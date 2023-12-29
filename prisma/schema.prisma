@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "multiSchema", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuid_ossp(map: "uuid-ossp", schema: "extensions")]
+  schemas    = ["extensions", "geo", "public"]
+}
+
+model User {
+  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name              String
+  lastName          String
+  email             String              @unique
+  document          String              @unique
+  phone             String?             @unique
+  password          String?
+  role              String
+  info              UserInfo            @relation(fields: [infoId], references: [id])
+  infoId            String              @unique @db.Uuid
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt
+  Organization      Organization[]
+  EventRegistration EventRegistration[]
+
+  @@schema("public")
+}
+
+model UserInfo {
+  id         String    @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  user       User?
+  birthDate  DateTime?
+  gender     String?
+  zipCode    String
+  state      State     @relation(fields: [stateId], references: [id])
+  stateId    String    @db.Uuid
+  city       City      @relation(fields: [cityId], references: [id])
+  cityId     String    @db.Uuid
+  address    String
+  number     String
+  complement String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@schema("public")
+}
+
+model Organization {
+  id        String    @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name      String
+  email     String    @unique
+  phone     String?   @unique
+  owner     User      @relation(fields: [ownerId], references: [id])
+  ownerId   String    @db.Uuid
+  slug      String    @unique
+  domain    String?   @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@schema("public")
+}
+
+model EventGroupType {
+  id         String       @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  EventGroup EventGroup[]
+
+  @@schema("public")
+}
+
+model EventGroup {
+  id               String         @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name             String
+  slug             String         @unique
+  type             EventGroupType @relation(fields: [eventGroupTypeId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime?      @updatedAt
+  Event            Event[]
+  eventGroupTypeId String         @db.Uuid
+
+  @@schema("public")
+}
+
+model EventModality {
+  id            String             @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name          String
+  eventGroup    Event              @relation(fields: [eventGroupId], references: [id])
+  eventGroupId  String             @db.Uuid
+  eventCategory ModalityCategory[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime?          @updatedAt
+
+  @@schema("public")
+}
+
+model ModalityCategory {
+  id                     String                   @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                   String
+  minAge                 Int
+  maxAge                 Int
+  EventModality          EventModality?           @relation(fields: [eventModalityId], references: [id])
+  eventModalityId        String?                  @db.Uuid
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime?                @updatedAt
+  EventRegistrationBatch EventRegistrationBatch[]
+
+  @@schema("public")
+}
+
+model EventRegistrationBatch {
+  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  event             Event               @relation(fields: [eventId], references: [id])
+  eventId           String              @db.Uuid
+  category          ModalityCategory    @relation(fields: [categoryId], references: [id])
+  categoryId        String              @db.Uuid
+  coupon            BatchCoupon[]
+  maxRegistrations  Int
+  dateStart         DateTime
+  dateEnd           DateTime
+  price             Int
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt
+  EventRegistration EventRegistration[]
+
+  @@schema("public")
+}
+
+enum CouponType {
+  percentage
+  fixed
+
+  @@schema("public")
+}
+
+model BatchCoupon {
+  id                       String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  slug                     String
+  EventRegistrationBatch   EventRegistrationBatch @relation(fields: [eventRegistrationBatchId], references: [id])
+  eventRegistrationBatchId String                 @db.Uuid
+  type                     CouponType
+
+  @@schema("public")
+}
+
+enum EventStatus {
+  draft
+  published
+  canceled
+
+  @@schema("public")
+}
+
+model EventType {
+  id           String    @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name         String
+  resultsModel Json      @db.JsonB
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+
+  @@schema("public")
+}
+
+model Event {
+  id                     String                   @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                   String
+  slug                   String                   @unique
+  status                 EventStatus
+  EventRegistration      EventRegistration[]
+  EventGroup             EventGroup               @relation(fields: [eventGroupId], references: [id])
+  eventGroupId           String                   @db.Uuid
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime?                @updatedAt
+  EventModality          EventModality[]
+  EventRegistrationBatch EventRegistrationBatch[]
+
+  @@schema("public")
+}
+
+model EventRegistration {
+  id        String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  code      String                 @db.VarChar
+  user      User                   @relation(fields: [userId], references: [id])
+  userId    String                 @db.Uuid
+  event     Event                  @relation(fields: [eventId], references: [id])
+  eventId   String                 @db.Uuid
+  batch     EventRegistrationBatch @relation(fields: [batchId], references: [id])
+  batchId   String                 @db.Uuid
+  createdAt DateTime               @default(now())
+  updatedAt DateTime?              @updatedAt
+
+  @@schema("public")
+}
+
+model State {
+  id       String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  code     String     @db.VarChar
+  name     String     @db.VarChar
+  UserInfo UserInfo[]
+  City     City[]
+
+  @@schema("geo")
+}
+
+model City {
+  id       String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name     String     @db.VarChar
+  state    State      @relation(fields: [stateId], references: [id])
+  stateId  String     @db.Uuid
+  UserInfo UserInfo[]
+
+  @@schema("geo")
+}
