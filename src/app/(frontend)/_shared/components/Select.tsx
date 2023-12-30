@@ -32,7 +32,7 @@ export function Select({ className, multiple, ...props }: HeadlessSelectProps) {
         {...props}
         className={clsx([
           // Basic layout
-          "relative block w-full appearance-none rounded-lg py-[calc(theme(spacing[2.5])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]",
+          "relative block w-full appearance-none rounded-lg py-[calc(theme(spacing[1.5])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]",
 
           // Horizontal padding
           multiple

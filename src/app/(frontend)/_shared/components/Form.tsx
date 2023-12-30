@@ -65,7 +65,7 @@ export function FieldGroup({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  return <div {...props} data-slot="control" className={clsx(className, "space-y-8")} />;
+  return <div {...props} data-slot="control" className={clsx(className, "space-y-3")} />;
 }
 
 const FieldContext = createContext({
