@@ -3,6 +3,8 @@ import {
   type InputProps as HeadlessInputProps,
 } from "@headlessui/react";
 import { clsx } from "clsx";
+import { useField } from "./Form";
+import { useFormContext } from "react-hook-form";
 
 const dateTypes = ["date", "datetime-local", "month", "time", "week"];
 type DateType = (typeof dateTypes)[number];
@@ -13,12 +15,14 @@ export function Input({
 }: {
   type?: "email" | "number" | "password" | "search" | "tel" | "text" | "url" | DateType;
 } & HeadlessInputProps) {
+  const form = useFormContext();
+  const { name } = useField();
+
   return (
     <span
       data-slot="control"
       className={clsx([
         className,
-
         // Basic layout
         "relative block w-full",
 
@@ -39,6 +43,7 @@ export function Input({
       ])}
     >
       <HeadlessInput
+        {...form.register(name)}
         className={clsx([
           // Date classes
           props.type &&

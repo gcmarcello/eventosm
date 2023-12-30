@@ -12,6 +12,26 @@ import {
 } from "@headlessui/react";
 import clsx from "clsx";
 import type React from "react";
+import { createContext, useContext } from "react";
+import {
+  useForm,
+  Path,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
+
+export function Form<Fields extends FieldValues>(props: {
+  children?: React.ReactNode;
+  onSubmit: (data: Fields) => void;
+  hform: ReturnType<typeof useForm<Fields>>;
+}) {
+  return (
+    <FormProvider {...props.hform}>
+      <form onSubmit={props.hform?.handleSubmit((data) => props.onSubmit(data))} />
+    </FormProvider>
+  );
+}
 
 export function Fieldset({
   className,
@@ -48,21 +68,55 @@ export function FieldGroup({
   return <div {...props} data-slot="control" className={clsx(className, "space-y-8")} />;
 }
 
-export function Field({ className, ...props }: HeadlessFieldProps) {
+const FieldContext = createContext({
+  name: "",
+  error: "",
+});
+
+export function useField() {
+  return useContext(FieldContext);
+}
+
+type FieldProps<Fields extends FieldValues> = HeadlessFieldProps & {
+  name: Path<Fields>;
+};
+
+function Field<Fields extends FieldValues>({ className, ...props }: FieldProps<Fields>) {
+  const form = useFormContext();
+
+  const name = props["name"];
+  const path = name.split(".");
+
+  const fieldContextValue = {
+    name,
+    error: path.reduce((acc, curr) => acc && acc[curr], form.formState.errors as any)
+      ?.message as string,
+  };
+
   return (
-    <HeadlessField
-      className={clsx(
-        className,
-        "[&>[data-slot=label]+[data-slot=control]]:mt-3",
-        "[&>[data-slot=label]+[data-slot=description]]:mt-1",
-        "[&>[data-slot=description]+[data-slot=control]]:mt-3",
-        "[&>[data-slot=control]+[data-slot=description]]:mt-3",
-        "[&>[data-slot=control]+[data-slot=error]]:mt-3",
-        "[&>[data-slot=label]]:font-medium"
-      )}
-      {...props}
-    />
+    <FieldContext.Provider value={fieldContextValue}>
+      <HeadlessField
+        className={clsx(
+          className,
+          "[&>[data-slot=label]+[data-slot=control]]:mt-3",
+          "[&>[data-slot=label]+[data-slot=description]]:mt-1",
+          "[&>[data-slot=description]+[data-slot=control]]:mt-3",
+          "[&>[data-slot=control]+[data-slot=description]]:mt-3",
+          "[&>[data-slot=control]+[data-slot=error]]:mt-3",
+          "[&>[data-slot=label]]:font-medium"
+        )}
+        {...props}
+      />
+    </FieldContext.Provider>
   );
+}
+
+export function createField<T extends FieldValues>() {
+  const _Field = (props: FieldProps<T>) => {
+    return <Field {...props} />;
+  };
+
+  return _Field;
 }
 
 export function Label({
@@ -103,6 +157,8 @@ export function ErrorMessage({
   disabled,
   ...props
 }: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
+  const { error } = useContext(FieldContext)!;
+
   return (
     <HeadlessDescription
       {...props}
@@ -111,6 +167,8 @@ export function ErrorMessage({
         className,
         "text-base/6 text-red-600 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-red-500"
       )}
-    />
+    >
+      {error}
+    </HeadlessDescription>
   );
 }

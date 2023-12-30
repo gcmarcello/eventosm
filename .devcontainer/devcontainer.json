@@ -18,7 +18,8 @@
         "GitHub.copilot",
         "rangav.vscode-thunder-client",
         "eamodio.gitlens",
-        "yoavbls.pretty-ts-errors"
+        "yoavbls.pretty-ts-errors",
+        "MS-vsliveshare.vsliveshare"
       ],
       "settings": {
         "extensions.autoCheckUpdates": false,
