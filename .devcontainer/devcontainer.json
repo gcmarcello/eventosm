@@ -19,7 +19,7 @@
         "rangav.vscode-thunder-client",
         "eamodio.gitlens",
         "yoavbls.pretty-ts-errors",
-        "MS-vsliveshare.vsliveshare"
+        "ms-vsliveshare.vsliveshare"
       ],
       "settings": {
         "extensions.autoCheckUpdates": false,
