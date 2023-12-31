@@ -89,9 +89,16 @@ export default function GeneralDetailsSection() {
                 {({ checked }) => {
                   return (
                     <Description>
-                      {checked
-                        ? "Clique aqui para usar seu CPF."
-                        : "Estrangeiro? clique aqui!"}
+                      {checked ? (
+                        <>
+                          <span className="underline">Clique aqui</span> para usar seu
+                          CPF.
+                        </>
+                      ) : (
+                        <>
+                          Estrangeiro? <span className="underline">clique aqui!</span>
+                        </>
+                      )}
                     </Description>
                   );
                 }}

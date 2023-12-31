@@ -4,6 +4,5 @@ import { CompanyNavbar } from "./_shared/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
-  console.log("xd");
   return <CompanyNavbar />;
 }

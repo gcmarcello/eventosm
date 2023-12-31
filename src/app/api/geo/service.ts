@@ -1,3 +1,6 @@
+import { normalize } from "@/utils/format";
+import { prisma } from "prisma/prisma";
+
 type ViaCepResponse = {
   cep: string;
   logradouro: string;
@@ -11,12 +14,12 @@ type ViaCepResponse = {
   siafi: string;
 };
 
-export async function getStates() {
+export async function readStates() {
   const states = await prisma.state.findMany();
   return states;
 }
 
-export async function getCitiesByState({ stateId }: { stateId: string }) {
+export async function readCitiesByState({ stateId }: { stateId: string }) {
   const cities = await prisma.city.findMany({
     where: {
       stateId: stateId,
@@ -25,14 +28,26 @@ export async function getCitiesByState({ stateId }: { stateId: string }) {
   return cities;
 }
 
-export async function getAddressFromZipCode({ zipCode }: { zipCode: string }) {
-  const response: Promise<ViaCepResponse> = (
-    await fetch(`https://viacep.com.br/ws/${zipCode}/json/`)
-  ).json();
+export async function readAddressFromZipCode({ zipCode }: { zipCode: string }) {
+  const response: Response = await fetch(
+    `https://viacep.com.br/ws/${normalize(zipCode)}/json/`
+  );
+  const parsedResponse: ViaCepResponse = await response.json();
 
-  const city = await prisma.city.findFirst({
+  const ibge = parsedResponse?.ibge;
+
+  if (!ibge) throw "CEP Inválido";
+
+  const cityAndState = await prisma.city.findFirst({
     where: {
-      ibge: zipCode,
+      code: ibge,
     },
+    include: { state: true },
   });
+
+  return {
+    address: parsedResponse.logradouro,
+    city: { name: cityAndState?.name, id: cityAndState?.id },
+    state: { name: cityAndState?.state.abbreviation, id: cityAndState?.state.id },
+  };
 }

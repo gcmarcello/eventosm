@@ -22,6 +22,8 @@ import { useSearchParams } from "next/navigation";
 import { signup } from "@/app/api/auth/action";
 import { useAction } from "../_shared/hooks/useAction";
 import { showToast } from "../_shared/components/Toast";
+import { readAddressFromZipCode } from "@/app/api/geo/service";
+import { Text } from "../_shared/components/Text";
 
 export default function RegistrarPage() {
   const [step, setStep] = useState(0);
@@ -78,9 +80,10 @@ export default function RegistrarPage() {
             <div>Anterior</div>
           </Button>
         )}
+        <div className="text-sm font-medium text-gray-500">EventoSM ©</div>
         {step !== steps.length - 1 ? (
           <Button
-            disabled={!verifyStep(step, form)}
+            disabled={!verifyStep(step, form, signupDto)}
             onClick={() => handleStepChange("next")}
           >
             <div>Próximo</div>
@@ -130,12 +133,12 @@ export default function RegistrarPage() {
     form.setValue("step1.passwords.passwordConfirm", data.passwordConfirm);
     form.setValue("step2.info.birthDate", data.birthDate);
     form.setValue("step2.info.gender", data.gender);
-    form.setValue("step2.info.zipCode", data.zipCode);
+    /* form.setValue("step2.info.zipCode", data.zipCode); 
     form.setValue("step2.info.address", data.address);
     form.setValue("step2.info.cityId", data.cityId);
     form.setValue("step2.info.stateId", data.stateId);
     form.setValue("step2.info.number", data.number);
-    form.setValue("step2.info.complement", data.complement);
+    form.setValue("step2.info.complement", data.complement);*/
     form.trigger();
   }
 
@@ -152,8 +155,8 @@ export default function RegistrarPage() {
   });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3">
-      <div className="col-span-full lg:col-span-1 lg:col-start-2">
+    <div className="grid grid-cols-1 lg:grid-cols-4">
+      <div className="col-span-full lg:col-span-2 lg:col-start-2">
         <Container className="mx-4 mb-20 mt-4 lg:col-start-2 lg:mb-10">
           <Form
             hform={form}
@@ -177,8 +180,8 @@ export default function RegistrarPage() {
 
             <div
               className={clsx(
-                "hidden pt-3 lg:flex",
-                step > 0 ? " justify-between" : "justify-end"
+                "hidden items-center pt-3 lg:flex",
+                step > 0 ? " justify-between" : "justify-end gap-2"
               )}
             >
               <StepController />
@@ -187,7 +190,7 @@ export default function RegistrarPage() {
               <BottomNavigation>
                 <div
                   className={clsx(
-                    "flex p-2",
+                    "flex items-center gap-2 p-2",
                     step > 0 ? " justify-between" : "justify-end"
                   )}
                 >

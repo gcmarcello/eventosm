@@ -200,9 +200,9 @@ model EventRegistration {
 
 model State {
   id           String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  code         String     @db.VarChar
-  abbreviation String     @db.VarChar
-  name         String     @db.VarChar
+  code         String     @unique @db.VarChar
+  abbreviation String     @unique @db.VarChar
+  name         String     @unique @db.VarChar
   UserInfo     UserInfo[]
   City         City[]
 
@@ -212,7 +212,7 @@ model State {
 model City {
   id       String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   name     String     @db.VarChar
-  code     String     @db.VarChar
+  code     String     @unique @db.VarChar
   state    State      @relation(fields: [stateId], references: [id])
   stateId  String     @db.Uuid
   UserInfo UserInfo[]

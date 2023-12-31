@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import { useField } from "./Form";
 import { Controller, useFormContext } from "react-hook-form";
 import { MaskType, formatWithMask } from "./utils/formatWithMask";
+import { ButtonSpinner, LoadingSpinner } from "../Spinners";
 
 const dateTypes = ["date", "datetime-local", "month", "time", "week"];
 type DateType = (typeof dateTypes)[number];
@@ -29,9 +30,11 @@ export function Input({
   className,
   mask,
   onChange,
+  loading,
   ...props
 }: {
   type?: "email" | "number" | "password" | "search" | "tel" | "text" | "url" | DateType;
+  loading?: boolean;
   mask?: MaskType;
 } & HeadlessInputProps) {
   const form = useFormContext();
@@ -100,6 +103,11 @@ export function Input({
             {...props}
             {...field}
           />
+          {loading && (
+            <div className="absolute right-2 top-2.5 text-white">
+              <ButtonSpinner />
+            </div>
+          )}
         </span>
       )}
     />
