@@ -2,6 +2,10 @@ export function normalizeEmail(data: string) {
   return data.toLowerCase();
 }
 
+export function normalize(data: string) {
+  return data.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+}
+
 export function normalizePhone(data: string) {
   return data?.replace(/[^0-9]/g, "");
 }

@@ -22,13 +22,18 @@ import {
 } from "react-hook-form";
 
 export function Form<Fields extends FieldValues>(props: {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   onSubmit: (data: Fields) => void;
   hform: ReturnType<typeof useForm<Fields>>;
+  className?: string;
 }) {
   return (
     <FormProvider {...props.hform}>
-      <form onSubmit={props.hform?.handleSubmit((data) => props.onSubmit(data))} />
+      <form
+        className={props.className}
+        onSubmit={props.hform?.handleSubmit((data) => props.onSubmit(data))}
+        children={props.children}
+      />
     </FormProvider>
   );
 }
@@ -112,11 +117,9 @@ function Field<Fields extends FieldValues>({ className, ...props }: FieldProps<F
 }
 
 export function createField<T extends FieldValues>() {
-  const _Field = (props: FieldProps<T>) => {
+  return (props: FieldProps<T>) => {
     return <Field {...props} />;
   };
-
-  return _Field;
 }
 
 export function Label({
@@ -157,7 +160,7 @@ export function ErrorMessage({
   disabled,
   ...props
 }: { className?: string; disabled?: boolean } & HeadlessDescriptionProps) {
-  const { error } = useContext(FieldContext)!;
+  const { error } = useField()!;
 
   return (
     <HeadlessDescription

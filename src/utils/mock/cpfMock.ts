@@ -14,5 +14,9 @@ export function cpfMock() {
   d2 = 11 - mod(d2, 11);
   if (d2 >= 10) d2 = 0;
 
-  return `${n.join("")}${d1}${d2}`;
+  const cpf = `${n.join("")}${d1}${d2}`;
+  return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(
+    6,
+    9
+  )}-${cpf.substring(9)}`;
 }

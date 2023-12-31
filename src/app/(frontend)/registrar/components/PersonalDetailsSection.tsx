@@ -1,16 +1,17 @@
+import { SignupDto } from "@/app/api/auth/dto";
 import {
   FieldGroup,
   ErrorMessage,
   Fieldset,
   Legend,
-  Field,
+  createField,
   Label,
-  Description,
-} from "../../_shared/components/Fieldset";
-import { Input } from "../../_shared/components/Input";
-import { Link } from "../../_shared/components/Link";
-import { Select } from "../../_shared/components/Select";
+} from "../../_shared/components/Form/Form";
+import { Input } from "../../_shared/components/Form/Input";
+import { Select } from "../../_shared/components/Form/Select";
 import { Text } from "../../_shared/components/Text";
+
+const Field = createField<SignupDto>();
 
 export default function PersonalDetailSections() {
   return (
@@ -23,68 +24,57 @@ export default function PersonalDetailSections() {
       <FieldGroup className="space-y-4 divide-y divide-zinc-700">
         <div className="grid-cols-5 justify-center gap-4 lg:grid">
           <div className="col-span-3">
-            <Field className="my-2 ">
-              <Label>Celular</Label>
-              <Input name="phone" placeholder="(99) 99999-9999" />
-              <ErrorMessage>Sobrenome Inválido</ErrorMessage>
+            <Field name="step2.info.birthDate" className="my-2 ">
+              <Label>Data de Nascimento</Label>
+              <Input mask={"99/99/9999"} placeholder="DD/MM/AAAA" />
+              <ErrorMessage />
             </Field>
           </div>
           <div className="col-span-2">
-            <Field className="my-2 ">
+            <Field name="step2.info.gender" className="my-2 ">
               <Label>Sexo</Label>
-              <Select defaultValue={""} name="gender">
+              <Select defaultValue={""}>
                 <option value="" disabled>
                   Selecione
                 </option>
                 <option value="female">Feminino</option>
                 <option value="male">Masculino</option>
               </Select>
-              {/* <ErrorMessage>Email Inválido</ErrorMessage> */}
+              <ErrorMessage />
             </Field>
           </div>
         </div>
         <div>
           <div className="grid grid-cols-5 justify-center gap-4">
             <div className="col-span-5">
-              <Field className="my-2 space-y-3">
+              <Field name="step2.info.zipCode" className="my-2 space-y-3">
                 <Label>CEP</Label>
-                <Input name="phone" placeholder="99999-999" />
+                <Input placeholder="99999-999" />
 
-                {/* <ErrorMessage>CEP Inválido</ErrorMessage> */}
-              </Field>
-            </div>
-
-            <div className="col-span-5 -my-5 mb-4">
-              <Field>
-                <Description>
-                  Não sabe seu CEP?{" "}
-                  <Link href="#" className="underline">
-                    Clique aqui
-                  </Link>
-                </Description>
+                <ErrorMessage />
               </Field>
             </div>
           </div>
           <div className="col-span-5">
-            <Field className="my-2 space-y-3">
+            <Field name="step2.info.address" className="my-2 space-y-3">
               <Label>Endereço</Label>
-              <Input name="address" placeholder="Rua X." />
-              {/* <ErrorMessage>CEP Inválido</ErrorMessage> */}
+              <Input placeholder="Rua X." />
+              <ErrorMessage />
             </Field>
           </div>
 
           <div className="grid grid-cols-5 gap-4">
             <div className="col-span-3">
-              <Field className="my-2 space-y-2">
+              <Field name="step2.info.cityId" className="my-2 space-y-2">
                 <Label>Cidade</Label>
-                <Input name="address" placeholder="Rua X." />
+                <Input placeholder="Rua X." />
                 {/* <ErrorMessage>CEP Inválido</ErrorMessage> */}
               </Field>
             </div>
             <div className="col-span-2">
-              <Field className="my-2 space-y-3">
+              <Field name="step2.info.stateId" className="my-2 space-y-3">
                 <Label>Estado</Label>
-                <Select defaultValue={""} name="state">
+                <Select defaultValue={""}>
                   <option value="" disabled>
                     Selecione
                   </option>
@@ -96,16 +86,16 @@ export default function PersonalDetailSections() {
           </div>
           <div className="grid grid-cols-5 gap-4">
             <div className="col-span-3">
-              <Field className="my-2 space-y-3">
+              <Field name="step2.info.number" className="my-2 space-y-3">
                 <Label>Número</Label>
-                <Input name="address" placeholder="Rua X." />
+                <Input placeholder="Rua X." />
                 {/* <ErrorMessage>CEP Inválido</ErrorMessage> */}
               </Field>
             </div>
             <div className="col-span-2">
-              <Field className="my-2 space-y-3">
+              <Field name="step2.info.complement" className="my-2 space-y-3">
                 <Label>Complemento</Label>
-                <Input name="complement" placeholder="Rua X." />
+                <Input placeholder="Rua X." />
                 {/* <ErrorMessage>CEP Inválido</ErrorMessage> */}
               </Field>
             </div>

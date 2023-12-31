@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Pagination } from "../dto/read";
 
 export interface SuccessResponse<T> {
@@ -28,6 +29,10 @@ export class ActionResponse {
     message = "Operação realizada com sucesso",
   }: SuccessResponse<T>): SuccessResponse<T> {
     return { data, pagination, message };
+  }
+
+  public static redirect({ href }: { href: string }): void {
+    redirect(href);
   }
 
   public static error(message: unknown = "Operação falhou"): ErrorResponse {
