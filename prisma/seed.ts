@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { states } from "../src/utils/geo/states";
-import { cities } from "../src/utils/geo/cities";
+import { states } from "../geo/states";
+import { cities } from "../geo/cities";
 const prisma = new PrismaClient();
 
 async function main() {
