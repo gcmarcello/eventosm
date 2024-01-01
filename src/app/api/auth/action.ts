@@ -6,23 +6,29 @@ import * as service from "./service";
 import { ActionResponse } from "../_shared/utils/ActionResponse";
 
 export async function signup(request: SignupDto) {
+  let eventRedirect;
+  let signup;
+
   try {
-    const { parsedRequest, eventRedirect } =
+    const { parsedRequest, eventRedirect: redirect } =
       await UseMiddlewares(request).then(SignupMiddleware);
-    const signup = await service.signup(parsedRequest);
-    if (eventRedirect) {
-      return ActionResponse.redirect({
-        href: `/evento/${eventRedirect.id}/inscricao`,
-      });
-    }
-    return ActionResponse.success({
-      data: signup,
-      message: "Usuário cadastrado com sucesso!",
-    });
+    signup = await service.signup(parsedRequest);
+
+    eventRedirect = redirect || undefined;
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
+
+  if (eventRedirect) {
+    return ActionResponse.redirect({
+      href: `/evento/${eventRedirect.id}/inscricao`,
+    });
+  }
+  return ActionResponse.success({
+    data: signup,
+    message: "Usuário cadastrado com sucesso!",
+  });
 }
 
 /* export async function login(request: any) {

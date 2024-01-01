@@ -110,13 +110,13 @@ export default function GeneralDetailsSection() {
           <div className="grid grid-cols-2 gap-4">
             <Field name="step1.passwords.password" className="my-2 space-y-3">
               <Label>Senha</Label>
-              <Input />
+              <Input type="password" />
               <ErrorMessage />
             </Field>
 
             <Field name="step1.passwords.passwordConfirm" className="my-2 space-y-3">
               <Label>Confirmar Senha</Label>
-              <Input />
+              <Input type="password" />
               <ErrorMessage />
             </Field>
           </div>

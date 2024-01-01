@@ -100,7 +100,7 @@ export const parsedSignupDto = z.object({
     ),
     gender: z.string().min(3).max(255),
     address: z.string().min(3).max(255),
-    number: z.string().min(3).max(255),
+    number: z.string().optional(),
     complement: z.string().optional(),
     cityId: z.string(),
     stateId: z.string(),
@@ -109,3 +109,14 @@ export const parsedSignupDto = z.object({
 });
 
 export type ParsedSignupDto = z.infer<typeof parsedSignupDto>;
+
+export const loginDto = z.object({
+  identifier: z
+    .string({ required_error: "Obrigatório." })
+    .min(1, { message: "Use seu email, CPF ou telefone." }),
+  password: z
+    .string({ required_error: "Obrigatório." })
+    .min(1, { message: "Digite sua senha." }),
+});
+
+export type LoginDto = z.infer<typeof loginDto>;

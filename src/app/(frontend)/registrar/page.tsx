@@ -119,8 +119,8 @@ export default function RegistrarPage() {
       gender: "male",
       zipCode: fakerPT_BR.location.zipCode(),
       address: fakerPT_BR.location.streetAddress(),
-      cityId: "354800",
-      stateId: "SP",
+      cityId: "1c287b08-b951-4df1-ae77-219c32ea3be7",
+      stateId: "ceccc633-34e0-4041-a77d-70bc51ebce93",
       number: fakerPT_BR.location.buildingNumber(),
       complement: fakerPT_BR.location.secondaryAddress(),
     };
@@ -133,14 +133,17 @@ export default function RegistrarPage() {
     form.setValue("step1.passwords.passwordConfirm", data.passwordConfirm);
     form.setValue("step2.info.birthDate", data.birthDate);
     form.setValue("step2.info.gender", data.gender);
-    /* form.setValue("step2.info.zipCode", data.zipCode); 
+    form.setValue("step2.info.zipCode", data.zipCode);
     form.setValue("step2.info.address", data.address);
     form.setValue("step2.info.cityId", data.cityId);
     form.setValue("step2.info.stateId", data.stateId);
     form.setValue("step2.info.number", data.number);
-    form.setValue("step2.info.complement", data.complement);*/
+    form.setValue("step2.info.complement", data.complement);
+    console.log(form.getValues());
     form.trigger();
   }
+
+  console.log(form.formState.errors);
 
   const { trigger: signUpAction, isMutating: isLoading } = useAction({
     action: signup as any,

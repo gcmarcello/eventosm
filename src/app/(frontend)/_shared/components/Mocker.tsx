@@ -7,6 +7,24 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
+import { FieldValues, UseFormReturn, Path } from "react-hook-form";
+
+export function mockData<T extends FieldValues>({
+  form,
+  data,
+}: {
+  form: UseFormReturn<T>;
+  data: T;
+}) {
+  for (const [key, value] of Object.entries(data) as [keyof T, T[keyof T]][]) {
+    // Ensure the key is a valid key of T
+    if (key in form.getValues()) {
+      form.setValue(key as Path<T>, value);
+    }
+  }
+  console.log(form.getValues());
+  form.trigger();
+}
 
 export function Mocker({ mockData, submit }: { mockData?: any; submit?: any }) {
   const [isFolded, setIsFolded] = useState(false);

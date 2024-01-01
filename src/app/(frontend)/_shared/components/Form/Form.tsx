@@ -20,6 +20,7 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form";
+import { ZodObject, ZodRawShape, ZodType, ZodTypeAny, z } from "zod";
 
 export function Form<Fields extends FieldValues>(props: {
   children: React.ReactNode;
@@ -73,10 +74,11 @@ export function FieldGroup({
   return <div {...props} data-slot="control" className={clsx(className, "space-y-3")} />;
 }
 
-const FieldContext = createContext({
-  name: "",
-  error: "",
-});
+const FieldContext = createContext<{
+  error: string;
+  name: string;
+  isRequired: boolean;
+}>(null!);
 
 export function useField() {
   return useContext(FieldContext);
@@ -86,14 +88,24 @@ type FieldProps<Fields extends FieldValues> = HeadlessFieldProps & {
   name: Path<Fields>;
 };
 
-function Field<Fields extends FieldValues>({ className, ...props }: FieldProps<Fields>) {
+function Field<Fields extends FieldValues>({
+  className,
+  enableAsterisk,
+  ...props
+}: FieldProps<Fields> & {
+  zodObject: ZodObject<ZodRawShape, "strip", ZodTypeAny, Fields, Fields>;
+  enableAsterisk: boolean;
+}) {
   const form = useFormContext();
 
   const name = props["name"];
   const path = name.split(".");
+  const zodField = props.zodObject.shape[name];
+  const isRequired = enableAsterisk && !zodField.isOptional();
 
   const fieldContextValue = {
     name,
+    isRequired,
     error: path.reduce((acc, curr) => acc && acc[curr], form.formState.errors as any)
       ?.message as string,
   };
@@ -116,16 +128,25 @@ function Field<Fields extends FieldValues>({ className, ...props }: FieldProps<F
   );
 }
 
-export function createField<T extends FieldValues>() {
-  return (props: FieldProps<T>) => {
-    return <Field {...props} />;
+export function createField<Fields extends FieldValues>({
+  zodObject,
+  enableAsterisk = false,
+}: {
+  zodObject: ZodObject<ZodRawShape, "strip", ZodTypeAny, Fields, Fields>;
+  enableAsterisk?: boolean;
+}) {
+  return (props: FieldProps<Fields>) => {
+    return <Field {...props} enableAsterisk={enableAsterisk} zodObject={zodObject} />;
   };
 }
 
 export function Label({
   className,
+  children,
   ...props
 }: { className?: string } & HeadlessLabelProps) {
+  const { isRequired } = useField();
+
   return (
     <HeadlessLabel
       {...props}
@@ -134,7 +155,11 @@ export function Label({
         className,
         "select-none text-base/6 text-zinc-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white"
       )}
-    />
+    >
+      <>
+        {children} {isRequired && <span className="text-red-600">*</span>}
+      </>
+    </HeadlessLabel>
   );
 }
 
