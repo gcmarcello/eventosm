@@ -5,6 +5,9 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { Button } from "../../_shared/components/Button";
+import { logout } from "@/app/api/auth/action";
+import { useAction } from "../../_shared/hooks/useAction";
+import { showToast } from "../../_shared/components/Toast";
 
 const user = {
   name: "Tom Cook",
@@ -25,6 +28,18 @@ const userNavigation = [
 ];
 
 export default function PanelNavbar() {
+  const { trigger: logoutTrigger, isMutating: isLoading } = useAction({
+    action: logout,
+    redirect: true,
+    onError: (error) => console.log(error),
+    onSuccess: (data) =>
+      showToast({
+        message: "Deslogado com sucesso",
+        variant: "success",
+        title: "Sucesso!",
+      }),
+  });
+
   return (
     <Disclosure as="nav" className="border-b border-zinc-600 bg-zinc-800 shadow">
       {({ open }) => (
@@ -114,6 +129,7 @@ export default function PanelNavbar() {
                             {({ active }) => (
                               <a
                                 href={item.href}
+                                onClick={() => logoutTrigger()}
                                 className={clsx(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
@@ -175,6 +191,7 @@ export default function PanelNavbar() {
                     key={item.name}
                     as="a"
                     href={item.href}
+                    onClick={() => logoutTrigger()}
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                   >
                     {item.name}

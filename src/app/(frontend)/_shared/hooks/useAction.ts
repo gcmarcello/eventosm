@@ -11,13 +11,14 @@ interface UseActionParams<
   ParserReturnType,
 > {
   defaultData?: ParserReturnType;
+  redirect?: boolean;
   onError?: (error: string) => void;
   onSuccess?: (res: SuccessResponse<ParserReturnType>) => void;
   parser?: (arg: DataReturnType) => ParserReturnType;
   formatter?: (arg: ArgumentType) => FormatterReturnType;
   action: (
     arg: FormatterReturnType | ArgumentType
-  ) => Promise<SuccessResponse<DataReturnType> | ErrorResponse>;
+  ) => Promise<SuccessResponse<DataReturnType> | ErrorResponse | void>;
 }
 
 export function useAction<
@@ -27,6 +28,7 @@ export function useAction<
   ParserReturnType = DataReturnType,
 >({
   defaultData,
+  redirect,
   action,
   onSuccess,
   onError,
@@ -39,14 +41,23 @@ export function useAction<
     arg: ArgumentType
   ): FetcherResponse<SuccessResponse<ParserReturnType>> => {
     const formattedArg = formatter ? formatter(arg) : arg;
+    console.log(formattedArg);
 
     return action(formattedArg)
       .then((res) => {
+        if (redirect)
+          return {
+            data: null as ParserReturnType,
+            message: `Redirecionando...`,
+          };
         if (!res) {
           throw "Resposta indefinida.";
         }
         if ("error" in res) {
           throw res.message;
+        }
+        if (!res.data) {
+          throw "Resposta sem dados.";
         }
         return {
           data: (parser ? parser(res.data) : res.data) as ParserReturnType,

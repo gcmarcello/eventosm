@@ -1,31 +1,26 @@
-import { compareHash } from "@/utils/bCrypt";
-import { ParsedSignupDto, SignupDto } from "./dto";
+import { compareHash, hashInfo } from "@/utils/bCrypt";
+import { LoginDto, ParsedSignupDto, SignupDto } from "./dto";
 import { getEnv } from "@/utils/settings";
 import * as jose from "jose";
 import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { normalize, normalizeEmail, normalizePhone } from "@/utils/format";
 dayjs.extend(customParseFormat);
 
 export async function signup(request: ParsedSignupDto) {
   const newUser = await prisma.user.create({
     data: {
       fullName: request.fullName,
-      email: request.email,
-      document: request.document.value,
-      phone: request.phone,
-      password: request.passwords.password,
+      email: normalizeEmail(request.email),
+      document: normalize(request.document.value),
+      phone: normalizePhone(request.phone),
+      password: await hashInfo(request.passwords.password),
       role: "user",
       info: {
         create: {
+          ...request.info,
           birthDate: dayjs(request.info.birthDate, "DD/MM/YYYY").toISOString(),
-          gender: request.info.gender,
-          zipCode: request.info.zipCode,
-          address: request.info.address,
-          number: request.info.number,
-          complement: request.info.complement,
-          cityId: request.info.cityId,
-          stateId: request.info.stateId,
         },
       },
     },
@@ -47,9 +42,22 @@ export function createToken(request: { id: string }) {
   return token;
 }
 
-export async function login(request: any) {
-  if (!(await compareHash(request.password, request.user.password)))
-    throw `${request.isEmail ? "Email" : "Usuário"} ou senha incorretos.`;
+export async function login(request: LoginDto) {
+  const potentialUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: normalizeEmail(request.identifier) },
+        { document: normalize(request.identifier) },
+        { phone: normalizePhone(request.identifier) },
+      ],
+    },
+  });
 
-  return createToken({ id: request.user.id });
+  if (!potentialUser) throw `Informações de login incorretas!`;
+  if (!potentialUser.password) throw `Usuário não possui uma conta configurada`;
+
+  if (!(await compareHash(request.password, potentialUser.password)))
+    throw `Dados de login ou senha incorretos.`;
+
+  return createToken({ id: potentialUser.id });
 }

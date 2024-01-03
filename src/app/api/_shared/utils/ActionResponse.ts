@@ -1,11 +1,11 @@
-import { redirect } from "next/navigation";
+import { redirect as _redirect } from "next/navigation";
 import { Pagination } from "../dto/read";
 
-export interface SuccessResponse<T> {
-  data: T;
+export type SuccessResponse<T> = {
+  data?: T;
   pagination?: Pagination;
   message?: string | string[];
-}
+};
 
 export type ExtractSuccessResponse<T extends (...args: any) => any> = Awaited<
   ReturnType<T>
@@ -27,12 +27,13 @@ export class ActionResponse {
     data,
     pagination,
     message = "Operação realizada com sucesso",
-  }: SuccessResponse<T>): SuccessResponse<T> {
-    return { data, pagination, message };
-  }
+    redirect,
+  }: SuccessResponse<T> & {
+    redirect?: string;
+  }): SuccessResponse<T> | void {
+    if (redirect) _redirect(redirect);
 
-  public static redirect({ href }: { href: string }): void {
-    redirect(href);
+    return { data, pagination, message };
   }
 
   public static error(message: unknown = "Operação falhou"): ErrorResponse {

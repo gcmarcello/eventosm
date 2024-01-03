@@ -22,15 +22,18 @@ interface ToastType {
 
 export const toastVariants = {
   success: {
-    bg: "bg-green-300",
+    bg: "bg-lime-300",
+    border: "border-lime-400",
     icon: <CheckCircleIcon className="h-6 w-6 text-white" aria-hidden="true" />,
   },
   error: {
-    bg: "bg-red-300",
+    bg: "bg-red-500",
+    border: "border-red-700",
     icon: <XCircleIcon className="h-6 w-6 text-zinc-900" aria-hidden="true" />,
   },
   alert: {
-    bg: "bg-yellow-300",
+    bg: "bg-yellow-500",
+    border: "border-yellow-700",
     icon: <ExclamationCircleIcon className="h-6 w-6 text-black" aria-hidden="true" />,
   },
 };
@@ -59,7 +62,14 @@ const ToastContent: React.FC<ToastContentProps> = ({ toastElement, visible }) =>
       leaveTo="transform opacity-0 scale-95"
       className={clsx("w-full")}
     >
-      <div className={clsx("rounded-lg", "border border-red-600 bg-red-500")}>
+      <div
+        className={clsx(
+          "rounded-lg",
+          "border",
+          toastVariants[toastElement.variant].bg,
+          toastVariants[toastElement.variant].border
+        )}
+      >
         <div className="p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0">

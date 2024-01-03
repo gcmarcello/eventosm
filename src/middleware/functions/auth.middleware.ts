@@ -1,5 +1,7 @@
-import { getEnv } from "@/_shared/utils/settings";
 import { ActionResponse } from "@/app/api/_shared/utils/ActionResponse";
+import { getEnv } from "@/utils/settings";
+import { jwtDecrypt, jwtVerify } from "jose";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function AuthMiddleware({
@@ -9,23 +11,33 @@ export async function AuthMiddleware({
   request: { token: string | undefined };
   additionalArguments: { roles: string[] };
 }) {
-  if (!request.token) return false;
+  try {
+    if (!request.token) return false;
 
-  const roles: string[] = additionalArguments.roles;
+    const { payload } = await jwtVerify(
+      request.token,
+      new TextEncoder().encode(getEnv("JWT_KEY"))
+    );
 
-  const url = getEnv("NEXT_PUBLIC_SITE_URL");
+    const roles: string[] = additionalArguments.roles;
 
-  const user = await fetch(`${url}/api/auth/verify`, {
-    headers: { Authorization: request.token },
-  })
-    .then((res) => res.json())
-    .catch((error) => error);
+    const url = getEnv("NEXT_PUBLIC_SITE_URL");
 
-  if (!user) return false;
+    if (!url) return false;
+    if (!payload.id) return false;
 
-  const isAuthenticated = [...roles, "admin"].includes(user.role);
+    const user = await fetch(`${url}/api/auth/verify`, {
+      headers: { Authorization: payload.id as string },
+    })
+      .then((res) => res.json())
+      .catch((error) => error);
 
-  if (!isAuthenticated) return false;
+    if (!user) return false;
 
-  return user.id;
+    const isAuthenticated = [...roles, "admin"].includes(user.role);
+    return isAuthenticated;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className={clsx(inter.className, "min-h-dvh bg-zinc-700")}>
+      <div className={clsx(inter.className)}>
         <PanelNavbar />
         {children}
       </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import clsx from "clsx";
+import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,9 +13,7 @@ export const metadata: Metadata = {
 export default function SignUpLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className={clsx(inter.className, "min-h-dvh bg-white dark:bg-zinc-800")}>
-        {children}
-      </div>
+      <div className={clsx(inter.className)}>{children}</div>
     </>
   );
 }

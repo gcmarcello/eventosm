@@ -1,5 +1,5 @@
 "use client";
-import { SignupDto } from "@/app/api/auth/dto";
+import { SignupDto, signupDto } from "@/app/api/auth/dto";
 import {
   FieldGroup,
   ErrorMessage,
@@ -17,7 +17,7 @@ import { useState } from "react";
 import { Button, Switch } from "@headlessui/react";
 import { Link } from "../../_shared/components/Link";
 
-const Field = createField<SignupDto>();
+const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 
 export default function GeneralDetailsSection() {
   const { getValues, setValue, watch, resetField } = useFormContext();

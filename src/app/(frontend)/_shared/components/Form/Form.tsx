@@ -93,15 +93,15 @@ function Field<Fields extends FieldValues>({
   enableAsterisk,
   ...props
 }: FieldProps<Fields> & {
-  zodObject: ZodObject<ZodRawShape, "strip", ZodTypeAny, Fields, Fields>;
+  zodobject: ZodObject<ZodRawShape, "strip", ZodTypeAny, Fields, Fields>;
   enableAsterisk: boolean;
 }) {
   const form = useFormContext();
 
   const name = props["name"];
   const path = name.split(".");
-  const zodField = props.zodObject.shape[name];
-  const isRequired = enableAsterisk && !zodField.isOptional();
+  const zodField = props.zodobject.shape[name];
+  const isRequired = enableAsterisk && !zodField?.isOptional();
 
   const fieldContextValue = {
     name,
@@ -136,7 +136,7 @@ export function createField<Fields extends FieldValues>({
   enableAsterisk?: boolean;
 }) {
   return (props: FieldProps<Fields>) => {
-    return <Field {...props} enableAsterisk={enableAsterisk} zodObject={zodObject} />;
+    return <Field {...props} enableAsterisk={enableAsterisk} zodobject={zodObject} />;
   };
 }
 

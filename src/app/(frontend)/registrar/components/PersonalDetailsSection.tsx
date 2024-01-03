@@ -1,4 +1,4 @@
-import { SignupDto } from "@/app/api/auth/dto";
+import { SignupDto, signupDto } from "@/app/api/auth/dto";
 import {
   FieldGroup,
   ErrorMessage,
@@ -15,7 +15,7 @@ import { readAddressFromZipCode } from "@/app/api/geo/action";
 import { showToast } from "../../_shared/components/Toast";
 import { useFormContext } from "react-hook-form";
 
-const Field = createField<SignupDto>();
+const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 
 export default function PersonalDetailSections() {
   const form = useFormContext();

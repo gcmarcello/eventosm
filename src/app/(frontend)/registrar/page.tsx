@@ -58,7 +58,7 @@ export default function RegistrarPage() {
           zipCode: "",
         },
       },
-      eventRedirect: undefined,
+      eventRedirect: { id: "3333", name: "Cubatense de Pedestrianismo 2024" },
     },
   });
 
@@ -143,10 +143,9 @@ export default function RegistrarPage() {
     form.trigger();
   }
 
-  console.log(form.formState.errors);
-
   const { trigger: signUpAction, isMutating: isLoading } = useAction({
     action: signup as any,
+    redirect: true,
     onError: (error) => {
       console.log(error);
       showToast({ message: "Erro inesperado", variant: "error", title: "Erro" });

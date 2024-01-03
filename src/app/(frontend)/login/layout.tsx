@@ -12,9 +12,7 @@ export const metadata: Metadata = {
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className={clsx(inter.className, "min-h-dvh bg-white dark:bg-zinc-800")}>
-        {children}
-      </div>
+      <div className={clsx(inter.className)}>{children}</div>
     </>
   );
 }

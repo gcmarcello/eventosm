@@ -1,9 +1,10 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { SignupDto } from "./dto";
+import { LoginDto, SignupDto } from "./dto";
 import { SignupMiddleware } from "@/middleware/functions/signup.middleware";
 import * as service from "./service";
 import { ActionResponse } from "../_shared/utils/ActionResponse";
+import { cookies } from "next/headers";
 
 export async function signup(request: SignupDto) {
   let eventRedirect;
@@ -21,8 +22,8 @@ export async function signup(request: SignupDto) {
   }
 
   if (eventRedirect) {
-    return ActionResponse.redirect({
-      href: `/evento/${eventRedirect.id}/inscricao`,
+    return ActionResponse.success({
+      redirect: `/evento/${eventRedirect.id}/inscricao`,
     });
   }
   return ActionResponse.success({
@@ -31,9 +32,10 @@ export async function signup(request: SignupDto) {
   });
 }
 
-/* export async function login(request: any) {
+export async function login(request: LoginDto) {
   try {
     const login = await service.login(request);
+    cookies().set("token", login);
     return ActionResponse.success({
       data: login,
       message: "Usuário logado com sucesso!",
@@ -41,4 +43,16 @@ export async function signup(request: SignupDto) {
   } catch (error) {
     return ActionResponse.error(error);
   }
-} */
+}
+
+export async function logout() {
+  try {
+    cookies().delete("token");
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+  return ActionResponse.success({
+    redirect: "/",
+  });
+}

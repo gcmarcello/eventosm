@@ -18,7 +18,7 @@ import { BottomRightMocker, TopLeftMocker, mockData } from "../_shared/component
 import { fakerPT_BR } from "@faker-js/faker";
 import { cpfMock } from "@/utils/mock/cpfMock";
 import { useSearchParams } from "next/navigation";
-import { signup } from "@/app/api/auth/action";
+import { login, signup } from "@/app/api/auth/action";
 import { useAction } from "../_shared/hooks/useAction";
 import { showToast } from "../_shared/components/Toast";
 import { readAddressFromZipCode } from "@/app/api/geo/service";
@@ -37,11 +37,13 @@ export default function LoginPage() {
     mode: "onChange",
   });
 
-  const { trigger: signUpAction, isMutating: isLoading } = useAction({
-    action: signup as any,
+  const { trigger: loginTrigger, isMutating: isLoading } = useAction({
+    action: login as any,
+    onSuccess: (data) =>
+      showToast({ message: "Logado com sucesso", variant: "success", title: "Sucesso!" }),
     onError: (error) => {
-      console.log(error);
-      showToast({ message: "Erro inesperado", variant: "error", title: "Erro" });
+      form.resetField("password");
+      showToast({ message: error, variant: "error", title: "Erro" });
       /* form.setError("root.serverError", {
         type: "400",
         message: (error as string) || "Erro inesperado",
@@ -55,7 +57,7 @@ export default function LoginPage() {
         <Container className="mx-4 mb-20 mt-4 lg:col-start-2 lg:mb-10">
           <Form
             hform={form}
-            onSubmit={(data) => signUpAction(data)}
+            onSubmit={(data) => loginTrigger(data)}
             className="px-4 py-4 lg:pb-4"
           >
             <div className="flex flex-col items-center justify-center gap-4 py-6">
@@ -65,7 +67,7 @@ export default function LoginPage() {
             <Fieldset>
               <FieldGroup>
                 <Field name="identifier">
-                  <Label>CPF</Label>
+                  <Label>Email, Documento ou Celular</Label>
                   <Input />
                   <ErrorMessage />
                 </Field>
@@ -75,7 +77,8 @@ export default function LoginPage() {
                   <ErrorMessage />
                 </Field>
               </FieldGroup>
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex items-center justify-between">
+                <Text className="underline">Esqueceu a senha?</Text>
                 <Button type="submit" color="lime">
                   <span className="px-4">Login</span>
                 </Button>
