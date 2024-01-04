@@ -41,6 +41,7 @@ export async function login(request: LoginDto) {
       message: "Usuário logado com sucesso!",
     });
   } catch (error) {
+    console.log(error);
     return ActionResponse.error(error);
   }
 }

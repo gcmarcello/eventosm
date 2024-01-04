@@ -26,6 +26,7 @@ import { Text } from "../_shared/components/Text";
 import { Input } from "../_shared/components/Form/Input";
 import { Logo } from "../_shared/components/Logo";
 import { Button } from "../_shared/components/Button";
+import { Link } from "../_shared/components/Link";
 
 const Field = createField({
   zodObject: loginDto,
@@ -52,17 +53,18 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="grid grid-cols-1 py-20 lg:grid-cols-4">
-      <div className="col-span-full lg:col-span-2 lg:col-start-2">
+    <div className="grid grid-cols-1 py-20 lg:grid-cols-6">
+      <div className="col-span-full lg:col-span-2 lg:col-start-3">
         <Container className="mx-4 mb-20 mt-4 lg:col-start-2 lg:mb-10">
           <Form
             hform={form}
             onSubmit={(data) => loginTrigger(data)}
             className="px-4 py-4 lg:pb-4"
           >
-            <div className="flex flex-col items-center justify-center gap-4 py-6">
-              <Logo />
-              <span className="text-2xl text-zinc-500 dark:text-zinc-400">EventoSM</span>
+            <div className="mb-6 flex gap-4">
+              <span className="text-base/6 font-semibold text-zinc-950 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-white">
+                Login - EventoSM
+              </span>
             </div>
             <Fieldset>
               <FieldGroup>
@@ -77,11 +79,20 @@ export default function LoginPage() {
                   <ErrorMessage />
                 </Field>
               </FieldGroup>
-              <div className="mt-4 flex items-center justify-between">
-                <Text className="underline">Esqueceu a senha?</Text>
-                <Button type="submit" color="lime">
+
+              <Text className="underline">Esqueceu a senha?</Text>
+              <div className="my-4 flex">
+                <Button type="submit" color="lime" className="w-full">
                   <span className="px-4">Login</span>
                 </Button>
+              </div>
+              <div className="mt-4 flex items-center justify-center">
+                <Text>
+                  Ainda não tem uma conta?{" "}
+                  <Link href="/registrar" className="text-lime-300 underline">
+                    Cadastre-se
+                  </Link>
+                </Text>
               </div>
             </Fieldset>
           </Form>

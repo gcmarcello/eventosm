@@ -9,14 +9,13 @@ export async function middleware(request: NextRequest) {
 
   const token = request.cookies.get("token")?.value;
 
-  if (startsWith("/login")) {
+  if (startsWith("/login") || startsWith("/registrar")) {
     const isAuthenticated = await AuthMiddleware({
       request: { token },
       additionalArguments: { roles: ["user"] },
     });
 
-    if (isAuthenticated)
-      return NextResponse.redirect(new URL("/painel", request.nextUrl).href);
+    if (isAuthenticated) return NextResponse.redirect(new URL("/", request.nextUrl).href);
   }
 
   if (startsWith("/admin")) {
@@ -27,5 +26,32 @@ export async function middleware(request: NextRequest) {
 
     if (!isAuthenticated)
       return NextResponse.redirect(new URL("/painel", request.nextUrl).href);
+  }
+
+  if (startsWith("/painel")) {
+    const isAuthenticated = await AuthMiddleware({
+      request: { token },
+      additionalArguments: { roles: ["user"] },
+    });
+
+    if (!isAuthenticated)
+      return NextResponse.redirect(new URL("/login", request.nextUrl).href);
+  }
+
+  if (/^\/[^\/.]+[^.]$/.test(request.nextUrl.pathname)) {
+    const userId = await AuthMiddleware({
+      request: { token },
+      additionalArguments: { roles: ["user"] },
+    });
+
+    const requestHeaders = new Headers(request.headers);
+
+    requestHeaders.set("userId", userId);
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 }

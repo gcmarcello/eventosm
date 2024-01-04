@@ -35,7 +35,10 @@ export async function AuthMiddleware({
     if (!user) return false;
 
     const isAuthenticated = [...roles, "admin"].includes(user.role);
-    return isAuthenticated;
+
+    if (!isAuthenticated) return false;
+
+    return user.id;
   } catch (error) {
     console.log(error);
     return false;

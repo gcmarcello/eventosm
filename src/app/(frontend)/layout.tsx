@@ -4,6 +4,8 @@ import "./globals.css";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { cookies } from "next/headers";
+import PanelNavbar from "./_shared/components/MainNavbar";
+import MainNavbar from "./_shared/components/MainNavbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,9 +17,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = cookies();
   const theme = cookieStore.get("theme");
+
   return (
     <html data-theme={theme?.value} lang="en">
       <body className={clsx(inter.className, "bg-white dark:bg-zinc-800")}>
+        <MainNavbar />
         {children}
         <Toaster position="bottom-right" />
       </body>

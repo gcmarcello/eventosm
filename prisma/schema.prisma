@@ -51,16 +51,19 @@ model UserInfo {
 }
 
 model Organization {
-  id        String    @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  name      String
-  email     String    @unique
-  phone     String?   @unique
-  owner     User      @relation(fields: [ownerId], references: [id])
-  ownerId   String    @db.Uuid
-  slug      String    @unique
-  domain    String?   @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  id         String       @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name       String
+  email      String       @unique
+  phone      String?      @unique
+  owner      User         @relation(fields: [ownerId], references: [id])
+  ownerId    String       @db.Uuid
+  document   String?      @unique
+  slug       String       @unique
+  domain     String?      @unique
+  Event      Event[]
+  EventGroup EventGroup[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
 
   @@schema("public")
 }
@@ -84,6 +87,8 @@ model EventGroup {
   updatedAt        DateTime?      @updatedAt
   Event            Event[]
   eventGroupTypeId String         @db.Uuid
+  Organization     Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId   String?        @db.Uuid
 
   @@schema("public")
 }
@@ -179,6 +184,8 @@ model Event {
   updatedAt              DateTime?                @updatedAt
   EventModality          EventModality[]
   EventRegistrationBatch EventRegistrationBatch[]
+  Organization           Organization?            @relation(fields: [organizationId], references: [id])
+  organizationId         String?                  @db.Uuid
 
   @@schema("public")
 }

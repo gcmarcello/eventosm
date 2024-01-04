@@ -4,10 +4,12 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
-import { Button } from "../../_shared/components/Button";
+import { Button } from "./Button";
 import { logout } from "@/app/api/auth/action";
-import { useAction } from "../../_shared/hooks/useAction";
-import { showToast } from "../../_shared/components/Toast";
+import { useAction } from "../hooks/useAction";
+import { showToast } from "./Toast";
+import { TicketIcon } from "@heroicons/react/24/solid";
+import { usePathname } from "next/navigation";
 
 const user = {
   name: "Tom Cook",
@@ -19,7 +21,6 @@ const navigation = [
   { name: "Início", href: "#", current: true },
   { name: "Eventos", href: "#", current: false },
   { name: "Organizações", href: "#", current: false },
-  { name: "Relatórios", href: "#", current: false },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -27,7 +28,8 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-export default function PanelNavbar() {
+export default function MainNavbar() {
+  const pathname = usePathname();
   const { trigger: logoutTrigger, isMutating: isLoading } = useAction({
     action: logout,
     redirect: true,
@@ -39,6 +41,9 @@ export default function PanelNavbar() {
         title: "Sucesso!",
       }),
   });
+
+  if (pathname === "/login" || pathname === "/registrar" || pathname.includes("painel"))
+    return null;
 
   return (
     <Disclosure as="nav" className="border-b border-zinc-600 bg-zinc-800 shadow">
@@ -87,8 +92,8 @@ export default function PanelNavbar() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <Button>
-                    <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                    New Job
+                    <TicketIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                    Inscrições
                   </Button>
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">

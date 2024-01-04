@@ -8,7 +8,10 @@ export async function GET(request: Request, response: NextResponse) {
 
     if (!token) throw "Token não encontrado.";
 
-    const user = await prisma.user.findFirst({ where: { id: token } });
+    const user = await prisma.user.findFirst({
+      where: { id: token },
+      select: { id: true, role: true },
+    });
 
     return NextResponse.json(user);
   } catch (error) {
