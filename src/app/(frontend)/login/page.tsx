@@ -40,8 +40,7 @@ export default function LoginPage() {
 
   const { trigger: loginTrigger, isMutating: isLoading } = useAction({
     action: login as any,
-    onSuccess: (data) =>
-      showToast({ message: "Logado com sucesso", variant: "success", title: "Sucesso!" }),
+    redirect: true,
     onError: (error) => {
       form.resetField("password");
       showToast({ message: error, variant: "error", title: "Erro" });

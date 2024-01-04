@@ -36,14 +36,13 @@ export async function login(request: LoginDto) {
   try {
     const login = await service.login(request);
     cookies().set("token", login);
-    return ActionResponse.success({
-      data: login,
-      message: "Usuário logado com sucesso!",
-    });
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
+  return ActionResponse.success({
+    redirect: "/",
+  });
 }
 
 export async function logout() {
@@ -54,6 +53,6 @@ export async function logout() {
     return ActionResponse.error(error);
   }
   return ActionResponse.success({
-    redirect: "/",
+    redirect: "/login",
   });
 }

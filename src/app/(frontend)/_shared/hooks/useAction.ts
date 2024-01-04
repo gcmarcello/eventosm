@@ -41,7 +41,6 @@ export function useAction<
     arg: ArgumentType
   ): FetcherResponse<SuccessResponse<ParserReturnType>> => {
     const formattedArg = formatter ? formatter(arg) : arg;
-    console.log(formattedArg);
 
     return action(formattedArg)
       .then((res) => {
