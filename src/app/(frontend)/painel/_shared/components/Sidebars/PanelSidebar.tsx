@@ -138,7 +138,7 @@ export default function PanelSideBar() {
                     )}
                   >
                     <div className="my-2 flex h-16 shrink-0 items-center">
-                      <Logo />
+                      <Logo className="rounded-lg" url={organization.options?.logo} />
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -198,13 +198,14 @@ export default function PanelSideBar() {
         </Transition.Root>
         <div className="hidden lg:flex lg:h-screen lg:w-64 lg:flex-col">
           <div
+            style={{ backgroundColor: organization?.options?.primaryColor }}
             className={clsx(
-              "bg-zinc-700",
+              !organization?.options?.primaryColor && "bg-zinc-700",
               `fixed flex h-full w-64  grow flex-col gap-y-1 overflow-y-hidden px-6 pb-4`
             )}
           >
             <div className="my-2 flex h-16 shrink-0 items-center">
-              <Logo url={organization.options?.logo} />
+              <Logo className="rounded-lg" url={organization.options?.logo} />
             </div>
 
             <nav className="mt-2 flex flex-1 flex-col">

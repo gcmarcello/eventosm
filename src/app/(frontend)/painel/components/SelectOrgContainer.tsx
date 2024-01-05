@@ -10,11 +10,12 @@ import { changeActiveOrganization } from "@/app/api/orgs/action";
 import { useAction } from "../../_shared/hooks/useAction";
 import { showToast } from "../../_shared/components/Toast";
 import { BottomNavigation } from "../../_shared/components/BottomNavigation";
+import { OrganizationWithOptions } from "prisma/types/Organization";
 
 export default function SelectOrgContainer({
   organizations,
 }: {
-  organizations: Organization[];
+  organizations: OrganizationWithOptions[];
 }) {
   const { trigger: changeOrgTrigger, isMutating: isLoading } = useAction({
     action: changeActiveOrganization,
@@ -38,7 +39,7 @@ export default function SelectOrgContainer({
               className="flex flex-col items-center justify-center gap-4 p-6 "
             >
               <Avatar
-                src={""}
+                src={org.options?.logo}
                 className="size-32  text-lime-400 shadow-lg"
                 initials={org.name[0]}
               />

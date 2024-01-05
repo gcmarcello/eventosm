@@ -32,6 +32,14 @@ export const upsertOrganizationDto = z.object({
         path: ["value"],
       }
     ) @todo Validador de CNPJ */ domain: z.string().optional(),
+  options: z
+    .object({
+      logo: z.string().optional(),
+      abbreviation: z.string().optional(),
+      primaryColor: z.string().optional(),
+      secondaryColor: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type UpsertOrganizationDto = z.infer<typeof upsertOrganizationDto>;
