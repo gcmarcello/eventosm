@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html data-theme={theme?.value} lang="en">
       <body className={clsx(inter.className, "bg-white dark:bg-zinc-800")}>
         <MainNavbar />
-        {children}
+        <main>{children}</main>
         <Toaster position="bottom-right" />
       </body>
     </html>

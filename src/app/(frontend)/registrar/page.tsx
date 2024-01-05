@@ -119,8 +119,8 @@ export default function RegistrarPage() {
       gender: "male",
       zipCode: fakerPT_BR.location.zipCode(),
       address: fakerPT_BR.location.streetAddress(),
-      cityId: "772ebbe0-3a0c-4f0c-b27a-f3597421aea0",
-      stateId: "3689b40d-5422-4032-8de0-9d3b7617cc20",
+      cityId: "b1209a53-d316-45c7-86ce-8345a8a8b4e2",
+      stateId: "0d52ea34-7b15-4d07-9820-25a16cf7f299",
       number: fakerPT_BR.location.buildingNumber(),
       complement: fakerPT_BR.location.secondaryAddress(),
     };

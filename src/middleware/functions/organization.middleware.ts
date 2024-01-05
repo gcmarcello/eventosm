@@ -6,7 +6,7 @@ import { UserSessionMiddlewareReturnType } from "./userSession.middleware";
 export async function CampaignLeaderMiddleware<T>({
   request,
 }: UserSessionMiddlewareReturnType<T>) {
-  const campaignId = cookies().get("activeCampaign")!.value;
+  const activeOrg = cookies().get("activeOrg")?.value;
 
   const supporter = await prisma.supporter.findFirst({
     where: {

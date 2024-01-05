@@ -38,20 +38,18 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.nextUrl).href);
   }
 
-  if (/^\/[^\/.]+[^.]$/.test(request.nextUrl.pathname)) {
-    const userId = await AuthMiddleware({
-      request: { token },
-      additionalArguments: { roles: ["user"] },
-    });
+  const userId = await AuthMiddleware({
+    request: { token },
+    additionalArguments: { roles: ["user"] },
+  });
 
-    const requestHeaders = new Headers(request.headers);
+  const requestHeaders = new Headers(request.headers);
 
-    requestHeaders.set("userId", userId);
+  requestHeaders.set("userId", userId);
 
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  }
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }

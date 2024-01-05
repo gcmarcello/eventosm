@@ -44,16 +44,17 @@ export function useAction<
 
     return action(formattedArg)
       .then((res) => {
-        if (redirect)
+        if (res && "error" in res) {
+          throw res.message;
+        }
+        if (redirect) {
           return {
             data: null as ParserReturnType,
             message: `Redirecionando...`,
           };
+        }
         if (!res) {
           throw "Resposta indefinida.";
-        }
-        if ("error" in res) {
-          throw res.message;
         }
         if (!res.data) {
           throw "Resposta sem dados.";

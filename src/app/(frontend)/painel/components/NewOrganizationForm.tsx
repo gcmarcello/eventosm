@@ -1,36 +1,61 @@
 "use client";
-import { useForm } from "react-hook-form";
-import { Container } from "../../_shared/components/Containers";
+import { Button } from "@/app/(frontend)/_shared/components/Button";
+import { Container } from "@/app/(frontend)/_shared/components/Containers";
 import {
-  Description,
-  ErrorMessage,
   FieldGroup,
-  Fieldset,
-  Form,
-  Label,
-  Legend,
+  ErrorMessage,
   createField,
-} from "../../_shared/components/Form/Form";
-import { Text } from "../../_shared/components/Text";
-import { createOrganizationDto } from "@/app/api/orgs/dto";
-import { Input } from "../../_shared/components/Form/Input";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
+  Form,
+  Fieldset,
+  Legend,
+  Label,
+  Description,
+} from "@/app/(frontend)/_shared/components/Form/Form";
+import { Input } from "@/app/(frontend)/_shared/components/Form/Input";
+import { Text } from "@/app/(frontend)/_shared/components/Text";
+import { showToast } from "@/app/(frontend)/_shared/components/Toast";
+import { useAction } from "@/app/(frontend)/_shared/hooks/useAction";
+import { createOrganization } from "@/app/api/orgs/action";
+import { CreateOrganizationDto, createOrganizationDto } from "@/app/api/orgs/dto";
+import { formatPhone } from "@/utils/format";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UserWithoutPassword } from "prisma/types/User";
+import { useForm } from "react-hook-form";
 
 const Field = createField({ zodObject: createOrganizationDto, enableAsterisk: true });
 
-export default function NewOrganizationPage() {
-  const form = useForm({
+export default function NewOrganizationForm({ user }: { user: UserWithoutPassword }) {
+  const form = useForm<CreateOrganizationDto>({
     mode: "onChange",
     resolver: zodResolver(createOrganizationDto),
+    defaultValues: {
+      document: "",
+      email: user?.email || "",
+      name: "",
+      phone: user?.phone ? formatPhone(user?.phone) : "",
+    },
   });
+
+  const { trigger: newOrgTrigger, isMutating: isLoading } = useAction({
+    action: createOrganization,
+    redirect: true,
+    onError: (error) => {
+      showToast({ message: error, variant: "error", title: "Erro" });
+      /* form.setError("root.serverError", {
+        type: "400",
+        message: (error as string) || "Erro inesperado",
+      }); */
+    },
+  });
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4">
       <div className="col-span-full lg:col-span-2 lg:col-start-2">
         <Container className="mx-4 mb-20 mt-4 lg:col-start-2 lg:mb-10">
           <Form
             hform={form}
-            onSubmit={(data) => console.log(data)}
+            onSubmit={(data) => newOrgTrigger(data)}
             className="px-4 py-4 lg:pb-4"
           >
             <Fieldset>
@@ -74,12 +99,24 @@ export default function NewOrganizationPage() {
                   <Label>Link do perfil</Label>
                   <Input />
                   <Description className="flex gap-1">
-                    Apenas letras minúsculas, números e hífens.
+                    Letras minúsculas, números e hífens.
                   </Description>
+                  <Text className="text-wrap italic">
+                    {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
+                    {form.watch("slug") || "exemplo"}
+                  </Text>
                   <ErrorMessage />
                 </Field>
               </FieldGroup>
             </Fieldset>
+            <Button
+              disabled={!form.formState.isValid}
+              type="submit"
+              color="lime"
+              className="mt-6 w-full"
+            >
+              <span className="px-4">Criar Organização</span>
+            </Button>
           </Form>
         </Container>
       </div>

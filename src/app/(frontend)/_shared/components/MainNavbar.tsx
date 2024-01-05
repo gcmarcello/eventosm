@@ -42,7 +42,12 @@ export default function MainNavbar() {
       }),
   });
 
-  if (pathname === "/login" || pathname === "/registrar" || pathname.includes("painel"))
+  if (
+    pathname === "/login" ||
+    pathname === "/registrar" ||
+    pathname.includes("painel") ||
+    pathname.includes("novaorg")
+  )
     return null;
 
   return (
@@ -91,9 +96,9 @@ export default function MainNavbar() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Button>
+                  <Button href="/painel">
                     <TicketIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                    Inscrições
+                    Painel
                   </Button>
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">

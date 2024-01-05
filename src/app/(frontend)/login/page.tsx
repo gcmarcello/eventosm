@@ -39,7 +39,7 @@ export default function LoginPage() {
   });
 
   const { trigger: loginTrigger, isMutating: isLoading } = useAction({
-    action: login as any,
+    action: login,
     redirect: true,
     onError: (error) => {
       form.resetField("password");
@@ -88,7 +88,7 @@ export default function LoginPage() {
               <div className="mt-4 flex items-center justify-center">
                 <Text>
                   Ainda não tem uma conta?{" "}
-                  <Link href="/registrar" className="text-lime-300 underline">
+                  <Link href="/registrar" className="underline dark:text-lime-300">
                     Cadastre-se
                   </Link>
                 </Text>

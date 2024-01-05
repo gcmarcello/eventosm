@@ -3,23 +3,25 @@ import { z } from "zod";
 import { readDto } from "../_shared/dto/read";
 
 export const createOrganizationDto = z.object({
-  name: z.string().min(3).max(100),
-  email: z.string().email(),
-  slug: z.custom((data: any) => {
-    return (
-      /^[a-z0-9]+(-[a-z0-9]+)*$/.test(data) &&
-      !data?.startsWith("-") &&
-      !data?.endsWith("-")
-    );
-  }),
+  name: z.string().min(3, { message: "Nome deve ter mais de 3 caracteres." }).max(100),
+  email: z.string().min(3).email({ message: "Email Inválido" }),
+  slug: z.custom(
+    (data: any) => {
+      return (
+        /^[a-z0-9]+(-[a-z0-9]+)*$/.test(data) &&
+        !data?.startsWith("-") &&
+        !data?.endsWith("-") &&
+        (data as string)?.length >= 3
+      );
+    },
+    { message: "Link inválido" }
+  ),
   phone: z
     .string()
     .min(14, { message: "Telefone Inválido" })
     .max(15, { message: "Telefone inválido" }),
-  document: z
-    .string()
-    .optional()
-    .refine(
+  document: z.string().optional().nullable(),
+  /* .refine(
       (data) => {
         if (!data) return true;
         const isCpfValid = cpfValidator(data);
@@ -29,8 +31,7 @@ export const createOrganizationDto = z.object({
         message: "CPF inválido",
         path: ["value"],
       }
-    ),
-  domain: z.string().optional(),
+    ) */ domain: z.string().optional(),
 });
 
 export type CreateOrganizationDto = z.infer<typeof createOrganizationDto>;

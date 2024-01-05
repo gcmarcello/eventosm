@@ -53,13 +53,14 @@ model UserInfo {
 model Organization {
   id         String       @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   name       String
-  email      String       @unique
-  phone      String?      @unique
+  email      String
+  phone      String?
   owner      User         @relation(fields: [ownerId], references: [id])
   ownerId    String       @db.Uuid
   document   String?      @unique
   slug       String       @unique
   domain     String?      @unique
+  options    Json?        @db.JsonB
   Event      Event[]
   EventGroup EventGroup[]
   createdAt  DateTime     @default(now())
