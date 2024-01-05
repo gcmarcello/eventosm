@@ -13,7 +13,7 @@ import { getPageName } from "../../utils/pageName";
 import ProfileDropdown from "@/app/(frontend)/_shared/components/ProfileDropdown";
 
 export function SupporterTopBar() {
-  const { user } = useSidebar();
+  const { user, organization, setVisibility } = useSidebar();
   const pathname = usePathname();
 
   return (
@@ -21,12 +21,12 @@ export function SupporterTopBar() {
       <button
         type="button"
         className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-        /* onClick={() =>
+        onClick={() =>
           setVisibility((prev) => ({
             ...prev,
             panelSidebar: true,
           }))
-        } */
+        }
       >
         <span className="sr-only">Open sidebar</span>
         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -37,8 +37,10 @@ export function SupporterTopBar() {
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <div className="flex min-w-0 flex-1 pt-[1.65rem] md:pt-5">
           <h2 className="flex text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            <span className="block md:hidden">{getPageName(pathname, true)}</span>
-            <span className="hidden md:block">{getPageName(pathname)}</span>
+            <span>
+              {organization.options?.abbreviation || organization.name} - Painel de
+              Controle
+            </span>
           </h2>
         </div>
         <div className="flex items-center gap-x-4 lg:gap-x-6">

@@ -13,6 +13,7 @@ export async function createOrganization(request: CreateOrganizationDto) {
     const { request: parsedRequest } =
       await UseMiddlewares(request).then(UserSessionMiddleware);
     organization = await service.createOrganization(parsedRequest);
+    cookies().set("activeOrg", organization.id);
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);

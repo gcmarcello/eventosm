@@ -40,6 +40,12 @@ export default function NewOrganizationForm({ user }: { user: UserWithoutPasswor
   const { trigger: newOrgTrigger, isMutating: isLoading } = useAction({
     action: createOrganization,
     redirect: true,
+    onSuccess: () =>
+      showToast({
+        message: "Organização criada com sucesso.",
+        variant: "success",
+        title: "Sucesso!",
+      }),
     onError: (error) => {
       showToast({ message: error, variant: "error", title: "Erro" });
       /* form.setError("root.serverError", {

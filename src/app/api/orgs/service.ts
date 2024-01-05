@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { CreateOrganizationDto, ReadOrganizationDto } from "./dto";
 import { prisma } from "prisma/prisma";
+import { OrganizationWithOptions } from "prisma/types/Organization";
 
 export async function createOrganization(
   request: CreateOrganizationDto & { userSession: UserSession }
@@ -28,7 +29,7 @@ export async function createOrganization(
 }
 
 export async function readOrganizations(request: ReadOrganizationDto) {
-  return await prisma.organization.findMany({
+  return (await prisma.organization.findMany({
     where: request.where,
-  });
+  })) as OrganizationWithOptions[];
 }

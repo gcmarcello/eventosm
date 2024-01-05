@@ -43,7 +43,12 @@ export default async function PanelLayout({ children }: { children: React.ReactN
 
   return (
     <>
-      {organization && <PanelSidebarsLayout user={data?.request.userSession} />}
+      {organization && (
+        <PanelSidebarsLayout
+          user={data?.request.userSession}
+          organization={organization}
+        />
+      )}
       <div className={clsx(inter.className)}>{children}</div>
     </>
   );
