@@ -1,31 +1,38 @@
 import { PrismaClient } from "@prisma/client";
-import { states } from "../geo/states";
-import { cities } from "../geo/cities";
 const prisma = new PrismaClient();
 
 async function main() {
-  for (const state of states.data) {
+  const cities = await fetch(
+    "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
+  ).then((res) => res.json());
+
+  const states = await fetch(
+    "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+  ).then((res) => res.json());
+
+  for (const state of states) {
     await prisma.state.upsert({
-      where: { code: String(state.CodigoUf) },
+      where: { id: state.id },
       update: {},
       create: {
-        name: state.Nome,
-        abbreviation: state.Uf,
-        code: String(state.CodigoUf),
+        id: state.id,
+        name: state.nome,
+        uf: state.sigla,
       },
     });
   }
 
-  for (const city of cities.data) {
+  for (const city of cities) {
+    const stateId = city.microrregiao.mesorregiao.UF.id;
     await prisma.city.upsert({
-      where: { code: String(city.Codigo) },
+      where: { id: city.id },
       update: {},
       create: {
-        name: city.Nome,
-        code: String(city.Codigo),
+        id: city.id,
+        name: city.nome,
         state: {
           connect: {
-            abbreviation: String(city.Uf),
+            id: stateId,
           },
         },
       },

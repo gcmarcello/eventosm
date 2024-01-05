@@ -38,9 +38,9 @@ model UserInfo {
   gender     String?
   zipCode    String
   state      State     @relation(fields: [stateId], references: [id])
-  stateId    String    @db.Uuid
+  stateId    Int
   city       City      @relation(fields: [cityId], references: [id])
-  cityId     String    @db.Uuid
+  cityId     Int
   address    String
   number     String
   complement String?
@@ -206,23 +206,22 @@ model EventRegistration {
   @@schema("public")
 }
 
+
 model State {
-  id           String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  code         String     @unique @db.VarChar
-  abbreviation String     @unique @db.VarChar
-  name         String     @unique @db.VarChar
-  UserInfo     UserInfo[]
-  City         City[]
+  id       Int        @id
+  uf       String     @unique @db.VarChar
+  name     String     @unique @db.VarChar
+  UserInfo UserInfo[]
+  City     City[]
 
   @@schema("geo")
 }
 
 model City {
-  id       String     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  id       Int        @id
   name     String     @db.VarChar
-  code     String     @unique @db.VarChar
   state    State      @relation(fields: [stateId], references: [id])
-  stateId  String     @db.Uuid
+  stateId  Int
   UserInfo UserInfo[]
 
   @@schema("geo")
