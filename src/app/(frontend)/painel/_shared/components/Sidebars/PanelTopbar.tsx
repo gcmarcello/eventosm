@@ -37,9 +37,12 @@ export function SupporterTopBar() {
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <div className="flex min-w-0 flex-1 pt-[1.65rem] md:pt-5">
           <h2 className="flex text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            <span>
+            <span className="hidden md:block">
               {organization.options?.abbreviation || organization.name} - Painel de
               Controle
+            </span>
+            <span className="block md:hidden">
+              {organization.options?.abbreviation || "Painel"}
             </span>
           </h2>
         </div>

@@ -2,7 +2,7 @@ import { cpfValidator } from "@/utils/validators/cpf.validator";
 import { z } from "zod";
 import { readDto } from "../_shared/dto/read";
 
-export const createOrganizationDto = z.object({
+export const upsertOrganizationDto = z.object({
   name: z.string().min(3, { message: "Nome deve ter mais de 3 caracteres." }).max(100),
   email: z.string().min(3).email({ message: "Email Inválido" }),
   slug: z.custom(
@@ -31,10 +31,10 @@ export const createOrganizationDto = z.object({
         message: "CPF inválido",
         path: ["value"],
       }
-    ) */ domain: z.string().optional(),
+    ) @todo Validador de CNPJ */ domain: z.string().optional(),
 });
 
-export type CreateOrganizationDto = z.infer<typeof createOrganizationDto>;
+export type UpsertOrganizationDto = z.infer<typeof upsertOrganizationDto>;
 
 const readOrganizationDto = readDto(
   z.object({

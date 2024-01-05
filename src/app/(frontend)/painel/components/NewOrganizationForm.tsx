@@ -16,19 +16,19 @@ import { Text } from "@/app/(frontend)/_shared/components/Text";
 import { showToast } from "@/app/(frontend)/_shared/components/Toast";
 import { useAction } from "@/app/(frontend)/_shared/hooks/useAction";
 import { createOrganization } from "@/app/api/orgs/action";
-import { CreateOrganizationDto, createOrganizationDto } from "@/app/api/orgs/dto";
+import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
 import { formatPhone } from "@/utils/format";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithoutPassword } from "prisma/types/User";
 import { useForm } from "react-hook-form";
 
-const Field = createField({ zodObject: createOrganizationDto, enableAsterisk: true });
+const Field = createField({ zodObject: upsertOrganizationDto, enableAsterisk: true });
 
 export default function NewOrganizationForm({ user }: { user: UserWithoutPassword }) {
-  const form = useForm<CreateOrganizationDto>({
+  const form = useForm<UpsertOrganizationDto>({
     mode: "onChange",
-    resolver: zodResolver(createOrganizationDto),
+    resolver: zodResolver(upsertOrganizationDto),
     defaultValues: {
       document: "",
       email: user?.email || "",

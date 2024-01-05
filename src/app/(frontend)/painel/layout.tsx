@@ -49,7 +49,9 @@ export default async function PanelLayout({ children }: { children: React.ReactN
           organization={organization}
         />
       )}
-      <div className={clsx(inter.className)}>{children}</div>
+      <div className={clsx("h-[calc(100vh-80px-30px)] p-4 lg:ml-64 lg:p-8")}>
+        {children}
+      </div>
     </>
   );
 }

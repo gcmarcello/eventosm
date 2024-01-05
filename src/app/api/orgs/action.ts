@@ -1,13 +1,13 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { ActionResponse } from "../_shared/utils/ActionResponse";
-import { CreateOrganizationDto } from "./dto";
+import { UpsertOrganizationDto } from "./dto";
 import * as service from "./service";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-export async function createOrganization(request: CreateOrganizationDto) {
+export async function createOrganization(request: UpsertOrganizationDto) {
   let organization;
   try {
     const { request: parsedRequest } =

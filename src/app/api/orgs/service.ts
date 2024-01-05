@@ -1,10 +1,10 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { CreateOrganizationDto, ReadOrganizationDto } from "./dto";
+import { UpsertOrganizationDto, ReadOrganizationDto } from "./dto";
 import { prisma } from "prisma/prisma";
 import { OrganizationWithOptions } from "prisma/types/Organization";
 
 export async function createOrganization(
-  request: CreateOrganizationDto & { userSession: UserSession }
+  request: UpsertOrganizationDto & { userSession: UserSession }
 ) {
   const existingSlug = await prisma.organization.findFirst({
     where: { slug: request.slug },
