@@ -1,16 +1,11 @@
 "use client";
-import { Button } from "@/app/(frontend)/_shared/components/Button";
-import { Container } from "@/app/(frontend)/_shared/components/Containers";
-import { Text } from "@/app/(frontend)/_shared/components/Text";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Organization } from "@prisma/client";
-import { Avatar } from "../../_shared/components/Avatar";
 import { changeActiveOrganization } from "@/app/api/orgs/action";
-import { useAction } from "../../_shared/hooks/useAction";
-import { showToast } from "../../_shared/components/Toast";
-import { BottomNavigation } from "../../_shared/components/BottomNavigation";
 import { OrganizationWithOptions } from "prisma/types/Organization";
+import { Avatar, Button, Container, Text, showToast, useAction } from "odinkit";
+import { BottomNavigation } from "../../_shared/components/BottomNavigation";
 
 export default function SelectOrgContainer({
   organizations,

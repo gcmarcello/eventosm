@@ -1,21 +1,18 @@
 "use client";
-import { SignupDto, signupDto } from "@/app/api/auth/dto";
+import { signupDto } from "@/app/api/auth/dto";
+import { Text } from "../../../../packages/odinkit/components/Text";
+import { useFormContext } from "react-hook-form";
 import {
+  createField,
   FieldGroup,
   ErrorMessage,
-  Fieldset,
   Legend,
-  Label,
   Description,
-  Form,
-} from "../../_shared/components/Form/Form";
-import { createField } from "../../_shared/components/Form/Form";
-import { Input } from "../../_shared/components/Form/Input";
-import { Text } from "../../_shared/components/Text";
-import { useFormContext } from "react-hook-form";
-import { useState } from "react";
-import { Button, Switch } from "@headlessui/react";
-import { Link } from "../../_shared/components/Link";
+  Fieldset,
+  Input,
+  Label,
+  Switch,
+} from "odinkit";
 
 const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 
@@ -86,22 +83,19 @@ export default function GeneralDetailsSection() {
                   resetField("step1.document.value");
                 }}
               >
-                {({ checked }) => {
-                  return (
-                    <Description>
-                      {checked ? (
-                        <>
-                          <span className="underline">Clique aqui</span> para usar seu
-                          CPF.
-                        </>
-                      ) : (
-                        <>
-                          Estrangeiro? <span className="underline">clique aqui!</span>
-                        </>
-                      )}
-                    </Description>
-                  );
-                }}
+                {({ checked }) => (
+                  <Description>
+                    {checked ? (
+                      <>
+                        <span className="underline">Clique aqui</span> para usar seu CPF.
+                      </>
+                    ) : (
+                      <>
+                        Estrangeiro? <span className="underline">clique aqui!</span>
+                      </>
+                    )}
+                  </Description>
+                )}
               </Switch>
             </Field>
           </div>

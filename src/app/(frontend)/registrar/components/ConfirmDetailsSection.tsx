@@ -1,7 +1,5 @@
+import { Strong, Text } from "odinkit";
 import { useFormContext } from "react-hook-form";
-
-import { Legend } from "../../_shared/components/Form/Form";
-import { Strong, Text } from "../../_shared/components/Text";
 
 export default function ConfirmDetailsSection() {
   const form = useFormContext();

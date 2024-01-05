@@ -1,18 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BottomNavigation } from "../_shared/components/BottomNavigation";
-import { Button } from "../_shared/components/Button";
-import { Container } from "../_shared/components/Containers";
 import GeneralDetailsSection from "./components/GeneralDetailsSection";
 import { Transition } from "@headlessui/react";
 import PersonalDetailSections from "./components/PersonalDetailsSection";
 import clsx from "clsx";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { SignupDto, signupDto } from "@/app/api/auth/dto";
-import { Form, createField } from "../_shared/components/Form/Form";
-import { BottomRightMocker, TopLeftMocker } from "../_shared/components/Mocker";
 import { fakerPT_BR } from "@faker-js/faker";
 import { cpfMock } from "@/utils/mock/cpfMock";
 import { verifyStep } from "./utils/steps";
@@ -20,10 +15,8 @@ import dayjs from "dayjs";
 import ConfirmDetailsSection from "./components/ConfirmDetailsSection";
 import { useSearchParams } from "next/navigation";
 import { signup } from "@/app/api/auth/action";
-import { useAction } from "../_shared/hooks/useAction";
-import { showToast } from "../_shared/components/Toast";
-import { readAddressFromZipCode } from "@/app/api/geo/service";
-import { Text } from "../_shared/components/Text";
+import { Button, Container, showToast, useAction } from "odinkit";
+import { BottomNavigation } from "../_shared/components/BottomNavigation";
 
 export default function RegistrarPage() {
   const [step, setStep] = useState(0);
@@ -203,7 +196,6 @@ export default function RegistrarPage() {
           </Form>
         </Container>
       </div>
-      <TopLeftMocker mockData={mockData} />
     </div>
   );
 }

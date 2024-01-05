@@ -1,5 +1,3 @@
-import { createField } from "../../_shared/components/Form/Form";
-
 export default async function CompanyHome({
   params,
 }: {

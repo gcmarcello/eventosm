@@ -1,0 +1,6 @@
+{
+  "_libuilder": {
+    "src": "./",
+    "index": "./index.ts"
+  }
+}

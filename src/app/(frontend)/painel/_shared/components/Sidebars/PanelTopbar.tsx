@@ -1,15 +1,9 @@
 "use client";
 
-import { Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon } from "@heroicons/react/24/solid";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import clsx from "clsx";
-import Image from "next/image";
-import { useState, Fragment } from "react";
 import { useSidebar } from "./lib/useSidebar";
-import { ButtonSpinner } from "@/app/(frontend)/_shared/components/Spinners";
 import { usePathname } from "next/navigation";
-import { getPageName } from "../../utils/pageName";
 import ProfileDropdown from "@/app/(frontend)/_shared/components/ProfileDropdown";
 
 export function SupporterTopBar() {

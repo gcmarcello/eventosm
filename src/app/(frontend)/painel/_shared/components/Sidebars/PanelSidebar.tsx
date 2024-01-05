@@ -1,35 +1,18 @@
 "use client";
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  MapIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  PlusCircleIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-  CalendarIcon,
-  ClipboardDocumentListIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { Cog6ToothIcon, HomeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
-import { User } from "@prisma/client";
 import { useSidebar } from "./lib/useSidebar";
 import Link from "next/link";
-import WhatsAppIcon from "@/app/(frontend)/_shared/components/icons/WhatsAppIcon";
-import Image from "next/image";
-import { Logo } from "@/app/(frontend)/_shared/components/Logo";
-import { For } from "@/app/(frontend)/_shared/components/For";
 import {
   CalendarDaysIcon,
   DocumentIcon,
   NewspaperIcon,
   PhotoIcon,
 } from "@heroicons/react/24/solid";
+import { For, Logo, WhatsAppIcon } from "odinkit";
 
 export default function PanelSideBar() {
   const { organization, visibility, setVisibility } = useSidebar();

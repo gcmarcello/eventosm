@@ -1,19 +1,19 @@
 import { SignupDto, signupDto } from "@/app/api/auth/dto";
-import {
-  FieldGroup,
-  ErrorMessage,
-  Fieldset,
-  Legend,
-  createField,
-  Label,
-} from "../../_shared/components/Form/Form";
-import { Input } from "../../_shared/components/Form/Input";
-import { Select } from "../../_shared/components/Form/Select";
-import { Text } from "../../_shared/components/Text";
-import { useAction } from "../../_shared/hooks/useAction";
+import { Text } from "../../../../packages/odinkit/components/Text";
+import { useAction } from "../../../../packages/odinkit/hooks/useAction";
 import { readAddressFromZipCode } from "@/app/api/geo/action";
-import { showToast } from "../../_shared/components/Toast";
+import { showToast } from "../../../../packages/odinkit/components/Toast";
 import { useFormContext } from "react-hook-form";
+import {
+  ErrorMessage,
+  FieldGroup,
+  Fieldset,
+  Input,
+  Label,
+  Legend,
+  Select,
+  createField,
+} from "odinkit";
 
 const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 

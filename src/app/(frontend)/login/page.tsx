@@ -1,32 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { Container } from "../_shared/components/Containers";
+import { Container } from "../../../packages/odinkit/components/Containers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { LoginDto, loginDto } from "@/app/api/auth/dto";
+
 import {
+  Button,
   ErrorMessage,
   FieldGroup,
   Fieldset,
-  Form,
+  Input,
   Label,
-  Legend,
+  Link,
+  Text,
   createField,
-} from "../_shared/components/Form/Form";
-import { BottomRightMocker, TopLeftMocker, mockData } from "../_shared/components/Mocker";
-import { fakerPT_BR } from "@faker-js/faker";
-import { cpfMock } from "@/utils/mock/cpfMock";
-import { useSearchParams } from "next/navigation";
-import { login, signup } from "@/app/api/auth/action";
-import { useAction } from "../_shared/hooks/useAction";
-import { showToast } from "../_shared/components/Toast";
-import { readAddressFromZipCode } from "@/app/api/geo/service";
-import { Text } from "../_shared/components/Text";
-import { Input } from "../_shared/components/Form/Input";
-import { Logo } from "../_shared/components/Logo";
-import { Button } from "../_shared/components/Button";
-import { Link } from "../_shared/components/Link";
+  showToast,
+  useAction,
+} from "odinkit";
+import { login } from "@/app/api/auth/action";
 
 const Field = createField({
   zodObject: loginDto,
@@ -96,11 +88,6 @@ export default function LoginPage() {
             </Fieldset>
           </Form>
         </Container>
-        <BottomRightMocker
-          mockData={() =>
-            mockData({ form, data: { identifier: "teste", password: "123456" } })
-          }
-        />
       </div>
     </div>
   );

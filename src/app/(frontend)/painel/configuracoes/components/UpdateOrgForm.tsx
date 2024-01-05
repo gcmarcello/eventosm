@@ -1,23 +1,22 @@
 "use client";
-import { Button } from "@/app/(frontend)/_shared/components/Button";
-import { Container } from "@/app/(frontend)/_shared/components/Containers";
+
+import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Text,
+  ColorInput,
   Description,
   ErrorMessage,
   FieldGroup,
   Fieldset,
-  Form,
+  Input,
   Label,
   Legend,
   createField,
-} from "@/app/(frontend)/_shared/components/Form/Form";
-import { ColorInput, Input } from "@/app/(frontend)/_shared/components/Form/Input";
-import { Text } from "@/app/(frontend)/_shared/components/Text";
-import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from "odinkit";
 import { OrganizationWithOptions } from "prisma/types/Organization";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 
 const Field = createField({ zodObject: upsertOrganizationDto, enableAsterisk: true });
 

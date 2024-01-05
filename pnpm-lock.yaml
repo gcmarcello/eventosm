@@ -11,6 +11,9 @@ dependencies:
   '@faker-js/faker':
     specifier: ^8.3.1
     version: 8.3.1
+  '@ferstack/libuilderjs':
+    specifier: 3.0.0
+    version: 3.0.0
   '@headlessui/react':
     specifier: 2.0.0-alpha.3
     version: 2.0.0-alpha.3(react-dom@18.2.0)(react@18.2.0)
@@ -766,6 +769,11 @@ packages:
   /@faker-js/faker@8.3.1:
     resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+    dev: false
+
+  /@ferstack/libuilderjs@3.0.0:
+    resolution: {integrity: sha512-w2kg+5XYOzu01f6A4uBH3TcDZFinYi3DpjUXXJZvCbNDyMQOX+4nKG6IsRDa/NNTLZ/z4O7FoJtpVk4ERpJkyw==}
+    hasBin: true
     dev: false
 
   /@floating-ui/core@1.5.2:
