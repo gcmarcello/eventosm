@@ -132,9 +132,10 @@ export default function PanelSideBar() {
                     </div>
                   </Transition.Child>
                   <div
+                    style={{ backgroundColor: organization?.options?.primaryColor }}
                     className={clsx(
-                      "bg-zinc-700",
-                      "fixed  flex h-full w-64 grow flex-col gap-y-5 overflow-y-auto  px-6 pb-4"
+                      !organization?.options?.primaryColor && "bg-zinc-700",
+                      "fixed flex h-full w-64 grow flex-col gap-y-5 overflow-y-auto px-6 py-4 pb-4"
                     )}
                   >
                     <div className="my-2 flex h-16 shrink-0 items-center">
@@ -201,7 +202,7 @@ export default function PanelSideBar() {
             style={{ backgroundColor: organization?.options?.primaryColor }}
             className={clsx(
               !organization?.options?.primaryColor && "bg-zinc-700",
-              `fixed flex h-full w-64  grow flex-col gap-y-1 overflow-y-hidden px-6 pb-4`
+              `fixed flex h-full w-64  grow flex-col gap-y-1 overflow-y-hidden px-6 py-4 pb-4`
             )}
           >
             <div className="my-2 flex h-16 shrink-0 items-center">

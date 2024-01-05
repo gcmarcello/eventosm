@@ -11,7 +11,7 @@ import {
   Legend,
   createField,
 } from "@/app/(frontend)/_shared/components/Form/Form";
-import { Input } from "@/app/(frontend)/_shared/components/Form/Input";
+import { ColorInput, Input } from "@/app/(frontend)/_shared/components/Form/Input";
 import { Text } from "@/app/(frontend)/_shared/components/Text";
 import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -37,6 +37,7 @@ export default function UpdateOrgForm({
       slug: organization.slug,
     },
   });
+
   return (
     <Form hform={form} onSubmit={(data) => console.log(data)} className="space-y-3">
       <Fieldset className=" rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4 dark:border-zinc-700 dark:bg-zinc-900">
@@ -94,9 +95,11 @@ export default function UpdateOrgForm({
         <FieldGroup className="grid grid-cols-2 gap-x-4 gap-y-4">
           <Field className="col-span-2 lg:col-span-1" name="options.abbreviation">
             <Label>Abreviação</Label>
-            <Input />
+            <Input placeholder="Ex: ESM para EventoSM" />
             <ErrorMessage />
-            <Description className="flex gap-1">Ex: ESM para EventoSM</Description>
+            <Description className="flex gap-1">
+              Usada em telas pequenas e locais diversos.
+            </Description>
           </Field>
           <Field className="col-span-2 lg:col-span-1 " name="document">
             <Label>CNPJ</Label>
@@ -106,9 +109,9 @@ export default function UpdateOrgForm({
             </Text>
             <ErrorMessage />
           </Field>
-          <Field className="col-span-2 lg:col-span-1" name="email">
-            <Label>Email da Organização</Label>
-            <Input />
+          <Field name="options.primaryColor">
+            <Label>Cor Principal</Label>
+            <ColorInput className="h-16 w-16" />
             <ErrorMessage />
           </Field>
         </FieldGroup>
