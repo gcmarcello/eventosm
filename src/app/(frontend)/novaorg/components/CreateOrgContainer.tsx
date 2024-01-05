@@ -25,7 +25,7 @@ export default function CreateOrgContainer() {
               notícias, calendário de eventos, e muito mais!)
             </Text>
 
-            <Button href="/painel/nova" color="lime">
+            <Button href="/novaorg" color="lime">
               <PlusIcon />
               Criar Organização
             </Button>

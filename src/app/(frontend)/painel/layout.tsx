@@ -34,7 +34,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   const activeOrg = cookies().get("activeOrg")?.value;
   const organization = organizations?.find((org) => org.id === activeOrg);
 
-  if (!organizations) return <CreateOrgContainer />;
+  if (!organizations || !organizations.length) return <CreateOrgContainer />;
 
   if (!activeOrg || !organizations.find((org) => org.id === activeOrg))
     return <SelectOrgContainer organizations={organizations} />;

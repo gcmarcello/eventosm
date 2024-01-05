@@ -6,6 +6,7 @@ import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { normalize, normalizeEmail, normalizePhone } from "@/utils/format";
+import { cookies } from "next/headers";
 dayjs.extend(customParseFormat);
 
 export async function signup(request: ParsedSignupDto) {
@@ -25,6 +26,8 @@ export async function signup(request: ParsedSignupDto) {
       },
     },
   });
+  const loginToken = await createToken({ id: newUser.id });
+  cookies().set("token", loginToken);
   return newUser;
 }
 

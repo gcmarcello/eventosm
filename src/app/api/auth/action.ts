@@ -14,7 +14,6 @@ export async function signup(request: SignupDto) {
     const { parsedRequest, eventRedirect: redirect } =
       await UseMiddlewares(request).then(SignupMiddleware);
     signup = await service.signup(parsedRequest);
-
     eventRedirect = redirect || undefined;
   } catch (error) {
     console.log(error);

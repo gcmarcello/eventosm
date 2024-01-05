@@ -8,7 +8,7 @@ import { Button } from "./Button";
 import { logout } from "@/app/api/auth/action";
 import { useAction } from "../hooks/useAction";
 import { showToast } from "./Toast";
-import { TicketIcon } from "@heroicons/react/24/solid";
+import { TicketIcon, WrenchIcon } from "@heroicons/react/24/solid";
 import { usePathname } from "next/navigation";
 
 const user = {
@@ -96,8 +96,8 @@ export default function MainNavbar() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Button href="/painel">
-                    <TicketIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+                  <Button color="lime" href="/painel">
+                    <WrenchIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                     Painel
                   </Button>
                 </div>
