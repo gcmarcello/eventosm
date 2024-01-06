@@ -1,4 +1,4 @@
-import { Strong, Text } from "odinkit";
+import { Strong, Text } from "odinkit/components/Text";
 import { useFormContext } from "react-hook-form";
 
 export default function ConfirmDetailsSection() {

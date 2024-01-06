@@ -4,8 +4,14 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { Organization } from "@prisma/client";
 import { changeActiveOrganization } from "@/app/api/orgs/action";
 import { OrganizationWithOptions } from "prisma/types/Organization";
-import { Avatar, Button, Container, Text, showToast, useAction } from "odinkit";
+
 import { BottomNavigation } from "../../_shared/components/BottomNavigation";
+import { useAction } from "odinkit/hooks/useAction";
+import { showToast } from "odinkit/components/Toast";
+import { Text } from "odinkit/components/Text";
+import { Container } from "odinkit/components/Containers";
+import { Avatar } from "odinkit/components/Avatar";
+import { Button } from "odinkit/components/Button";
 
 export default function SelectOrgContainer({
   organizations,

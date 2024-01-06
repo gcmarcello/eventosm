@@ -12,7 +12,9 @@ import {
   NewspaperIcon,
   PhotoIcon,
 } from "@heroicons/react/24/solid";
-import { For, Logo, WhatsAppIcon } from "odinkit";
+import { Logo } from "odinkit/components/Logo";
+import { For } from "odinkit/components/For";
+import { WhatsAppIcon } from "odinkit/icons/WhatsappIcon";
 
 export default function PanelSideBar() {
   const { organization, visibility, setVisibility } = useSidebar();

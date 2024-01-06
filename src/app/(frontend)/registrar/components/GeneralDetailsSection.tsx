@@ -3,16 +3,16 @@ import { signupDto } from "@/app/api/auth/dto";
 import { Text } from "../../../../packages/odinkit/components/Text";
 import { useFormContext } from "react-hook-form";
 import {
-  createField,
-  FieldGroup,
-  ErrorMessage,
-  Legend,
   Description,
+  ErrorMessage,
+  FieldGroup,
   Fieldset,
-  Input,
   Label,
-  Switch,
-} from "odinkit";
+  Legend,
+  createField,
+} from "odinkit/components/Form/Form";
+import { Input } from "odinkit/components/Form/Input";
+import { Switch } from "@headlessui/react";
 
 const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 

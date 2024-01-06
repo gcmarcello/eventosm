@@ -12,10 +12,10 @@ async function main() {
 
   for (const state of states) {
     await prisma.state.upsert({
-      where: { id: state.id },
+      where: { id: String(state.id) },
       update: {},
       create: {
-        id: state.id,
+        id: String(state.id),
         name: state.nome,
         uf: state.sigla,
       },
@@ -25,14 +25,14 @@ async function main() {
   for (const city of cities) {
     const stateId = city.microrregiao.mesorregiao.UF.id;
     await prisma.city.upsert({
-      where: { id: city.id },
+      where: { id: String(city.id) },
       update: {},
       create: {
-        id: city.id,
+        id: String(city.id),
         name: city.nome,
         state: {
           connect: {
-            id: stateId,
+            id: String(stateId),
           },
         },
       },

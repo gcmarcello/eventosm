@@ -5,15 +5,15 @@ import { readAddressFromZipCode } from "@/app/api/geo/action";
 import { showToast } from "../../../../packages/odinkit/components/Toast";
 import { useFormContext } from "react-hook-form";
 import {
-  ErrorMessage,
-  FieldGroup,
-  Fieldset,
-  Input,
-  Label,
-  Legend,
-  Select,
   createField,
-} from "odinkit";
+  FieldGroup,
+  ErrorMessage,
+  Fieldset,
+  Legend,
+  Label,
+} from "odinkit/components/Form/Form";
+import { Input } from "odinkit/components/Form/Input";
+import { Select } from "odinkit/components/Form/Select";
 
 const Field = createField({ zodObject: signupDto, enableAsterisk: true });
 
@@ -21,12 +21,12 @@ export default function PersonalDetailSections() {
   const form = useFormContext();
   const { trigger: findCep, isMutating: loadingCep } = useAction({
     action: readAddressFromZipCode,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       form.resetField("step2.info.number");
       form.resetField("step2.info.complement");
-      form.setValue("step2.info.address", data.data.address);
-      form.setValue("step2.info.cityId", data.data.city.name);
-      form.setValue("step2.info.stateId", data.data.state.name);
+      form.setValue("step2.info.address", data?.address);
+      form.setValue("step2.info.cityId", data?.city.name);
+      form.setValue("step2.info.stateId", data?.state.name);
       form.trigger();
     },
     onError: (error) => {

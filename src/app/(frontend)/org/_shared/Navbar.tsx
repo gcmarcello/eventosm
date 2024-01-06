@@ -3,7 +3,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { Logo, For } from "odinkit";
+import { For } from "odinkit/components/For";
+import { Logo } from "odinkit/components/Logo";
 
 const user = {
   name: "Tom Cook",

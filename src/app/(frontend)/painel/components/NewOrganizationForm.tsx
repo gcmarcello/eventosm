@@ -5,22 +5,23 @@ import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto
 import { formatPhone } from "@/utils/format";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "odinkit/components/Button";
+import { Container } from "odinkit/components/Containers";
 import {
-  Text,
-  Button,
-  Container,
   Description,
   ErrorMessage,
   FieldGroup,
   Fieldset,
   Form,
-  Input,
   Label,
   Legend,
   createField,
-  showToast,
-  useAction,
-} from "odinkit";
+} from "odinkit/components/Form/Form";
+import { Input } from "odinkit/components/Form/Input";
+import { Text } from "odinkit/components/Text";
+import { showToast } from "odinkit/components/Toast";
+import { useAction } from "odinkit/hooks/useAction";
+
 import { UserWithoutPassword } from "prisma/types/User";
 import { useForm } from "react-hook-form";
 
