@@ -40,7 +40,6 @@ export async function AuthMiddleware({
 
     return user.id;
   } catch (error) {
-    console.log(error);
     return false;
   }
 }

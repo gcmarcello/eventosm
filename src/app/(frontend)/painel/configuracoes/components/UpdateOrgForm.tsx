@@ -1,9 +1,11 @@
 "use client";
 
+import { updateOrganization } from "@/app/api/orgs/action";
 import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "odinkit/components/Button";
+import { FileInput } from "odinkit/components/Form/File";
 import {
   Description,
   ErrorMessage,
@@ -16,6 +18,8 @@ import {
 } from "odinkit/components/Form/Form";
 import { ColorInput, Input } from "odinkit/components/Form/Input";
 import { Text } from "odinkit/components/Text";
+import { showToast } from "odinkit/components/Toast";
+import { useAction } from "odinkit/hooks/useAction";
 
 import { OrganizationWithOptions } from "prisma/types/Organization";
 import { useForm } from "react-hook-form";
@@ -36,12 +40,33 @@ export default function UpdateOrgForm({
       email: organization.email,
       phone: organization.phone || undefined,
       slug: organization.slug,
+      options: {
+        abbreviation: organization.options?.abbreviation,
+        primaryColor: organization.options?.primaryColor,
+        secondaryColor: organization.options?.secondaryColor,
+      },
     },
   });
 
+  const { trigger: updateTrigger, isMutating: isLoading } = useAction({
+    action: updateOrganization,
+    redirect: true,
+    onError: (error) => showToast({ message: error, variant: "error", title: "Erro!" }),
+    onSuccess: (data) =>
+      showToast({
+        message: "Organização atualizada com sucesso!",
+        variant: "success",
+        title: "Sucesso!",
+      }),
+  });
+
   return (
-    <Form hform={form} onSubmit={(data) => console.log(data)} className="space-y-3 pb-10">
-      <div className="flex items-center justify-between px-1">
+    <Form
+      hform={form}
+      onSubmit={(data) => updateTrigger(data)}
+      className="space-y-3 pb-10"
+    >
+      <div className="sticky  flex items-center justify-between px-1">
         <Text className="font-semibold">Configurações</Text>
         <Button
           disabled={!form.formState.isValid}
@@ -130,6 +155,30 @@ export default function UpdateOrgForm({
             <Label>Cor Secundária</Label>
             <ColorInput />
             <ErrorMessage />
+          </Field>
+          <Field className="col-span-2" name="options.logo">
+            <Label>Logo</Label>
+            <FileInput>
+              <div className="relative block w-full cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6"
+                  />
+                </svg>
+                <span className="mt-2 block text-sm font-semibold text-zinc-400">
+                  Create a new database
+                </span>
+              </div>
+            </FileInput>
           </Field>
         </FieldGroup>
       </Fieldset>

@@ -1,6 +1,6 @@
 import { compareHash, hashInfo } from "@/utils/bCrypt";
 import { LoginDto, ParsedSignupDto, SignupDto } from "./dto";
-import { getEnv } from "@/utils/settings";
+import { getEnv, isDev } from "@/utils/settings";
 import * as jose from "jose";
 import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
@@ -40,7 +40,7 @@ export function createToken(request: { id: string }) {
     .setIssuedAt()
     .setIssuer("eventosmapi")
     .setAudience("user")
-    .setExpirationTime("1h")
+    .setExpirationTime(isDev ? "10000d" : "1d")
     .sign(JWT_KEY);
   return token;
 }

@@ -22,13 +22,26 @@ import {
 } from "react-hook-form";
 import { ZodObject, ZodRawShape, ZodType, ZodTypeAny, z } from "zod";
 
-export const getErrorMessage = (form: any, fieldName: string) => {
-  const path = fieldName.split(".");
+export const getEntryFromPath = (obj: any, path: string, extraKey: string = "") => {
+  const pathArray = path.split(".");
 
-  const errorMessage = path.reduce((acc, part) => acc && acc[part], form.formState.errors)
-    ?.message as string;
+  const entryValue = pathArray.reduce((acc, curr) => {
+    const nextAcc = acc && acc[curr];
 
-  return errorMessage;
+    if (!nextAcc) return null;
+
+    if (extraKey in nextAcc) {
+      return nextAcc[extraKey];
+    }
+
+    return nextAcc;
+  }, obj);
+
+  const entryKey = path.split(".").pop();
+  return {
+    entryKey,
+    entryValue,
+  };
 };
 
 export function Form<Fields extends FieldValues>(props: {
@@ -108,13 +121,13 @@ function Field<Fields extends FieldValues>({
   const form = useFormContext();
 
   const name = props["name"];
-  const zodField = props.zodobject.shape[name];
+  const zodField = getEntryFromPath(props.zodobject.shape, name, "shape").entryValue;
   const isRequired = enableAsterisk && !zodField?.isOptional();
 
   const fieldContextValue = {
     name,
     isRequired,
-    error: getErrorMessage(form, name),
+    error: getEntryFromPath(form.formState.errors, name).entryValue,
   };
 
   return (

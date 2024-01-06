@@ -79,7 +79,8 @@ export function Select({ className, multiple, ...props }: HeadlessSelectProps) {
   );
 }
 
-export function Combobox<Data, Nullable extends boolean, Multiple extends boolean>({
+/**
+ * export function Combobox<Data, Nullable extends boolean, Multiple extends boolean>({
   multiple,
   className,
   components,
@@ -153,3 +154,4 @@ export function Combobox<Data, Nullable extends boolean, Multiple extends boolea
     />
   );
 }
+ */

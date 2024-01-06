@@ -23,6 +23,7 @@ export async function OrganizationMiddleware<T>({
   return {
     request: {
       ...request,
+      id: activeOrg,
     },
   };
 }
