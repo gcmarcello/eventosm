@@ -5,6 +5,8 @@ import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { cookies } from "next/headers";
 import MainNavbar from "./_shared/components/MainNavbar";
+import { Mocker } from "odinkit/components/Mocker";
+import { isDev } from "@/utils/settings";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html data-theme={theme?.value} lang="en">
       <body className={clsx(inter.className, "bg-white dark:bg-zinc-800")}>
         <MainNavbar />
+        {isDev && <Mocker />}
         <main>{children}</main>
         <Toaster position="bottom-right" />
       </body>

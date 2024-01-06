@@ -142,13 +142,13 @@ export function ColorInput({
             "relative block",
 
             // Background color + shadow applied to inset pseudo element, so shadow blends with border in light mode
-            "before:absolute before:inset-px before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-white before:shadow",
+            "before:absolute before:inset-px before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-white",
 
             // Background color is moved to control and shadow is removed in dark mode so hide `before` pseudo
             "dark:before:hidden",
 
             // Focus ring
-            "after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500",
+            "after:pointer-events-none after:absolute after:inset-0 after:rounded-lg  after:ring-transparent sm:after:focus-within:ring-2 ",
 
             // Disabled state
             "has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-zinc-950/5 before:has-[[data-disabled]]:shadow-none",
@@ -170,7 +170,7 @@ export function ColorInput({
               props.type && dateTypes.includes(props.type) && webkitCss,
 
               // Basic layout
-              "relative mb-1 mt-[11px] block w-full appearance-none rounded-lg px-[calc(theme(spacing[2])-1px)] py-[calc(theme(spacing[1])-1px)] sm:px-[calc(theme(spacing[2])-1px)] sm:py-[calc(theme(spacing[1])-1px)]",
+              "relative mb-1 mt-[11px] block min-h-16 min-w-16 cursor-pointer appearance-none rounded-full px-1 py-1",
 
               // Typography
               "text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white",

@@ -3,6 +3,7 @@
 import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "odinkit/components/Button";
 import {
   Description,
   ErrorMessage,
@@ -39,7 +40,18 @@ export default function UpdateOrgForm({
   });
 
   return (
-    <Form hform={form} onSubmit={(data) => console.log(data)} className="space-y-3">
+    <Form hform={form} onSubmit={(data) => console.log(data)} className="space-y-3 pb-10">
+      <div className="flex items-center justify-between px-1">
+        <Text className="font-semibold">Configurações</Text>
+        <Button
+          disabled={!form.formState.isValid}
+          type="submit"
+          color="lime"
+          className="my-2"
+        >
+          <span className="px-4">Salvar</span>
+        </Button>
+      </div>
       <Fieldset className=" rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4 dark:border-zinc-700 dark:bg-zinc-900">
         <Legend>Detalhes Gerais</Legend>
         <Text>Informações principais da organização.</Text>
@@ -109,21 +121,18 @@ export default function UpdateOrgForm({
             </Text>
             <ErrorMessage />
           </Field>
-          <Field name="options.primaryColor">
+          <Field className="col-span-1" name="options.primaryColor">
             <Label>Cor Principal</Label>
-            <ColorInput className="h-16 w-16" />
+            <ColorInput />
+            <ErrorMessage />
+          </Field>
+          <Field className="col-span-1" name="options.secondaryColor">
+            <Label>Cor Secundária</Label>
+            <ColorInput />
             <ErrorMessage />
           </Field>
         </FieldGroup>
       </Fieldset>
-      {/* <Button
-          disabled={!form.formState.isValid}
-          type="submit"
-          color="lime"
-          className="mt-6 w-full"
-        >
-          <span className="px-4">Criar Organização</span>
-        </Button> */}
     </Form>
   );
 }

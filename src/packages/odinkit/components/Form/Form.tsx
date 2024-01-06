@@ -1,4 +1,3 @@
-"use client";
 import {
   Description as HeadlessDescription,
   Field as HeadlessField,
