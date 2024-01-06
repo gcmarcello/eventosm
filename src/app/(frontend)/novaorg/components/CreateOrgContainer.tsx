@@ -1,5 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, Container, Text } from "odinkit";
+import { Button } from "odinkit/components/Button";
+import { Container } from "odinkit/components/Containers";
+import { Text } from "odinkit/components/Text";
 
 export default function CreateOrgContainer() {
   return (

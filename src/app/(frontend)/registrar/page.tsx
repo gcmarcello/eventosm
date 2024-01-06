@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import GeneralDetailsSection from "./components/GeneralDetailsSection";
-import { Transition } from "@headlessui/react";
+
 import PersonalDetailSections from "./components/PersonalDetailsSection";
 import clsx from "clsx";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { SignupDto, signupDto } from "@/app/api/auth/dto";
 import { fakerPT_BR } from "@faker-js/faker";
 import { cpfMock } from "@/utils/mock/cpfMock";
@@ -15,8 +15,13 @@ import dayjs from "dayjs";
 import ConfirmDetailsSection from "./components/ConfirmDetailsSection";
 import { useSearchParams } from "next/navigation";
 import { signup } from "@/app/api/auth/action";
-import { Button, Container, showToast, useAction } from "odinkit";
 import { BottomNavigation } from "../_shared/components/BottomNavigation";
+import { Container } from "odinkit/components/Containers";
+import { showToast } from "odinkit/components/Toast";
+import { useAction } from "odinkit/hooks/useAction";
+import { Button } from "odinkit/components/Button";
+import { Form } from "odinkit/components/Form/Form";
+import { Transition } from "@headlessui/react";
 
 export default function RegistrarPage() {
   const [step, setStep] = useState(0);

@@ -4,19 +4,20 @@ import { UpsertOrganizationDto, upsertOrganizationDto } from "@/app/api/orgs/dto
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Text,
-  ColorInput,
   Description,
   ErrorMessage,
   FieldGroup,
   Fieldset,
-  Input,
+  Form,
   Label,
   Legend,
   createField,
-} from "odinkit";
+} from "odinkit/components/Form/Form";
+import { ColorInput, Input } from "odinkit/components/Form/Input";
+import { Text } from "odinkit/components/Text";
+
 import { OrganizationWithOptions } from "prisma/types/Organization";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const Field = createField({ zodObject: upsertOrganizationDto, enableAsterisk: true });
 

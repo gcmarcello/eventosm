@@ -4,7 +4,6 @@ import "./globals.css";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { cookies } from "next/headers";
-import PanelNavbar from "./_shared/components/MainNavbar";
 import MainNavbar from "./_shared/components/MainNavbar";
 
 const inter = Inter({ subsets: ["latin"] });

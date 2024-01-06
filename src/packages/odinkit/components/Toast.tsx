@@ -1,3 +1,4 @@
+"use client";
 import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";

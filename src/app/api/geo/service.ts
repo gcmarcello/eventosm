@@ -40,7 +40,7 @@ export async function readAddressFromZipCode({ zipCode }: { zipCode: string }) {
 
   const cityAndState = await prisma.city.findFirst({
     where: {
-      code: ibge,
+      id: ibge,
     },
     include: { state: true },
   });
@@ -48,6 +48,6 @@ export async function readAddressFromZipCode({ zipCode }: { zipCode: string }) {
   return {
     address: parsedResponse.logradouro,
     city: { name: cityAndState?.name, id: cityAndState?.id },
-    state: { name: cityAndState?.state.abbreviation, id: cityAndState?.state.id },
+    state: { name: cityAndState?.state.uf, id: cityAndState?.state.id },
   };
 }

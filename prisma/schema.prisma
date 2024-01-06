@@ -38,9 +38,9 @@ model UserInfo {
   gender     String?
   zipCode    String
   state      State     @relation(fields: [stateId], references: [id])
-  stateId    Int
+  stateId    String
   city       City      @relation(fields: [cityId], references: [id])
-  cityId     Int
+  cityId     String
   address    String
   number     String
   complement String?
@@ -206,9 +206,8 @@ model EventRegistration {
   @@schema("public")
 }
 
-
 model State {
-  id       Int        @id
+  id       String     @id
   uf       String     @unique @db.VarChar
   name     String     @unique @db.VarChar
   UserInfo UserInfo[]
@@ -218,10 +217,10 @@ model State {
 }
 
 model City {
-  id       Int        @id
+  id       String     @id
   name     String     @db.VarChar
   state    State      @relation(fields: [stateId], references: [id])
-  stateId  Int
+  stateId  String
   UserInfo UserInfo[]
 
   @@schema("geo")
