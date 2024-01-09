@@ -2,6 +2,7 @@
 
 #packages
 src/packages/
+src/packages/gitremoval/
 
 # dependencies
 /node_modules
