@@ -22,6 +22,7 @@
         "ms-vsliveshare.vsliveshare"
       ],
       "settings": {
+        "git.repositoryScanMaxDepth": 5,
         "extensions.autoCheckUpdates": false,
         "extensions.autoUpdate": false,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
