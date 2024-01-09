@@ -22,6 +22,7 @@ import { useAction } from "odinkit/hooks/useAction";
 import { Button } from "odinkit/components/Button";
 import { Form } from "odinkit/components/Form/Form";
 import { Transition } from "@headlessui/react";
+import { useMocker } from "odinkit/components/Mocker";
 
 export default function RegistrarPage() {
   const [step, setStep] = useState(0);
@@ -58,6 +59,26 @@ export default function RegistrarPage() {
       },
       eventRedirect: { id: "3333", name: "Cubatense de Pedestrianismo 2024" },
     },
+  });
+
+  const mocker = useMocker({
+    form,
+    data: () => ({
+      "step1.fullName": fakerPT_BR.person.fullName(),
+      "step1.email": fakerPT_BR.internet.email(),
+      "step1.phone": fakerPT_BR.phone.number(),
+      "step1.document.value": cpfMock(),
+      "step1.passwords.password": "123456",
+      "step1.passwords.passwordConfirm": "123456",
+      "step2.info.birthDate": dayjs(fakerPT_BR.date.birthdate()).format("DD/MM/YYYY"),
+      "step2.info.gender": "male",
+      "step2.info.zipCode": fakerPT_BR.location.zipCode(),
+      "step2.info.address": fakerPT_BR.location.streetAddress(),
+      "step2.info.cityId": "3548500",
+      "step2.info.stateId": "35",
+      "step2.info.number": fakerPT_BR.location.buildingNumber(),
+      "step2.info.complement": fakerPT_BR.location.secondaryAddress(),
+    }),
   });
 
   const steps = [GeneralDetailsSection, PersonalDetailSections, ConfirmDetailsSection];
@@ -102,43 +123,6 @@ export default function RegistrarPage() {
     if (direction === "prev" && step > 0) {
       setStep((prev) => prev - 1);
     }
-  }
-
-  function mockData() {
-    const password = fakerPT_BR.internet.password();
-    const data = {
-      name: fakerPT_BR.person.fullName(),
-      email: fakerPT_BR.internet.email(),
-      phone: fakerPT_BR.phone.number(),
-      document: cpfMock(),
-      password: password,
-      passwordConfirm: password,
-      birthDate: dayjs(fakerPT_BR.date.birthdate()).format("DD/MM/YYYY"),
-      gender: "male",
-      zipCode: fakerPT_BR.location.zipCode(),
-      address: fakerPT_BR.location.streetAddress(),
-      cityId: "1c287b08-b951-4df1-ae77-219c32ea3be7",
-      stateId: "ceccc633-34e0-4041-a77d-70bc51ebce93",
-      number: fakerPT_BR.location.buildingNumber(),
-      complement: fakerPT_BR.location.secondaryAddress(),
-    };
-    form.setValue("step1.fullName", data.name);
-    form.setValue("step1.email", data.email);
-    form.setValue("step1.phone", data.phone);
-    form.setValue("step1.document.value", data.document);
-    form.setValue("step1.document.foreigner", false);
-    form.setValue("step1.passwords.password", data.password);
-    form.setValue("step1.passwords.passwordConfirm", data.passwordConfirm);
-    form.setValue("step2.info.birthDate", data.birthDate);
-    form.setValue("step2.info.gender", data.gender);
-    form.setValue("step2.info.zipCode", data.zipCode);
-    form.setValue("step2.info.address", data.address);
-    form.setValue("step2.info.cityId", data.cityId);
-    form.setValue("step2.info.stateId", data.stateId);
-    form.setValue("step2.info.number", data.number);
-    form.setValue("step2.info.complement", data.complement);
-    console.log(form.getValues());
-    form.trigger();
   }
 
   const { trigger: signUpAction, isMutating: isLoading } = useAction({

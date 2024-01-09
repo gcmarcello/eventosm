@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "next dev & libuilder ./src/packages/odinkit",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -36,7 +36,8 @@
     "react-hot-toast": "2.4.1",
     "react-input-mask": "3.0.0-alpha.2",
     "swr": "2.2.4",
-    "zod": "3.21.0"
+    "zod": "3.21.0",
+    "zustand": "4.4.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

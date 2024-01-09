@@ -28,6 +28,17 @@ export async function createOrganization(
   return organization;
 }
 
+export async function updateOrganization(
+  request: UpsertOrganizationDto & { userSession: UserSession } & { id: string }
+) {
+  const { id, userSession, ...data } = request;
+  const organization = await prisma.organization.update({
+    where: { id },
+    data,
+  });
+  return organization;
+}
+
 export async function readOrganizations(request: ReadOrganizationDto) {
   return (await prisma.organization.findMany({
     where: request.where,

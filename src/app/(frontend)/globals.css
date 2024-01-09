@@ -8,5 +8,10 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 
 input[type="color"]::-webkit-color-swatch {
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border-radius: 50%;
+  border: none;
 }
