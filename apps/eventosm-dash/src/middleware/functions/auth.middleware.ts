@@ -23,7 +23,6 @@ export async function AuthMiddleware({
     if (!url) return false;
     if (!payload.id) return false;
 
-    console.log(`${url}/api/auth/verify`);
     const user = await fetch(`${url}/api/auth/verify`, {
       headers: { Authorization: payload.id as string },
     })
