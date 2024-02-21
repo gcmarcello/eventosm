@@ -19,18 +19,16 @@ export async function AuthMiddleware({
     const roles: string[] = additionalArguments.roles;
 
     const url = getEnv("NEXT_PUBLIC_SITE_URL");
-    console.log(url, payload.id, roles, "AuthMiddleware");
 
     if (!url) return false;
     if (!payload.id) return false;
 
+    console.log(`${url}/api/auth/verify`);
     const user = await fetch(`${url}/api/auth/verify`, {
       headers: { Authorization: payload.id as string },
     })
       .then((res) => res.json())
       .catch((error) => error);
-
-    console.log(user, "AuthMiddleware");
 
     if (!user) return false;
 
