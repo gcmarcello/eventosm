@@ -282,7 +282,7 @@ importers:
         specifier: 2.0.0-alpha.3
         version: 2.0.0-alpha.3(react-dom@18.2.0)(react@18.2.0)
       '@heroicons/react':
-        specifier: 2.1.1
+        specifier: ^2.1.1
         version: 2.1.1(react@18.2.0)
       '@hookform/resolvers':
         specifier: 3.3.4
@@ -323,18 +323,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
-      embla-carousel-autoplay:
-        specifier: 8.0.0-rc21
-        version: 8.0.0-rc21(embla-carousel@8.0.0-rc21)
-      embla-carousel-react:
-        specifier: 8.0.0-rc21
-        version: 8.0.0-rc21(react@18.2.0)
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
-      json-as-xlsx:
-        specifier: ^2.5.6
-        version: 2.5.6
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -4536,14 +4527,6 @@ packages:
 
   /electron-to-chromium@1.4.639:
     resolution: {integrity: sha512-CkKf3ZUVZchr+zDpAlNLEEy2NJJ9T64ULWaDgy3THXXlPVPkLu3VOs9Bac44nebVtdwl2geSj6AxTtGDOxoXhg==}
-    dev: false
-
-  /embla-carousel-autoplay@8.0.0-rc21(embla-carousel@8.0.0-rc21):
-    resolution: {integrity: sha512-o8T3+cpkZyJZfpN1PqxRDOdep/wlLvBQTIr0KUQbtk/y44esiAdZEGCjR/GJDJbl2huMIB/GzxkC7JQYEHZPxQ==}
-    peerDependencies:
-      embla-carousel: 8.0.0-rc21
-    dependencies:
-      embla-carousel: 8.0.0-rc21
     dev: false
 
   /embla-carousel-react@8.0.0-rc21(react@18.2.0):
