@@ -66,6 +66,8 @@ export async function middleware(request: NextRequest) {
       additionalArguments: { roles: ["user"] },
     });
 
+    console.log(isAuthenticated, "painel");
+
     if (!isAuthenticated)
       return NextResponse.redirect(new URL("/login", request.nextUrl).href);
   }
