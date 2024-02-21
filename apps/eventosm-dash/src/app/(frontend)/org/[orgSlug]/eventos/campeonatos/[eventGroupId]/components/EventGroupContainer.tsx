@@ -1,0 +1,386 @@
+"use client";
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  UserIcon,
+  UserGroupIcon,
+} from "@heroicons/react/20/solid";
+import clsx from "clsx";
+import {
+  Tabs,
+  BottomNavigation,
+  Text,
+  TabItem,
+  Table,
+  date,
+  For,
+  Heading,
+  List,
+} from "odinkit";
+import {
+  Dropdown,
+  DropdownButton,
+  DropdownMenu,
+  DropdownItem,
+  DropdownLabel,
+  DropdownSeparator,
+  DropdownDescription,
+  Button,
+  DisclosureAccordion,
+} from "odinkit/client";
+import { EventGroupWithEvents } from "prisma/types/Events";
+import { useOrg } from "../../../../components/OrgStore";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
+import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
+import { EventRegistrationBatch } from "@prisma/client";
+import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
+import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
+import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
+import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
+import { useEffect, useRef, useState } from "react";
+
+export default function EventGroupContainer({
+  eventGroup,
+  isUserRegistered,
+  batch,
+}: {
+  isUserRegistered: boolean;
+  eventGroup: EventGroupWithEvents;
+  batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
+}) {
+  const generalTabs: TabItem[] = [
+    {
+      content: (
+        <div className="my-2 text-sm">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: eventGroup.description || "Nenhuma descrição cadastrada.",
+            }}
+          />
+        </div>
+      ),
+      title: "Descrição",
+    },
+    {
+      content: (
+        <div className="my-2 ">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: eventGroup.rules || "Nenhum regulamento cadastrado.",
+            }}
+          />
+        </div>
+      ),
+      title: "Regulamento",
+    },
+  ];
+  const tabs: TabItem[] = [
+    {
+      content: (
+        <div>
+          <For each={generalTabs}>
+            {(tab: TabItem, index: number) => (
+              <DisclosureAccordion defaultOpen={!index} title={tab.title}>
+                {tab.content}
+              </DisclosureAccordion>
+            )}
+          </For>
+        </div>
+      ),
+      title: "Informações",
+    },
+    {
+      content: (
+        <div className="p-4">
+          <Table
+            data={eventGroup.Event}
+            pagination={false}
+            search={false}
+            columns={(columnHelper) => [
+              columnHelper.accessor("name", {
+                id: "name",
+                header: "Nome",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => info.getValue(),
+              }),
+              columnHelper.accessor("dateStart", {
+                id: "dateStart",
+                header: "Data",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => date(info.getValue(), "DD/MM/YYYY"),
+              }),
+              columnHelper.accessor("location", {
+                id: "location",
+                header: "Local",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => info.getValue(),
+              }),
+            ]}
+          />
+        </div>
+      ),
+      title: "Etapas",
+    },
+    {
+      content: <div className="p-4 text-sm">Resultados em breve.</div>,
+      title: "Resultados",
+    },
+  ];
+
+  const { slug, colors, image } = useOrg();
+  const contentRef = useRef(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (typeof ResizeObserver !== "undefined") {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          setContentHeight((entry.target as any).offsetHeight);
+        }
+      });
+
+      if (contentRef.current) {
+        resizeObserver.observe(contentRef.current);
+      }
+
+      // Cleanup function to unobserve the element on component unmount
+      return () => {
+        if (contentRef.current) {
+          resizeObserver.unobserve(contentRef.current);
+        }
+      };
+    }
+  }, []);
+
+  return (
+    <>
+      <div
+        style={{
+          backgroundImage: image ? `url(${image})` : "",
+          height: window.innerHeight > contentHeight ? "100dvh" : contentHeight,
+        }}
+        className={clsx(!image && "bg-slate-200", "bg-cover")}
+      >
+        <div
+          ref={contentRef}
+          className={clsx(
+            "xxl:mx-96 mb-4 rounded-b bg-white shadow-md lg:mx-40"
+          )}
+        >
+          <div className="grid grid-cols-4 gap-4 ">
+            <div className="col-span-4 h-32 w-full lg:h-64">
+              <img
+                src={eventGroup?.imageUrl || ""}
+                className="xs:block h-full w-full rounded-none object-fill"
+              />
+              <div className="-mt-7 flex w-full flex-col items-center justify-center gap-2 px-4 lg:flex-row lg:justify-between">
+                <div className="flex flex-col items-center gap-4  lg:flex-row">
+                  <img
+                    src={eventGroup?.imageUrl || ""}
+                    className="xs:hidden absolute -z-10"
+                    alt=""
+                  />
+                  <div className="xs:pt-0 flex flex-col items-center justify-center gap-3 lg:flex-row lg:pt-0">
+                    <img
+                      src={eventGroup?.imageUrl || ""}
+                      className="h-32 w-32 rounded-full border-2 border-white object-fill lg:ms-4"
+                    />
+                    <div className="flex flex-col px-4 lg:px-0">
+                      <span className=" text-center text-2xl font-semibold">
+                        {eventGroup.name}
+                      </span>
+                      <Text className="text-center lg:text-start">
+                        {`${eventGroup.location} - ${eventGroup.Event.length} etapas`}
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+                <div className="me-4 hidden flex-col gap-2 lg:flex">
+                  <div className=" text-sm font-medium">Compartilhe!</div>
+                  <div className="flex gap-3">
+                    <FacebookIcon size={32} />
+                    <WhatsappIcon size={32} />
+                    <XIcon size={32} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-52 grid grid-cols-4 px-5 pb-20 lg:mt-32 lg:divide-x lg:pb-4">
+            <div
+              className={clsx("col-span-4 px-2 lg:col-span-3 lg:px-0 lg:pe-5")}
+            >
+              <Tabs color={colors.primaryColor} tabs={tabs} />
+            </div>
+            <div
+              className={clsx(
+                "col-span-4 hidden lg:col-span-1 lg:block lg:ps-5"
+              )}
+            >
+              {batch ? (
+                <>
+                  <Dropdown>
+                    <DropdownButton
+                      className={"w-full"}
+                      color={isUserRegistered ? "amber" : "green"}
+                    >
+                      {isUserRegistered ? "Inscrito!" : "Inscrição"}
+
+                      <ChevronUpIcon className="lg:hidden" />
+                      <ChevronDownIcon className="lg:block" />
+                    </DropdownButton>
+                    <DropdownMenu>
+                      {
+                        <DropdownItem
+                          disabled={
+                            isUserRegistered ||
+                            !(
+                              batch.registrationType === "individual" ||
+                              batch.registrationType === "mixed"
+                            )
+                          }
+                          href={`/inscricoes/campeonatos/${eventGroup.id}`}
+                        >
+                          <DropdownLabel>
+                            <span className="inline-flex gap-2">
+                              <UserIcon className="h-5 w-5" />
+                              Individual
+                            </span>
+                          </DropdownLabel>
+                        </DropdownItem>
+                      }
+                      <DropdownSeparator />
+                      {
+                        <DropdownItem
+                          href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                          disabled={
+                            !(
+                              batch.registrationType === "team" ||
+                              batch.registrationType === "mixed"
+                            )
+                          }
+                        >
+                          <DropdownLabel>
+                            <span className="inline-flex gap-2">
+                              <UserGroupIcon className="h-5 w-5" />
+                              Por Equipes
+                            </span>
+                          </DropdownLabel>
+                          <DropdownDescription>
+                            Inscreva toda a equipe de uma só vez.
+                          </DropdownDescription>
+                        </DropdownItem>
+                      }
+                    </DropdownMenu>
+                  </Dropdown>
+                </>
+              ) : (
+                <Button disabled color="red" className={"w-full"}>
+                  Inscrições Indisponíveis
+                </Button>
+              )}
+              <dl className="mt-2 divide-y divide-gray-100">
+                <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium leading-6 text-gray-900">
+                    Local
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {eventGroup.location}
+                  </dd>
+                </div>
+                {eventGroup.Event[0]?.dateStart && (
+                  <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium leading-6 text-gray-900">
+                      Início
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      {date(eventGroup.Event[0]?.dateStart, "DD/MM/YYYY")}
+                    </dd>
+                  </div>
+                )}
+                {eventGroup.Event[eventGroup.Event.length - 1]?.dateEnd && (
+                  <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium leading-6 text-gray-900">
+                      Fim
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      {date(
+                        eventGroup.Event[eventGroup.Event.length - 1]
+                          ?.dateEnd as any,
+                        "DD/MM/YYYY"
+                      )}
+                    </dd>
+                  </div>
+                )}
+                <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium leading-6 text-gray-900">
+                    Etapas
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {eventGroup.Event.length}
+                  </dd>
+                </div>
+                <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium leading-6 text-gray-900">
+                    Modalidades
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {eventGroup.EventModality.map(
+                      (modality) => modality.name
+                    ).join(", ")}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+      <BottomNavigation className="lg:hidden">
+        <div className="flex flex-row-reverse items-center justify-between p-2">
+          <Dropdown>
+            <DropdownButton color={isUserRegistered ? "amber" : "green"}>
+              {isUserRegistered
+                ? "Inscrito!"
+                : "Inscrição (à partir de R$ 0,00)"}
+
+              <ChevronUpIcon className="lg:hidden" />
+            </DropdownButton>
+            <DropdownMenu>
+              <DropdownItem
+                disabled={isUserRegistered}
+                href={`/inscricoes/campeonatos/${eventGroup.id}`}
+              >
+                <DropdownLabel>
+                  <span className="inline-flex gap-2">
+                    <UserIcon className="h-5 w-5" />
+                    Individual
+                  </span>
+                </DropdownLabel>
+                {/* <DropdownDescription>
+                Open the file in a new tab.
+              </DropdownDescription> */}
+              </DropdownItem>
+              <DropdownSeparator />
+              <DropdownItem
+                href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+              >
+                <DropdownLabel>
+                  <span className="inline-flex gap-2">
+                    <UserGroupIcon className="h-5 w-5" />
+                    Por Equipes
+                  </span>
+                </DropdownLabel>
+                <DropdownDescription>
+                  Inscreva toda a equipe de uma só vez.
+                </DropdownDescription>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </BottomNavigation>
+    </>
+  );
+}
