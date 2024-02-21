@@ -25,7 +25,6 @@ export default function PersonalizationSection({
 }) {
   const form = useFormContext();
   const Field = useMemo(() => form.createField(), []);
-  console.log(form.watch("primaryColor"));
   return (
     <Fieldset className=" grid grid-cols-2 gap-x-4 gap-y-4 rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4">
       <FieldGroup className="col-span-2">

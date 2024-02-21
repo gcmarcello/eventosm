@@ -38,7 +38,6 @@ export default function MainNavbar() {
   const { trigger: logoutTrigger, isMutating: isLoading } = useAction({
     action: logout,
     redirect: true,
-    onError: (error) => console.log(error),
     onSuccess: (data) =>
       showToast({
         message: "Deslogado com sucesso",
