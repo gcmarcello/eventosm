@@ -19,6 +19,7 @@ export async function AuthMiddleware({
     const roles: string[] = additionalArguments.roles;
 
     const url = getEnv("NEXT_PUBLIC_SITE_URL");
+    console.log(url, payload.id, roles, "AuthMiddleware");
 
     if (!url) return false;
     if (!payload.id) return false;
@@ -28,6 +29,8 @@ export async function AuthMiddleware({
     })
       .then((res) => res.json())
       .catch((error) => error);
+
+    console.log(user, "AuthMiddleware");
 
     if (!user) return false;
 
