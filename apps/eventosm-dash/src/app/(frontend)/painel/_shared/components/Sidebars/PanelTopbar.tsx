@@ -1,11 +1,16 @@
 "use client";
 
-import { Bars3Icon } from "@heroicons/react/24/solid";
+import {
+  ArrowTopRightOnSquareIcon,
+  Bars3Icon,
+} from "@heroicons/react/24/solid";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useSidebar } from "./lib/useSidebar";
 import { usePathname } from "next/navigation";
 import ProfileDropdown from "@/app/(frontend)/_shared/components/ProfileDropdown";
 import { getPageName } from "../../utils/pageName";
+import { getEnv } from "@/utils/settings";
+import { Link } from "odinkit";
 
 export function SupporterTopBar() {
   const { user, organization, setVisibility } = useSidebar();
@@ -41,8 +46,14 @@ export function SupporterTopBar() {
           </h2>
         </div>
         <div className="flex items-center gap-x-4 lg:gap-x-6">
-          <button
+          <Link
+            target="_blank"
             type="button"
+            href={
+              organization.domain
+                ? `https://${organization.domain}`
+                : `${getEnv("NEXT_PUBLIC_SITE_URL")}/org/${organization.slug}`
+            }
             className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
             /* onClick={async () =>
               setVisibility((prev) => ({
@@ -52,10 +63,13 @@ export function SupporterTopBar() {
             } */
           >
             <div className="flex items-center justify-center gap-2">
-              <PlusCircleIcon className="h-8 w-8" aria-hidden="true" />{" "}
-              <span className="sr-only">Adicionar Apoiador</span>
+              <ArrowTopRightOnSquareIcon
+                className="h-6 w-6"
+                aria-hidden="true"
+              />{" "}
+              <span>Ver Site</span>
             </div>
-          </button>
+          </Link>
 
           {/* Separator */}
           <div

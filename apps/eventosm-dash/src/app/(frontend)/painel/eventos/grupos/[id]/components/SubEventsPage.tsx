@@ -22,6 +22,12 @@ import { z } from "zod";
 import { uploadFiles } from "@/app/api/uploads/action";
 import Image from "next/image";
 
+const schema = upsertEventDto
+  .omit({ imageUrl: true })
+  .merge(z.object({ image: z.array(z.any()) }));
+
+type Schema = z.infer<typeof schema>;
+
 export default function SubeventsPage({
   eventGroup,
   eventId,
@@ -35,9 +41,7 @@ export default function SubeventsPage({
   } = usePanel();
 
   const form = useForm({
-    schema: upsertEventDto
-      .omit({ imageUrl: true })
-      .merge(z.object({ image: z.array(z.any()) })),
+    schema,
     mode: "onChange",
     defaultValues: {
       eventGroupId: eventGroup.id,
@@ -53,6 +57,22 @@ export default function SubeventsPage({
 
   const { data, trigger, isMutating } = useAction({
     action: upsertEvent,
+    prepare: async (data: Schema) => {
+      const { image, ...rest } = data;
+
+      if (!image)
+        return {
+          ...data,
+          image: eventGroup.imageUrl,
+        };
+
+      const uploadedFiles = await uploadFiles(
+        [{ name: "image", file: image ? image[0] : [] }],
+        "/events/"
+      );
+
+      return { ...rest, imageUrl: uploadedFiles?.image?.url };
+    },
     onSuccess: () => {
       setIsModalOpen(false);
     },
@@ -90,14 +110,7 @@ export default function SubeventsPage({
         id="SubeventForm"
         hform={form}
         onSubmit={async (data) => {
-          const { image, ...rest } = data;
-
-          const uploadedFiles = await uploadFiles(
-            [{ name: "image", file: image ? image[0] : [] }],
-            "/events/"
-          );
-
-          trigger({ ...rest, imageUrl: uploadedFiles?.image?.url });
+          trigger(data);
         }}
       >
         <SubeventModal

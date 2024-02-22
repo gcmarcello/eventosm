@@ -432,7 +432,7 @@ export default function EventGroupUpdateForm({
         steps={steps}
         stepRefs={stepRefs}
         topRef={topRef}
-        color={colors.primaryColor.tw.color}
+        color={colors.primaryColor.hex}
       />
 
       <BottomNavigation className="lg:hidden">

@@ -31,6 +31,7 @@ import { Badge, Table } from "odinkit";
 import { useState } from "react";
 import { Field } from "@headlessui/react";
 import clsx from "clsx";
+import Image from "next/image";
 
 export default function EventsContainer({
   events,
@@ -112,6 +113,22 @@ export default function EventsContainer({
             className="my-2"
             data={eventGroups}
             columns={(columnHelper) => [
+              columnHelper.accessor("imageUrl", {
+                id: "image",
+                header: "",
+                enableSorting: false,
+                enableGlobalFilter: false,
+                cell: (info) =>
+                  info.getValue() && (
+                    <Image
+                      width={56}
+                      height={56}
+                      className="size-10 rounded-full"
+                      src={info.getValue()}
+                      alt={`event-${info.row.original.slug}`}
+                    />
+                  ),
+              }),
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
@@ -178,9 +195,10 @@ export default function EventsContainer({
         </div>
 
         <div>
-          <div className="font-semibold">Grupos de Eventos</div>
+          <div className="font-semibold">Eventos</div>
           <Table
             striped
+            search={false}
             className="my-2"
             data={events}
             columns={(columnHelper) => [
