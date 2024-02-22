@@ -125,6 +125,10 @@ export default function PanelSideBar() {
                     </div>
                   </Transition.Child>
                   <div
+                    style={{
+                      backgroundColor:
+                        organization.options?.colors.primaryColor.hex || "#FFF",
+                    }}
                     className={clsx(
                       "fixed flex h-full w-64 grow flex-col gap-y-5 overflow-y-auto px-6 py-4 pb-4"
                     )}
@@ -144,6 +148,12 @@ export default function PanelSideBar() {
                                 <li>
                                   <a
                                     href={item.href}
+                                    style={{
+                                      color: chooseTextColor(
+                                        organization.options?.colors
+                                          .primaryColor.hex || "#FFF"
+                                      ),
+                                    }}
                                     className={clsx(
                                       item.current
                                         ? `bg-zinc-600 bg-opacity-25`
@@ -168,7 +178,15 @@ export default function PanelSideBar() {
                           </ul>
                         </li>
 
-                        <li className="group mt-auto">
+                        <li
+                          className="group mt-auto"
+                          style={{
+                            color: chooseTextColor(
+                              organization.options?.colors.primaryColor.hex ||
+                                "#FFF"
+                            ),
+                          }}
+                        >
                           <Link
                             href="/painel/configuracoes"
                             className={clsx(

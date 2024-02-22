@@ -33,6 +33,7 @@ import { z } from "zod";
 import GeneralInfoSection from "./GeneralInfoSection";
 import PersonalizationSection from "./PersonalizationSection";
 import { Organization } from "@prisma/client";
+import ImagesSection from "./ImagesSection";
 
 const schema = upsertOrganizationDto.omit({ images: true }).merge(
   z.object({
@@ -124,10 +125,11 @@ export default function UpdateOrgForm({
       title: "Personalização",
       content: <PersonalizationSection organization={organization} />,
     },
-    { title: "Imagens", content: <div>Imagens</div> },
+    {
+      title: "Imagens",
+      content: <ImagesSection organization={organization} />,
+    },
   ];
-
-  console.log(form.formState.isSubmitting);
 
   return (
     <Form
@@ -141,7 +143,7 @@ export default function UpdateOrgForm({
         stepRefs={stepRefs}
         topRef={topRef}
         steps={steps}
-        color={organization.options.colors.primaryColor?.tw.color}
+        color={organization.options.colors.primaryColor?.hex}
       />
       <div className="flex justify-end">
         <Button
