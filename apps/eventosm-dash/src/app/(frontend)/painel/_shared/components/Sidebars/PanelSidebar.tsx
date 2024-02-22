@@ -39,7 +39,7 @@ export default function PanelSideBar() {
       icon: CalendarDaysIcon,
       current: pathname.includes("/eventos"),
     },
-    {
+    /* {
       name: "Notícias",
       href: `/painel/noticias`,
       icon: NewspaperIcon,
@@ -56,7 +56,7 @@ export default function PanelSideBar() {
       href: `/painel/galerias`,
       icon: PhotoIcon,
       current: pathname.includes("/tmidiasme"),
-    },
+    }, */
   ];
 
   return (
