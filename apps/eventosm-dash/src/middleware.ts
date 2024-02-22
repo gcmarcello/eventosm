@@ -67,7 +67,9 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!isAuthenticated)
-      return NextResponse.redirect(new URL("/login", request.nextUrl).href);
+      return NextResponse.redirect(
+        new URL("/login?redirect=/painel", request.nextUrl).href
+      );
   }
 
   if (startsWith("/inscricoes") || startsWith(/^\/org\/[^\/]+\/inscricoes/)) {
