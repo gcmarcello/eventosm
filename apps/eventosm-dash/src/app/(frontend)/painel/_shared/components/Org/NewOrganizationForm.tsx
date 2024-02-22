@@ -5,7 +5,6 @@ import {
   UpsertOrganizationDto,
   upsertOrganizationDto,
 } from "@/app/api/orgs/dto";
-
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Container, Text, formatPhone } from "odinkit";
@@ -32,7 +31,7 @@ export default function NewOrganizationForm({
 }: {
   user: UserWithoutPassword;
 }) {
-  const form = useForm({
+  const form = useForm<UpsertOrganizationDto>({
     mode: "onChange",
     schema: upsertOrganizationDto,
     defaultValues: {

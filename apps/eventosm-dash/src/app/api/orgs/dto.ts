@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { readDto } from "../_shared/dto/read";
+import { ColorId } from "@prisma/client";
 
 export const upsertOrganizationDto = z.object({
   name: z
@@ -23,13 +24,10 @@ export const upsertOrganizationDto = z.object({
     .min(14, { message: "Telefone Inválido" })
     .max(15, { message: "Telefone inválido" }),
   document: z.string().optional().nullable(),
-  abbreviation: z
-    .string()
-    .max(7, { message: "No máximo 7 caracteres" })
-    .optional(),
-  primaryColor: z.string().optional(),
-  secondaryColor: z.string().optional(),
-  tertiaryColor: z.string().optional(),
+  abbreviation: z.string().max(7, { message: "No máximo 7 caracteres" }),
+  primaryColor: z.nativeEnum(ColorId),
+  secondaryColor: z.nativeEnum(ColorId),
+  tertiaryColor: z.nativeEnum(ColorId),
   images: z
     .object({
       bg: z.string().optional(),

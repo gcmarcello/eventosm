@@ -3,14 +3,13 @@ import { Organization, Prisma, User } from "@prisma/client";
 import PanelSideBar from "./PanelSidebar";
 import { SupporterTopBar } from "./PanelTopbar";
 import SidebarProvider from "./lib/SidebarProvider";
-import { OrganizationWithOptions } from "prisma/types/Organization";
 
 export function PanelSidebarsLayout({
   user,
   organization,
 }: {
   user: Omit<User, "password">;
-  organization: OrganizationWithOptions;
+  organization: Organization;
 }) {
   return (
     <SidebarProvider user={user} organization={organization}>

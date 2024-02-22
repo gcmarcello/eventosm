@@ -1,5 +1,5 @@
 "use client";
-import { Color } from "prisma/types/Organization";
+import { OrganizationColors } from "prisma/types/Colors";
 import { Fragment, useEffect } from "react";
 import { create } from "zustand";
 
@@ -8,14 +8,7 @@ interface OrgStoreElements {
   name?: string;
   email?: string;
   phone?: string;
-  colors: {
-    primaryColor?: Color;
-    primaryShade?: string;
-    secondaryColor?: Color;
-    secondaryShade?: string;
-    tertiaryColor?: Color;
-    tertiaryShade?: string;
-  };
+  colors: OrganizationColors;
   timezone?: string;
   abbreviation?: string;
   slug: string;
@@ -37,12 +30,42 @@ const useOrgStore = create<OrgStore>()((set) => ({
   slug: "",
   abbreviation: "",
   colors: {
-    primaryColor: "white",
-    primaryShade: "",
-    secondaryColor: "dark",
-    secondaryShade: "",
-    tertiaryColor: "dark",
-    tertiaryShade: "",
+    primaryColor: {
+      id: "indigo_600",
+      color: "",
+      shade: "",
+      hex: "",
+      rgb: "",
+      tw: {
+        color: "indigo",
+        shade: "",
+        id: "",
+      },
+    },
+    secondaryColor: {
+      id: "indigo_600",
+      color: "",
+      shade: "",
+      hex: "",
+      rgb: "",
+      tw: {
+        color: "indigo",
+        shade: "",
+        id: "",
+      },
+    },
+    tertiaryColor: {
+      id: "indigo_600",
+      color: "",
+      shade: "",
+      hex: "",
+      rgb: "",
+      tw: {
+        color: "indigo",
+        shade: "",
+        id: "",
+      },
+    },
   },
   timezone: "America/Sao_Paulo",
   image: "",

@@ -5,7 +5,7 @@ import { Organization } from "@prisma/client";
 import { changeActiveOrganization } from "@/app/api/orgs/action";
 import { OrganizationWithOptions } from "prisma/types/Organization";
 
-import { BottomNavigation } from "../../_shared/components/BottomNavigation";
+import { BottomNavigation } from "../../../../_shared/components/BottomNavigation";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { Avatar, Container, Text } from "odinkit";

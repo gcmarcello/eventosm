@@ -1,13 +1,8 @@
 "use client";
 
 import { updateOrganization } from "@/app/api/orgs/action";
-import {
-  UpsertOrganizationDto,
-  upsertOrganizationDto,
-} from "@/app/api/orgs/dto";
+import { upsertOrganizationDto } from "@/app/api/orgs/dto";
 
-import { OrganizationWithOptions } from "prisma/types/Organization";
-import clsx from "clsx";
 import { usePanel } from "../../_shared/components/PanelStore";
 import { useMemo, useRef } from "react";
 import {
@@ -26,48 +21,88 @@ import {
   useAction,
   useForm,
 } from "odinkit/client";
-import { BottomNavigation, Step, Steps, Text } from "odinkit";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
-import FileImagePreview from "node_modules/odinkit/src/components/Form/File/FileImagePreview";
+import {
+  BottomNavigation,
+  ButtonSpinner,
+  Step,
+  Steps,
+  Text,
+  formatPhone,
+} from "odinkit";
 import { z } from "zod";
 import GeneralInfoSection from "./GeneralInfoSection";
 import PersonalizationSection from "./PersonalizationSection";
+import { Organization } from "@prisma/client";
+
+const schema = upsertOrganizationDto.omit({ images: true }).merge(
+  z.object({
+    images: z
+      .object({
+        bg: z.array(z.any()).optional(),
+        hero: z.array(z.any()).optional(),
+        logo: z.array(z.any()).optional(),
+      })
+      .optional(),
+  })
+);
+
+type Schema = z.infer<typeof schema>;
 
 export default function UpdateOrgForm({
   organization,
 }: {
-  organization: OrganizationWithOptions;
+  organization: Organization;
 }) {
   const topRef = useRef(null!);
   const stepRefs = useRef<HTMLDivElement[]>([]);
   const form = useForm({
     mode: "onChange",
-    schema: upsertOrganizationDto.omit({ images: true }).merge(
-      z.object({
-        images: z
-          .object({
-            bg: z.array(z.any()).optional(),
-            hero: z.array(z.any()).optional(),
-            logo: z.array(z.any()).optional(),
-          })
-          .optional(),
-      })
-    ),
+    schema,
     defaultValues: {
       name: organization.name,
       document: organization.document,
       email: organization.email,
-      phone: organization.phone || undefined,
+      phone: formatPhone(organization.phone || ""),
       slug: organization.slug,
-      abbreviation: organization.options?.abbreviation,
-      primaryColor: organization.options?.colors.primaryColor || "#fff",
-      secondaryColor: organization.options?.colors.secondaryColor || "#fff",
-      tertiaryColor: organization.options?.colors.tertiaryColor || "#fff",
+      abbreviation: organization.abbreviation,
+      primaryColor: organization.options?.colors.primaryColor.id,
+      secondaryColor: organization.options?.colors.secondaryColor.id,
+      tertiaryColor: organization.options?.colors.tertiaryColor.id,
     },
   });
 
   const { trigger: updateTrigger, isMutating: isLoading } = useAction({
     action: updateOrganization,
+    prepare: async (data: Schema) => {
+      if (!data.images)
+        return {
+          ...data,
+          images: organization.options?.images,
+        };
+      const { bg, hero, logo } = data.images;
+      const formData = new FormData();
+      if (bg) formData.append("bg", bg[0]);
+      if (hero) formData.append("hero", hero[0]);
+      if (logo) formData.append("logo", logo[0]);
+
+      const fileUrl = await fetch("/api/uploads", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .catch((error) => {
+          throw error;
+        });
+
+      return {
+        ...data,
+        images: {
+          bg: fileUrl.bg?.url || organization.options?.images?.bg,
+          hero: fileUrl.hero?.url || organization.options?.images?.hero,
+          logo: fileUrl.logo?.url || organization.options?.images?.logo,
+        },
+      };
+    },
     redirect: true,
     onError: (error) =>
       showToast({ message: error, variant: "error", title: "Erro!" }),
@@ -78,10 +113,6 @@ export default function UpdateOrgForm({
         title: "Sucesso!",
       }),
   });
-
-  const {
-    colors: { primaryColor },
-  } = usePanel();
 
   const steps: Step[] = [
     {
@@ -96,40 +127,13 @@ export default function UpdateOrgForm({
     { title: "Imagens", content: <div>Imagens</div> },
   ];
 
-  const panel = usePanel();
+  console.log(form.formState.isSubmitting);
 
   return (
     <Form
       hform={form}
-      onSubmit={async (data) => {
-        if (!data.images)
-          return updateTrigger({
-            ...data,
-            images: organization.options?.images,
-          });
-        const { bg, hero, logo } = data.images;
-        const formData = new FormData();
-        if (bg) formData.append("bg", bg[0]);
-        if (hero) formData.append("hero", hero[0]);
-        if (logo) formData.append("logo", logo[0]);
-
-        const fileUrl = await fetch("/api/uploads", {
-          method: "POST",
-          body: formData,
-        })
-          .then((res) => res.json())
-          .catch((error) => {
-            throw error;
-          });
-
-        updateTrigger({
-          ...data,
-          images: {
-            bg: fileUrl.bg?.url || organization.options?.images?.bg,
-            hero: fileUrl.hero?.url || organization.options?.images?.hero,
-            logo: fileUrl.logo?.url || organization.options?.images?.logo,
-          },
-        });
+      onSubmit={(data) => {
+        updateTrigger(data);
       }}
       className="space-y-3 pb-10"
     >
@@ -137,16 +141,30 @@ export default function UpdateOrgForm({
         stepRefs={stepRefs}
         topRef={topRef}
         steps={steps}
-        color={primaryColor}
+        color={organization.options.colors.primaryColor?.tw.color}
       />
       <div className="flex justify-end">
-        <Button type="submit" color={primaryColor}>
-          Salvar
+        <Button
+          disabled={isLoading}
+          type="submit"
+          color={organization.options.colors.primaryColor?.tw.color}
+        >
+          <div className="flex items-center gap-2">
+            Salvar
+            {isLoading && <ButtonSpinner />}
+          </div>
         </Button>
       </div>
       <BottomNavigation className="flex justify-end p-2 lg:hidden">
-        <Button type="submit" color={primaryColor}>
-          Salvar
+        <Button
+          disabled={isLoading}
+          type="submit"
+          color={organization.options.colors.primaryColor?.tw.color}
+        >
+          <div className="flex items-center gap-2">
+            Salvar
+            {(isLoading || form.formState.isSubmitting) && <ButtonSpinner />}
+          </div>
         </Button>
       </BottomNavigation>
     </Form>

@@ -7,10 +7,10 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { Organization } from "@prisma/client";
-import CreateOrgContainer from "../novaorg/components/CreateOrgContainer";
-import SelectOrgContainer from "./components/SelectOrgContainer";
 import { redirect } from "next/navigation";
 import { PanelStore } from "./_shared/components/PanelStore";
+import CreateOrgContainer from "./_shared/components/Org/CreateOrgContainer";
+import SelectOrgContainer from "./_shared/components/Org/SelectOrgContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +32,8 @@ export default async function PanelLayout({
     where: { ownerId: data.request.userSession.id },
   });
 
-  if (!organizations.length) return <CreateOrgContainer />;
+  if (!organizations.length)
+    return <CreateOrgContainer user={data.request.userSession} />;
 
   const activeOrg = cookies().get("activeOrg")?.value;
 

@@ -1,4 +1,5 @@
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
+import { Organization } from "@prisma/client";
 import FileImagePreview from "node_modules/odinkit/src/components/Form/File/FileImagePreview";
 import { Text } from "odinkit";
 import {
@@ -15,13 +16,12 @@ import {
   showToast,
   useFormContext,
 } from "odinkit/client";
-import { OrganizationWithOptions } from "prisma/types/Organization";
 import { useMemo } from "react";
 
 export default function PersonalizationSection({
   organization,
 }: {
-  organization: OrganizationWithOptions;
+  organization: Organization;
 }) {
   const form = useFormContext();
   const Field = useMemo(() => form.createField(), []);

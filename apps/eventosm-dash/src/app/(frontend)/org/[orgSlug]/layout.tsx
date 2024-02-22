@@ -51,25 +51,14 @@ export default async function CompanyLayout({
         <OrgStore
           value={{
             id: organization.id,
-            colors: organization.options?.colors,
+            colors: organization.options.colors,
             name: organization.name,
             slug: organization.slug,
-            abbreviation: organization.options?.abbreviation,
+            abbreviation: organization.abbreviation,
           }}
         />
       )}
-      <CompanyNavbar
-        colors={{
-          primary: organization.options?.colors?.primaryColor || "indigo",
-          secondary: organization.options?.colors?.secondaryColor || "indigo",
-          tertiary: organization.options?.colors?.tertiaryColor || "indigo",
-          primaryShade: organization.options?.colors?.primaryShade || "",
-          secondaryShade: organization.options?.colors?.secondaryShade || "",
-          tertiaryShade: organization.options?.colors?.tertiaryShade || "",
-        }}
-        organization={organization}
-        user={request.userSession}
-      />
+      <CompanyNavbar organization={organization} user={request.userSession} />
       {children}
     </>
   );
