@@ -62,8 +62,6 @@ export async function updateOrganization(
 ) {
   const { organizationId, userSession, ...data } = request;
 
-  console.log(data);
-
   const currentOrg = await prisma.organization.findFirst({
     where: { id: organizationId },
     select: { options: true },
