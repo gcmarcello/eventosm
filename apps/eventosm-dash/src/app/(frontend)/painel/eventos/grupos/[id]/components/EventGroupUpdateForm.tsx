@@ -10,8 +10,8 @@ import {
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import EventGeneralInfo from "../../../[id]/components/EventGeneralInfo";
-import EventModalities from "../../../[id]/components/EventModalities";
-import EventBatches from "../../../[id]/components/EventBatches";
+import EventModalities from "../../../_shared/EventModalities";
+import EventBatches from "../../../_shared/EventBatches";
 import {
   EventGroupWithEvents,
   EventModalityWithCategories,
@@ -54,25 +54,28 @@ import {
 import { parseEventStatus } from "@/app/(frontend)/painel/_shared/utils/eventStatus";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import SubeventsUpdateForm from "./SubEventsPage";
-import RegistrationsPage from "../../../[id]/components/RegistrationsPage";
+import RegistrationsPage from "../../../_shared/RegistrationsPage";
 import { EventStatusAlert } from "../../../components/EventStatusAlert";
 import { z } from "zod";
 import Image from "next/image";
 import FileImagePreview from "node_modules/odinkit/src/components/Form/File/FileImagePreview";
 import { uploadFiles } from "@/app/api/uploads/action";
+import { Organization } from "@prisma/client";
 
 export default function EventGroupUpdateForm({
   eventGroup,
   modalities,
   batches,
+  organization,
 }: {
   eventGroup: EventGroupWithEvents;
   modalities: EventModalityWithCategories[];
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
+  organization: Organization;
 }) {
   const topRef = useRef(null!);
   const stepRefs = useRef<HTMLDivElement[]>([]);
-  const [coverPreview, setCoverPreview] = useState<string>("");
+  const { colors } = organization.options;
 
   const form = useForm({
     schema: upsertEventGroupDto.omit({ imageUrl: true }).merge(
@@ -349,7 +352,7 @@ export default function EventGroupUpdateForm({
             disabled={isMutating}
             type="submit"
             form="generalEventGroupForm"
-            color={primaryColor}
+            color={colors.primaryColor.tw.color}
           >
             <div className="flex items-center gap-2">
               {isMutating && <ButtonSpinner />}
@@ -429,7 +432,7 @@ export default function EventGroupUpdateForm({
         steps={steps}
         stepRefs={stepRefs}
         topRef={topRef}
-        color={primaryColor}
+        color={colors.primaryColor.tw.color}
       />
 
       <BottomNavigation className="lg:hidden">

@@ -3,7 +3,7 @@
 import { usePanel } from "../../_shared/components/PanelStore";
 
 import Link from "next/link";
-import { Event, EventGroup } from "@prisma/client";
+import { Event, EventGroup, Organization } from "@prisma/client";
 import {
   EventGroupWithEvents,
   EventWithRegistrationCount,
@@ -35,18 +35,20 @@ import clsx from "clsx";
 export default function EventsContainer({
   events,
   eventGroups,
+  organization,
 }: {
   events: EventWithRegistrationCount[];
   eventGroups: EventGroupWithEvents[];
+  organization: Organization;
 }) {
-  const { colors } = usePanel();
   const [showNewEventModal, setShowNewEventModal] = useState(false);
+  const { colors } = organization.options;
 
   return (
     <>
       <div className="flex items-center justify-end">
         <Button
-          color={colors.primaryColor || "indigo"}
+          color={colors.primaryColor.tw.color || "indigo"}
           onClick={() => setShowNewEventModal(true)}
         >
           Novo Evento
@@ -62,11 +64,10 @@ export default function EventsContainer({
               <Button color="white">
                 <div className="flex flex-col items-center">
                   <TrophyIcon
+                    style={{ color: colors.primaryColor?.hex || "" }}
                     className={clsx(
-                      colors.primaryColor && colors.primaryShade
-                        ? `text-${colors.primaryColor}-${colors.primaryShade}`
-                        : `text-indigo-600`,
-                      "h-16 w-16"
+                      "h-16 w-16",
+                      !colors.primaryColor?.hex && "text-indigo-600"
                     )}
                   />
                   <div>Grupo de Eventos</div>
@@ -80,11 +81,10 @@ export default function EventsContainer({
               <Button color="white">
                 <div className="flex flex-col items-center">
                   <TicketIcon
+                    style={{ color: colors.primaryColor?.hex || "" }}
                     className={clsx(
-                      colors.primaryColor && colors.primaryShade
-                        ? `text-${colors.primaryColor}-${colors.primaryShade}`
-                        : `text-indigo-600`,
-                      "h-16 w-16"
+                      "h-16 w-16",
+                      !colors.primaryColor?.hex && "text-indigo-600"
                     )}
                   />
                   <div>Evento Único</div>
@@ -164,7 +164,9 @@ export default function EventsContainer({
                       <EllipsisVerticalIcon className="text-zinc-500" />
                     </DropdownButton>
                     <DropdownMenu>
-                      <DropdownItem href={`/painel/eventos/${info.getValue()}`}>
+                      <DropdownItem
+                        href={`/painel/eventos/grupos/${info.getValue()}`}
+                      >
                         Editar
                       </DropdownItem>
                     </DropdownMenu>

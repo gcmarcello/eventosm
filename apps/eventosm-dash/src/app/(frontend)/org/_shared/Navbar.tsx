@@ -29,10 +29,10 @@ import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { isProd } from "@/utils/settings";
 import { login, logout } from "@/app/api/auth/action";
-import { Color, OrganizationWithOptions } from "prisma/types/Organization";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { loginDto } from "@/app/api/auth/dto";
+import { Organization } from "@prisma/client";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -43,19 +43,10 @@ const navigation = [
 ];
 
 export function CompanyNavbar({
-  colors,
   user,
   organization,
 }: {
-  organization: OrganizationWithOptions;
-  colors?: {
-    primary: Color;
-    secondary: Color;
-    tertiary: Color;
-    primaryShade?: string;
-    secondaryShade?: string;
-    tertiaryShade?: string;
-  };
+  organization: Organization;
   user?: UserSession | null;
 }) {
   const pathName = usePathname();
@@ -66,6 +57,7 @@ export function CompanyNavbar({
     { name: "Sair", onClick: () => logout(pathName) },
   ];
   let [isOpen, setIsOpen] = useState(false);
+  const colors = organization.options.colors;
   const form = useForm({
     schema: loginDto,
     mode: "onChange",
@@ -93,9 +85,8 @@ export function CompanyNavbar({
       <div className="sticky top-0 z-10 min-h-full w-full ring-1 ring-gray-700/25">
         <Disclosure
           as="nav"
-          className={clsx(
-            `${colors?.primary && isProd ? `bg-${colors?.primary}${colors?.primaryShade ? `-${colors.primaryShade}` : ""}` : "bg-emerald-600"} shadow-md`
-          )}
+          style={{ backgroundColor: colors.primaryColor.hex || "" }}
+          className={clsx(`shadow-md`)}
         >
           {({ open }) => (
             <>
@@ -109,23 +100,28 @@ export function CompanyNavbar({
                     </Link>
                     <div className="hidden sm:-my-px sm:ml-6 sm:space-x-4 md:flex">
                       <For each={navigation} key="navigation">
-                        {(item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className={clsx(
-                              item.current
-                                ? `text-${colors ? compareContrasts(colors.tertiary, colors.secondary, colors.primary) : "indigo-600"}`
-                                : `text-${chooseTextColor(colors?.primary || "white")} border-transparent`,
-                              "my-4 text-lg font-semibold",
-                              "inline-flex items-center px-2 font-medium ",
-                              "hover:rounded-md hover:bg-zinc-600 hover:bg-opacity-10"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </a>
-                        )}
+                        {(item) => {
+                          const colors = organization?.options?.colors;
+                          return (
+                            <a
+                              key={item.name}
+                              href={item.href}
+                              style={{
+                                color: chooseTextColor(
+                                  organization?.options?.colors.primaryColor.hex
+                                ),
+                              }}
+                              className={clsx(
+                                "my-4 text-lg font-semibold",
+                                "inline-flex items-center px-2 font-medium ",
+                                "hover:rounded-md hover:bg-zinc-600 hover:bg-opacity-10"
+                              )}
+                              aria-current={item.current ? "page" : undefined}
+                            >
+                              {item.name}
+                            </a>
+                          );
+                        }}
                       </For>
                     </div>
                   </div>
@@ -152,7 +148,14 @@ export function CompanyNavbar({
 
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
-                        <div>
+                        <div
+                          className="p-2 hover:rounded-md hover:bg-zinc-600 hover:bg-opacity-10"
+                          style={{
+                            color: chooseTextColor(
+                              organization?.options?.colors.primaryColor.hex
+                            ),
+                          }}
+                        >
                           <Menu.Button className="relative flex rounded-full text-sm">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
@@ -169,18 +172,12 @@ export function CompanyNavbar({
                                 <UserCircleIcon
                                   className={clsx(
                                     "h-8 w-8",
-                                    `text-${chooseTextColor(colors?.primary || "white")}`,
                                     "hover:rounded-md hover:bg-zinc-600 hover:bg-opacity-10",
                                     "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                   )}
                                   aria-hidden="true"
                                 />
-                                <span
-                                  className={clsx(
-                                    `text-${chooseTextColor(colors?.primary || "white")}`,
-                                    "font-semibold"
-                                  )}
-                                >
+                                <span className={clsx("font-semibold")}>
                                   {user.fullName.split(" ")[0]}
                                 </span>
                               </div>
@@ -223,14 +220,14 @@ export function CompanyNavbar({
                     <div className="hidden gap-2 md:flex ">
                       <Button
                         className="my-auto"
-                        color={colors?.secondary}
+                        color={colors?.secondaryColor.tw.color}
                         href="/auth/login"
                       >
                         Entrar
                       </Button>
                       <Button
                         className="my-auto"
-                        color={colors?.tertiary}
+                        color={colors?.tertiaryColor.tw.color}
                         href={`/auth/cadastro`}
                       >
                         Cadastrar
@@ -242,8 +239,7 @@ export function CompanyNavbar({
                   <div className="-mr-2 flex items-center md:hidden">
                     <Disclosure.Button
                       className={clsx(
-                        "relative inline-flex items-center justify-center rounded-md  p-2  hover:bg-zinc-600 hover:bg-opacity-10  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
-                        `text-${chooseTextColor(colors?.primary || "white")}`
+                        "relative inline-flex items-center justify-center rounded-md  p-2  hover:bg-zinc-600 hover:bg-opacity-10  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       )}
                     >
                       <span className="absolute -inset-0.5" />
@@ -274,9 +270,6 @@ export function CompanyNavbar({
                         as="a"
                         href={item.href}
                         className={clsx(
-                          item.current
-                            ? `border-${colors?.tertiary} bg-white text-gray-800`
-                            : `border-transparent text-${chooseTextColor(colors?.primary || "white")}  hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800`,
                           "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
                         )}
                         aria-current={item.current ? "page" : undefined}
@@ -299,17 +292,13 @@ export function CompanyNavbar({
                       <div className="ml-3">
                         <div
                           className={clsx(
-                            "text-base font-medium text-gray-800",
-                            `text-${chooseTextColor(colors?.primary || "white")}`
+                            "text-base font-medium text-gray-800"
                           )}
                         >
                           {user.fullName.split(" ")[0]}
                         </div>
                         <div
-                          className={clsx(
-                            "text-sm font-medium text-gray-500",
-                            `text-${chooseTextColor(colors?.primary || "white")}`
-                          )}
+                          className={clsx("text-sm font-medium text-gray-500")}
                         >
                           {user.email}
                         </div>
@@ -330,8 +319,7 @@ export function CompanyNavbar({
                           as="a"
                           onClick={item.onClick}
                           className={clsx(
-                            "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800",
-                            `text-${chooseTextColor(colors?.primary || "white")}`
+                            "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800"
                           )}
                         >
                           {item.name}
@@ -343,14 +331,14 @@ export function CompanyNavbar({
                   <div className="flex flex-col gap-3 p-3 pt-1">
                     <Button
                       className="my-auto"
-                      color={colors?.secondary}
+                      color={colors?.secondaryColor.tw.color}
                       href="/login"
                     >
                       Entrar
                     </Button>
                     <Button
                       className="my-auto"
-                      color={colors?.tertiary}
+                      color={colors?.tertiaryColor.tw.color}
                       onClick={() => setIsOpen(false)}
                       href={`/cadastro`}
                     >

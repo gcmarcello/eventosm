@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { upsertRegistrationBatch } from "@/app/api/batches/action";
 
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../_shared/components/PanelStore";
 
 import {
   EventGroupWithEvents,
@@ -148,7 +148,7 @@ export default function EventBatches({
       <div className="flex flex-row-reverse">
         <Button
           type="button"
-          color={primaryColor}
+          color={primaryColor?.tw.color}
           onClick={() => {
             eventBatchForm.reset();
             setIsBatchModalOpen(true);

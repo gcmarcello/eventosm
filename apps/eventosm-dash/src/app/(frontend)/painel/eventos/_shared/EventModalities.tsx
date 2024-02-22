@@ -13,7 +13,7 @@ import {
   EventWithRegistrationCount,
 } from "prisma/types/Events";
 import { useEffect, useState } from "react";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../_shared/components/PanelStore";
 import { upsertEventModality } from "@/app/api/events/action";
 import { Table } from "odinkit";
 import {
@@ -126,7 +126,7 @@ export default function EventModalities({
       <div className="flex justify-end">
         <Button
           type="button"
-          color={primaryColor}
+          color={primaryColor?.tw.color}
           onClick={() => setIsModalityModalOpen(true)}
         >
           Nova Modalidade
@@ -163,7 +163,7 @@ export default function EventModalities({
             cell: (info) => (
               <Button
                 onClick={() => handleOpenCategoryModal(info.row.original.id)}
-                color={secondaryColor}
+                color={secondaryColor?.tw.color}
               >
                 {`${info.getValue().length} Categorias`}
               </Button>

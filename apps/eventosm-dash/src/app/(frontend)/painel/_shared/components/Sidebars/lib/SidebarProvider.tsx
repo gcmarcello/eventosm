@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { SidebarContext } from "./sidebar.ctx";
 import { Organization, Prisma, User } from "@prisma/client";
-import { OrganizationWithOptions } from "prisma/types/Organization";
 
 export default function SidebarProvider({
   children,
@@ -12,7 +11,7 @@ export default function SidebarProvider({
 }: {
   children: React.ReactNode;
   user: Omit<User, "password">;
-  organization: OrganizationWithOptions;
+  organization: Organization;
 }) {
   const [visibility, setVisibility] = useState({
     panelTopbar: true,

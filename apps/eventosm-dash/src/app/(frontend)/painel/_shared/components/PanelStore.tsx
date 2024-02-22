@@ -1,14 +1,12 @@
 "use client";
-import { Color } from "prisma/types/Organization";
+import { Color } from "@prisma/client";
 import { Fragment, useEffect } from "react";
 import { create } from "zustand";
 
 interface PanelStoreElements {
   colors: {
     primaryColor?: Color;
-    primaryShade?: string;
     secondaryColor?: Color;
-    secondaryShade?: string;
   };
   timezone?: string;
 }
@@ -21,12 +19,7 @@ type PanelStore = PanelStoreElements & PanelStoreSetters;
 
 const usePanelStore = create<PanelStore>()((set) => ({
   set: (panelStore: PanelStoreElements) => set(panelStore),
-  colors: {
-    primaryColor: "white",
-    primaryShade: "",
-    secondaryColor: "dark",
-    secondaryShade: "",
-  },
+  colors: {},
 }));
 
 export function PanelStore(props: { value: PanelStoreElements }) {

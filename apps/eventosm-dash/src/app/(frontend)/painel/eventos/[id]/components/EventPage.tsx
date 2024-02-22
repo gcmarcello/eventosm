@@ -13,13 +13,13 @@ import { Form, showToast, useAction, useForm, useSteps } from "odinkit/client";
 import EventGeneralInfo from "./EventGeneralInfo";
 import { BottomNavigation } from "odinkit";
 import { Alertbox } from "odinkit";
-import EventModalities from "./EventModalities";
+import EventModalities from "../../_shared/EventModalities";
 
 import { updateEventStatus } from "@/app/api/events/action";
 
 import { Text } from "odinkit";
 import { parseEventStatus } from "../../../_shared/utils/eventStatus";
-import EventBatches from "./EventBatches";
+import EventBatches from "../../_shared/EventBatches";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import {
   Dropdown,
@@ -181,7 +181,7 @@ export default function UpdateEventPage({
         steps={steps}
         stepRefs={stepRefs}
         topRef={topRef}
-        color={primaryColor}
+        color={primaryColor?.hex}
       />
 
       <BottomNavigation className="lg:hidden">

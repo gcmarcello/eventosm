@@ -213,7 +213,7 @@ export default function EventGroupContainer({
             <div
               className={clsx("col-span-4 px-2 lg:col-span-3 lg:px-0 lg:pe-5")}
             >
-              <Tabs color={colors.primaryColor} tabs={tabs} />
+              <Tabs tabs={tabs} />
             </div>
             <div
               className={clsx(

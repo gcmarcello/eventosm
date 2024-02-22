@@ -25,8 +25,6 @@ import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 export default function PanelSideBar() {
   const { organization, visibility, setVisibility } = useSidebar();
   const pathname = usePathname();
-  const router = useRouter();
-  const { colors } = usePanel();
 
   const navigation = [
     {
@@ -128,9 +126,6 @@ export default function PanelSideBar() {
                   </Transition.Child>
                   <div
                     className={clsx(
-                      !organization?.options?.colors?.primaryColor || !isProd
-                        ? "bg-emerald-600"
-                        : `bg-${organization?.options?.colors?.primaryColor}-${organization?.options?.colors?.primaryShade}`,
                       "fixed flex h-full w-64 grow flex-col gap-y-5 overflow-y-auto px-6 py-4 pb-4"
                     )}
                   >
@@ -151,31 +146,16 @@ export default function PanelSideBar() {
                                     href={item.href}
                                     className={clsx(
                                       item.current
-                                        ? `bg-zinc-600 bg-opacity-25 text-${chooseTextColor(
-                                            organization?.options?.colors
-                                              ?.primaryColor || "white"
-                                          )}`
-                                        : ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                                            organization?.options?.colors
-                                              ?.primaryColor || "white"
-                                          )} group-hover:text-text-${chooseTextColor(
-                                            organization?.options?.colors
-                                              ?.primaryColor || "white"
-                                          )}`,
+                                        ? `bg-zinc-600 bg-opacity-25`
+                                        : ` hover:bg-zinc-800 hover:bg-opacity-25 `,
                                       "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                                     )}
                                   >
                                     <item.icon
                                       className={clsx(
                                         item.current
-                                          ? `text-${chooseTextColor(
-                                              organization?.options?.colors
-                                                ?.primaryColor || "white"
-                                            )}`
-                                          : ` text-${chooseTextColor(
-                                              organization?.options?.colors
-                                                ?.primaryColor || "white"
-                                            )} group-hover:text-white`,
+                                          ? ``
+                                          : ` group-hover:text-white`,
                                         "h-6 w-6 shrink-0"
                                       )}
                                       aria-hidden="true"
@@ -194,19 +174,13 @@ export default function PanelSideBar() {
                             className={clsx(
                               "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
 
-                              ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                                organization?.options?.colors?.primaryColor ||
-                                  "white"
-                              )} group-hover:text-white`
+                              ` hover:bg-zinc-800 hover:bg-opacity-25  group-hover:text-white`
                             )}
                           >
                             <Cog6ToothIcon
                               className={clsx(
                                 "h-6 w-6 shrink-0",
-                                ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                                  organization?.options?.colors?.primaryColor ||
-                                    "white"
-                                )} group-hover:text-white`
+                                ` hover:bg-zinc-800 hover:bg-opacity-25  group-hover:text-white`
                               )}
                               aria-hidden="true"
                             />
@@ -224,11 +198,12 @@ export default function PanelSideBar() {
         <div className="hidden lg:flex lg:h-screen lg:w-64 lg:flex-col">
           <div
             className={clsx(
-              !colors.primaryColor || isDev
-                ? "bg-emerald-600"
-                : `bg-${organization?.options?.colors?.primaryColor}-${organization?.options?.colors?.primaryShade}`,
               `fixed flex h-full w-64  grow flex-col gap-y-1 overflow-y-hidden px-6 py-4 pb-4`
             )}
+            style={{
+              backgroundColor:
+                organization.options?.colors.primaryColor.hex || "#FFF",
+            }}
           >
             <div className="relative my-2 min-h-20 w-auto shrink-0 items-center">
               <Logo
@@ -248,33 +223,22 @@ export default function PanelSideBar() {
                       <li className="group" key={item.name}>
                         <a
                           href={item.href}
+                          style={{
+                            color: chooseTextColor(
+                              organization.options?.colors.primaryColor.hex ||
+                                "#FFF"
+                            ),
+                          }}
                           className={clsx(
                             item.current
-                              ? `bg-zinc-600 bg-opacity-25 text-${chooseTextColor(
-                                  organization?.options?.colors?.primaryColor ||
-                                    "white"
-                                )}`
-                              : ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                                  organization?.options?.colors?.primaryColor ||
-                                    "white"
-                                )} group-hover:text-text-${chooseTextColor(
-                                  organization?.options?.colors?.primaryColor ||
-                                    "white"
-                                )}`,
+                              ? `bg-zinc-600 bg-opacity-25 `
+                              : ` hover:bg-zinc-800 hover:bg-opacity-25`,
                             "leading-6, group flex gap-x-3 rounded-md p-2 text-sm font-semibold"
                           )}
                         >
                           <item.icon
                             className={clsx(
-                              item.current
-                                ? `text-${chooseTextColor(
-                                    organization?.options?.colors
-                                      ?.primaryColor || "white"
-                                  )}`
-                                : ` text-${chooseTextColor(
-                                    organization?.options?.colors
-                                      ?.primaryColor || "white"
-                                  )} group-hover:text-white`,
+                              item.current ? `` : ` `,
                               item.icon === WhatsappIcon &&
                                 "me-1 h-[1.3rem] w-[1.3rem] fill-indigo-200",
 
@@ -291,21 +255,22 @@ export default function PanelSideBar() {
 
                 <li className="group mt-auto">
                   <Link
+                    style={{
+                      color: chooseTextColor(
+                        organization.options?.colors.primaryColor.hex || "#FFF"
+                      ),
+                    }}
                     href="/painel/configuracoes"
                     className={clsx(
                       "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
 
-                      ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                        organization?.options?.colors?.primaryColor || "white"
-                      )} group-hover:text-white`
+                      ` hover:bg-zinc-800 hover:bg-opacity-25 group-hover:text-white`
                     )}
                   >
                     <Cog6ToothIcon
                       className={clsx(
                         "h-6 w-6 shrink-0",
-                        ` hover:bg-zinc-800 hover:bg-opacity-25 text-${chooseTextColor(
-                          organization?.options?.colors?.primaryColor || "white"
-                        )} group-hover:text-white`
+                        ` hover:bg-zinc-800 hover:bg-opacity-25  group-hover:text-white`
                       )}
                       aria-hidden="true"
                     />

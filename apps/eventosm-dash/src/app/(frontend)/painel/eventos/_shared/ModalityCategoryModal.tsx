@@ -12,7 +12,7 @@ import {
 } from "odinkit/client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../_shared/components/PanelStore";
 
 import { For } from "odinkit";
 
@@ -190,13 +190,17 @@ export default function ModalityCategoryModal({
                   })
                 : setShowForm(true)
             }
-            color={secondaryColor}
+            color={secondaryColor?.tw.color}
           >
             {showForm || fields.every((f) => !f.name)
               ? "Adicionar"
               : "Editar Categorias"}
           </Button>
-          <Button type="submit" form="categoryForm" color={primaryColor}>
+          <Button
+            type="submit"
+            form="categoryForm"
+            color={primaryColor?.tw.color}
+          >
             Salvar
           </Button>
         </DialogActions>

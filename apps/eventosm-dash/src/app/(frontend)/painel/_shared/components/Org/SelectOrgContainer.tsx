@@ -3,9 +3,8 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Organization } from "@prisma/client";
 import { changeActiveOrganization } from "@/app/api/orgs/action";
-import { OrganizationWithOptions } from "prisma/types/Organization";
 
-import { BottomNavigation } from "../../_shared/components/BottomNavigation";
+import { BottomNavigation } from "../../../../_shared/components/BottomNavigation";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { Avatar, Container, Text } from "odinkit";
@@ -14,7 +13,7 @@ import { Button, showToast, useAction } from "odinkit/client";
 export default function SelectOrgContainer({
   organizations,
 }: {
-  organizations: OrganizationWithOptions[];
+  organizations: Organization[];
 }) {
   const { trigger: changeOrgTrigger, isMutating: isLoading } = useAction({
     action: changeActiveOrganization,

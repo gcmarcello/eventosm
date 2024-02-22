@@ -103,11 +103,11 @@ export default function LoginPage() {
             </div>
           </DialogBody>
           <DialogActions>
-            <Button color={colors.secondaryColor} href="./cadastro">
+            <Button color={colors.secondaryColor.tw.color} href="./cadastro">
               Cadastrar nova conta
             </Button>
             <Button
-              color={colors.primaryColor}
+              color={colors.primaryColor.tw.color}
               onClick={() =>
                 loginTrigger({ ...form.getValues(), acceptTerms: true })
               }
@@ -197,7 +197,7 @@ export default function LoginPage() {
                   disabled={isLoading}
                   type="submit"
                   className={"w-full"}
-                  color={colors.primaryColor}
+                  color={colors.primaryColor.tw.color}
                 >
                   <div className="flex items-center gap-2">
                     Login

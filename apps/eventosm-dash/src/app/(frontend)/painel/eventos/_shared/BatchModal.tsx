@@ -25,7 +25,7 @@ import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/t
 import { EventModalityWithCategories } from "prisma/types/Events";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../_shared/components/PanelStore";
 
 export default function BatchModal({
   modalState,
@@ -93,7 +93,7 @@ export default function BatchModal({
               name="categoryControl"
             >
               <Label>Controle por Categoria</Label>
-              <Switch color={primaryColor || "indigo"} />
+              <Switch color={primaryColor?.tw.color} />
             </BatchField>
             <span className="text-xl">
               Vagas:{" "}
@@ -258,12 +258,16 @@ export default function BatchModal({
       <DialogActions className="justify-between">
         <Button
           onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
-          color={secondaryColor}
+          color={secondaryColor?.tw.color}
         >
           {modalState.showCategoryBatches ? "Voltar" : "Definir por Categoria"}
         </Button>
         <div className="flex gap-2">
-          <Button form="eventBatchForm" type="submit" color={primaryColor}>
+          <Button
+            form="eventBatchForm"
+            type="submit"
+            color={primaryColor?.tw.color}
+          >
             {batchForm.getValues("id") ? "Salvar" : "Criar"}
           </Button>
         </div>
