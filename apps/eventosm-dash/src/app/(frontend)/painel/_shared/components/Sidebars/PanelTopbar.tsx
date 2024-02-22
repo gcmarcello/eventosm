@@ -52,7 +52,7 @@ export function SupporterTopBar() {
             href={
               organization.domain
                 ? `https://${organization.domain}`
-                : `${getEnv("NEXT_PUBLIC_SITE_URL")}/org/${organization.slug}`
+                : `/org/${organization.slug}`
             }
             className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
             /* onClick={async () =>
@@ -67,7 +67,7 @@ export function SupporterTopBar() {
                 className="h-6 w-6"
                 aria-hidden="true"
               />{" "}
-              <span>Ver Site</span>
+              <span className="hidden lg:block">Ver Site</span>
             </div>
           </Link>
 

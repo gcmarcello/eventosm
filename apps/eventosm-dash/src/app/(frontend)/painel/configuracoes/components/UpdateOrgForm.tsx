@@ -137,7 +137,7 @@ export default function UpdateOrgForm({
       onSubmit={(data) => {
         updateTrigger(data);
       }}
-      className="space-y-3 pb-10"
+      className="space-y-3 pb-20 lg:pb-10"
     >
       <Steps
         stepRefs={stepRefs}
@@ -145,7 +145,7 @@ export default function UpdateOrgForm({
         steps={steps}
         color={organization.options.colors.primaryColor?.hex}
       />
-      <div className="flex justify-end">
+      <div className="hidden justify-end lg:flex">
         <Button
           disabled={isLoading}
           type="submit"

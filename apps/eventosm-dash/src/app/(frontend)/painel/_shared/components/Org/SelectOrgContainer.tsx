@@ -39,7 +39,7 @@ export default function SelectOrgContainer({
                 className="flex flex-col items-center justify-center gap-4 p-6 "
               >
                 <Avatar
-                  src={org.options?.logos?.lg}
+                  src={org.options.image}
                   className="size-32  text-indigo-600 shadow-lg"
                 />
                 <Text className="text-sm">{org.name}</Text>
