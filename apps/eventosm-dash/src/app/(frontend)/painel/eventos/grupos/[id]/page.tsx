@@ -9,6 +9,7 @@ import { readModalityCategories } from "@/app/api/categories/service";
 import { readRegistrationBatches } from "@/app/api/batches/service";
 import EventGroupForm from "../../novogrupo/components/NewEventGroupForm";
 import EventGroupUpdateForm from "./components/EventGroupUpdateForm";
+import { readOrganizations } from "@/app/api/orgs/service";
 
 export default async function EditEventGroupPage({
   params,
@@ -18,6 +19,14 @@ export default async function EditEventGroupPage({
   const organizationId = cookies().get("activeOrg")?.value;
 
   if (!organizationId) return redirect("/painel");
+
+  const organization = (
+    await readOrganizations({
+      where: { id: organizationId },
+    })
+  )[0];
+
+  if (!organization) return redirect("/painel");
 
   const eventGroup = await readEventGroups({
     where: { id: params.id, organizationId: organizationId },
@@ -38,6 +47,7 @@ export default async function EditEventGroupPage({
       eventGroup={eventGroup[0]}
       modalities={modalities}
       batches={batches}
+      organization={organization}
     />
   );
 }

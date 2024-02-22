@@ -248,41 +248,41 @@ export function EventForm({
                       {form.watch(
                         `teamMembers.${index}.registration.addon.id`
                       ) &&
-                        eventGroup.EventAddon?.find(
-                          (addon) =>
-                            addon.id ===
-                            form.watch(
-                              `teamMembers.${index}.registration.addon.id`
-                            )
-                        )?.options && (
-                          <Field
-                            name={`teamMembers.${index}.registration.addon.option`}
-                          >
-                            <Select
-                              disabled={
-                                !form.watch(
-                                  `teamMembers.${index}.registration.addon.id`
-                                )
-                              }
-                              data={
-                                (
-                                  eventGroup.EventAddon?.find(
-                                    (addon) =>
-                                      addon.id ===
-                                      form.watch(
-                                        `teamMembers.${index}.registration.addon.id`
-                                      )
-                                  )?.options as string[]
-                                )?.map((o) => ({
-                                  id: o,
-                                  name: o,
-                                })) || []
-                              }
-                              valueKey="id"
-                              displayValueKey="name"
-                            />
-                          </Field>
-                        )}
+                      eventGroup.EventAddon?.find(
+                        (addon) =>
+                          addon.id ===
+                          form.watch(
+                            `teamMembers.${index}.registration.addon.id`
+                          )
+                      )?.options ? (
+                        <Field
+                          name={`teamMembers.${index}.registration.addon.option`}
+                        >
+                          <Select
+                            disabled={
+                              !form.watch(
+                                `teamMembers.${index}.registration.addon.id`
+                              )
+                            }
+                            data={
+                              (
+                                eventGroup.EventAddon?.find(
+                                  (addon) =>
+                                    addon.id ===
+                                    form.watch(
+                                      `teamMembers.${index}.registration.addon.id`
+                                    )
+                                )?.options as string[]
+                              )?.map((o) => ({
+                                id: o,
+                                name: o,
+                              })) || []
+                            }
+                            valueKey="id"
+                            displayValueKey="name"
+                          />
+                        </Field>
+                      ) : null}
                     </TableCell>
                   ) : null}
                 </TableRow>

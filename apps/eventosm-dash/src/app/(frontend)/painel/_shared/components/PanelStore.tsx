@@ -19,10 +19,7 @@ type PanelStore = PanelStoreElements & PanelStoreSetters;
 
 const usePanelStore = create<PanelStore>()((set) => ({
   set: (panelStore: PanelStoreElements) => set(panelStore),
-  colors: {
-    primaryColor: "white",
-    secondaryColor: "dark",
-  },
+  colors: {},
 }));
 
 export function PanelStore(props: { value: PanelStoreElements }) {

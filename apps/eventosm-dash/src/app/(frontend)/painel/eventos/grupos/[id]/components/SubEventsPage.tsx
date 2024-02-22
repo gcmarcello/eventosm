@@ -110,7 +110,7 @@ export default function SubeventsPage({
       <div className="flex justify-end">
         <Button
           type="button"
-          color={primaryColor}
+          color={primaryColor?.tw.color}
           onClick={() => setIsModalOpen(true)}
         >
           Nova Etapa

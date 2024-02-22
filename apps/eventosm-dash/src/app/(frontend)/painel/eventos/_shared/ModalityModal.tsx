@@ -15,7 +15,7 @@ import {
 } from "odinkit/client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../_shared/components/PanelStore";
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { format } from "path";
@@ -64,7 +64,11 @@ export default function ModalityModal({
           >
             Cancelar
           </Button>
-          <Button form="ModalityForm" type="submit" color={primaryColor}>
+          <Button
+            form="ModalityForm"
+            type="submit"
+            color={primaryColor?.tw.color}
+          >
             {modalityForm.getValues("id") ? "Salvar" : "Criar"}
           </Button>
         </DialogActions>

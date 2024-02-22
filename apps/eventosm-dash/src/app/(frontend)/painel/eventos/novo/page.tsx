@@ -96,7 +96,7 @@ export default function NewEventPage() {
     <Form hform={form} onSubmit={(data) => trigger(data)}>
       <div className="pb-20 lg:pb-4">
         <Steps
-          color={primaryColor}
+          color={primaryColor?.hex}
           steps={steps}
           stepRefs={stepRefs}
           topRef={topRef}

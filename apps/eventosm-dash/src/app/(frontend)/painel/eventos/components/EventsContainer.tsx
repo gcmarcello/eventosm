@@ -164,7 +164,9 @@ export default function EventsContainer({
                       <EllipsisVerticalIcon className="text-zinc-500" />
                     </DropdownButton>
                     <DropdownMenu>
-                      <DropdownItem href={`/painel/eventos/${info.getValue()}`}>
+                      <DropdownItem
+                        href={`/painel/eventos/grupos/${info.getValue()}`}
+                      >
                         Editar
                       </DropdownItem>
                     </DropdownMenu>

@@ -31,7 +31,7 @@ export default function StepControl({
         Anterior
       </Button>
       <Button
-        color={primaryColor}
+        color={primaryColor?.tw.color}
         type={step.currentStep === steps.length - 1 ? "submit" : "button"}
         disabled={blockNextStep}
         onClick={(e: any) => {

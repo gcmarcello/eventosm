@@ -140,7 +140,11 @@ export default function SubeventModal({
         <Button color="white" onClick={() => modalState.setIsModalOpen(false)}>
           Cancelar
         </Button>
-        <Button form="SubeventForm" type="submit" color={primaryColor}>
+        <Button
+          form="SubeventForm"
+          type="submit"
+          color={primaryColor?.tw.color}
+        >
           {form.getValues("id") ? "Salvar" : "Criar"}
         </Button>
       </DialogActions>
