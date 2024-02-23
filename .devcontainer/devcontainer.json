@@ -19,7 +19,8 @@
         "rangav.vscode-thunder-client",
         "eamodio.gitlens",
         "yoavbls.pretty-ts-errors",
-        "ms-vsliveshare.vsliveshare"
+        "ms-vsliveshare.vsliveshare",
+        "harehare.portable-kanban"
       ],
       "settings": {
         "git.repositoryScanMaxDepth": 5,
