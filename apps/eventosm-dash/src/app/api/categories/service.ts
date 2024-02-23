@@ -1,7 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { UpsertEventModalityCategoriesDto } from "../events/dto";
 import { TeamWithUsers } from "prisma/types/Teams";
-import { CategoryBatch, ModalityCategory } from "@prisma/client";
+import { CategoryBatch, ModalityCategory, Organization } from "@prisma/client";
 import { readTeamSize } from "../teams/service";
 import dayjs from "dayjs";
 import { readUser } from "../users/service";
@@ -16,9 +16,9 @@ export async function readModalityCategories(
 }
 
 export async function upsertEventModalityCategories(
-  request: UpsertEventModalityCategoriesDto & { organizationId: string }
+  request: UpsertEventModalityCategoriesDto & { organization: Organization }
 ) {
-  const { organizationId, ...rest } = request;
+  const { organization, ...rest } = request;
 
   if (request.categories.some((category) => !category.eventModalityId))
     throw "Nenhuma categoria informada";
@@ -29,8 +29,8 @@ export async function upsertEventModalityCategories(
   });
 
   if (
-    modality?.event?.organizationId !== request.organizationId &&
-    modality?.eventGroup?.organizationId !== request.organizationId
+    modality?.event?.organizationId !== request.organization.id &&
+    modality?.eventGroup?.organizationId !== request.organization.id
   )
     throw "Modalidade de evento não encontrado nessa organização.";
 

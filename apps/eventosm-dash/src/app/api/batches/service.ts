@@ -1,4 +1,4 @@
-import { EventRegistrationBatch, Team } from "@prisma/client";
+import { EventRegistrationBatch, Organization, Team } from "@prisma/client";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -18,10 +18,10 @@ dayjs.extend(isSameOrAfter);
 export async function upsertRegistrationBatch(
   request: UpsertRegistrationBatchDto & {
     userSession: UserSession;
-    organizationId: string;
+    organization: Organization;
   }
 ) {
-  const { organizationId, userSession, categoryBatch, ...rest } = request;
+  const { organization, userSession, categoryBatch, ...rest } = request;
   if (
     !dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").isValid() ||
     !dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").isValid()

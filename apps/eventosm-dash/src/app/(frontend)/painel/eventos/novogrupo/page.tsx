@@ -8,7 +8,7 @@ export default async function NewEventGroupPage() {
     .then(UserSessionMiddleware)
     .then(OrganizationMiddleware);
 
-  if (!request.organizationId) throw "Organization nao encontrada";
+  if (!request.organization) throw "Organization nao encontrada";
 
-  return <NewEventGroupForm organizationId={request.organizationId} />;
+  return <NewEventGroupForm organization={request.organization} />;
 }

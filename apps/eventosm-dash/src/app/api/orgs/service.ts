@@ -3,6 +3,7 @@ import { UpsertOrganizationDto, ReadOrganizationDto } from "./dto";
 import { prisma } from "prisma/prisma";
 import { generateColorJson } from "../colors/service";
 import { normalizePhone } from "odinkit";
+import { Organization } from "@prisma/client";
 
 export async function createOrganization(
   request: UpsertOrganizationDto & { userSession: UserSession }
@@ -56,14 +57,15 @@ export async function createOrganization(
 }
 
 export async function updateOrganization(
-  request: UpsertOrganizationDto & { userSession: UserSession } & {
-    organizationId: string;
+  request: UpsertOrganizationDto & {
+    userSession: UserSession;
+    organization: Organization;
   }
 ) {
-  const { organizationId, userSession, ...data } = request;
+  const { userSession, organization, ...data } = request;
 
   const currentOrg = await prisma.organization.findFirst({
-    where: { id: organizationId },
+    where: { id: request.organization.id },
     select: { options: true },
   });
 
@@ -86,8 +88,8 @@ export async function updateOrganization(
       where: { id: data.tertiaryColor },
     })) ?? undefined;
 
-  const organization = await prisma.organization.update({
-    where: { id: organizationId },
+  const updatedOrganization = await prisma.organization.update({
+    where: { id: organization.id },
     data: {
       email: data.email,
       name: data.name,
@@ -111,7 +113,7 @@ export async function updateOrganization(
       },
     },
   });
-  return organization;
+  return updatedOrganization;
 }
 
 export async function readOrganizations(request: ReadOrganizationDto) {

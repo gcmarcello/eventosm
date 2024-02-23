@@ -1,5 +1,6 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { UpsertCouponBatchDto } from "../registrations/dto";
+import { Organization } from "@prisma/client";
 
 export async function readCoupon({
   couponId,
@@ -24,10 +25,10 @@ export async function readCoupon({
 export async function upsertCouponBatchDto(
   request: UpsertCouponBatchDto & {
     userSession: UserSession;
-    organizationId: string;
+    organization: Organization;
   }
 ) {
-  const { organizationId, userSession, ...rest } = request;
+  const { organization, userSession, ...rest } = request;
 
   const upsertedBatch = await prisma.batchCoupon.upsert({
     where: { id: rest.id },

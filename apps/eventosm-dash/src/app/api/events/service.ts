@@ -17,6 +17,7 @@ import {
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventModalityWithCategories } from "prisma/types/Events";
+import { Organization } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
 /* export async function upsertEventGroupType(request: UpsertEventGroupTypeDto) {
@@ -28,7 +29,10 @@ dayjs.extend(customParseFormat);
 } */
 
 export async function upsertEvent(
-  request: UpsertEventDto & { organizationId: string; userSession: UserSession }
+  request: UpsertEventDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
 ) {
   const { userSession, ...rest } = request;
   let newImage;
@@ -47,6 +51,7 @@ export async function upsertEvent(
     create: {
       ...rest,
       slug: rest.slug || id,
+      organizationId: request.organization.id,
       dateStart,
       dateEnd,
       status: rest.eventGroupId ? "published" : "draft",
@@ -59,10 +64,10 @@ export async function upsertEvent(
 export async function upsertEventGroup(
   request: UpsertEventGroupDto & {
     userSession: UserSession;
-    organizationId: string;
+    organization: Organization;
   }
 ) {
-  const { ruleLogic, userSession, ...event } = request;
+  const { ruleLogic, userSession, organization, ...event } = request;
   const id = event.id ?? crypto.randomUUID();
   const newEventGroup = await prisma.eventGroup.upsert({
     where: { id: id },
@@ -70,7 +75,11 @@ export async function upsertEventGroup(
       ...event,
       slug: event.slug || id,
     },
-    create: { ...event, slug: event.slug || id },
+    create: {
+      ...event,
+      slug: event.slug || id,
+      organizationId: organization.id,
+    },
   });
 
   if (newEventGroup.eventGroupType === "free") return newEventGroup;
@@ -94,21 +103,21 @@ export async function upsertEventGroup(
 
 export async function upsertEventModality(
   request: UpsertEventModalityDto & {
-    organizationId: string;
+    organization: Organization;
     userSession: UserSession;
   }
 ) {
   let event;
-  const { organizationId, userSession, ...rest } = request;
+  const { organization, userSession, ...rest } = request;
   request.id = request.id ?? crypto.randomUUID();
 
   if (request.eventId) {
     event = await prisma.event.findFirst({
-      where: { id: request.eventId, organizationId },
+      where: { id: request.eventId, organizationId: organization.id },
     });
   } else {
     event = await prisma.eventGroup.findFirst({
-      where: { id: request.eventGroupId, organizationId },
+      where: { id: request.eventGroupId, organizationId: organization.id },
     });
   }
 
@@ -129,14 +138,14 @@ export async function upsertEventModality(
 
 export async function upsertEventAddon(
   request: UpsertEventAddonDto & {
-    organizationId: string;
+    organization: Organization;
     userSession: UserSession;
   }
 ) {
-  const { organizationId, userSession, ...rest } = request;
+  const { organization, userSession, ...rest } = request;
 
   const event = await prisma.event.findFirst({
-    where: { id: request.id, organizationId },
+    where: { id: request.id, organizationId: organization.id },
     include: { EventAddon: true },
   });
   if (!event) throw "Evento não encontrado nessa organização.";
@@ -218,7 +227,10 @@ export async function readEventModalities(request: ReadEventModalitiesDto) {
 }
 
 export async function deleteModality(
-  request: { id: string } & { userSession: UserSession; organizationId: string }
+  request: { id: string } & {
+    userSession: UserSession;
+    organization: Organization;
+  }
 ) {
   const modality = await prisma.eventModality.update({
     where: { id: request.id },
@@ -235,14 +247,14 @@ export async function deleteModality(
 export async function updateEventStatus(
   request: UpdateEventStatusDto & {
     userSession: UserSession;
-    organizationId: string;
+    organization: Organization;
   }
 ) {
   if (!request.id && !request.groupId) throw "Evento não encontrado.";
 
   if (request.id) {
     const eventToUpdate = await prisma.event.findFirst({
-      where: { id: request.id, organizationId: request.organizationId },
+      where: { id: request.id, organizationId: request.organization.id },
       include: { EventModality: true, EventRegistrationBatch: true },
     });
     if (!eventToUpdate) throw "Evento não encontrado na organização.";
@@ -251,7 +263,7 @@ export async function updateEventStatus(
       throw "Evento sem lotes de inscrição.";
   } else {
     const groupToUpdate = await prisma.eventGroup.findFirst({
-      where: { id: request.id, organizationId: request.organizationId },
+      where: { id: request.id, organizationId: request.organization.id },
       include: {
         EventModality: true,
         EventRegistrationBatch: true,
@@ -270,7 +282,7 @@ export async function updateEventStatus(
         where: {
           id: request.id,
           Organization: {
-            id: request.organizationId,
+            id: request.organization.id,
             ownerId: request.userSession.id,
           },
         },
@@ -280,7 +292,7 @@ export async function updateEventStatus(
         where: {
           id: request.groupId,
           Organization: {
-            id: request.organizationId,
+            id: request.organization.id,
             ownerId: request.userSession.id,
           },
         },
