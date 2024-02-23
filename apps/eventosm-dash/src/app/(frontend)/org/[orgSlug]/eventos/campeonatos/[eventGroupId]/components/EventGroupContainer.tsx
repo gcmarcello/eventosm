@@ -229,8 +229,8 @@ export default function EventGroupContainer({
                     >
                       {isUserRegistered ? "Inscrito!" : "Inscrição"}
 
-                      <ChevronUpIcon className="lg:hidden" />
-                      <ChevronDownIcon className="lg:block" />
+                      <ChevronUpIcon className="size-5 lg:hidden" />
+                      <ChevronDownIcon className=" size-5 lg:block" />
                     </DropdownButton>
                     <DropdownMenu>
                       {
@@ -346,7 +346,7 @@ export default function EventGroupContainer({
                 ? "Inscrito!"
                 : "Inscrição (à partir de R$ 0,00)"}
 
-              <ChevronUpIcon className="lg:hidden" />
+              <ChevronUpIcon className="size-5 lg:hidden" />
             </DropdownButton>
             <DropdownMenu>
               <DropdownItem

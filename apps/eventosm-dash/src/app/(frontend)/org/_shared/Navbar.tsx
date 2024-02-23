@@ -221,14 +221,14 @@ export function CompanyNavbar({
                       <Button
                         className="my-auto"
                         color={colors?.secondaryColor.tw.color}
-                        href="/auth/login"
+                        href="/login"
                       >
                         Entrar
                       </Button>
                       <Button
                         className="my-auto"
                         color={colors?.tertiaryColor.tw.color}
-                        href={`/auth/cadastro`}
+                        href={`/cadastro`}
                       >
                         Cadastrar
                       </Button>

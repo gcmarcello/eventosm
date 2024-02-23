@@ -24,7 +24,7 @@ import Image from "next/image";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
-  .merge(z.object({ image: z.array(z.any()) }));
+  .merge(z.object({ image: z.array(z.any()).optional() }));
 
 type Schema = z.infer<typeof schema>;
 
@@ -62,8 +62,8 @@ export default function SubeventsPage({
 
       if (!image)
         return {
-          ...data,
-          image: eventGroup.imageUrl,
+          ...rest,
+          imageUrl: eventGroup.imageUrl ?? undefined,
         };
 
       const uploadedFiles = await uploadFiles(
@@ -192,7 +192,7 @@ export default function SubeventsPage({
             cell: (info) => (
               <Dropdown>
                 <DropdownButton plain>
-                  <EllipsisVerticalIcon className="text-zinc-500" />
+                  <EllipsisVerticalIcon className="size-5 text-zinc-500" />
                 </DropdownButton>
                 <DropdownMenu>
                   <DropdownItem

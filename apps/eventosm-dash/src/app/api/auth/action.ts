@@ -8,25 +8,19 @@ import path from "path";
 import { ActionResponse } from "odinkit";
 
 export async function signup(request: SignupDto) {
-  let eventRedirect;
   let signup;
 
   try {
-    const { request: parsedRequest, eventRedirect: redirect } =
+    const { request: parsedRequest } =
       await UseMiddlewares(request).then(SignupMiddleware);
     signup = await service.signup(parsedRequest);
-    eventRedirect = redirect || undefined;
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
 
-  if (eventRedirect) {
-    return ActionResponse.success({
-      redirect: `/evento/${eventRedirect.id}/inscricao`,
-    });
-  }
   return ActionResponse.success({
+    redirect: `/login`,
     data: signup,
     message: "Usuário cadastrado com sucesso!",
   });

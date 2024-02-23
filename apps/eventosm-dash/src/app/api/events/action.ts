@@ -54,12 +54,10 @@ export async function upsertEvent(request: UpsertEventDto) {
     newEvent = await service.upsertEvent(parsedRequest);
   } catch (error) {
     console.log(error);
-    return ActionResponse.error({
-      message: "Erro ao criar evento.",
-    });
+    return ActionResponse.error(error);
   }
 
-  if (!request.id) {
+  if (!request.id || !request.eventGroupId) {
     return ActionResponse.success({
       redirect: `/painel/eventos/`,
       message: "Evento criado com sucesso.",

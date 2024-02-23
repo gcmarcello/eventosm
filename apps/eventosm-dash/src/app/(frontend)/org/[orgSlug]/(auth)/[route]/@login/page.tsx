@@ -58,15 +58,22 @@ export default function LoginPage() {
     action: login,
     redirect: true,
     onError: (error) => {
-      if (typeof error === "object") {
-        setUser(
-          error as UserWithoutPassword & {
-            UserOrgLink: (UserOrgLink & { Organization: Organization })[];
-          }
-        );
-        setOpenTermsModal(true);
-      } else {
-        return showToast({ message: error, variant: "error", title: "Erro" });
+      try {
+        const parsedObject = JSON.parse(error);
+        if ("fullName" in parsedObject) {
+          setUser(
+            parsedObject as UserWithoutPassword & {
+              UserOrgLink: (UserOrgLink & { Organization: Organization })[];
+            }
+          );
+          setOpenTermsModal(true);
+        }
+      } catch (error) {
+        showToast({
+          message: error as string,
+          variant: "error",
+          title: "Erro",
+        });
       }
 
       /* form.setError("root.serverError", {
@@ -132,7 +139,7 @@ export default function LoginPage() {
           <p className="mt-2 text-sm leading-6 text-gray-500">
             Ainda não tem cadastro?{" "}
             <Link
-              href="/auth/cadastro"
+              href="/cadastro"
               className={clsx(
                 "font-semibold",
                 `text-${colors.primaryColor}-600 hover:text-${colors.primaryColor}-500`

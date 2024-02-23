@@ -27,8 +27,6 @@ export async function signup(request: SignupDto) {
       },
     },
   });
-  const loginToken = await createToken({ id: newUser.id });
-  cookies().set("token", loginToken);
   return newUser;
 }
 

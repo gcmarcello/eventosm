@@ -85,14 +85,6 @@ export default function FormContainer({ states }: { states: State[] }) {
     ConfirmDetailsSection,
   ];
 
-  useEffect(() => {
-    searchParams.get("event") &&
-      form.setValue("eventRedirect", {
-        id: "3333",
-        name: "Evento de Teste",
-      });
-  }, [searchParams]);
-
   const { trigger: signUpTrigger, isMutating: isLoading } = useAction({
     action: signup,
     redirect: true,

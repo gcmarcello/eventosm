@@ -402,6 +402,9 @@ export default function EventGroupUpdateForm({
           className="mb-3"
         >
           <ul className="list-disc space-y-1">
+            {eventGroup.Event.length === 0 && (
+              <li>Nenhuma etapa foi criada.</li>
+            )}
             {modalities.length === 0 && (
               <li>O evento ainda não possui nenhuma modalidade cadastrada.</li>
             )}
@@ -409,9 +412,6 @@ export default function EventGroupUpdateForm({
               (modality) => !modality.modalityCategory?.length
             ) && <li>Nenhuma modalidade tem uma categoria cadastrada.</li>}
             {!batches.length && <li>Nenhum lote de inscrições foi criado.</li>}
-            {eventGroup.Event.length === 0 && (
-              <li>Nenhuma etapa foi criada.</li>
-            )}
           </ul>
         </Alertbox>
       ) : (
