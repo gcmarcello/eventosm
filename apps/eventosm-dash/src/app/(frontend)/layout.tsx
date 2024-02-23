@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import MainNavbar from "./_shared/components/MainNavbar";
 import { Mocker } from "odinkit/client";
 import { isDev } from "@/utils/settings";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html data-theme={theme?.value} className=" bg-white" lang="pt-BR">
       <body className={clsx(inter.className)}>
         {isDev && <Mocker />}
+
         <main>{children}</main>
         <Toaster position="bottom-right" />
       </body>
