@@ -24,17 +24,18 @@ import {
 import { useMemo } from "react";
 import { usePanel } from "../../../_shared/components/PanelStore";
 import { upsertEventGroup } from "@/app/api/events/action";
-import { EventGroup } from "@prisma/client";
+import { EventGroup, Organization } from "@prisma/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { fromPairs } from "lodash";
+import OrganizationEventsPage from "@/app/(frontend)/org/[orgSlug]/eventos/page";
 
 export default function EventGroupForm({
-  organizationId,
+  organization,
   eventGroup,
 }: {
-  organizationId: string;
+  organization: Organization;
   eventGroup?: EventGroupWithEvents;
 }) {
   const form = useForm({
@@ -70,7 +71,7 @@ export default function EventGroupForm({
       steps={{
         general: {
           fields: ["name", "slug", "eventGroupType", "registrationType"],
-          form: <EventGroupGeneralInfo />,
+          form: <EventGroupGeneralInfo organization={organization} />,
         },
         rules: {
           fields: [
@@ -80,7 +81,7 @@ export default function EventGroupForm({
           ],
           conditions: ["eventGroupType"],
           form: form.watch("eventGroupType") === "championship" && (
-            <EventGroupRules />
+            <EventGroupRules organization={organization} />
           ),
         },
       }}
@@ -114,7 +115,12 @@ export default function EventGroupForm({
               </For>
             </div>
 
-            <div className="hidden justify-between lg:flex">
+            <div
+              className={clsx(
+                "hidden justify-between lg:flex",
+                !hasPrevStep && "flex-row-reverse"
+              )}
+            >
               {hasPrevStep && (
                 <Button
                   type="button"
@@ -130,8 +136,7 @@ export default function EventGroupForm({
               {hasNextStep && (
                 <Button
                   type="button"
-                  color="indigo"
-                  className="w-full"
+                  color={organization.options.colors.primaryColor.tw.color}
                   onClick={() => {
                     walk(1);
                   }}
@@ -144,7 +149,7 @@ export default function EventGroupForm({
               {!hasNextStep && (
                 <Button
                   type="submit"
-                  color="indigo"
+                  color={organization.options.colors.primaryColor.tw.color}
                   disabled={!isCurrentStepValid}
                   loading={isMutating}
                 >
@@ -152,8 +157,13 @@ export default function EventGroupForm({
                 </Button>
               )}
             </div>
-            <BottomNavigation className="block p-2 lg:hidden">
-              <div className="flex justify-between">
+            <BottomNavigation className={"block p-2 lg:hidden"}>
+              <div
+                className={clsx(
+                  "flex justify-between",
+                  !hasPrevStep && "flex-row-reverse"
+                )}
+              >
                 {hasPrevStep && (
                   <Button
                     type="button"
@@ -168,6 +178,7 @@ export default function EventGroupForm({
                 {hasNextStep && (
                   <Button
                     type="button"
+                    color={organization.options.colors.primaryColor.tw.color}
                     onClick={() => {
                       walk(1);
                     }}
@@ -180,7 +191,7 @@ export default function EventGroupForm({
                 {!hasNextStep && (
                   <Button
                     type="submit"
-                    color="indigo"
+                    color={organization.options.colors.primaryColor.tw.color}
                     disabled={!isCurrentStepValid}
                     loading={isMutating}
                   >
@@ -196,7 +207,11 @@ export default function EventGroupForm({
   );
 }
 
-function EventGroupGeneralInfo() {
+function EventGroupGeneralInfo({
+  organization,
+}: {
+  organization: Organization;
+}) {
   const form = useFormContext<UpsertEventGroupDto>();
   const Field = useMemo(() => form.createField(), []);
   return (
@@ -216,8 +231,8 @@ function EventGroupGeneralInfo() {
           <Field name="slug">
             <Label>Link do Grupo de Eventos</Label>
             <Input />
-            <Description className={"text-sm"}>
-              https://eventosm.com.br/eventos/
+            <Description className={"text-wrap text-xs"}>
+              https://eventosm.com.br/org/{`${organization.slug}`}/eventos/
               <span className="font-semibold">{`${form.watch("slug") || "exemplo"}`}</span>
             </Description>
             <ErrorMessage />
@@ -244,21 +259,30 @@ function EventGroupGeneralInfo() {
             <Label>Estilo de Inscrição</Label>
             <RadioGroup>
               <RadioField>
-                <Radio color="indigo" value="individual" />
+                <Radio
+                  color={organization.options.colors.primaryColor.tw.color}
+                  value="individual"
+                />
                 <Label>Individual</Label>
                 <Description>
                   Inscrições podem ser feitas apenas por atletas.
                 </Description>
               </RadioField>
               <RadioField>
-                <Radio color="indigo" value="team" />
+                <Radio
+                  color={organization.options.colors.primaryColor.tw.color}
+                  value="team"
+                />
                 <Label>Equipes</Label>
                 <Description>
                   Inscrições podem ser feitas apenas por equipes.
                 </Description>
               </RadioField>
               <RadioField>
-                <Radio color="indigo" value="mixed" />
+                <Radio
+                  color={organization.options.colors.primaryColor.tw.color}
+                  value="mixed"
+                />
                 <Label>Mista</Label>
                 <Description>
                   Inscrições podem ser feitas por atletas ou equipes.
@@ -272,7 +296,7 @@ function EventGroupGeneralInfo() {
   );
 }
 
-function EventGroupRules() {
+function EventGroupRules({ organization }: { organization: Organization }) {
   const form = useFormContext<UpsertEventGroupDto>();
   const Field = useMemo(() => form.createField(), []);
   return (
@@ -294,7 +318,10 @@ function EventGroupRules() {
                 <Label>Modo do Campeonato</Label>
                 <RadioGroup>
                   <RadioField>
-                    <Radio color="indigo" value="league" />
+                    <Radio
+                      color={organization.options.colors.primaryColor.tw.color}
+                      value="league"
+                    />
                     <Label>Liga</Label>
                     <Description>
                       Modo de torneio em que os participantes jogam entre si e
@@ -302,7 +329,11 @@ function EventGroupRules() {
                     </Description>
                   </RadioField>
                   <RadioField>
-                    <Radio disabled color="indigo" value="cup" />
+                    <Radio
+                      disabled
+                      color={organization.options.colors.primaryColor.tw.color}
+                      value="cup"
+                    />
                     <Label>Copa</Label>
                     <Description>
                       Modo de torneio em que os participantes participam de
@@ -358,7 +389,7 @@ function EventGroupRules() {
             <div className="col-span-2 space-y-8 px-2 lg:col-span-1 lg:ps-6 ">
               <Field name="ruleLogic.discard">
                 <Label>Etapas Descartadas</Label>
-                <Input type="number" />
+                <Input type="text" inputMode="numeric" />
                 <ErrorMessage />
                 <Description>
                   Número de etapas que terão os resultados descartados para a
@@ -369,7 +400,7 @@ function EventGroupRules() {
             <div className="col-span-2 grid grid-cols-2 gap-3 px-2 lg:col-span-1 lg:ps-6">
               <Field name="ruleLogic.justifiedAbsences">
                 <Label>Ausências Justificadas</Label>
-                <Input type="number" />
+                <Input type="text" inputMode="numeric" />
                 <ErrorMessage />
                 <Description>
                   Número de ausências justificadas permitidas antes da
@@ -378,7 +409,7 @@ function EventGroupRules() {
               </Field>
               <Field name="ruleLogic.unjustifiedAbsences">
                 <Label>Ausências não Justificadas</Label>
-                <Input type="number" />
+                <Input type="text" inputMode="numeric" />
                 <ErrorMessage />
                 <Description>
                   Número de ausências não justificadas permitidas antes da

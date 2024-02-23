@@ -5,33 +5,6 @@
       "title": "To do",
       "cards": [
         {
-          "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Mudar url do primeiro step (novo grupo de eventos)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Mudar cor do botão dos steps (novo grupo de eventos)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "a7b1c667-fd60-4030-ab34-63768aa1e9d6",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Não é possivel escolher 0 para ausencias (novo grupo de eventos)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "adicionar toast de sucesso (novo grupo de eventos)",
@@ -66,6 +39,15 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
+        },
+        {
+          "id": "8e1ed45b-08a5-4ded-9985-90db69046f3e",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "arrastar arquivos para file input",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
         }
       ]
     },
@@ -77,7 +59,35 @@
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
-      "cards": []
+      "cards": [
+        {
+          "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Mudar cor do botão dos steps (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "a7b1c667-fd60-4030-ab34-63768aa1e9d6",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Não é possivel escolher 0 para ausencias (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Mudar url do primeiro step (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     }
   ],
   "archive": {
