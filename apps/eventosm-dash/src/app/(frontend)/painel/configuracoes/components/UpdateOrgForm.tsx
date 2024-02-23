@@ -147,26 +147,20 @@ export default function UpdateOrgForm({
       />
       <div className="hidden justify-end lg:flex">
         <Button
-          disabled={isLoading}
+          loading={isLoading}
           type="submit"
           color={organization.options.colors.primaryColor?.tw.color}
         >
-          <div className="flex items-center gap-2">
-            Salvar
-            {isLoading && <ButtonSpinner />}
-          </div>
+          Salvar
         </Button>
       </div>
       <BottomNavigation className="flex justify-end p-2 lg:hidden">
         <Button
-          disabled={isLoading}
+          loading={isLoading}
           type="submit"
           color={organization.options.colors.primaryColor?.tw.color}
         >
-          <div className="flex items-center gap-2">
-            Salvar
-            {(isLoading || form.formState.isSubmitting) && <ButtonSpinner />}
-          </div>
+          Salvar
         </Button>
       </BottomNavigation>
     </Form>

@@ -35,12 +35,14 @@ import { Event } from "@prisma/client";
 export default function SubeventModal({
   modalState,
   subevent,
+  isLoading,
 }: {
   modalState: {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     isModalOpen: boolean;
   };
   subevent: Event | undefined;
+  isLoading?: boolean;
 }) {
   type ClientUpsertEventDto = Omit<UpsertEventDto, "imageUrl"> & {
     image?: any[];
@@ -143,6 +145,7 @@ export default function SubeventModal({
         <Button
           form="SubeventForm"
           type="submit"
+          loading={isLoading}
           color={primaryColor?.tw.color}
         >
           {form.getValues("id") ? "Salvar" : "Criar"}

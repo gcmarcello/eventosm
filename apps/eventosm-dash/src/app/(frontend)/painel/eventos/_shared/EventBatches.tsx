@@ -62,29 +62,32 @@ export default function EventBatches({
       : { eventGroupId: eventGroup?.id },
   });
 
-  const { data: registrationBatch, trigger: triggerRegistrationBatch } =
-    useAction({
-      action: upsertRegistrationBatch,
-      requestParser: (data) => {
-        const parsedDateStart = `${data.dateStart} ${data.timeStart}`;
-        const parsedDateEnd = `${data.dateEnd} ${data.timeEnd}`;
-        return { ...data, dateStart: parsedDateStart, dateEnd: parsedDateEnd };
-      },
-      onSuccess: () => {
-        setIsBatchModalOpen(false);
-        setShowCategoryBatches(false);
-        showToast({
-          message: `Lote de inscrição ${eventBatchForm.getValues("id") ? "editado" : "criado"} com sucesso!`,
-          variant: "success",
-          title: "Sucesso!",
-        });
-      },
-      onError: (error) => {
-        eventBatchForm.setError("root.serverError", {
-          message: error as string,
-        });
-      },
-    });
+  const {
+    data: registrationBatch,
+    trigger: triggerRegistrationBatch,
+    isMutating: isLoading,
+  } = useAction({
+    action: upsertRegistrationBatch,
+    requestParser: (data) => {
+      const parsedDateStart = `${data.dateStart} ${data.timeStart}`;
+      const parsedDateEnd = `${data.dateEnd} ${data.timeEnd}`;
+      return { ...data, dateStart: parsedDateStart, dateEnd: parsedDateEnd };
+    },
+    onSuccess: () => {
+      setIsBatchModalOpen(false);
+      setShowCategoryBatches(false);
+      showToast({
+        message: `Lote de inscrição ${eventBatchForm.getValues("id") ? "editado" : "criado"} com sucesso!`,
+        variant: "success",
+        title: "Sucesso!",
+      });
+    },
+    onError: (error) => {
+      eventBatchForm.setError("root.serverError", {
+        message: error as string,
+      });
+    },
+  });
   const {
     colors: { primaryColor, secondaryColor },
   } = usePanel();
@@ -141,6 +144,7 @@ export default function EventBatches({
             showCategoryBatches,
             setShowCategoryBatches,
           }}
+          isLoading={isLoading}
           modalities={modalities}
         />
       </Form>

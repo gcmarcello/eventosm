@@ -57,7 +57,11 @@ export default function EventModalities({
     colors: { primaryColor, secondaryColor },
   } = usePanel();
 
-  const { data, trigger } = useAction({
+  const {
+    data,
+    trigger,
+    isMutating: modalityLoading,
+  } = useAction({
     action: upsertEventModality,
     redirect: false,
     onSuccess: () => {
@@ -77,7 +81,11 @@ export default function EventModalities({
       }),
   });
 
-  const { data: categoryData, trigger: categoriesTrigger } = useAction({
+  const {
+    data: categoryData,
+    trigger: categoriesTrigger,
+    isMutating: modalityCategoryLoading,
+  } = useAction({
     action: upsertEventModalityCategories,
     redirect: false,
     onSuccess: () => {
@@ -136,6 +144,7 @@ export default function EventModalities({
         modalState={{ isModalityModalOpen, setIsModalityModalOpen }}
         modalityForm={modalityForm}
         trigger={trigger}
+        isLoading={modalityLoading}
       />
       <ModalityCategoryModal
         modalState={{ isCategoryModalOpen, setIsCategoryModalOpen }}
@@ -143,6 +152,7 @@ export default function EventModalities({
         categoriesTrigger={categoriesTrigger}
         activeModality={activeModality}
         modalities={modalities}
+        isLoading={modalityCategoryLoading}
       />
 
       <Table

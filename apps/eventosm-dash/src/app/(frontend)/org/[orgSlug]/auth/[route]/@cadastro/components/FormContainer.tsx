@@ -169,12 +169,10 @@ export default function FormContainer({ states }: { states: State[] }) {
                   <Button
                     type="submit"
                     color="indigo"
+                    loading={isLoading}
                     disabled={!isCurrentStepValid}
                   >
-                    <div className="flex items-center gap-2">
-                      Cadastrar
-                      {isLoading && <ButtonSpinner />}
-                    </div>
+                    Cadastrar
                   </Button>
                 )}
                 {hasPrevStep && (
@@ -195,12 +193,10 @@ export default function FormContainer({ states }: { states: State[] }) {
                     <Button
                       type="submit"
                       color="indigo"
-                      disabled={isLoading || !isCurrentStepValid}
+                      loading={isLoading}
+                      disabled={!isCurrentStepValid}
                     >
-                      <div className="flex items-center gap-2">
-                        Inscrever
-                        {isLoading && <ButtonSpinner />}
-                      </div>
+                      Inscrever
                     </Button>
                   )}
                   {hasNextStep && (

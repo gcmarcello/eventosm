@@ -194,15 +194,12 @@ export default function LoginPage() {
 
               <div className="flex">
                 <Button
-                  disabled={isLoading}
+                  loading={isLoading}
                   type="submit"
                   className={"w-full"}
                   color={colors.primaryColor.tw.color}
                 >
-                  <div className="flex items-center gap-2">
-                    Login
-                    {isLoading && <ButtonSpinner />}
-                  </div>
+                  Login
                 </Button>
               </div>
             </Form>
