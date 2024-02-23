@@ -30,6 +30,7 @@ export default function ModalityCategoryModal({
   categoryForm,
   modalities,
   activeModality,
+  isLoading,
 }: {
   modalities: EventModalityWithCategories[];
   modalState: {
@@ -39,6 +40,7 @@ export default function ModalityCategoryModal({
   categoriesTrigger: (data: any) => void;
   categoryForm: UseFormReturn<UpsertEventModalityCategoriesDto>;
   activeModality: string;
+  isLoading?: boolean;
 }) {
   const CategoryField = useMemo(
     () => (categoryForm as any).createField(),
@@ -199,6 +201,7 @@ export default function ModalityCategoryModal({
           <Button
             type="submit"
             form="categoryForm"
+            loading={isLoading}
             color={primaryColor?.tw.color}
           >
             Salvar

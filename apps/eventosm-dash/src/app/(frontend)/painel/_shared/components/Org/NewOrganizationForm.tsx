@@ -129,8 +129,9 @@ export default function NewOrganizationForm({
               type="submit"
               color="indigo"
               className="mt-6 w-full"
+              loading={isLoading}
             >
-              <span className="px-4">Criar Organização</span>
+              Criar Organização
             </Button>
           </Form>
         </Container>

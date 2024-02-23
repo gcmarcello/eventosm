@@ -24,6 +24,7 @@ export default function ModalityModal({
   modalState,
   trigger,
   modalityForm,
+  isLoading,
 }: {
   modalState: {
     setIsModalityModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -31,6 +32,7 @@ export default function ModalityModal({
   };
   trigger: (data: any) => void;
   modalityForm: UseFormReturn<UpsertEventModalityDto>;
+  isLoading?: boolean;
 }) {
   const ModalityField = useMemo(() => modalityForm.createField(), []);
   const {
@@ -67,6 +69,7 @@ export default function ModalityModal({
           <Button
             form="ModalityForm"
             type="submit"
+            loading={isLoading}
             color={primaryColor?.tw.color}
           >
             {modalityForm.getValues("id") ? "Salvar" : "Criar"}

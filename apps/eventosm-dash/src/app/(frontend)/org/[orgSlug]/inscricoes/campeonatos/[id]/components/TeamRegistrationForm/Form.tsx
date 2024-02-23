@@ -322,9 +322,10 @@ export default function TeamTournamentRegistration({
                       <Button
                         type="submit"
                         color="indigo"
+                        loading={isMutating}
                         disabled={!isCurrentStepValid}
                       >
-                        <div className="flex items-center gap-2">Inscrever</div>
+                        Inscrever
                       </Button>
                     )}
                     {hasPrevStep && (

@@ -31,6 +31,7 @@ export default function BatchModal({
   modalState,
   batches,
   modalities,
+  isLoading,
 }: {
   modalState: {
     setIsBatchModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +39,7 @@ export default function BatchModal({
     showCategoryBatches: boolean;
     setShowCategoryBatches: Dispatch<SetStateAction<boolean>>;
   };
-
+  isLoading?: boolean;
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
   modalities: EventModalityWithCategories[];
 }) {
@@ -256,16 +257,21 @@ export default function BatchModal({
         )}
       </DialogBody>
       <DialogActions className="justify-between">
-        <Button
-          onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
-          color={secondaryColor?.tw.color}
-        >
-          {modalState.showCategoryBatches ? "Voltar" : "Definir por Categoria"}
-        </Button>
+        {batchForm.getValues("id") && (
+          <Button
+            onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
+            color={secondaryColor?.tw.color}
+          >
+            {modalState.showCategoryBatches
+              ? "Voltar"
+              : "Definir por Categoria"}
+          </Button>
+        )}
         <div className="flex gap-2">
           <Button
             form="eventBatchForm"
             type="submit"
+            loading={isLoading}
             color={primaryColor?.tw.color}
           >
             {batchForm.getValues("id") ? "Salvar" : "Criar"}

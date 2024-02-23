@@ -146,11 +146,9 @@ export default function EventGroupForm({
                   type="submit"
                   color="indigo"
                   disabled={!isCurrentStepValid}
+                  loading={isMutating}
                 >
-                  <div className="flex items-center gap-2">
-                    Inscrever
-                    {isMutating && <ButtonSpinner />}
-                  </div>
+                  Inscrever
                 </Button>
               )}
             </div>
@@ -183,12 +181,10 @@ export default function EventGroupForm({
                   <Button
                     type="submit"
                     color="indigo"
-                    disabled={isMutating || !isCurrentStepValid}
+                    disabled={!isCurrentStepValid}
+                    loading={isMutating}
                   >
-                    <div className="flex items-center gap-2">
-                      Inscrever
-                      {isMutating && <ButtonSpinner />}
-                    </div>
+                    Inscrever
                   </Button>
                 )}
               </div>

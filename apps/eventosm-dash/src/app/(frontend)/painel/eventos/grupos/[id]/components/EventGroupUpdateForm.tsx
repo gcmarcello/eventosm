@@ -349,15 +349,12 @@ export default function EventGroupUpdateForm({
         {eventGroup.status === "published" && <EventStatusAlert eventId="" />}
         {step.currentStep === 0 && (
           <Button
-            disabled={isMutating}
+            loading={isMutating}
             type="submit"
             form="generalEventGroupForm"
             color={colors.primaryColor.tw.color}
           >
-            <div className="flex items-center gap-2">
-              {isMutating && <ButtonSpinner />}
-              Salvar
-            </div>
+            Salvar
           </Button>
         )}
 
@@ -372,7 +369,7 @@ export default function EventGroupUpdateForm({
             }
           >
             {parseEventStatus(eventGroup.status)}
-            <ChevronDownIcon />
+            <ChevronDownIcon className="size-4" />
           </DropdownButton>
           <DropdownMenu className="z-30">
             <DropdownItem

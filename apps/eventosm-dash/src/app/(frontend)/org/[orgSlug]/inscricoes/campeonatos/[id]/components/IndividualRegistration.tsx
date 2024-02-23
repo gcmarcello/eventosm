@@ -430,11 +430,9 @@ export default function IndividualTournamentRegistration({
                         type="submit"
                         color="indigo"
                         disabled={!isCurrentStepValid}
+                        loading={isMutating}
                       >
-                        <div className="flex items-center gap-2">
-                          Inscrever
-                          {isMutating && <ButtonSpinner />}
-                        </div>
+                        Inscrever
                       </Button>
                     )}
                     {hasPrevStep && (
@@ -454,8 +452,9 @@ export default function IndividualTournamentRegistration({
                       {!hasNextStep && (
                         <Button
                           type="submit"
+                          loading={isMutating}
                           color="indigo"
-                          disabled={isMutating || !isCurrentStepValid}
+                          disabled={!isCurrentStepValid}
                         >
                           <div className="flex items-center gap-2">
                             Inscrever

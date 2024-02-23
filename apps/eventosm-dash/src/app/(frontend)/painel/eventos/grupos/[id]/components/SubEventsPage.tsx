@@ -118,6 +118,7 @@ export default function SubeventsPage({
           subevent={eventGroup.Event.find(
             (event) => event.id === form.getValues("id")
           )}
+          isLoading={isMutating}
         />
       </Form>
       <div className="flex justify-end">

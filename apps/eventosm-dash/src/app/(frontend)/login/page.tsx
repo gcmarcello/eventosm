@@ -115,7 +115,12 @@ export default function LoginPage() {
                 </div>
 
                 <div className="flex">
-                  <Button type="submit" className={"w-full"} color="indigo">
+                  <Button
+                    type="submit"
+                    loading={isLoading}
+                    className={"w-full"}
+                    color="indigo"
+                  >
                     Login
                   </Button>
                 </div>
