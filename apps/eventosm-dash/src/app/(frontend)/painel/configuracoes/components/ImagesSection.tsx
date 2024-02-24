@@ -1,7 +1,6 @@
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { Organization } from "@prisma/client";
-import FileImagePreview from "node_modules/odinkit/src/components/Form/File/FileImagePreview";
-import { Text } from "odinkit";
+import { FileImagePreview, Text } from "odinkit";
 import {
   ColorInput,
   Description,

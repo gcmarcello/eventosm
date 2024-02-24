@@ -26,10 +26,8 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
-import { format } from "path";
 import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore";
-import FileImagePreview from "node_modules/odinkit/src/components/Form/File/FileImagePreview";
-import { Text } from "odinkit";
+import { FileImagePreview, Text } from "odinkit";
 import { Event } from "@prisma/client";
 
 export default function SubeventModal({

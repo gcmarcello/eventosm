@@ -1,6 +1,7 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import {
+  ReadEventGroupDto,
   ReadEventTypeDto,
   UpdateEventStatusDto,
   UpsertEventDto,
@@ -14,6 +15,20 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { upsertEventModalityCategories } from "../categories/service";
 import { revalidatePath } from "next/cache";
 import { ActionResponse } from "odinkit";
+
+export async function readEventGroups(request: ReadEventGroupDto) {
+  try {
+    const eventGroups = await service.readEventGroups(request);
+
+    return ActionResponse.success({
+      data: eventGroups,
+    });
+  } catch (err) {
+    return ActionResponse.error({
+      message: err,
+    });
+  }
+}
 
 export async function upsertEventGroup(request: UpsertEventGroupDto) {
   let newEvent;

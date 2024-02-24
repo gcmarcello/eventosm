@@ -28,33 +28,34 @@ dayjs.extend(customParseFormat);
   return newEventType;
 } */
 
-export async function upsertEvent(
-  request: UpsertEventDto & {
-    organization: Organization;
-    userSession: UserSession;
-  }
-) {
-  const { userSession, ...rest } = request;
+export async function upsertEvent({
+  organization,
+  userSession,
+  ...data
+}: UpsertEventDto & {
+  organization: Organization;
+  userSession: UserSession;
+}) {
   let newImage;
 
-  const id = rest.id ?? crypto.randomUUID();
-  const dateStart = dayjs(rest.dateStart, "DD/MM/YYYY").toISOString();
-  const dateEnd = dayjs(rest.dateEnd, "DD/MM/YYYY").toISOString();
+  const id = data.id ?? crypto.randomUUID();
+  const dateStart = dayjs(data.dateStart, "DD/MM/YYYY").toISOString();
+  const dateEnd = dayjs(data.dateEnd, "DD/MM/YYYY").toISOString();
 
   const newEvent = await prisma.event.upsert({
     where: { id },
     update: {
-      ...rest,
+      ...data,
       dateStart,
       dateEnd,
     },
     create: {
-      ...rest,
-      slug: rest.slug || id,
-      organizationId: request.organization.id,
+      ...data,
+      slug: data.slug || id,
+      organizationId: organization.id,
       dateStart,
       dateEnd,
-      status: rest.eventGroupId ? "published" : "draft",
+      status: data.eventGroupId ? "published" : "draft",
     },
   });
 

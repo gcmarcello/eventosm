@@ -1,26 +1,5 @@
-import { Badge, Table, date } from "odinkit";
-import { EventGroupWithEvents } from "prisma/types/Events";
-import SubeventModal from "./NewSubeventModal";
-import { useState } from "react";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  DropdownItem,
-  DropdownMenu,
-  Form,
-  showToast,
-  useAction,
-  useForm,
-} from "odinkit/client";
 import { upsertEventDto } from "@/app/api/events/dto";
-import { upsertEvent } from "@/app/api/events/action";
-import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore";
-import dayjs from "dayjs";
-import { Cog6ToothIcon, EllipsisVerticalIcon } from "@heroicons/react/24/solid";
 import { z } from "zod";
-import { uploadFiles } from "@/app/api/uploads/action";
-import Image from "next/image";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
@@ -28,13 +7,7 @@ const schema = upsertEventDto
 
 type Schema = z.infer<typeof schema>;
 
-export default function SubeventsPage({
-  eventGroup,
-  eventId,
-}: {
-  eventGroup: EventGroupWithEvents;
-  eventId?: string;
-}) {
+export function EtapasForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     colors: { primaryColor, secondaryColor },
