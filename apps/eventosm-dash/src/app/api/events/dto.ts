@@ -52,9 +52,9 @@ export const upsertEventGroupRulesDto = z.object({
     .optional(),
   groupStage: z.boolean().optional(),
   groupSize: z.number().optional(),
-  discard: z.number().optional(),
-  justifiedAbsences: z.number().optional(),
-  unjustifiedAbsences: z.number().optional(),
+  discard: z.string().optional(),
+  justifiedAbsences: z.string().optional(),
+  unjustifiedAbsences: z.string().optional(),
 });
 
 export type UpsertEventGroupRulesDto = z.infer<typeof upsertEventGroupRulesDto>;

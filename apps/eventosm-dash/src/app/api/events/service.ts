@@ -10,6 +10,7 @@ import {
   UpsertEventAddonDto,
   UpsertEventDto,
   UpsertEventGroupDto,
+  UpsertEventGroupRulesDto,
   UpsertEventModalityCategoriesDto,
   UpsertEventModalityDto,
   UpsertEventTypeDto,
@@ -17,7 +18,7 @@ import {
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventModalityWithCategories } from "prisma/types/Events";
-import { Organization } from "@prisma/client";
+import { EventGroupRules, Organization } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
 /* export async function upsertEventGroupType(request: UpsertEventGroupTypeDto) {
@@ -28,19 +29,39 @@ dayjs.extend(customParseFormat);
   return newEventType;
 } */
 
-export async function upsertEvent({
-  organization,
-  userSession,
-  ...data
-}: UpsertEventDto & {
-  organization: Organization;
-  userSession: UserSession;
+export async function verifySlugUniqueness({
+  slug,
+  eventId,
+}: {
+  slug: string;
+  eventId: string;
 }) {
+  const verifyEventSlugs = await prisma.event.findFirst({
+    where: { AND: { slug, NOT: { id: eventId } } },
+  });
+  if (verifyEventSlugs)
+    throw { message: `Link ${slug} já utilizado.`, field: "slug" };
+  const verifyEventGroupSlugs = await prisma.eventGroup.findFirst({
+    where: { AND: { slug, NOT: { id: eventId } } },
+  });
+  if (verifyEventGroupSlugs)
+    throw { message: `Link ${slug} já utilizado.`, field: "slug" };
+}
+
+export async function upsertEvent(
+  request: UpsertEventDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
+) {
+  const { userSession, organization, ...data } = request;
   let newImage;
 
   const id = data.id ?? crypto.randomUUID();
   const dateStart = dayjs(data.dateStart, "DD/MM/YYYY").toISOString();
   const dateEnd = dayjs(data.dateEnd, "DD/MM/YYYY").toISOString();
+
+  data.slug && (await verifySlugUniqueness({ slug: data.slug, eventId: id }));
 
   const newEvent = await prisma.event.upsert({
     where: { id },
@@ -69,7 +90,9 @@ export async function upsertEventGroup(
   }
 ) {
   const { ruleLogic, userSession, organization, ...event } = request;
+
   const id = event.id ?? crypto.randomUUID();
+  await verifySlugUniqueness({ slug: event.slug, eventId: id });
   const newEventGroup = await prisma.eventGroup.upsert({
     where: { id: id },
     update: {
@@ -86,20 +109,14 @@ export async function upsertEventGroup(
   if (newEventGroup.eventGroupType === "free") return newEventGroup;
 
   if (ruleLogic) {
-    const newRules = await prisma.eventGroupRules.upsert({
-      where: { eventGroupId: id },
-      update: {
-        ...ruleLogic,
-      },
-      create: {
-        ...ruleLogic,
-        eventGroupId: newEventGroup.id,
-      },
+    const newRules = await upsertEventGroupRules({
+      eventGroupId: newEventGroup.id,
+      rules: ruleLogic,
     });
-    return { newEventGroup, rules: newRules };
+    return { ...newEventGroup, rules: newRules };
   }
 
-  return { newEventGroup };
+  return newEventGroup;
 }
 
 export async function upsertEventModality(
@@ -301,4 +318,37 @@ export async function updateEventStatus(
       });
 
   return updatedEventOrGroup;
+}
+
+export async function upsertEventGroupRules({
+  rules,
+  eventGroupId,
+}: {
+  rules: UpsertEventGroupRulesDto;
+  eventGroupId: string;
+}) {
+  const newRules = await prisma.eventGroupRules.upsert({
+    where: { eventGroupId },
+    update: {
+      ...rules,
+      discard: rules.discard ? parseInt(rules.discard) : null,
+      justifiedAbsences: rules.justifiedAbsences
+        ? parseInt(rules.justifiedAbsences)
+        : null,
+      unjustifiedAbsences: rules.unjustifiedAbsences
+        ? parseInt(rules.unjustifiedAbsences)
+        : null,
+    },
+    create: {
+      ...rules,
+      eventGroupId,
+      discard: rules.discard ? parseInt(rules.discard) : null,
+      justifiedAbsences: rules.justifiedAbsences
+        ? parseInt(rules.justifiedAbsences)
+        : null,
+      unjustifiedAbsences: rules.unjustifiedAbsences
+        ? parseInt(rules.unjustifiedAbsences)
+        : null,
+    },
+  });
 }
