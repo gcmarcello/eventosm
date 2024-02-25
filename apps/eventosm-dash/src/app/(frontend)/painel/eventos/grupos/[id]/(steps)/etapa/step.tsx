@@ -1,5 +1,26 @@
+"use client";
+import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore";
 import { upsertEventDto } from "@/app/api/events/dto";
+import { uploadFiles } from "@/app/api/uploads/action";
+import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
+import dayjs from "dayjs";
+import { Table, Badge, ExtractSuccessResponse, date } from "odinkit";
+import {
+  useAction,
+  showToast,
+  Dropdown,
+  DropdownButton,
+  DropdownMenu,
+  DropdownItem,
+  useForm,
+  Form,
+  Button,
+} from "odinkit/client";
+import { useState } from "react";
 import { z } from "zod";
+import SubeventModal from "./components/NewSubeventModal";
+import { readEventGroups, upsertEvent } from "@/app/api/events/action";
+import Image from "next/image";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
@@ -7,7 +28,13 @@ const schema = upsertEventDto
 
 type Schema = z.infer<typeof schema>;
 
-export function EtapasForm() {
+export function EtapasForm({
+  eventGroup,
+  eventId,
+}: {
+  eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
+  eventId?: string;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     colors: { primaryColor, secondaryColor },

@@ -1,3 +1,4 @@
+"use client";
 import { parseEventStatus } from "@/app/(frontend)/painel/_shared/utils/eventStatus";
 import { readEventGroups, updateEventStatus } from "@/app/api/events/action";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";

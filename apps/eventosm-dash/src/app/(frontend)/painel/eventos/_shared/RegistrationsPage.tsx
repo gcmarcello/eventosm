@@ -1,3 +1,4 @@
+"use client";
 import { readRegistrations } from "@/app/api/registrations/action";
 import { date } from "odinkit";
 import { Badge, Table, formatPhone } from "odinkit";

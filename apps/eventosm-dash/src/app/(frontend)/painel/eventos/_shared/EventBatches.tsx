@@ -1,3 +1,4 @@
+"use client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import BatchModal from "./BatchModal";
 import { useState } from "react";

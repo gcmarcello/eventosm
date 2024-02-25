@@ -37,7 +37,7 @@ export const orgSeed = async (userId: string) => {
       },
       OrgCustomDomain: {
         create: {
-          domain: "192.168.68.110:3000",
+          domain: process.env.SECOND_HOST + ":3000",
         },
       },
 

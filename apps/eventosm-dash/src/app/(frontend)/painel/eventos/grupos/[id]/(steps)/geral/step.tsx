@@ -1,8 +1,16 @@
+"use client";
 import { readEventGroups, upsertEventGroup } from "@/app/api/events/action";
 import { upsertEventGroupDto } from "@/app/api/events/dto";
 import { uploadFiles } from "@/app/api/uploads/action";
-import { ExtractSuccessResponse, FileImagePreview, Text } from "odinkit";
+import { Color } from "@prisma/client";
 import {
+  Container,
+  ExtractSuccessResponse,
+  FileImagePreview,
+  Text,
+} from "odinkit";
+import {
+  Button,
   Description,
   ErrorMessage,
   FieldGroup,
@@ -16,7 +24,7 @@ import {
   Radio,
   RadioField,
   RadioGroup,
-  TinyMCE,
+  RichTextEditor,
   showToast,
   useAction,
   useForm,
@@ -24,9 +32,11 @@ import {
 import { useMemo } from "react";
 import { z } from "zod";
 
-export async function GeralForm({
+export function GeralForm({
   eventGroup,
+  color,
 }: {
+  color: Color;
   eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
 }) {
   const form = useForm({
@@ -87,11 +97,23 @@ export async function GeralForm({
       id="generalEventGroupForm"
     >
       <Fieldset>
-        <Legend>Informações Gerais</Legend>
-        <Text>
-          Informações gerais sobre o grupo de eventos. Você pode alterar essas
-          informações a qualquer momento.
-        </Text>
+        <div className="flex justify-between">
+          <div>
+            <Legend>Informações Gerais</Legend>
+            <Text>
+              Informações gerais sobre o grupo de eventos. Você pode alterar
+              essas informações a qualquer momento.
+            </Text>
+          </div>
+          <Button
+            type="submit"
+            form="generalEventGroupForm"
+            className={"my-auto hidden lg:block"}
+            color={color.tw.color}
+          >
+            Salvar
+          </Button>
+        </div>
         <FieldGroup className="grid grid-cols-2 gap-3 lg:divide-x ">
           <div className="col-span-2 space-y-3 px-2 lg:col-span-1">
             <Field name="name">
@@ -117,21 +139,21 @@ export async function GeralForm({
               <Label>Estilo de Inscrição</Label>
               <RadioGroup>
                 <RadioField>
-                  <Radio color="emerald" value="individual" />
+                  <Radio color={color.tw.color} value="individual" />
                   <Label>Individual</Label>
                   <Description>
                     Inscrições podem ser feitas apenas por atletas.
                   </Description>
                 </RadioField>
                 <RadioField>
-                  <Radio color="emerald" value="team" />
+                  <Radio color={color.tw.color} value="team" />
                   <Label>Equipes</Label>
                   <Description>
                     Inscrições podem ser feitas apenas por equipes.
                   </Description>
                 </RadioField>
                 <RadioField>
-                  <Radio color="emerald" value="mixed" />
+                  <Radio color={color.tw.color} value="mixed" />
                   <Label>Mista</Label>
                   <Description>
                     Inscrições podem ser feitas por atletas ou equipes.
@@ -189,19 +211,19 @@ export async function GeralForm({
           <div className="col-span-4">
             <Field name="description">
               <Label>Descrição do Grupo de Eventos</Label>
-              <TinyMCE />
+              <RichTextEditor />
             </Field>
           </div>
           <div className="col-span-4">
             <Field name="rules">
               <Label>Regulamento do Grupo de Eventos</Label>
-              <TinyMCE />
+              <RichTextEditor />
             </Field>
           </div>
           <div className="col-span-4">
             <Field name="details">
               <Label>Detalhes do Grupo de Eventos</Label>
-              <TinyMCE />
+              <RichTextEditor />
             </Field>
           </div>
         </FieldGroup>
