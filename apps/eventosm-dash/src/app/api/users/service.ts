@@ -1,4 +1,5 @@
 import { UserWithInfo } from "prisma/types/User";
+import { UpdateUserDto } from "./dto";
 
 export async function readUser({
   userId,
@@ -30,4 +31,17 @@ export async function readUserInfo({ id }: { id: string }) {
   });
   if (!userInfo) throw "Informações de usuário não encontradas.";
   return userInfo;
+}
+
+export async function updateUser({
+  request,
+}: {
+  request: UpdateUserDto & { userId: string };
+}) {
+  const { userId, ...data } = request;
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data,
+  });
+  return user;
 }
