@@ -12,16 +12,16 @@ export default async function EventosPanelPage() {
 
   const organization = (
     await readOrganizations({
-      where: { id: request.organizationId },
+      where: { id: request.organization.id },
     })
   )[0];
 
   if (!organization) return null;
   const events = await readEvents({
-    where: { organizationId: request.organizationId, eventGroupId: null },
+    where: { organizationId: request.organization.id, eventGroupId: null },
   });
   const eventGroups = await readEventGroups({
-    where: { organizationId: request.organizationId },
+    where: { organizationId: request.organization.id },
   });
 
   return (

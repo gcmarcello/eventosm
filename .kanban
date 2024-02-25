@@ -5,15 +5,6 @@
       "title": "To do",
       "cards": [
         {
-          "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "adicionar toast de sucesso (novo grupo de eventos)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Corrigir asteriscos (nando)",
@@ -64,6 +55,15 @@
           "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Mudar cor do botão dos steps (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "adicionar toast de sucesso (novo grupo de eventos)",
           "description": "",
           "labels": [],
           "checkboxes": [],

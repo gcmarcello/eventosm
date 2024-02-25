@@ -39,15 +39,12 @@ export async function upsertEventGroup(request: UpsertEventGroupDto) {
 
     newEvent = await service.upsertEventGroup(parsedRequest);
   } catch (error) {
-    console.log(error);
-    return ActionResponse.error({
-      message: "Erro ao criar evento.",
-    });
+    return ActionResponse.error(error);
   }
 
   if (!request.id) {
     return ActionResponse.success({
-      redirect: `/painel/eventos/`,
+      redirect: `/painel/eventos/grupos/${newEvent.eventGroupType === "championship" ? "campeonatos" : "series"}/${newEvent.id}`,
       message: "Evento criado com sucesso.",
     });
   } else {
