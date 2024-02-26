@@ -4,6 +4,7 @@ export const updateUserDto = z.object({
   fullName: z.string(),
   email: z.string().email(),
   phone: z.string(),
+  document: z.string(),
 });
 
 export type UpdateUserDto = z.infer<typeof updateUserDto>;
