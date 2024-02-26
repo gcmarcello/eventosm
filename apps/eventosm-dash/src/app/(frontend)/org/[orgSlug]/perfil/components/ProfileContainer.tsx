@@ -2,12 +2,22 @@
 import { UserCircleIcon, UsersIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { Organization } from "@prisma/client";
-import { For, formatPhone } from "odinkit";
+import { Badge, For, formatCPF, formatPhone } from "odinkit";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { FieldGroup, Form, Input, useForm } from "odinkit/client";
+import {
+  ErrorMessage,
+  FieldGroup,
+  Form,
+  Input,
+  showToast,
+  useAction,
+  useForm,
+} from "odinkit/client";
 import { updateUserDto } from "@/app/api/users/dto";
+import { get } from "lodash";
+import { updateUser } from "@/app/api/users/action";
 
 const navigation = [
   { name: "Home", href: "#" },
@@ -32,14 +42,6 @@ export default function ProfileContainer({
   const [organization, setOrganization] = useState(
     connectedOrgs.find((org) => org.slug === orgSlug)
   );
-  const fields = useMemo(() => {
-    [
-      { field: "fullName", display: "Nome Completo" },
-      { field: "email", display: "Email" },
-      { field: "phone", display: "Telefone" },
-      { field: "document", display: "Documento" },
-    ];
-  }, []);
 
   const form = useForm({
     schema: updateUserDto,
@@ -47,8 +49,77 @@ export default function ProfileContainer({
     defaultValues: {
       fullName: userSession.fullName,
       email: userSession.email,
-      phone: userSession.phone || "",
+      phone: formatPhone(userSession.phone || ""),
+      document: formatCPF(userSession.document),
     },
+  });
+
+  const [fields, setFields] = useState<
+    {
+      name: any;
+      display: string;
+      edit: boolean;
+    }[]
+  >([
+    { name: "fullName", display: "Nome Completo", edit: false },
+    { name: "email", display: "Email", edit: false },
+    {
+      name: "phone",
+      display: "Telefone",
+      edit: false,
+    },
+    { name: "document", display: "Documento", edit: false },
+  ]);
+
+  function handleEdit(field?: string) {
+    if (!field)
+      return setFields(
+        fields.map((f) => {
+          return { ...f, edit: false };
+        })
+      );
+
+    setFields(
+      fields.map((f) => {
+        if (f.name === field) {
+          return { ...f, edit: !f.edit };
+        }
+        return f;
+      })
+    );
+  }
+
+  function handleMask(field: string) {
+    switch (field) {
+      case "phone":
+        return form.watch("phone").length < 14
+          ? "(99) 9999-99999"
+          : "(99) 99999-9999";
+
+      case "document":
+        return "999.999.999-99";
+
+      default:
+        return "";
+    }
+  }
+
+  const { data, trigger } = useAction({
+    action: updateUser,
+    onSuccess: (data) => {
+      handleEdit();
+      showToast({
+        message: "Dados atualizados com sucesso.",
+        variant: "success",
+        title: "Sucesso",
+      });
+    },
+    onError: (error) =>
+      showToast({
+        message: error,
+        variant: "error",
+        title: "Erro!",
+      }),
   });
 
   const Field = useMemo(() => form.createField(), []);
@@ -97,7 +168,7 @@ export default function ProfileContainer({
 
         <main className="px-4 pb-8 pt-4 sm:px-6 lg:flex-auto lg:px-0 lg:py-10">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-            <Form hform={form}>
+            <Form hform={form} onSubmit={(data) => trigger(data)}>
               <div>
                 <h2 className="text-base font-semibold leading-7 text-gray-900">
                   Meu Perfil
@@ -108,68 +179,69 @@ export default function ProfileContainer({
                 </p>
 
                 <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
-                  <div className="pt-6 sm:flex">
-                    <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                      Nome Completo
-                    </dt>
-                    <dd className="mt-1 flex items-center justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                      <div className="text-gray-900">
-                        {editField.fullName ? (
-                          <Field name={"fullName"}>
-                            <Input />
-                          </Field>
-                        ) : (
-                          form.getValues("fullName")
-                        )}
+                  <For each={fields}>
+                    {(field) => (
+                      <div className="items-center pt-6 sm:flex">
+                        <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                          {field.display}
+                        </dt>
+                        <dd className="mt-1 flex items-center justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                          {field.edit ? (
+                            <>
+                              <Field name={field.name}>
+                                <Input mask={handleMask(field.name)} />
+                                <ErrorMessage />
+                              </Field>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  className="rounded-md p-2 font-semibold hover:bg-gray-50"
+                                  onClick={() => handleEdit(field.name)}
+                                  style={{
+                                    color:
+                                      organization?.options.colors
+                                        .secondaryColor.hex,
+                                  }}
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md p-2 font-semibold hover:bg-gray-50"
+                                  onClick={() => {
+                                    trigger(form.getValues());
+                                  }}
+                                  style={{
+                                    color:
+                                      organization?.options.colors.primaryColor
+                                        .hex,
+                                  }}
+                                >
+                                  Salvar
+                                </button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div>{form.getValues(field.name)}</div>
+                              <button
+                                type="button"
+                                className="font-semibold"
+                                onClick={() => handleEdit(field.name)}
+                                style={{
+                                  color:
+                                    organization?.options.colors.primaryColor
+                                      .hex,
+                                }}
+                              >
+                                Atualizar
+                              </button>
+                            </>
+                          )}
+                        </dd>
                       </div>
-                      <button
-                        type="button"
-                        className="font-semibold"
-                        style={{
-                          color: organization?.options.colors.primaryColor.hex,
-                        }}
-                      >
-                        Atualizar
-                      </button>
-                    </dd>
-                  </div>
-                  <div className="pt-6 sm:flex">
-                    <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                      Email
-                    </dt>
-                    <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                      <div className="text-gray-900">{userSession.email}</div>
-                      <button type="button" className="font-semibold">
-                        Atualizar
-                      </button>
-                    </dd>
-                  </div>
-                  <div className="pt-6 sm:flex">
-                    <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                      Telefone
-                    </dt>
-                    <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                      <div className="text-gray-900">
-                        {formatPhone(userSession.phone!)}
-                      </div>
-                      <button type="button" className="font-semibold ">
-                        Atualizar
-                      </button>
-                    </dd>
-                  </div>
-                  <div className="pt-6 sm:flex">
-                    <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                      Documento
-                    </dt>
-                    <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                      <div className="text-gray-900">
-                        {userSession.document}
-                      </div>
-                      <button type="button" className="font-semibold">
-                        Atualizar
-                      </button>
-                    </dd>
-                  </div>
+                    )}
+                  </For>
                 </dl>
               </div>
             </Form>
@@ -199,12 +271,16 @@ export default function ProfileContainer({
                       <div className="font-medium text-gray-900">
                         {org.name}
                       </div>
-                      <button
-                        type="button"
-                        className="font-semibold text-red-600 hover:text-red-500"
-                      >
-                        Remover
-                      </button>
+                      {org.slug === orgSlug ? (
+                        <Badge>Atual</Badge>
+                      ) : (
+                        <button
+                          type="button"
+                          className="font-semibold text-red-600 hover:text-red-500"
+                        >
+                          Remover
+                        </button>
+                      )}
                     </li>
                   )}
                 </For>

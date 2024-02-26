@@ -32,6 +32,10 @@ import {
   useFormContext,
   Input,
   Select,
+  Label,
+  Description,
+  Switch,
+  ErrorMessage,
 } from "odinkit/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { useMemo } from "react";
@@ -96,25 +100,46 @@ export function ParticipantsForm({
     <>
       <div className="grid grid-cols-4">
         {!inputMode && (
-          <div className="col-span-4 flex flex-col justify-center gap-2 lg:flex-row lg:gap-4">
-            <div
-              onClick={() => setInputMode("file")}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
-            >
-              <DocumentArrowUpIcon className="size-16 text-emerald-600" />{" "}
-              <p className="px-2 text-center">Importar de Arquivo</p>
+          <>
+            <div className="col-span-2 col-start-2 mb-3 space-y-4 bg-white lg:mb-6">
+              <Field name="createTeam" variant="switch">
+                <Label>Salvar atletas em um time</Label>
+                <Description>
+                  Selecione se deseja salvar os atletas em um time, agilizando
+                  futuras inscrições.
+                </Description>
+                <Switch color="emerald" />
+              </Field>
+              {form.watch("createTeam") && (
+                <div className="col-span-4 mb-3 lg:col-span-2 lg:mb-4">
+                  <Field name="teamName">
+                    <Label>Nome do Time</Label>
+                    <Input placeholder="Academia X" />
+                    <ErrorMessage />
+                  </Field>
+                </div>
+              )}
             </div>
-            <div
-              onClick={() => {
-                setInputMode("manual");
-                addEmptyTeamMember();
-              }}
-              className="flex cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
-            >
-              <PencilSquareIcon className="size-16 text-emerald-600" />{" "}
-              <p className="px-2 text-center">Inscrever Manualmente</p>
+            <div className="col-span-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
+              <div
+                onClick={() => setInputMode("file")}
+                className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+              >
+                <DocumentArrowUpIcon className="size-16 text-emerald-600" />{" "}
+                <p className="px-2 text-center">Importar de Arquivo</p>
+              </div>
+              <div
+                onClick={() => {
+                  setInputMode("manual");
+                  addEmptyTeamMember();
+                }}
+                className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+              >
+                <PencilSquareIcon className="size-16 text-emerald-600" />{" "}
+                <p className="px-2 text-center">Inscrever Manualmente</p>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {inputMode === "file" && (

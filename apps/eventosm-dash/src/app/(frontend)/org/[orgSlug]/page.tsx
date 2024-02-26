@@ -84,8 +84,9 @@ export default async function CompanyHome({
               )}
               <NewsCard news={news} />
             </div>
-            <div className="xxl:col-span-1 col-span-4 grid grid-cols-1 gap-4 lg:col-span-1">
-              <div className="-mb-2 lg:-mb-4">
+
+            <div className="col-span-4 flex flex-col lg:col-span-1">
+              <div className="mb-2">
                 <Heading>Próximos Eventos</Heading>
               </div>
               <For each={[...eventGroups, ...events]}>

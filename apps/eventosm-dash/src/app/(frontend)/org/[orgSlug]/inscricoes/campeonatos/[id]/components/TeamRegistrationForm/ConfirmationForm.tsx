@@ -42,25 +42,6 @@ export function ConfirmationForm({
   return (
     <>
       <div className="flex flex-col items-center gap-4">
-        <div className="col-span-2 mb-3 space-y-4 bg-white lg:col-span-2 lg:mb-4 lg:pe-4">
-          <Field name="createTeam" variant="switch">
-            <Label>Salvar atletas em um time</Label>
-            <Description>
-              Selecione se deseja salvar os atletas em um time, agilizando
-              futuras inscrições.
-            </Description>
-            <Switch color="emerald" />
-          </Field>
-          {form.watch("createTeam") && (
-            <div className="col-span-4 mb-3 lg:col-span-2 lg:mb-4">
-              <Field name="teamName">
-                <Label>Nome do Time</Label>
-                <Input placeholder="Academia X" />
-                <ErrorMessage />
-              </Field>
-            </div>
-          )}
-        </div>
         <ClipboardDocumentCheckIcon className="h-20 w-20 text-emerald-600" />
         <Text>Confirme os dados dos atletas e finalize a inscrição.</Text>
         <div className="grid grid-cols-4">

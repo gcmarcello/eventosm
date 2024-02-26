@@ -120,7 +120,7 @@ export default function TeamTournamentRegistration({
     defaultValues: {
       eventGroupId: eventGroup.id,
       teamMembers: [],
-      createTeam: false,
+      createTeam: true,
       teamName: "",
     },
   });
@@ -208,7 +208,7 @@ export default function TeamTournamentRegistration({
                 <div
                   className="mb-2 flex cursor-pointer items-center gap-1 text-sm font-semibold text-emerald-600"
                   onClick={() => {
-                    form.reset();
+                    form.resetField("teamMembers");
                     setInputMode(null);
                   }}
                 >

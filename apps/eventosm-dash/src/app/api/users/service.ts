@@ -1,5 +1,6 @@
 import { UserWithInfo } from "prisma/types/User";
 import { UpdateUserDto } from "./dto";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
 
 export async function readUser({
   userId,
@@ -36,11 +37,12 @@ export async function readUserInfo({ id }: { id: string }) {
 export async function updateUser({
   request,
 }: {
-  request: UpdateUserDto & { userId: string };
+  request: UpdateUserDto & { userSession: UserSession };
 }) {
-  const { userId, ...data } = request;
+  const { userSession, ...data } = request;
+  console.log(data);
   const user = await prisma.user.update({
-    where: { id: userId },
+    where: { id: userSession.id },
     data,
   });
   return user;

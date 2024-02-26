@@ -17,7 +17,7 @@ export default function ProfileDropdown({
   const userNavigation = [
     {
       name: "Meu Perfil",
-      href: "/configuracoes",
+      href: "/perfil",
     },
   ];
 

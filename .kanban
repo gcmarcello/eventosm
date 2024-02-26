@@ -39,6 +39,15 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
+        },
+        {
+          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Feature para limitar inscricoes de equipe",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
         }
       ]
     },

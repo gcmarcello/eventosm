@@ -119,7 +119,7 @@ export default function LoginPage() {
                 loginTrigger({ ...form.getValues(), acceptTerms: true })
               }
             >
-              Conectar conta com {abbreviation ?? name}
+              Conectar conta
             </Button>
           </DialogActions>
         </Dialog>

@@ -60,7 +60,3 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
-
-:hover {
-  color: var(--hover-color);
-}

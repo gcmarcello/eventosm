@@ -42,7 +42,7 @@ export default function GeneralDetailsSection() {
                   if (fieldValue.length > 14) {
                     return "(99) 99999-9999";
                   } else {
-                    return "(99) 9999-9999";
+                    return "(99) 9999-99999";
                   }
                 }}
               />
