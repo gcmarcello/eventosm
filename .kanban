@@ -32,18 +32,27 @@
           "comments": []
         },
         {
-          "id": "8e1ed45b-08a5-4ded-9985-90db69046f3e",
+          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "arrastar arquivos para file input",
+          "title": "Feature para limitar inscricoes de equipe",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
+          "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Feature para limitar inscricoes de equipe",
+          "title": "Feature para senha de lotes",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "de183c88-3f9b-42e7-9e1b-623ec8a1708e",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Resultados baseados nas regras do evento",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -73,6 +82,15 @@
           "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "adicionar toast de sucesso (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "8e1ed45b-08a5-4ded-9985-90db69046f3e",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "arrastar arquivos para file input",
           "description": "",
           "labels": [],
           "checkboxes": [],
