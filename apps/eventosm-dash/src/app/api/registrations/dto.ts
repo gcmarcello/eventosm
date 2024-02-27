@@ -138,6 +138,11 @@ export const readRegistrations = readDto(
       .string()
       .uuid({ message: "Formato de ID de grupo de evento inválido" })
       .optional(),
+    organizationId: z
+      .string()
+      .uuid({ message: "Formato de ID de organização inválido" })
+      .optional(),
+    status: z.any().optional(),
   })
 );
 

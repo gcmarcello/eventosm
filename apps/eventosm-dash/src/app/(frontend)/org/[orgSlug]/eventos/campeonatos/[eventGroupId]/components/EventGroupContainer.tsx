@@ -32,7 +32,7 @@ import { EventGroupWithEvents } from "prisma/types/Events";
 import { useOrg } from "../../../../components/OrgStore";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventRegistrationBatch } from "@prisma/client";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
@@ -43,10 +43,12 @@ export default function EventGroupContainer({
   eventGroup,
   isUserRegistered,
   batch,
+  organization,
 }: {
   isUserRegistered: boolean;
   eventGroup: EventGroupWithEvents;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
+  organization: Organization;
 }) {
   const generalTabs: TabItem[] = [
     {
@@ -160,7 +162,10 @@ export default function EventGroupContainer({
       <div
         style={{
           backgroundImage: image ? `url(${image})` : "",
-          height: window.innerHeight > contentHeight ? "100dvh" : contentHeight,
+          height:
+            window && window.innerHeight > contentHeight
+              ? "100dvh"
+              : contentHeight,
         }}
         className={clsx(!image && "bg-slate-200", "bg-cover")}
       >
@@ -213,7 +218,10 @@ export default function EventGroupContainer({
             <div
               className={clsx("col-span-4 px-2 lg:col-span-3 lg:px-0 lg:pe-5")}
             >
-              <Tabs tabs={tabs} />
+              <Tabs
+                color={organization.options.colors.primaryColor.hex}
+                tabs={tabs}
+              />
             </div>
             <div
               className={clsx(

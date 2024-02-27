@@ -66,10 +66,10 @@ export default async function CompanyHome({
             "xxl:mx-32 min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-8"
           )}
         >
-          <div className="grid grid-cols-4 gap-4 ">
+          <div className="grid grid-cols-3 gap-4 ">
             <div
               className={clsx(
-                "xxl:col-span-3 col-span-4 flex flex-col gap-4 lg:col-span-3"
+                "xxl:col-span-2 col-span-3 flex flex-col gap-4 lg:col-span-2"
               )}
             >
               {organization.options?.images?.hero && (
@@ -85,7 +85,7 @@ export default async function CompanyHome({
               <NewsCard news={news} />
             </div>
 
-            <div className="col-span-4 flex flex-col lg:col-span-1">
+            <div className="col-span-3 flex flex-col lg:col-span-1">
               <div className="mb-2">
                 <Heading>Próximos Eventos</Heading>
               </div>

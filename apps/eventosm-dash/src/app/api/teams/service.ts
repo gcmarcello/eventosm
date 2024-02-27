@@ -4,6 +4,15 @@ import { CreateTeamDto, ReadTeamsDto } from "./dto";
 export async function readTeams(request: ReadTeamsDto) {
   const team = await prisma.team.findMany({
     where: request.where,
+    include: {
+      User: {
+        select: {
+          fullName: true,
+          id: true,
+          _count: { select: { EventRegistration: true } },
+        },
+      },
+    },
   });
 
   if (!team) throw "Time não encontrado!";
@@ -43,17 +52,15 @@ export async function readTeamSize({ teamId }: { teamId: string }) {
   return teamSize._count.User;
 }
 
-export async function createTeam(
-  request: CreateTeamDto & { userSession: UserSession }
-) {
+export async function createTeam(request: CreateTeamDto) {
   const team = await prisma.team.create({
     data: {
       name: request.name,
-      ownerId: request.userSession.id,
+      ownerId: request.ownerId,
       User: {
         connect: [
           ...request.members.map((member) => ({ id: member })),
-          { id: request.userSession.id },
+          { id: request.ownerId },
         ],
       },
     },

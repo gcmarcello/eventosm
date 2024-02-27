@@ -158,7 +158,7 @@ export default function PanelSideBar() {
                                       item.current
                                         ? `bg-zinc-600 bg-opacity-25`
                                         : ` hover:bg-zinc-800 hover:bg-opacity-25 `,
-                                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 group-hover:text-white "
                                     )}
                                   >
                                     <item.icon
@@ -182,8 +182,7 @@ export default function PanelSideBar() {
                           className="group mt-auto"
                           style={{
                             color: chooseTextColor(
-                              organization.options?.colors.primaryColor.hex ||
-                                "#FFF"
+                              organization.options?.colors.primaryColor.hex
                             ),
                           }}
                         >

@@ -14,6 +14,7 @@ export type ReadTeamsDto = z.infer<typeof readTeamsDto>;
 export const createTeamDto = z.object({
   name: z.string(),
   members: z.array(z.string().uuid()),
+  ownerId: z.string().uuid(),
 });
 
 export type CreateTeamDto = z.infer<typeof createTeamDto>;

@@ -39,11 +39,15 @@ export async function updateUser({
 }: {
   request: UpdateUserDto & { userSession: UserSession };
 }) {
-  const { userSession, ...data } = request;
-  console.log(data);
+  const { userSession, info, ...data } = request;
   const user = await prisma.user.update({
     where: { id: userSession.id },
-    data,
+    data: {
+      ...data,
+      info: {
+        update: info,
+      },
+    },
   });
   return user;
 }

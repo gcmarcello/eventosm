@@ -9,6 +9,7 @@ import {
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
 import * as service from "./service";
+import { revalidatePath } from "next/cache";
 
 export async function createIndividualRegistration(
   request: UpsertRegistrationDto
@@ -69,6 +70,27 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
       message: "Inscrições encontradas",
     });
   } catch (error) {
+    return ActionResponse.error(error);
+  }
+}
+
+export async function cancelRegistration(request: { registrationId: string }) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request).then(
+      UserSessionMiddleware
+    );
+
+    const cancelledRegistration = await service.updateRegistrationStatus({
+      ...parsedRequest,
+      status: "cancelled",
+    });
+    revalidatePath("/perfil");
+    return ActionResponse.success({
+      message: "Inscrição cancelada com sucesso.",
+      data: cancelledRegistration,
+    });
+  } catch (error) {
+    console.log(error);
     return ActionResponse.error(error);
   }
 }

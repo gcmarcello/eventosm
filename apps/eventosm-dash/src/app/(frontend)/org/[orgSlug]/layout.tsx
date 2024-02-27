@@ -20,8 +20,12 @@ export async function generateViewport(props: { orgSlug: string }) {
     })
   )[0];
 
+  if (!organization) {
+    return notFound();
+  }
+
   return {
-    themeColor: "#059669",
+    themeColor: organization.options.colors.primaryColor.hex,
   };
 }
 

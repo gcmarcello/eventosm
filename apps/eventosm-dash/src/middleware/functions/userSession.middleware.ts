@@ -1,5 +1,5 @@
 "use server";
-import { User } from "@prisma/client";
+import { User, UserInfo } from "@prisma/client";
 import { headers } from "next/headers";
 import { MiddlewareArguments } from "../types/types";
 import { prisma } from "prisma/prisma";
@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 
 export async function UserSessionMiddleware<P>({
   request,
+  additionalArguments,
 }: MiddlewareArguments<P>) {
   const userId = headers().get("userId")!;
 
@@ -17,6 +18,9 @@ export async function UserSessionMiddleware<P>({
     .findFirst({
       where: {
         id: userId,
+      },
+      include: {
+        info: additionalArguments?.includeInfo,
       },
     })
     .then((user) => user!);
@@ -33,7 +37,7 @@ export async function UserSessionMiddleware<P>({
   };
 }
 
-export type UserSession = UserWithoutPassword;
+export type UserSession = UserWithoutPassword & { info?: UserInfo };
 
 export type UserSessionMiddlewareReturnType<T> = Awaited<
   ReturnType<typeof UserSessionMiddleware<T>>

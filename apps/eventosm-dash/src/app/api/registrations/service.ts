@@ -4,9 +4,11 @@ import {
   ReadRegistrationsDto,
   UpsertRegistrationDto,
 } from "./dto";
-
+import QRCode from "qrcode";
+import fs from "fs";
+import sharp from "sharp";
 import { createTeam, readTeamWithUsers } from "../teams/service";
-import { BatchCoupon, Gender } from "@prisma/client";
+import { BatchCoupon, Gender, Team } from "@prisma/client";
 import { TeamWithUsers } from "prisma/types/Teams";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
 import { createOrder } from "../payments/service";
@@ -22,10 +24,25 @@ import { readAddressFromZipCode } from "../geo/service";
 import { id_ID } from "@faker-js/faker";
 import dayjs from "dayjs";
 import { formatCPF } from "odinkit";
+import { uploadFile } from "../uploads/service";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
+  if (request.where?.organizationId) {
+    const { organizationId, ...where } = request.where;
+    const registrations = await prisma.eventRegistration.findMany({
+      where: where,
+      include: {
+        event: { where: { organizationId } },
+        eventGroup: { where: { organizationId }, include: { Event: true } },
+        modality: true,
+        category: true,
+      },
+    });
+    return registrations;
+  }
   return await prisma.eventRegistration.findMany({
     where: request.where,
+    include: { event: true, eventGroup: { include: { Event: true } } },
   });
 }
 
@@ -60,13 +77,14 @@ export async function createRegistration(
   });
 
   const orderId = categoryPrice ? await createOrder("@todo") : null;
-  const status = categoryPrice ? "pending" : "completed";
+  const status = categoryPrice ? "pending" : "active";
 
   const createRegistration = await prisma.eventRegistration.create({
     data: {
       ...registration,
       userId: userSession.id,
       id: registrationId,
+      qrCode: await generateQrCode(registrationId),
       code,
       status,
       orderId,
@@ -159,15 +177,22 @@ export async function createMultipleRegistrations(
   }
 
   const allUserIds = await prisma.user.findMany({
-    where: { document: { in: documents } },
+    where: {
+      document: {
+        in: documents,
+      },
+    },
     select: { id: true, document: true },
   });
 
+  let team: Team | undefined;
   if (request.createTeam && request.teamName) {
-    const team = await createTeam({
+    team = await createTeam({
       name: request.teamName,
-      members: allUserIds.map((user) => user.id),
-      userSession: request.userSession,
+      members: allUserIds.find((user) => user.id === request.userSession.id)
+        ? allUserIds.map((user) => user.id)
+        : [...allUserIds.map((user) => user.id), request.userSession.id],
+      ownerId: request.userSession.id,
     });
   }
 
@@ -200,18 +225,20 @@ export async function createMultipleRegistrations(
     if (!user.userId) throw "Usuário não encontrado";
 
     const { addon, ...parsedUser } = user;
-
+    const id = crypto.randomUUID();
     await prisma.eventRegistration.create({
       data: {
         ...parsedUser,
+        qrCode: await generateQrCode(id),
         batchId: batch.id,
         addonId: addon?.id,
         addonOption: addon?.option,
+        teamId: team ? team.id : undefined,
         userId: user.userId,
         eventId: request.eventId,
         eventGroupId: request.eventGroupId,
         code,
-        status: "completed",
+        status: "active",
       },
     });
   }
@@ -223,6 +250,20 @@ export async function createMultipleRegistrations(
   )[0];
 
   return { event, eventGroup, organization };
+}
+
+export async function updateRegistrationStatus(request: {
+  registrationId: string;
+  userSession: UserSession;
+  status: string;
+}) {
+  const updatedRegistration = await prisma.eventRegistration.update({
+    where: { id: request.registrationId, userId: request.userSession.id },
+    data: { status: "cancelled" },
+  });
+
+  if (!updatedRegistration) throw "Erro ao cancelar inscrição.";
+  return updatedRegistration;
 }
 
 async function verifyRegistrationAvailability({
@@ -243,8 +284,12 @@ async function verifyRegistrationAvailability({
 
   const previousRegistration = await prisma.eventRegistration.findFirst({
     where: registration.eventId
-      ? { eventId: registration.eventId, userId }
-      : { eventGroupId: registration.eventGroupId, userId },
+      ? { eventId: registration.eventId, userId, status: { not: "cancelled" } }
+      : {
+          eventGroupId: registration.eventGroupId,
+          userId,
+          status: { not: "cancelled" },
+        },
     include: { user: { select: { fullName: true, document: true } } },
   });
 
@@ -333,7 +378,9 @@ async function generateParticipantCode({
     throw "Evento ou grupo de evento não informado";
 
   const eventRegistrations = await prisma.eventRegistration.findMany({
-    where: eventId ? { eventId } : { eventGroupId },
+    where: eventId
+      ? { eventId, status: { not: "cancelled" } }
+      : { eventGroupId, status: { not: "cancelled" } },
     select: { code: true },
   });
 
@@ -344,4 +391,40 @@ async function generateParticipantCode({
   return (
     Number(participantCodes[participantCodes.length - 1]?.code ?? 0) + 1
   ).toString();
+}
+
+async function generateQrCode(id: string) {
+  try {
+    // Generate QR code with specified data
+    const qrCodeData = await QRCode.toDataURL(id);
+    const fileName = crypto.randomUUID();
+
+    // Convert base64 string to a buffer
+    const dataUrlToBlob = (dataUrl: string) => {
+      const arr = dataUrl.split(",");
+      const match = arr[0]?.match(/:(.*?);/);
+
+      // Check if the match was successful
+      if (!match || !match[1] || !arr[1]) {
+        throw "Unable to extract MIME type from data URL";
+      }
+
+      const mime = match[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new Blob([u8arr], { type: mime });
+    };
+
+    const blob = dataUrlToBlob(qrCodeData);
+    const file = new File([blob], fileName, { type: "image/png" });
+    return await uploadFile(file, `qr-codes/${fileName}.png`);
+  } catch (error) {
+    throw "Erro ao gerar QR Code. " + error;
+  }
 }

@@ -110,6 +110,7 @@ export function ParticipantsForm({
                 </Description>
                 <Switch color="emerald" />
               </Field>
+
               {form.watch("createTeam") && (
                 <div className="col-span-4 mb-3 lg:col-span-2 lg:mb-4">
                   <Field name="teamName">

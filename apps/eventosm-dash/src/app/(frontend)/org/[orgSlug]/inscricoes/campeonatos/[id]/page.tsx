@@ -32,7 +32,7 @@ export default async function InscricaoPage({
   const userInfo = await readUserInfo({ id: userSession.infoId });
 
   const isUserRegistered = eventGroup.EventRegistration.find(
-    (reg) => reg.userId === userSession?.id
+    (reg) => reg.userId === userSession?.id && reg.status !== "cancelled"
   );
 
   if (isUserRegistered && !searchParams.team) {

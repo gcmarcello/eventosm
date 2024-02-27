@@ -7,8 +7,9 @@ import * as service from "./service";
 import { ActionResponse } from "odinkit";
 import { revalidatePath } from "next/cache";
 
-export async function updateUser({ request }: { request: UpdateUserDto }) {
+export async function updateUser(request: UpdateUserDto) {
   try {
+    console.log(request);
     const { request: parsedRequest } = await UseMiddlewares(request).then(
       UserSessionMiddleware
     );
@@ -20,6 +21,7 @@ export async function updateUser({ request }: { request: UpdateUserDto }) {
       message: "Usuário atualizado com sucesso!",
     });
   } catch (error) {
+    console.log(error);
     return ActionResponse.error("Erro ao atualizar usuário.");
   }
 }
