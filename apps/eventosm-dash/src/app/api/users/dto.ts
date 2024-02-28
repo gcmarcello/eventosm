@@ -17,6 +17,7 @@ export const updateUserDto = z.object({
     address: z.string(),
     number: z.string(),
     complement: z.string().optional(),
+    support: z.string().optional(),
   }),
 });
 

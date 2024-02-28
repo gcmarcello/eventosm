@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import utc from "dayjs/plugin/utc";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import {
@@ -14,6 +15,7 @@ import { date } from "odinkit";
 dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
 
 export async function upsertRegistrationBatch(
   request: UpsertRegistrationBatchDto & {
@@ -28,32 +30,47 @@ export async function upsertRegistrationBatch(
   )
     throw "Formato de data inválido";
 
-  await verifyConflictingBatches(
-    request.eventGroupId
-      ? { batch: rest, eventGroupId: rest.eventGroupId }
-      : { batch: rest, eventId: rest.eventId }
-  );
+  if (!request.protectedBatch) {
+    await verifyConflictingBatches(
+      request.eventGroupId
+        ? { batch: rest, eventGroupId: rest.eventGroupId }
+        : { batch: rest, eventId: rest.eventId }
+    );
+  }
 
   rest.id = rest.id ?? crypto.randomUUID();
 
   const { timeStart, timeEnd, ...parsedData } = rest;
 
-  if (dayjs(rest.dateStart, "HH:mm").isAfter(dayjs(rest.dateEnd, "HH:mm")))
+  if (
+    dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").isAfter(
+      dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
+    )
+  ) {
     throw "Dia de início não pode ser depois que o dia de término.";
+  }
 
   const upsertedBatch = await prisma.eventRegistrationBatch.upsert({
     where: { id: rest.id },
     update: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
+        .add(3, "hours")
+        .toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
+        .add(3, "hours")
+        .toISOString(),
     },
     create: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
+        .add(3, "hours")
+        .toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
+        .add(3, "hours")
+        .toISOString(),
     },
   });
 
@@ -191,6 +208,54 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
     where: {
       dateStart: { lte: today.toISOString() },
       dateEnd: { gte: today.toISOString() },
+      protectedBatch: false,
+      AND: {
+        OR: [
+          { eventId: request.where?.eventId },
+          { eventGroupId: request.where?.eventGroupId },
+        ],
+      },
+    },
+    include: {
+      CategoryBatch: { include: { category: true } },
+      _count: {
+        select: { EventRegistration: true },
+      },
+    },
+  });
+
+  return batch;
+}
+
+export async function readProtectedBatch(request: ReadRegistrationBatchDto) {
+  const today = dayjs();
+  const batch = await prisma.eventRegistrationBatch
+    .findUniqueOrThrow({
+      where: {
+        dateStart: { lte: today.toISOString() },
+        dateEnd: { gte: today.toISOString() },
+        protectedBatch: true,
+        id: request.where?.id,
+      },
+      include: {
+        CategoryBatch: { include: { category: true } },
+        _count: {
+          select: { EventRegistration: true },
+        },
+      },
+    })
+    .catch(() => {
+      return null;
+    });
+  return batch;
+}
+
+export async function readNextBatch(request: ReadRegistrationBatchDto) {
+  const today = dayjs(); //@ TODO;
+  const batch = await prisma.eventRegistrationBatch.findFirst({
+    where: {
+      dateStart: { gt: today.toISOString() },
+      protectedBatch: false,
       AND: {
         OR: [
           { eventId: request.where?.eventId },

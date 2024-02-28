@@ -26,12 +26,15 @@ import { EventModalityWithCategories } from "prisma/types/Events";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { usePanel } from "../../_shared/components/PanelStore";
+import { format } from "path";
+import { Organization } from "@prisma/client";
 
 export default function BatchModal({
   modalState,
   batches,
   modalities,
   isLoading,
+  organization,
 }: {
   modalState: {
     setIsBatchModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -42,6 +45,7 @@ export default function BatchModal({
   isLoading?: boolean;
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
   modalities: EventModalityWithCategories[];
+  organization: Organization;
 }) {
   const batchForm = useFormContext<UpsertRegistrationBatchDto>();
   const BatchField = useMemo(() => batchForm.createField(), []);
@@ -236,7 +240,7 @@ export default function BatchModal({
                 </Description>
               )}
             </FieldGroup>
-            <FieldGroup className={"grid grid-cols-2 gap-2 lg:grid-cols-2"}>
+            <FieldGroup className={"grid grid-cols-2 gap-4 lg:grid-cols-2"}>
               <BatchField enableAsterisk={false} name="registrationType">
                 <Label>Tipo de Inscrição</Label>
                 <Select
@@ -251,6 +255,22 @@ export default function BatchModal({
               <BatchField name="name">
                 <Label>Nome do Lote</Label>
                 <Input />
+              </BatchField>
+              {batchForm.watch("registrationType") !== "individual" && (
+                <BatchField name="multipleRegistrationLimit">
+                  <Label>Limite de Inscrições em lote (por equipe)</Label>
+                  <Input type="number" />
+                </BatchField>
+              )}
+              <BatchField name="protectedBatch" variant="switch">
+                <Label>Proteger Lote</Label>
+                <Description>
+                  Se selecionado, o lote estará acessível apenas através do link
+                  disponível na tabela.
+                </Description>
+                <Switch
+                  color={organization.options.colors.primaryColor.tw.color}
+                />
               </BatchField>
             </FieldGroup>
           </Fieldset>

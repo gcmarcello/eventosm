@@ -18,7 +18,7 @@ import {
   Switch,
   useFormContext,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useMemo } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
 
@@ -26,7 +26,7 @@ export function ConfirmationForm({
   fieldArray,
   eventGroup,
 }: {
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
     CreateMultipleRegistrationsDto,
     "teamMembers",
@@ -62,7 +62,7 @@ export function ConfirmationForm({
                   {(field, index) => (
                     <TableRow>
                       <TableCell>
-                        {form.getValues(`teamMembers.${index}.user.name`)}
+                        {form.getValues(`teamMembers.${index}.user.fullName`)}
                       </TableCell>
                       <TableCell>
                         {form.getValues(`teamMembers.${index}.user.gender`) ===

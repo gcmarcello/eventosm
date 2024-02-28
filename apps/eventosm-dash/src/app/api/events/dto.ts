@@ -1,6 +1,7 @@
 import { dateRegex } from "@/utils/regex";
 import { ZodEffects, ZodObject, ZodRawShape, ZodTypeAny, z } from "zod";
 import { readDto } from "../_shared/dto/read";
+import { EventStatus } from "@prisma/client";
 
 export const upsertEventTypeDto = z.object({
   id: z.string().uuid({ message: "Formato de ID inválido" }).optional(),
@@ -86,19 +87,6 @@ export const upsertEventGroupDto = z.object({
   ruleLogic: upsertEventGroupRulesDto.optional(),
 });
 
-/* .refine(
-    (data) => {
-      if (data.eventGroupType === "championship") {
-        return (
-          data.ruleLogic?.scoreCalculation &&
-          data.ruleLogic?.mode &&
-          data.ruleLogic?.resultType
-        );
-      } else return true;
-    },
-    { message: "Preencha todas as regras do campeonato", path: ["rules"] }
-  ); */
-
 export type UpsertEventGroupDto = z.infer<typeof upsertEventGroupDto>;
 
 export const upsertEventModalityDto = z.object({
@@ -155,22 +143,6 @@ export type UpsertEventModalityCategoriesDto = z.infer<
   typeof upsertEventModalityCategoriesDto
 >;
 
-export const upsertEventAddonDto = z.object({
-  id: z.string().uuid({ message: "Formato de ID inválido" }).optional(),
-  name: z
-    .string()
-    .min(3, { message: "O nome deve ter pelo menos 3 caracteres" })
-    .max(255, { message: "O nome deve ter menos de 255 caracteres" }),
-  eventId: z.string().uuid({ message: "Formato de ID do evento inválido" }),
-  image: z.instanceof(File).optional(),
-  price: z.number().min(0, { message: "O preço deve ser maior ou igual a 0" }),
-  options: z
-    .array(z.object({ name: z.string(), price: z.number(), image: z.string() }))
-    .optional(),
-});
-
-export type UpsertEventAddonDto = z.infer<typeof upsertEventAddonDto>;
-
 export const readEventTypeDto = readDto(
   z.object({ id: z.string().uuid().optional() })
 );
@@ -187,7 +159,7 @@ export const readEventDto = readDto(
         slug: z.string().optional(),
       })
       .optional(),
-    status: z.enum(["draft", "published", "cancelled", "archived"]).optional(),
+    status: z.nativeEnum(EventStatus).optional(),
   })
 );
 
@@ -198,7 +170,7 @@ export const readEventGroupDto = readDto(
     id: z.string().uuid().optional(),
     organizationId: z.string().uuid().optional(),
     slug: z.string().optional(),
-    status: z.enum(["draft", "published", "cancelled", "archived"]).optional(),
+    status: z.nativeEnum(EventStatus).optional(),
     Organization: z
       .object({
         slug: z.string().optional(),
@@ -224,11 +196,3 @@ export const readEventModalitiesDto = readDto(
 );
 
 export type ReadEventModalitiesDto = z.infer<typeof readEventModalitiesDto>;
-
-export const updateEventStatusDto = z.object({
-  id: z.string().uuid().optional(),
-  groupId: z.string().uuid().optional(),
-  status: z.enum(["draft", "published", "cancelled", "archived"]),
-});
-
-export type UpdateEventStatusDto = z.infer<typeof updateEventStatusDto>;

@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 import { filterCategories } from "../../../../utils/categories";
 import {
   EventGroupWithEvents,
+  EventGroupWithInfo,
   EventModalityWithCategories,
 } from "prisma/types/Events";
 import { UseFieldArrayReturn } from "react-hook-form";
@@ -25,7 +26,7 @@ export function EventForm({
   fieldArray,
   eventGroup,
 }: {
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
     CreateMultipleRegistrationsDto,
     "teamMembers",
@@ -173,7 +174,7 @@ export function EventForm({
                 <TableRow>
                   <TableCell>
                     <Text>
-                      {form.getValues(`teamMembers.${index}.user.name`)}
+                      {form.getValues(`teamMembers.${index}.user.fullName`)}
                     </Text>
                   </TableCell>
                   <TableCell>

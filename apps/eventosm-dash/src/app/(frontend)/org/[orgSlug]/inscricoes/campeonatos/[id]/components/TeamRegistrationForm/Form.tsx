@@ -13,7 +13,11 @@ import {
   PencilSquareIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-import { EventModality, EventRegistrationBatch } from "@prisma/client";
+import {
+  EventModality,
+  EventRegistrationBatch,
+  Organization,
+} from "@prisma/client";
 import clsx from "clsx";
 import Image from "next/image";
 import {
@@ -55,6 +59,7 @@ import {
 } from "odinkit/client";
 import {
   EventGroupWithEvents,
+  EventGroupWithInfo,
   EventModalityWithCategories,
 } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
@@ -79,16 +84,18 @@ export default function TeamTournamentRegistration({
   eventGroup,
   batch,
   userSession,
+  organization,
 }: {
   userSession: UserSession;
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatch;
+  organization: Organization;
 }) {
   const [inputMode, setInputMode] = useState<"manual" | "file" | null>(null);
 
   const emptyTeamMember = {
     user: {
-      name: "",
+      fullName: "",
       email: "",
       phone: "",
       document: "",
@@ -122,6 +129,7 @@ export default function TeamTournamentRegistration({
       teamMembers: [],
       createTeam: true,
       teamName: "",
+      batchId: batch.id,
     },
   });
 
@@ -134,7 +142,7 @@ export default function TeamTournamentRegistration({
 
   function requiredFieldsForParticipant() {
     return fields.flatMap((_, index) => [
-      `teamMembers.${index}.user.name`,
+      `teamMembers.${index}.user.fullName`,
       `teamMembers.${index}.user.email`,
       `teamMembers.${index}.user.phone`,
       `teamMembers.${index}.user.document`,
@@ -244,7 +252,9 @@ export default function TeamTournamentRegistration({
                 fields: requiredFieldsForParticipant() as any,
                 form: (
                   <ParticipantsForm
+                    batch={batch}
                     eventGroup={eventGroup}
+                    organization={organization}
                     fieldArray={fieldArray}
                     inputMode={inputMode}
                     setInputMode={setInputMode}
@@ -303,7 +313,9 @@ export default function TeamTournamentRegistration({
                       <>
                         <Button
                           type="button"
-                          color="indigo"
+                          color={
+                            organization.options.colors.primaryColor.tw.color
+                          }
                           onClick={() => {
                             walk(1);
                           }}
@@ -321,7 +333,9 @@ export default function TeamTournamentRegistration({
                     {!hasNextStep && (
                       <Button
                         type="submit"
-                        color="indigo"
+                        color={
+                          organization.options.colors.primaryColor.tw.color
+                        }
                         loading={isMutating}
                         disabled={!isCurrentStepValid}
                       >

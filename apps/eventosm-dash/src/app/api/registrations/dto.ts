@@ -1,6 +1,7 @@
 import { dateRegex } from "@/utils/regex";
 import { readDto, sheetToJson } from "odinkit";
 import { z } from "zod";
+import { teamSignUpDto } from "../auth/dto";
 
 export const upsertCouponBatchDto = z.object({
   id: z.string().uuid({ message: "Formato de ID inválido" }).optional(),
@@ -25,6 +26,10 @@ export type UpsertCouponBatchDto = z.infer<typeof upsertCouponBatchDto>;
 export const upsertRegistrationDto = z.object({
   id: z.string().uuid({ message: "Formato de ID inválido" }).optional(),
   acceptedTerms: z.boolean({ coerce: true }),
+  batchId: z
+    .string()
+    .uuid({ message: "Formato de ID de lote inválido" })
+    .optional(),
   teamId: z
     .string()
     .uuid({ message: "Formato de ID de time inválido" })
@@ -65,8 +70,8 @@ export const excelDataSchema = z.array(
     CEP: z.string(),
     CPF: z.string(),
     Celular: z.string(),
-    Complemento: z.string().optional(),
-    "Data de Nascimento": z.string(),
+    "Complemento (Opcional)": z.string().optional(),
+    "Data de Nascimento (DD/MM/AAAA)": z.string(),
     "E-mail": z.string(),
     "Nome Completo": z.string(),
     Número: z.string().optional(),
@@ -76,6 +81,19 @@ export const excelDataSchema = z.array(
 
 export type ExcelDataSchema = z.infer<typeof excelDataSchema>;
 
+export const registrationDto = z.object({
+  modalityId: z.string().uuid(),
+  categoryId: z.string(),
+  addon: z
+    .object({
+      id: z.string().uuid().optional(),
+      option: z.string().optional(),
+    })
+    .optional(),
+});
+
+export type RegistrationDto = z.infer<typeof registrationDto>;
+
 export const createMultipleRegistrationsDto = z
   .object({
     files: z.array(z.any()),
@@ -83,34 +101,14 @@ export const createMultipleRegistrationsDto = z
     teamName: z.string().optional(),
     eventGroupId: z.string().uuid().optional(),
     eventId: z.string().uuid().optional(),
+    batchId: z
+      .string()
+      .uuid({ message: "Formato de ID de lote inválido" })
+      .optional(),
     teamMembers: z.array(
       z.object({
-        user: z.object({
-          name: z.string(),
-          email: z.string(),
-          phone: z.string(),
-          document: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
-          birthDate: z
-            .string()
-            .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/),
-          zipCode: z.string().regex(/^\d{5}-\d{3}$/),
-          gender: z.string(),
-          street: z.string().optional(),
-          number: z.string().optional(),
-          complement: z.string().optional(),
-          city: z.string().optional(),
-          state: z.string().optional(),
-        }),
-        registration: z.object({
-          modalityId: z.string().uuid(),
-          categoryId: z.string().uuid(),
-          addon: z
-            .object({
-              id: z.string().uuid().optional(),
-              option: z.string().optional(),
-            })
-            .optional(),
-        }),
+        user: teamSignUpDto,
+        registration: registrationDto,
       })
     ),
   })

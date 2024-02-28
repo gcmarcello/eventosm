@@ -17,14 +17,19 @@ import {
   readModalityCategories,
   verifyCategoryDisponibility,
 } from "../categories/service";
-import { readActiveBatch, verifyBatchDisponibility } from "../batches/service";
+import {
+  readActiveBatch,
+  readProtectedBatch,
+  verifyBatchDisponibility,
+} from "../batches/service";
 import { readOrganizations } from "../orgs/service";
 import { readEventGroups, readEvents } from "../events/service";
 import { readAddressFromZipCode } from "../geo/service";
 import { id_ID } from "@faker-js/faker";
 import dayjs from "dayjs";
-import { formatCPF } from "odinkit";
+import { formatCPF, normalizeDocument, normalizeZipCode } from "odinkit";
 import { uploadFile } from "../uploads/service";
+import { createMultipleUsers } from "../users/service";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -63,11 +68,13 @@ export async function createRegistration(
     userId: userSession.id,
   });
 
-  const code = (
-    await generateParticipantCode(
-      registration.eventId ? { eventId: id } : { eventGroupId: id }
-    )
-  )[0];
+  const eventRegistrations = await prisma.eventRegistration.count({
+    where: request.eventId
+      ? { eventId: request.eventId }
+      : { eventGroupId: request.eventGroupId },
+  });
+
+  const code = (eventRegistrations + 1).toString();
 
   if (!code) throw "Código de participante não encontrado";
 
@@ -89,6 +96,8 @@ export async function createRegistration(
       status,
       orderId,
       batchId: batch.id,
+      addonId: addon?.id,
+      addonOption: addon?.option,
     },
   });
 
@@ -126,64 +135,23 @@ export async function createMultipleRegistrations(
 
   if (!event && !eventGroup) throw "Evento não encontrado.";
 
-  const documents = request.teamMembers.map((member) => member.user.document);
+  const batch = request.batchId
+    ? await readProtectedBatch({ where: { id: request.batchId } })
+    : await readActiveBatch({
+        where: event ? { eventId: event.id } : { eventGroupId: eventGroup?.id },
+      });
 
-  const existingUsers = await prisma.user.findMany({
-    where: { document: { in: documents } },
-    select: { id: true, document: true },
-  });
+  if (!batch) throw "Lote de inscrição ativo não encontrado, 144";
 
-  const existingDocuments = new Set(existingUsers.map((user) => user.document));
+  if (
+    batch.multipleRegistrationLimit &&
+    request.teamMembers.length > batch?.multipleRegistrationLimit
+  )
+    throw "Limite de inscrições por equipe excedido";
 
-  const newDocuments = documents.filter(
-    (document) => !existingDocuments.has(document)
+  const allUserIds = await createMultipleUsers(
+    request.teamMembers.map((member) => member.user)
   );
-
-  if (newDocuments.length > 0) {
-    for (const newDocument of newDocuments) {
-      const userRecord = request.teamMembers.find(
-        (member) => member.user.document === newDocument
-      );
-      if (!userRecord) throw "User not found";
-      const address = await readAddressFromZipCode({
-        zipCode: userRecord.user.zipCode,
-      });
-      if (!address.city || !address.state) throw "Address not found";
-      await prisma.user.create({
-        data: {
-          fullName: userRecord.user.name,
-          email: userRecord.user.email,
-          document: userRecord.user.document,
-          phone: userRecord.user.phone,
-          role: "user",
-          info: {
-            create: {
-              gender: userRecord.user.gender as Gender,
-              birthDate: dayjs(
-                userRecord.user.birthDate,
-                "DD/MM/YYYY"
-              ).toISOString(),
-              zipCode: userRecord.user.zipCode,
-              stateId: address.state.id || "",
-              cityId: address.city.id || "",
-              address: address.address,
-              number: userRecord.user.number || "",
-              complement: userRecord.user.complement,
-            },
-          },
-        },
-      });
-    }
-  }
-
-  const allUserIds = await prisma.user.findMany({
-    where: {
-      document: {
-        in: documents,
-      },
-    },
-    select: { id: true, document: true },
-  });
 
   let team: Team | undefined;
   if (request.createTeam && request.teamName) {
@@ -198,7 +166,7 @@ export async function createMultipleRegistrations(
 
   const userRegistrationsInfo = request.teamMembers.map((member) => {
     const userId = allUserIds.find(
-      (user) => user.document === member.user.document
+      (user) => user.document === normalizeDocument(member.user.document)
     )?.id;
     return { userId, ...member.registration, couponId: undefined };
   });
@@ -215,33 +183,40 @@ export async function createMultipleRegistrations(
       },
       userId: user.userId,
       multiple: true,
+      batchId: request.batchId,
     });
-    const code = await generateParticipantCode(
-      request.eventId
-        ? { eventId: request.eventId }
-        : { eventGroupId: request.eventGroupId }
-    );
-    if (!code) throw "Código de participante não encontrado";
+  }
+  const eventRegistrations = await prisma.eventRegistration.count({
+    where: request.eventId
+      ? { eventId: request.eventId }
+      : { eventGroupId: request.eventGroupId },
+  });
+
+  const participantsArray = [];
+  for (const [index, user] of userRegistrationsInfo.entries()) {
     if (!user.userId) throw "Usuário não encontrado";
 
     const { addon, ...parsedUser } = user;
+
     const id = crypto.randomUUID();
-    await prisma.eventRegistration.create({
-      data: {
-        ...parsedUser,
-        qrCode: await generateQrCode(id),
-        batchId: batch.id,
-        addonId: addon?.id,
-        addonOption: addon?.option,
-        teamId: team ? team.id : undefined,
-        userId: user.userId,
-        eventId: request.eventId,
-        eventGroupId: request.eventGroupId,
-        code,
-        status: "active",
-      },
+    participantsArray.push({
+      ...parsedUser,
+      qrCode: await generateQrCode(id),
+      batchId: batch.id,
+      addonId: addon?.id,
+      addonOption: addon?.option,
+      teamId: team ? team.id : undefined,
+      userId: user.userId,
+      eventId: request.eventId,
+      eventGroupId: request.eventGroupId,
+      code: (eventRegistrations + (index + 1)).toString(),
+      status: "active",
     });
   }
+
+  await prisma.eventRegistration.createMany({
+    data: participantsArray,
+  });
 
   const organization = (
     await readOrganizations({
@@ -270,6 +245,7 @@ async function verifyRegistrationAvailability({
   registration,
   userId,
   multiple,
+  batchId,
 }: {
   registration: {
     eventId?: string;
@@ -278,6 +254,7 @@ async function verifyRegistrationAvailability({
     couponId?: string;
   };
   userId: string;
+  batchId?: string;
   multiple?: boolean;
 }) {
   let coupon: BatchCoupon | null = null;
@@ -296,12 +273,14 @@ async function verifyRegistrationAvailability({
   if (previousRegistration)
     throw `O CPF ${formatCPF(previousRegistration.user.document)} já foi inscrito no evento.`;
 
-  const batch = await readActiveBatch({
-    where: registration.eventId
-      ? { eventId: registration.eventId }
-      : { eventGroupId: registration.eventGroupId },
-  });
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  const batch = batchId
+    ? await readProtectedBatch({ where: { id: batchId } })
+    : await readActiveBatch({
+        where: registration.eventId
+          ? { eventId: registration.eventId }
+          : { eventGroupId: registration.eventGroupId },
+      });
+  if (!batch) throw "Lote de inscrição ativo não encontrado, 283";
 
   if (batch.registrationType === "team" && multiple)
     throw "Lote não permitido para inscrições em equipe.";
@@ -314,7 +293,7 @@ async function verifyRegistrationAvailability({
       batchId: batch?.id,
     });
 
-  if (!batch) throw "Lote de inscrição não encontrado";
+  if (!batch) throw "Lote de inscrição não encontrado, 296";
   const category = (
     await readModalityCategories({
       where: { id: registration.categoryId },
@@ -355,7 +334,7 @@ async function readRegistrationPrice({
   categoryId: string;
   coupon?: string;
 }) {
-  if (!batch) throw "Lote de inscrição não encontrado";
+  if (!batch) throw "Lote de inscrição não encontrado, 337";
 
   const category = batch?.CategoryBatch.find(
     (cb) => cb.categoryId === categoryId
@@ -363,34 +342,6 @@ async function readRegistrationPrice({
 
   if (category && category.price) return category.price;
   return batch.price || 0;
-}
-
-async function generateParticipantCode({
-  eventId,
-  eventGroupId,
-}: {
-  eventId?: string;
-  eventGroupId?: string;
-}) {
-  if (eventId && eventGroupId)
-    throw "Evento e grupo de evento não podem ser informados ao mesmo tempo";
-  if (!eventId && !eventGroupId)
-    throw "Evento ou grupo de evento não informado";
-
-  const eventRegistrations = await prisma.eventRegistration.findMany({
-    where: eventId
-      ? { eventId, status: { not: "cancelled" } }
-      : { eventGroupId, status: { not: "cancelled" } },
-    select: { code: true },
-  });
-
-  const participantCodes = eventRegistrations.sort(
-    (a, b) => Number(a.code) - Number(b.code)
-  );
-
-  return (
-    Number(participantCodes[participantCodes.length - 1]?.code ?? 0) + 1
-  ).toString();
 }
 
 async function generateQrCode(id: string) {

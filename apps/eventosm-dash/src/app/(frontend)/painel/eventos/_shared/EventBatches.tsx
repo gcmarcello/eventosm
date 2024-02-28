@@ -37,7 +37,9 @@ import {
   showToast,
   useAction,
   Form,
+  DropdownSeparator,
 } from "odinkit/client";
+import { Organization } from "@prisma/client";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);
@@ -47,11 +49,13 @@ export default function EventBatches({
   event,
   eventGroup,
   modalities,
+  organization,
 }: {
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
   event?: EventWithRegistrationCount;
   eventGroup?: EventGroupWithEvents;
   modalities: EventModalityWithCategories[];
+  organization: Organization;
 }) {
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [showCategoryBatches, setShowCategoryBatches] = useState(false);
@@ -99,17 +103,25 @@ export default function EventBatches({
     batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
   }) {
     eventBatchForm.setValue("id", batch.id);
-    eventBatchForm.setValue("dateStart", date(batch.dateStart, "DD/MM/YYYY"));
-    eventBatchForm.setValue("timeStart", date(batch.dateStart, "HH:mm"));
+    eventBatchForm.setValue(
+      "dateStart",
+      date(batch.dateStart, "DD/MM/YYYY", true)
+    );
+    eventBatchForm.setValue("timeStart", date(batch.dateStart, "HH:mm", true));
     eventBatchForm.setValue("price", batch.price.toFixed(2).replace(".", ","));
-    eventBatchForm.setValue("dateEnd", date(batch.dateEnd, "DD/MM/YYYY"));
-    eventBatchForm.setValue("timeEnd", date(batch.dateEnd, "HH:mm"));
+    eventBatchForm.setValue("dateEnd", date(batch.dateEnd, "DD/MM/YYYY", true));
+    eventBatchForm.setValue("timeEnd", date(batch.dateEnd, "HH:mm", true));
     eventBatchForm.setValue("maxRegistrations", batch.maxRegistrations || 0);
     eventBatchForm.setValue("eventId", batch?.eventId || undefined);
     eventBatchForm.setValue("eventGroupId", batch?.eventGroupId || undefined);
     eventBatchForm.setValue("categoryControl", batch.categoryControl);
     eventBatchForm.setValue("registrationType", batch.registrationType);
     eventBatchForm.setValue("name", batch.name || "");
+    eventBatchForm.setValue(
+      "multipleRegistrationLimit",
+      batch.multipleRegistrationLimit || 0
+    );
+    eventBatchForm.setValue("protectedBatch", batch.protectedBatch || false);
     const flatCategoryArray = modalities.flatMap(
       (modality) => modality.modalityCategory
     );
@@ -138,6 +150,7 @@ export default function EventBatches({
         onSubmit={(data) => triggerRegistrationBatch(data)}
       >
         <BatchModal
+          organization={organization}
           batches={batches}
           modalState={{
             isBatchModalOpen,
@@ -175,8 +188,8 @@ export default function EventBatches({
                 className="cursor-pointer underline"
                 onClick={() => handleEditBatch({ batch: info.row.original })}
               >
-                {date(info.getValue(), "DD/MM HH:mm")} -{" "}
-                {date(info.row.original.dateEnd, "DD/MM HH:mm")}
+                {date(info.getValue(), "DD/MM HH:mm", true)} -{" "}
+                {date(info.row.original.dateEnd, "DD/MM HH:mm", true)}
               </span>
             ),
           }),
@@ -218,7 +231,7 @@ export default function EventBatches({
             cell: (info) => (
               <Dropdown>
                 <DropdownButton plain>
-                  <EllipsisVerticalIcon className="text-zinc-500" />
+                  <EllipsisVerticalIcon className="size-5 text-zinc-500" />
                 </DropdownButton>
                 <DropdownMenu>
                   <DropdownItem
@@ -227,6 +240,18 @@ export default function EventBatches({
                     }
                   >
                     Editar
+                  </DropdownItem>
+                  <DropdownSeparator />
+                  <DropdownItem
+                    onClick={() =>
+                      showToast({
+                        message: "Em desenvolvimento",
+                        title: "Em desenvolvimento",
+                        variant: "success",
+                      })
+                    }
+                  >
+                    Copiar link do lote
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

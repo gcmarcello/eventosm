@@ -89,11 +89,13 @@ export default async function CompanyHome({
               <div className="mb-2">
                 <Heading>Próximos Eventos</Heading>
               </div>
-              <For each={[...eventGroups, ...events]}>
-                {(event) => {
-                  return <EventCard event={event} orgSlug={params.orgSlug} />;
-                }}
-              </For>
+              <div className="flex flex-col gap-4">
+                <For each={[...eventGroups, ...events]}>
+                  {(event) => {
+                    return <EventCard event={event} orgSlug={params.orgSlug} />;
+                  }}
+                </For>
+              </div>
             </div>
           </div>
         </div>

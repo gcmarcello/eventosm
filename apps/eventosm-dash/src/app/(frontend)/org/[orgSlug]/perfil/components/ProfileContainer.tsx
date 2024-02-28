@@ -11,6 +11,7 @@ import {
   formatPhone,
   normalizeDocument,
   normalizePhone,
+  normalizeZipCode,
   scrollToElement,
 } from "odinkit";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
@@ -69,6 +70,7 @@ export default function ProfileContainer({
         gender: userSession.info?.gender,
         cityId: userSession.info?.cityId,
         stateId: userSession.info?.stateId,
+        support: userSession.info?.support || "",
         birthDate: dayjs(userSession.info?.birthDate).toISOString(),
       },
     },
@@ -89,6 +91,7 @@ export default function ProfileContainer({
       edit: false,
     },
     { name: "document", display: "Documento", edit: false },
+    { name: "info.support", display: "Apoio/Patrocínio", edit: false },
   ]);
 
   function handleEdit(field?: string) {
@@ -126,7 +129,12 @@ export default function ProfileContainer({
         ...data,
         phone: normalizePhone(data.phone),
         document: normalizeDocument(data.document),
+        info: {
+          ...data.info,
+          zipCode: normalizeZipCode(data.info.zipCode),
+        },
       };
+      console.log(parsedData);
       return parsedData;
     },
     onSuccess: (data) => {
@@ -155,15 +163,15 @@ export default function ProfileContainer({
     onSuccess: ({ data }) => {
       form.setValue("info.number", "");
       form.setValue("info.complement", "");
-      if (!data || !data.city.name || !data.state.name)
+      if (!data || !data.city.id || !data.state.id)
         return showToast({
           message: "CEP não encontrado",
           variant: "error",
           title: "Erro!",
         });
       form.setValue("info.address", data.address);
-      form.setValue("info.cityId", data.city.name);
-      form.setValue("info.stateId", data.state.name);
+      form.setValue("info.cityId", data.city.id);
+      form.setValue("info.stateId", data.state.id);
       setTimeout(() => {
         if (addressRef.current) scrollToElement(addressRef.current);
       }, 200);

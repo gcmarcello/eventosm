@@ -2,7 +2,7 @@
 import { upsertRegistrationDto } from "@/app/api/registrations/dto";
 import { createIndividualRegistration } from "@/app/api/registrations/action";
 import { Transition } from "@headlessui/react";
-import { EventRegistrationBatch, UserInfo } from "@prisma/client";
+import { EventRegistrationBatch, Organization, UserInfo } from "@prisma/client";
 import clsx from "clsx";
 import { Radio as HeadlessRadio } from "@headlessui/react";
 import Image from "next/image";
@@ -40,7 +40,7 @@ import {
   showToast,
 } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { calculatePrice } from "../../../utils/price";
@@ -51,11 +51,13 @@ export default function IndividualTournamentRegistration({
   batch,
   userSession,
   userInfo,
+  organization,
 }: {
   userSession: UserSession;
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
   userInfo: UserInfo;
+  organization: Organization;
 }) {
   const [showRules, setShowRules] = useState(false);
   const form = useForm({
@@ -68,6 +70,12 @@ export default function IndividualTournamentRegistration({
   const { data, isMutating, trigger } = useAction({
     action: createIndividualRegistration,
     redirect: true,
+    onSuccess: (data) =>
+      showToast({
+        message: "Inscrição realizada com sucesso!",
+        title: "Sucesso",
+        variant: "success",
+      }),
     onError: (error) => {
       console.log(error);
       showToast({ message: error, title: "Erro", variant: "error" });
@@ -221,9 +229,9 @@ export default function IndividualTournamentRegistration({
                                     {({ checked }) => (
                                       <div
                                         className={clsx(
-                                          "flex min-h-32 min-w-32 grow  cursor-pointer flex-col rounded-md border border-slate-200 bg-opacity-25 p-4 shadow-md duration-200 hover:bg-emerald-500 hover:bg-opacity-25 lg:flex-row lg:divide-x",
+                                          "flex min-h-32 min-w-32 grow  cursor-pointer flex-col rounded-md border border-slate-200 bg-opacity-25 p-4 shadow-md duration-200 hover:bg-slate-400 hover:bg-opacity-25 lg:flex-row lg:divide-x",
                                           checked
-                                            ? "bg-emerald-500"
+                                            ? "bg-slate-400"
                                             : "bg-transparent"
                                         )}
                                       >
@@ -416,7 +424,9 @@ export default function IndividualTournamentRegistration({
                     {hasNextStep && (
                       <Button
                         type="button"
-                        color="indigo"
+                        color={
+                          organization.options.colors.primaryColor.tw.color
+                        }
                         onClick={() => {
                           walk(1);
                         }}
@@ -428,7 +438,9 @@ export default function IndividualTournamentRegistration({
                     {!hasNextStep && (
                       <Button
                         type="submit"
-                        color="indigo"
+                        color={
+                          organization.options.colors.primaryColor.tw.color
+                        }
                         disabled={!isCurrentStepValid}
                         loading={isMutating}
                       >
@@ -453,7 +465,9 @@ export default function IndividualTournamentRegistration({
                         <Button
                           type="submit"
                           loading={isMutating}
-                          color="indigo"
+                          color={
+                            organization.options.colors.primaryColor.tw.color
+                          }
                           disabled={!isCurrentStepValid}
                         >
                           <div className="flex items-center gap-2">

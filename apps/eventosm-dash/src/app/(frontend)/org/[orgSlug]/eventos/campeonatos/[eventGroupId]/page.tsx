@@ -6,7 +6,7 @@ import EventGroupContainer from "./components/EventGroupContainer";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { readRegistrations } from "@/app/api/registrations/service";
-import { readActiveBatch } from "@/app/api/batches/service";
+import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 
 export default async function TorneioPage({
@@ -60,11 +60,16 @@ export default async function TorneioPage({
     where: { eventGroupId: eventGroup?.id },
   });
 
+  const nextBatch = await readNextBatch({
+    where: { eventGroupId: eventGroup?.id },
+  });
+
   return (
     <EventGroupContainer
       eventGroup={eventGroup}
       isUserRegistered={isUserRegistered}
       batch={batch}
+      nextBatch={nextBatch}
       organization={organization}
     />
   );

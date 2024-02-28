@@ -29,6 +29,22 @@ export async function generateViewport(props: { orgSlug: string }) {
   };
 }
 
+export async function generateMetadata(props: { orgSlug: string }) {
+  const organization = (
+    await readOrganizations({
+      where: { slug: props.orgSlug },
+    })
+  )[0];
+
+  if (!organization) {
+    return notFound();
+  }
+
+  return {
+    title: organization.name,
+  };
+}
+
 export default async function CompanyLayout({
   children,
   params,

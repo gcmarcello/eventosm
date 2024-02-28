@@ -1,6 +1,57 @@
 {
   "lists": [
     {
+      "id": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+      "title": "Backlog",
+      "cards": [
+        {
+          "id": "fd75bee6-6c00-4a6d-bb08-c39295eba867",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar individuo nao presente",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "97e8ebee-43df-43c9-8d00-3dae69608b06",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar evento",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "1f7eb177-de4b-4d34-b37c-7e89545a5224",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar etapa",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "379efbcd-6477-4b69-8671-0371fe3818b9",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "checkin",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "bdcfeadf-20dc-4195-bf88-78ebb4bcf08d",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "nao pode checkin se registration cancelada",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
+    },
+    {
       "id": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
       "title": "To do",
       "cards": [
@@ -8,15 +59,6 @@
           "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Corrigir asteriscos (nando)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "c159bd12-84b7-4037-b968-cf72573bce95",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Adicionar descricao de subevento nos forms",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -32,27 +74,54 @@
           "comments": []
         },
         {
-          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Feature para limitar inscricoes de equipe",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Feature para senha de lotes",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "de183c88-3f9b-42e7-9e1b-623ec8a1708e",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Resultados baseados nas regras do evento",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "f6f1fcbb-8861-484b-81dd-0ee7596eca86",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Notificacoes Whatsapp",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6bc9072d-dbab-41ce-a951-112d5000e2d8",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Emails",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "b6d4ac8f-69c5-44f3-9e4d-67b190d5f18e",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Atestados",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "3ba348fb-e70f-4978-9896-ad046c2dcc5d",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "fuso horario de data de evento",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6fc82046-53b1-4dba-a148-1572d901a320",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "recuperacao de senha",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -69,6 +138,33 @@
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
       "cards": [
+        {
+          "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Feature para senha de lotes",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Feature para limitar inscricoes de equipe",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "c159bd12-84b7-4037-b968-cf72573bce95",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Adicionar descricao de subevento nos forms",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
         {
           "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",

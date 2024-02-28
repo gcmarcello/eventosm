@@ -7,6 +7,7 @@ import {
   DocumentArrowUpIcon,
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
 import {
   Alertbox,
   For,
@@ -37,7 +38,7 @@ import {
   Switch,
   ErrorMessage,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useMemo } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
 
@@ -47,9 +48,13 @@ export function ParticipantsForm({
   fieldArray,
   eventGroup,
   addEmptyTeamMember,
+  organization,
+  batch,
 }: {
   addEmptyTeamMember: () => void;
-  eventGroup: EventGroupWithEvents;
+  organization: Organization;
+  batch: EventRegistrationBatch;
+  eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
     CreateMultipleRegistrationsDto,
     "teamMembers",
@@ -67,18 +72,19 @@ export function ParticipantsForm({
   function formatSheetData(sheetData: ExcelDataSchema) {
     return sheetData.map((row) => ({
       user: {
-        name: row["Nome Completo"],
+        fullName: row["Nome Completo"],
         email: row["E-mail"],
         phone: formatPhone(normalize(row.Celular)),
-        document: formatCPF(row.CPF),
-        birthDate: row["Data de Nascimento"],
+        document: formatCPF(normalize(row.CPF)),
+        birthDate: row["Data de Nascimento (DD/MM/AAAA)"],
         zipCode: formatCEP(row.CEP),
-        gender:
-          normalize(row.Sexo) === "masculino" ||
-          normalize(row.Sexo) === "masc" ||
-          normalize(row.Sexo) === "m"
-            ? "male"
-            : "female",
+        number: row["Número"],
+        complemento: row["Complemento (Opcional)"],
+        gender: ["masc", "masculino", "m", "homem", "h", "homen"].includes(
+          normalize(row.Sexo)
+        )
+          ? "male"
+          : "female",
       },
       registration: {
         modalityId:
@@ -108,7 +114,9 @@ export function ParticipantsForm({
                   Selecione se deseja salvar os atletas em um time, agilizando
                   futuras inscrições.
                 </Description>
-                <Switch color="emerald" />
+                <Switch
+                  color={organization.options.colors.primaryColor.tw.color}
+                />
               </Field>
 
               {form.watch("createTeam") && (
@@ -126,7 +134,12 @@ export function ParticipantsForm({
                 onClick={() => setInputMode("file")}
                 className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
               >
-                <DocumentArrowUpIcon className="size-16 text-emerald-600" />{" "}
+                <DocumentArrowUpIcon
+                  style={{
+                    color: organization.options.colors.primaryColor.hex,
+                  }}
+                  className="size-16 "
+                />{" "}
                 <p className="px-2 text-center">Importar de Arquivo</p>
               </div>
               <div
@@ -136,7 +149,12 @@ export function ParticipantsForm({
                 }}
                 className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
               >
-                <PencilSquareIcon className="size-16 text-emerald-600" />{" "}
+                <PencilSquareIcon
+                  style={{
+                    color: organization.options.colors.primaryColor.hex,
+                  }}
+                  className="size-16 "
+                />{" "}
                 <p className="px-2 text-center">Inscrever Manualmente</p>
               </div>
             </div>
@@ -201,8 +219,14 @@ export function ParticipantsForm({
 
                   const sheetJson = sheetToJson(sheetArrayBuffer);
 
-                  if (!sheetJson?.length)
-                    return "Sua planilha não possui dados";
+                  if (!sheetJson?.length) throw "Sua planilha não possui dados";
+
+                  if (
+                    batch.multipleRegistrationLimit &&
+                    sheetJson.length > batch.multipleRegistrationLimit
+                  ) {
+                    throw "O número de inscrições excede o limite de inscrições permitido.";
+                  }
 
                   const sheetJsonValidation =
                     excelDataSchema.safeParse(sheetJson);
@@ -211,6 +235,7 @@ export function ParticipantsForm({
                     const data = sheetJsonValidation.data;
 
                     insert(0, formatSheetData(data));
+                    form.trigger();
 
                     return true;
                   }
@@ -219,12 +244,13 @@ export function ParticipantsForm({
                     const errorLocation = i.path;
                     const errorRow = Number(errorLocation[0]) + 1;
                     const errorColumn = errorLocation[1];
-                    return `Erro na linha ${errorRow}, coluna ${errorColumn}`;
+                    throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
                   });
 
-                  return error;
+                  throw error;
                 }}
                 onError={(error) => {
+                  console.log(error);
                   if (typeof error === "string") {
                     showToast({
                       message: error,
@@ -276,7 +302,7 @@ export function ParticipantsForm({
                 <TableBody>
                   <TableRow>
                     <TableCell>
-                      <Field name={`teamMembers.${index}.user.name`}>
+                      <Field name={`teamMembers.${index}.user.fullName`}>
                         <div className="min-w-[150px]">
                           <Input />
                         </div>

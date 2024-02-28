@@ -22,7 +22,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ButtonSpinner, For, Text, date } from "odinkit";
+import { Alertbox, ButtonSpinner, For, Heading, Text, date } from "odinkit";
 import { useOrg } from "../../../components/OrgStore";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -31,6 +31,7 @@ import { UserWithoutPassword } from "prisma/types/User";
 
 export default function LoginPage() {
   const [openTermsModal, setOpenTermsModal] = useState(false);
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<
     | (UserWithoutPassword & {
         UserOrgLink: (UserOrgLink & { Organization: Organization })[];
@@ -84,94 +85,115 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-20 lg:py-12 xl:px-24">
-      {user && (
-        <Dialog open={openTermsModal} onClose={setOpenTermsModal}>
-          <DialogTitle onClose={() => setOpenTermsModal(false)} className="">
-            Conectar Conta EventoSM
-          </DialogTitle>
-          <DialogBody>
-            <div className="flex flex-col gap-y-2">
-              <Text className="font-semibold">
-                Olá {user?.fullName.split(" ")[0]}!
-              </Text>
-              <Text className="text-sm lg:text-xs">
-                A(o) {abbreviation ?? name} utiliza o sistema EventoSM para
-                administrar suas inscrições e eventos. Detectamos que você já
-                possui uma conta cadastrada nas seguintes organizações:
-              </Text>
-              <Text>
-                <ul className="ms-5 list-disc">
-                  <For each={user?.UserOrgLink!}>
-                    {(org) => <li>{org.Organization.name}</li>}
-                  </For>
-                </ul>
-              </Text>
-            </div>
-          </DialogBody>
-          <DialogActions>
-            <Button color={colors.secondaryColor.tw.color} href="./cadastro">
-              Cadastrar nova conta
-            </Button>
-            <Button
-              color={colors.primaryColor.tw.color}
-              onClick={() =>
-                loginTrigger({ ...form.getValues(), acceptTerms: true })
-              }
-            >
-              Conectar conta
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-      <div className="mx-auto w-full max-w-sm lg:w-96">
-        <div>
-          {/* <img
+    <>
+      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-20 lg:py-12 xl:px-24">
+        {user && (
+          <Dialog open={openTermsModal} onClose={setOpenTermsModal}>
+            <DialogTitle onClose={() => setOpenTermsModal(false)} className="">
+              Conectar Conta EventoSM
+            </DialogTitle>
+            <DialogBody>
+              <div className="flex flex-col gap-y-2">
+                <Text className="font-semibold">
+                  Olá {user?.fullName.split(" ")[0]}!
+                </Text>
+                <Text className="text-sm lg:text-xs">
+                  A(o) {abbreviation ?? name} utiliza o sistema EventoSM para
+                  administrar suas inscrições e eventos. Detectamos que você já
+                  possui uma conta cadastrada nas seguintes organizações:
+                </Text>
+                <Text>
+                  <ul className="ms-5 list-disc">
+                    <For each={user?.UserOrgLink!}>
+                      {(org) => <li>{org.Organization.name}</li>}
+                    </For>
+                  </ul>
+                </Text>
+              </div>
+            </DialogBody>
+            <DialogActions>
+              <Button color={colors.secondaryColor.tw.color} href="./cadastro">
+                Cadastrar nova conta
+              </Button>
+              <Button
+                color={colors.primaryColor.tw.color}
+                onClick={() =>
+                  loginTrigger({ ...form.getValues(), acceptTerms: true })
+                }
+              >
+                Conectar conta
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
+        {searchParams.get("alert") === "successRegistration" && (
+          <Alertbox type="success">
+            <p className="mb-2 font-medium">
+              Para concluir seu cadastro, você precisa confirmar sua conta. Por
+              favor, siga as instruções abaixo:{" "}
+            </p>
+
+            <ul className="list-disc space-y-2">
+              <li>
+                Verifique sua caixa de entrada de e-mail e localize o e-mail de
+                confirmação que enviamos para você.{" "}
+              </li>
+              <li>
+                Clique no botão "Confirmar Minha Conta" ou no link fornecido no
+                e-mail. Se o botão ou link não funcionar, copie e cole a URL
+                fornecida em um navegador da web{" "}
+              </li>
+            </ul>
+          </Alertbox>
+        )}
+        <div className="mx-auto w-full max-w-sm lg:w-96">
+          <div>
+            {/* <img
             className="h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           /> */}
-          <div className="mt-8 flex items-baseline gap-3">
-            <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
-              Login {abbreviation}
-            </h2>
+            <div className="mt-8 flex items-baseline gap-3">
+              <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Login {abbreviation}
+              </h2>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-gray-500">
+              Ainda não tem cadastro?{" "}
+              <Link
+                href="/cadastro"
+                className={clsx(
+                  "font-semibold",
+                  `text-${colors.primaryColor}-600 hover:text-${colors.primaryColor}-500`
+                )}
+              >
+                Clique aqui!
+              </Link>
+            </p>
           </div>
-          <p className="mt-2 text-sm leading-6 text-gray-500">
-            Ainda não tem cadastro?{" "}
-            <Link
-              href="/cadastro"
-              className={clsx(
-                "font-semibold",
-                `text-${colors.primaryColor}-600 hover:text-${colors.primaryColor}-500`
-              )}
-            >
-              Clique aqui!
-            </Link>
-          </p>
-        </div>
 
-        <div className="mt-10">
-          <div>
-            <Form
-              hform={form}
-              onSubmit={(data) => loginTrigger(data)}
-              className="space-y-6"
-            >
-              <FieldGroup className="space-y-6">
-                <Field name="identifier">
-                  <Label>Email, Documento ou Celular</Label>
-                  <Input />
-                  <ErrorMessage />
-                </Field>
-                <Field name="password">
-                  <Label>Senha</Label>
-                  <Input type="password" />
-                  <ErrorMessage />
-                </Field>
-              </FieldGroup>
+          <div className="mt-10">
+            <div>
+              <Form
+                hform={form}
+                onSubmit={(data) => loginTrigger(data)}
+                className="space-y-6"
+              >
+                <FieldGroup className="space-y-6">
+                  <Field name="identifier">
+                    <Label>Email, Documento ou Celular</Label>
+                    <Input />
+                    <ErrorMessage />
+                  </Field>
+                  <Field name="password">
+                    <Label>Senha</Label>
+                    <Input type="password" />
+                    <ErrorMessage />
+                  </Field>
+                </FieldGroup>
 
-              <div className="flex items-center justify-between">
-                {/* <div className="flex items-center">
+                <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center">
                     <input
                       id="remember-me"
                       name="remember-me"
@@ -186,36 +208,36 @@ export default function LoginPage() {
                     </label>
                   </div> */}
 
-                <div className="text-sm leading-6">
-                  <a
-                    href="#"
-                    className={clsx(
-                      "font-semibold",
-                      `text-${colors.primaryColor}-600 hover:text-${colors.primaryColor}-500`
-                    )}
-                  >
-                    Esqueceu a senha?
-                  </a>
+                  <div className="text-sm leading-6">
+                    <a
+                      href="#"
+                      className={clsx(
+                        "font-semibold",
+                        `text-${colors.primaryColor}-600 hover:text-${colors.primaryColor}-500`
+                      )}
+                    >
+                      Esqueceu a senha?
+                    </a>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex">
-                <Button
-                  loading={isLoading}
-                  type="submit"
-                  className={"w-full"}
-                  color={colors.primaryColor.tw.color}
-                >
-                  Login
-                </Button>
+                <div className="flex">
+                  <Button
+                    loading={isLoading}
+                    type="submit"
+                    className={"w-full"}
+                    color={colors.primaryColor.tw.color}
+                  >
+                    Login
+                  </Button>
+                </div>
+              </Form>
+              <div className="mt-5 text-center text-xs leading-6 text-gray-500 lg:mt-8 lg:text-start">
+                Tecnologia EventoSM® {dayjs().get("year")}
               </div>
-            </Form>
-            <div className="mt-5 text-center text-xs leading-6 text-gray-500 lg:mt-8 lg:text-start">
-              Tecnologia EventoSM® {dayjs().get("year")}
             </div>
-          </div>
 
-          {/* <div className="mt-10">
+            {/* <div className="mt-10">
               <div className="relative">
                 <div
                   className="absolute inset-0 flex items-center"
@@ -284,8 +306,9 @@ export default function LoginPage() {
                 </a>
               </div>
             </div> */}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
