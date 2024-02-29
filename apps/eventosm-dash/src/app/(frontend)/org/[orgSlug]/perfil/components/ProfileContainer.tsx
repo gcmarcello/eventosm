@@ -5,6 +5,7 @@ import { Organization } from "@prisma/client";
 import {
   Badge,
   For,
+  SubmitButton,
   date,
   formatCEP,
   formatCPF,
@@ -252,18 +253,15 @@ export default function ProfileContainer({
             <Button plain onClick={() => setShowAddressModal(false)}>
               Cancelar
             </Button>
-            <Button
+            <SubmitButton
               disabled={
                 isMutatingCep ||
                 form.watch("info.zipCode").length !== 9 ||
                 !form.watch("info.number")
               }
-              loading={isMutating}
-              type="submit"
-              form="updateUserForm"
             >
               Salvar
-            </Button>
+            </SubmitButton>
           </DialogActions>
         </Dialog>
         <div>

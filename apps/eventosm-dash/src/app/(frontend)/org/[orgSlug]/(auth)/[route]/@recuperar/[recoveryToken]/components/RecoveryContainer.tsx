@@ -3,6 +3,7 @@
 import { useOrg } from "@/app/(frontend)/org/[orgSlug]/components/OrgStore";
 import { createNewPassword } from "@/app/api/auth/recovery/action";
 import { createNewPasswordDto } from "@/app/api/auth/recovery/dto";
+import { SubmitButton } from "odinkit";
 import {
   Button,
   ErrorMessage,
@@ -76,14 +77,12 @@ export function CreateNewPasswordForm({ token }: { token: string }) {
             </Field>
 
             <div className="mt-10 flex">
-              <Button
-                loading={isMutating}
-                type="submit"
+              <SubmitButton
                 className={"w-full"}
                 color={colors.primaryColor.tw.color}
               >
                 Enviar
-              </Button>
+              </SubmitButton>
             </div>
           </FieldGroup>
         </Fieldset>

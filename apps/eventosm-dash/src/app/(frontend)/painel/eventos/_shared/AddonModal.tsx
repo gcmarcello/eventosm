@@ -3,7 +3,7 @@ import { upsertEventAddonDto } from "@/app/api/products/dto";
 import { uploadFiles } from "@/app/api/uploads/action";
 
 import { EventAddon } from "@prisma/client";
-import { FileImagePreview, For, Text } from "odinkit";
+import { FileImagePreview, For, SubmitButton, Text } from "odinkit";
 import {
   Button,
   Dialog,
@@ -115,11 +115,13 @@ export default function AddonModal({
 
   const Field = useMemo(() => form.createField(), []);
   return (
-    <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
-      <DialogTitle>{form.getValues("id") ? "Editar" : "Criar"} Kit</DialogTitle>
-      <DialogDescription>{addon?.name}</DialogDescription>
-      <DialogBody>
-        <Form id="addonForm" hform={form} onSubmit={(data) => trigger(data)}>
+    <Form id="addonForm" hform={form} onSubmit={(data) => trigger(data)}>
+      <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
+        <DialogTitle>
+          {form.getValues("id") ? "Editar" : "Criar"} Kit
+        </DialogTitle>
+        <DialogDescription>{addon?.name}</DialogDescription>
+        <DialogBody>
           <Fieldset>
             <div className="grid grid-cols-2 gap-6">
               <div className="col-span-2 lg:col-span-1">
@@ -207,27 +209,20 @@ export default function AddonModal({
               </FieldGroup>
             </div>
           </Fieldset>
-        </Form>
-      </DialogBody>
-      <DialogActions className="lg:justify-between">
-        <Button className="flex gap-2 " onClick={() => append({ name: "" })}>
-          <PlusIcon className="size-5" />
-          Adicionar Opção
-        </Button>
-        <div className="flex justify-between gap-2">
-          <Button plain onClick={() => setIsOpen(false)}>
-            Cancelar
+        </DialogBody>
+        <DialogActions className="lg:justify-between">
+          <Button className="flex gap-2 " onClick={() => append({ name: "" })}>
+            <PlusIcon className="size-5" />
+            Adicionar Opção
           </Button>
-          <Button
-            color={primaryColor?.tw.color}
-            type="submit"
-            loading={isMutating}
-            form="addonForm"
-          >
-            Salvar
-          </Button>
-        </div>
-      </DialogActions>
-    </Dialog>
+          <div className="flex justify-between gap-2">
+            <Button plain onClick={() => setIsOpen(false)}>
+              Cancelar
+            </Button>
+            <SubmitButton color={primaryColor?.tw.color}>Salvar</SubmitButton>
+          </div>
+        </DialogActions>
+      </Dialog>
+    </Form>
   );
 }

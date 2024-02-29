@@ -18,6 +18,7 @@ import { upsertPasswordRecoveryTokenDto } from "@/app/api/auth/recovery/dto";
 import { generateRecoveryToken } from "@/app/api/auth/recovery/action";
 import { useMemo } from "react";
 import dayjs from "dayjs";
+import { SubmitButton } from "odinkit";
 
 export default function RecoverPage() {
   const { colors, abbreviation, id, name } = useOrg();
@@ -108,14 +109,12 @@ export default function RecoverPage() {
                         <ErrorMessage />
                       </Field>
                       <div className="flex">
-                        <Button
-                          loading={isMutating}
-                          type="submit"
+                        <SubmitButton
                           className={"w-full"}
                           color={colors.primaryColor.tw.color}
                         >
                           Recuperar Senha
-                        </Button>
+                        </SubmitButton>
                       </div>
                     </>
                   )}

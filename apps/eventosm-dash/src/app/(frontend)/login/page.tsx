@@ -18,6 +18,7 @@ import {
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { SubmitButton } from "odinkit";
 
 export default function LoginPage() {
   const params = useSearchParams();
@@ -115,14 +116,13 @@ export default function LoginPage() {
                 </div>
 
                 <div className="flex">
-                  <Button
+                  <SubmitButton
                     type="submit"
-                    loading={isLoading}
                     className={"w-full"}
                     color="indigo"
                   >
                     Login
-                  </Button>
+                  </SubmitButton>
                 </div>
               </Form>
             </div>
