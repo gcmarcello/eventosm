@@ -183,8 +183,7 @@ export type ReadEventGroupDto = z.infer<typeof readEventGroupDto>;
 
 export const readEventGroupCheckinsAndAbsencesDto = readDto(
   z.object({
-    userId: z.string().uuid(),
-    eventGroupId: z.string().uuid(),
+    registrationId: z.string().uuid(),
   })
 );
 
