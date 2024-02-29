@@ -1,5 +1,5 @@
 import { CreateMultipleRegistrationsDto } from "@/app/api/registrations/dto";
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { ArrowRightIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import dayjs from "dayjs";
 import { forEach } from "lodash";
 import {
@@ -12,7 +12,17 @@ import {
   TableRow,
   Text,
 } from "odinkit";
-import { Button, Select, useFormContext } from "odinkit/client";
+import {
+  Button,
+  Dropdown,
+  DropdownButton,
+  DropdownHeading,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  Select,
+  useFormContext,
+} from "odinkit/client";
 import { useEffect, useMemo, useState } from "react";
 import { filterCategories } from "../../../../utils/categories";
 import {
@@ -21,6 +31,7 @@ import {
   EventModalityWithCategories,
 } from "prisma/types/Events";
 import { UseFieldArrayReturn } from "react-hook-form";
+import { deleteUser } from "@/app/api/users/repository";
 
 export function EventForm({
   fieldArray,
@@ -77,6 +88,14 @@ export function EventForm({
         eventGroup.EventModality[0]!.id
       );
       form.resetField(`teamMembers.${index}.registration.categoryId`);
+    });
+  }
+
+  function autoAssignAddons(addonId: string, option?: string) {
+    forEach(fields, (field, index) => {
+      form.setValue(`teamMembers.${index}.registration.addon.id`, addonId);
+      if (option)
+        form.setValue(`teamMembers.${index}.registration.addon.option`, option);
     });
   }
 
@@ -152,6 +171,32 @@ export function EventForm({
                   </Text>
                 </div>
               </div>
+              <Dropdown>
+                <DropdownButton className={"mt-4"}>
+                  Atribuir Kits Automaticamente
+                  <ChevronDownIcon className="size-5" />
+                </DropdownButton>
+                <DropdownMenu>
+                  <For each={eventGroup.EventAddon}>
+                    {(addon) => (
+                      <DropdownSection aria-label={addon.name}>
+                        <DropdownHeading>{addon.name}</DropdownHeading>
+                        <For each={addon.options as string[]}>
+                          {(option) => (
+                            <DropdownItem
+                              onClick={() =>
+                                autoAssignAddons(addon.id, option as string)
+                              }
+                            >
+                              {option as string}
+                            </DropdownItem>
+                          )}
+                        </For>
+                      </DropdownSection>
+                    )}
+                  </For>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           </>
         ) : null}
@@ -192,7 +237,7 @@ export function EventForm({
                       <Text>Modalidade Única - {modalities[0]?.name}</Text>
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="min-w-[250px]">
                     <Field
                       name={`teamMembers.${index}.registration.categoryId`}
                     >
@@ -226,7 +271,7 @@ export function EventForm({
                     </Field>
                   </TableCell>
                   {eventGroup.EventAddon?.length ? (
-                    <TableCell>
+                    <TableCell className="min-w-[180px]">
                       <Field
                         name={`teamMembers.${index}.registration.addon.id`}
                       >

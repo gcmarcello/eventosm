@@ -3,10 +3,12 @@ import {
   ExcelDataSchema,
   excelDataSchema,
 } from "@/app/api/registrations/dto";
+import { chooseTextColor } from "@/utils/colors";
 import {
   DocumentArrowUpIcon,
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
+import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
 import {
   Alertbox,
@@ -37,6 +39,7 @@ import {
   Description,
   Switch,
   ErrorMessage,
+  Button,
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useMemo } from "react";
@@ -107,7 +110,7 @@ export function ParticipantsForm({
       <div className="grid grid-cols-4">
         {!inputMode && (
           <>
-            <div className="col-span-2 col-start-2 mb-3 space-y-4 bg-white lg:mb-6">
+            <div className="col-span-4 mb-3 space-y-4 bg-white lg:col-span-2 lg:col-start-2 lg:mb-6">
               <Field name="createTeam" variant="switch">
                 <Label>Salvar atletas em um time</Label>
                 <Description>
@@ -130,9 +133,11 @@ export function ParticipantsForm({
               )}
             </div>
             <div className="col-span-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
-              <div
+              <Button
+                outline
                 onClick={() => setInputMode("file")}
-                className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+                disabled={form.watch("createTeam") && !form.watch("teamName")}
+                className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  "
               >
                 <DocumentArrowUpIcon
                   style={{
@@ -141,13 +146,15 @@ export function ParticipantsForm({
                   className="size-16 "
                 />{" "}
                 <p className="px-2 text-center">Importar de Arquivo</p>
-              </div>
-              <div
+              </Button>
+              <Button
+                outline
+                disabled={form.watch("createTeam") && !form.watch("teamName")}
                 onClick={() => {
                   setInputMode("manual");
                   addEmptyTeamMember();
                 }}
-                className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+                className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  "
               >
                 <PencilSquareIcon
                   style={{
@@ -156,7 +163,14 @@ export function ParticipantsForm({
                   className="size-16 "
                 />{" "}
                 <p className="px-2 text-center">Inscrever Manualmente</p>
-              </div>
+              </Button>
+            </div>
+            <div className="col-span-4 mt-4 lg:col-span-2 lg:col-start-2 ">
+              <Text className="flex items-center gap-2">
+                <ComputerDesktopIcon className="size-32 lg:size-8" />
+                Devido ao alto número de informações na tela, recomendamos que
+                inscrições em lote sejam feitas através de um computador.
+              </Text>
             </div>
           </>
         )}
@@ -165,7 +179,16 @@ export function ParticipantsForm({
           <div className="col-span-4 space-y-4 lg:ps-4">
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full bg-emerald-600 font-bold text-white">
+                <div
+                  style={{
+                    backgroundColor:
+                      organization.options.colors.primaryColor.hex,
+                    color: chooseTextColor(
+                      organization.options.colors.primaryColor.hex
+                    ),
+                  }}
+                  className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
+                >
                   1
                 </div>
                 <div className="flex flex-col">
@@ -174,10 +197,13 @@ export function ParticipantsForm({
                     O arquivo deve ser um arquivo .xlsx e seguir o formato
                     correto.{" "}
                     <Link
+                      style={{
+                        color: organization.options.colors.primaryColor.hex,
+                      }}
                       href={
                         "https://f005.backblazeb2.com/file/eventosmb/ModeloInscricoes.xlsx"
                       }
-                      className="text-emerald-600 underline"
+                      className="underline"
                     >
                       Clique aqui
                     </Link>{" "}
@@ -188,7 +214,16 @@ export function ParticipantsForm({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full bg-emerald-600 font-bold text-white">
+                <div
+                  style={{
+                    backgroundColor:
+                      organization.options.colors.primaryColor.hex,
+                    color: chooseTextColor(
+                      organization.options.colors.primaryColor.hex
+                    ),
+                  }}
+                  className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full bg-emerald-600 font-bold text-white"
+                >
                   2
                 </div>
                 <div className="flex flex-col">
@@ -208,6 +243,17 @@ export function ParticipantsForm({
                     <List data={form.formState.errors.files?.message ?? ""} />
                   </Alertbox>
                 )}
+              {form.formState.errors.teamMembers ? (
+                <Alertbox className="hidden lg:block" type="error">
+                  <List
+                    data={JSON.stringify(
+                      Object.entries(
+                        form.formState.errors.teamMembers || {}
+                      ).map((value) => `Erro na linha ${Number(value[0]) + 1}`)
+                    )}
+                  />
+                </Alertbox>
+              ) : null}
             </div>
             <Field name="files">
               <FileInput
@@ -261,16 +307,24 @@ export function ParticipantsForm({
                 }}
               >
                 <FileDropArea
+                  color={organization.options.colors.primaryColor.hex}
                   render={
                     form.watch("files")?.length ? (
                       <Text>
-                        <span className="font-semibold">Arquivo:</span>{" "}
+                        <span
+                          style={{
+                            color: organization.options.colors.primaryColor.hex,
+                          }}
+                          className="font-semibold"
+                        >
+                          Arquivo:
+                        </span>{" "}
                         {form.watch("files")[0].name}{" "}
                         <span
                           onClick={() => {
                             form.reset();
                           }}
-                          className="cursor-pointer font-semibold text-emerald-600"
+                          className="cursor-pointer font-semibold "
                         >
                           Trocar
                         </span>
@@ -283,97 +337,101 @@ export function ParticipantsForm({
           </div>
         )}
       </div>
-      <div className="col-span-4 lg:divide-y">
-        <For each={fields}>
-          {(field, index) => (
-            <>
-              <TableMock>
-                <TableHead>
-                  <TableRow>
-                    <TableHeader>Nome Completo</TableHeader>
-                    <TableHeader>Email</TableHeader>
-                    <TableHeader>Celular</TableHeader>
-                    <TableHeader>CPF</TableHeader>
-                    <TableHeader>Sexo</TableHeader>
-                    <TableHeader>Data de Nascimento</TableHeader>
-                    <TableHeader>CEP</TableHeader>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.fullName`}>
-                        <div className="min-w-[150px]">
-                          <Input />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.email`}>
-                        <div className="min-w-[150px]">
-                          <Input />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.phone`}>
-                        <div className="min-w-[150px]">
-                          <Input
-                            mask={(fieldValue: string) => {
-                              if (fieldValue.length > 14) {
-                                return "(99) 99999-9999";
-                              } else {
-                                return "(99) 9999-9999";
-                              }
-                            }}
-                          />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.document`}>
-                        <div className="min-w-[100px]">
-                          <Input mask={"999.999.999-99"} />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.gender`}>
-                        <div className="min-w-[110px]">
-                          <Select
-                            data={[
-                              {
-                                id: "female",
-                                name: "Feminino",
-                              },
-                              { id: "male", name: "Masculino" },
-                            ]}
-                            displayValueKey="name"
-                          />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.birthDate`}>
-                        <div className="min-w-[100px]">
-                          <Input mask={"99/99/9999"} />
-                        </div>
-                      </Field>
-                    </TableCell>
-                    <TableCell>
-                      <Field name={`teamMembers.${index}.user.zipCode`}>
-                        <div className="min-w-[100px]">
-                          <Input mask={"99999-999"} />
-                        </div>
-                      </Field>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </TableMock>
-            </>
-          )}
-        </For>
-      </div>
+      {form.watch("teamMembers").length ? (
+        <div className="col-span-4 lg:divide-y">
+          <TableMock>
+            <TableHead>
+              <TableRow>
+                <TableHeader>Atleta</TableHeader>
+                <TableHeader>Nome Completo</TableHeader>
+                <TableHeader>Email</TableHeader>
+                <TableHeader>Celular</TableHeader>
+                <TableHeader>CPF</TableHeader>
+                <TableHeader>Sexo</TableHeader>
+                <TableHeader>Data de Nascimento</TableHeader>
+                <TableHeader>CEP</TableHeader>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <For each={fields}>
+                {(field, index) => (
+                  <>
+                    <TableRow className="overflow-x-scroll">
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        <Field name={`teamMembers.${index}.user.fullName`}>
+                          <div className="min-w-[150px]">
+                            <Input />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell>
+                        <Field name={`teamMembers.${index}.user.email`}>
+                          <div className="min-w-[150px]">
+                            <Input />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell className="min-w-[200px]">
+                        <Field name={`teamMembers.${index}.user.phone`}>
+                          <div className="min-w-[150px]">
+                            <Input
+                              mask={(fieldValue: string) => {
+                                if (fieldValue.length > 14) {
+                                  return "(99) 99999-9999";
+                                } else {
+                                  return "(99) 9999-9999";
+                                }
+                              }}
+                            />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell className="min-w-[200px]">
+                        <Field name={`teamMembers.${index}.user.document`}>
+                          <div className="min-w-[100px]">
+                            <Input mask={"999.999.999-99"} />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell>
+                        <Field name={`teamMembers.${index}.user.gender`}>
+                          <div className="min-w-[110px]">
+                            <Select
+                              data={[
+                                {
+                                  id: "female",
+                                  name: "Feminino",
+                                },
+                                { id: "male", name: "Masculino" },
+                              ]}
+                              displayValueKey="name"
+                            />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell>
+                        <Field name={`teamMembers.${index}.user.birthDate`}>
+                          <div className="min-w-[100px]">
+                            <Input mask={"99/99/9999"} />
+                          </div>
+                        </Field>
+                      </TableCell>
+                      <TableCell className="min-w-[200px]">
+                        <Field name={`teamMembers.${index}.user.zipCode`}>
+                          <div className="min-w-[100px]">
+                            <Input mask={"99999-999"} />
+                          </div>
+                        </Field>
+                      </TableCell>
+                    </TableRow>
+                  </>
+                )}
+              </For>
+            </TableBody>
+          </TableMock>
+        </div>
+      ) : null}
     </>
   );
 }

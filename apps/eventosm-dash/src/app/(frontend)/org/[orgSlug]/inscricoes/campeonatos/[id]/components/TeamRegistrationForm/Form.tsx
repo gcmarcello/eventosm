@@ -21,6 +21,7 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import {
+  Alertbox,
   BottomNavigation,
   ButtonSpinner,
   For,
@@ -218,7 +219,10 @@ export default function TeamTournamentRegistration({
             <div>
               {inputMode && (
                 <div
-                  className="mb-2 flex cursor-pointer items-center gap-1 text-sm font-semibold text-emerald-600"
+                  style={{
+                    color: organization.options.colors.primaryColor.hex,
+                  }}
+                  className="mb-2 flex cursor-pointer items-center gap-1 text-sm font-semibold "
                   onClick={() => {
                     form.resetField("teamMembers");
                     setInputMode(null);
@@ -322,6 +326,7 @@ export default function TeamTournamentRegistration({
                           }
                           onClick={() => {
                             walk(1);
+                            scrollTo({ top: 0, behavior: "smooth" });
                           }}
                           disabled={!isCurrentStepValid}
                         >
@@ -361,8 +366,10 @@ export default function TeamTournamentRegistration({
                         <>
                           <Button
                             type="button"
+                            className={"my-auto"}
                             onClick={() => {
                               walk(1);
+                              scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             disabled={!isCurrentStepValid}
                           >
@@ -370,10 +377,29 @@ export default function TeamTournamentRegistration({
                           </Button>
                         </>
                       )}
+                      {form.formState.errors.teamMembers ? (
+                        <Alertbox type="error">
+                          Linhas{" "}
+                          {Object.entries(
+                            form.formState.errors.teamMembers || {}
+                          )
+                            .map((value) => `${Number(value[0]) + 1}`)
+                            .join(", ")}
+                        </Alertbox>
+                      ) : null}
                       {currentStep === 0 && inputMode === "manual" && (
                         <Button onClick={() => addEmptyTeamMember()}>
                           <PlusIcon className="h-6 w-6" /> Participante
                         </Button>
+                      )}
+                      {!hasNextStep && (
+                        <SubmitButton
+                          color={
+                            organization.options.colors.primaryColor.tw.color
+                          }
+                        >
+                          Inscrever
+                        </SubmitButton>
                       )}
                       {hasPrevStep && (
                         <Button
