@@ -16,6 +16,7 @@ import { upsertEventModalityCategories } from "../categories/service";
 import { revalidatePath } from "next/cache";
 import { ActionResponse } from "odinkit";
 import { UpdateEventStatusDto } from "./status/dto";
+import { useHeaders } from "../_shared/utils/useHeaders";
 
 export async function readEventGroups(request: ReadEventGroupDto) {
   try {
@@ -35,8 +36,12 @@ export async function readEventGroupCheckinsAndAbsences(
   request: ReadEventGroupCheckinsAndAbsencesDto
 ) {
   try {
+    const { request: parsedRequest } = await UseMiddlewares(request).then(
+      UserSessionMiddleware
+    );
+
     const eventGroups =
-      await service.readEventGroupCheckinsAndAbsences(request);
+      await service.readEventGroupCheckinsAndAbsences(parsedRequest);
 
     return ActionResponse.success({
       data: eventGroups,
@@ -144,8 +149,9 @@ export async function updateEventStatus(request: UpdateEventStatusDto) {
     const { request: parsedRequest } = await UseMiddlewares(request)
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
+    const { referer, pathname } = await useHeaders();
     const event = await service.updateEventStatus(parsedRequest);
-    revalidatePath(`/painel/eventos/${request.id}`);
+    revalidatePath(pathname);
     return ActionResponse.success({
       data: event,
       message: "Status do evento atualizado.",

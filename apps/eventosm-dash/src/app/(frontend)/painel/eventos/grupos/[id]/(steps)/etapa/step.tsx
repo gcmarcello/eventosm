@@ -23,7 +23,7 @@ import Image from "next/image";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
-  .merge(z.object({ image: z.array(z.instanceof(File)) }));
+  .merge(z.object({ image: z.array(z.any()).optional() }));
 
 type Schema = z.infer<typeof schema>;
 

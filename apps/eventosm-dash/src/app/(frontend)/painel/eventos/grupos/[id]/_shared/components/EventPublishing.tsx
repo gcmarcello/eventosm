@@ -54,7 +54,7 @@ export function EventPublishing({
         <DropdownItem
           onClick={() =>
             triggerEventStatus({
-              groupId: eventGroup.id,
+              eventGroupId: eventGroup.id,
               status: eventGroup.status === "draft" ? "published" : "draft",
             })
           }

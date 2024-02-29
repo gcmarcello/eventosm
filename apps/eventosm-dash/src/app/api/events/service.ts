@@ -7,7 +7,6 @@ import {
   ReadEventGroupDto,
   ReadEventModalitiesDto,
   ReadEventTypeDto,
-  UpdateEventStatusDto,
   UpsertEventDto,
   UpsertEventGroupDto,
   UpsertEventGroupRulesDto,
@@ -19,6 +18,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventModalityWithCategories } from "prisma/types/Events";
 import { EventGroupRules, Organization } from "@prisma/client";
+import { UpdateEventStatusDto } from "./status/dto";
 dayjs.extend(customParseFormat);
 
 /* export async function upsertEventGroupType(request: UpsertEventGroupTypeDto) {
@@ -189,10 +189,13 @@ export async function readEventGroups(request: ReadEventGroupDto) {
 }
 
 export async function readEventGroupCheckinsAndAbsences(
-  request: ReadEventGroupCheckinsAndAbsencesDto
+  request: ReadEventGroupCheckinsAndAbsencesDto & { userSession: UserSession }
 ) {
   const userData = await prisma.eventRegistration.findUnique({
-    where: { id: request.where?.registrationId },
+    where: {
+      id: request.where?.registrationId,
+      userId: request.userSession.id,
+    },
     include: {
       eventGroup: { include: { Event: true } },
       EventAbsences: true,
@@ -237,11 +240,11 @@ export async function updateEventStatus(
     organization: Organization;
   }
 ) {
-  if (!request.id && !request.groupId) throw "Evento não encontrado.";
+  if (!request.eventId && !request.eventGroupId) throw "Evento não encontrado.";
 
-  if (request.id) {
+  if (request.eventId) {
     const eventToUpdate = await prisma.event.findFirst({
-      where: { id: request.id, organizationId: request.organization.id },
+      where: { id: request.eventId, organizationId: request.organization.id },
       include: { EventModality: true, EventRegistrationBatch: true },
     });
     if (!eventToUpdate) throw "Evento não encontrado na organização.";
@@ -250,7 +253,10 @@ export async function updateEventStatus(
       throw "Evento sem lotes de inscrição.";
   } else {
     const groupToUpdate = await prisma.eventGroup.findFirst({
-      where: { id: request.id, organizationId: request.organization.id },
+      where: {
+        id: request.eventGroupId,
+        organizationId: request.organization.id,
+      },
       include: {
         EventModality: true,
         EventRegistrationBatch: true,
@@ -264,10 +270,10 @@ export async function updateEventStatus(
       throw "Grupo sem lotes de inscrição.";
   }
 
-  const updatedEventOrGroup = request.id
+  const updatedEventOrGroup = request.eventId
     ? await prisma.event.update({
         where: {
-          id: request.id,
+          id: request.eventId,
           Organization: {
             id: request.organization.id,
             ownerId: request.userSession.id,
@@ -277,7 +283,7 @@ export async function updateEventStatus(
       })
     : await prisma.eventGroup.update({
         where: {
-          id: request.groupId,
+          id: request.eventGroupId,
           Organization: {
             id: request.organization.id,
             ownerId: request.userSession.id,

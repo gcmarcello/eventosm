@@ -8,7 +8,7 @@ import {
 } from "prisma/types/Events";
 import { useRef } from "react";
 import { usePanel } from "../../../_shared/components/PanelStore";
-import { updateEventStatusDto } from "@/app/api/events/dto";
+
 import { Form, showToast, useAction, useForm, useSteps } from "odinkit/client";
 import EventGeneralInfo from "./EventGeneralInfo";
 import { BottomNavigation } from "odinkit";
@@ -29,12 +29,16 @@ import {
   DropdownSeparator,
 } from "odinkit/client";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { Organization } from "@prisma/client";
+import { updateEventStatusDto } from "@/app/api/events/status/dto";
 
 export default function UpdateEventPage({
   event,
   modalities,
   batches,
+  organization,
 }: {
+  organization: Organization;
   modalities: EventModalityWithCategories[];
   event: EventWithRegistrationCount;
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
@@ -54,7 +58,12 @@ export default function UpdateEventPage({
     {
       title: "Lotes",
       content: (
-        <EventBatches modalities={modalities} event={event} batches={batches} />
+        <EventBatches
+          organization={organization}
+          modalities={modalities}
+          event={event}
+          batches={batches}
+        />
       ),
       disabled: modalities.every(
         (modality) => !modality.modalityCategory?.length
@@ -68,7 +77,7 @@ export default function UpdateEventPage({
     {
       title: "Resultados",
       content: <>xd</>,
-      disabled: event.status !== "completed",
+      disabled: event.status !== "review",
     },
   ];
 
@@ -108,7 +117,7 @@ export default function UpdateEventPage({
     schema: updateEventStatusDto,
     mode: "onChange",
     defaultValues: {
-      id: event.id,
+      eventId: event.id,
     },
   });
 
@@ -131,7 +140,7 @@ export default function UpdateEventPage({
           <DropdownItem
             onClick={() =>
               triggerEventStatus({
-                id: event.id,
+                eventId: event.id,
                 status: event.status === "draft" ? "published" : "draft",
               })
             }

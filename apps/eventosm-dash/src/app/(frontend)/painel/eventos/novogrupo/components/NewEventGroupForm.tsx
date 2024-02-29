@@ -45,6 +45,7 @@ export default function EventGroupForm({
   eventGroup?: EventGroupWithEvents;
 }) {
   const form = useForm({
+    id: "EventGroupForm",
     schema: upsertEventGroupDto,
     mode: "onChange",
     defaultValues: {
@@ -69,7 +70,6 @@ export default function EventGroupForm({
 
   return (
     <MultistepForm
-      id="EventGroupForm"
       hform={form}
       onSubmit={trigger}
       className="pb-20"
