@@ -1,4 +1,4 @@
-import { EventStatus } from "@prisma/client";
+import { EventStatus, ProductStatus } from "@prisma/client";
 import { readDto } from "odinkit";
 import { z } from "odinkit";
 
@@ -11,7 +11,7 @@ export const readEventAddonsDto = readDto(
       eventId: z.string().optional(),
       description: z.string().optional(),
       price: z.number().optional(),
-      status: z.nativeEnum(EventStatus).optional(),
+      status: z.nativeEnum(ProductStatus).optional(),
     })
     .optional()
 );
