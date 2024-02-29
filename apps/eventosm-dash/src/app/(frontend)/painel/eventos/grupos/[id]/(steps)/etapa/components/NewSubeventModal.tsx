@@ -22,6 +22,7 @@ import {
   UseFormReturn,
   showToast,
   useFormContext,
+  useMocker,
 } from "odinkit/client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
@@ -29,8 +30,10 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore";
-import { FileImagePreview, SubmitButton, Text } from "odinkit";
+import { FileImagePreview, SubmitButton, Text, fileFromUrl } from "odinkit";
 import { Event } from "@prisma/client";
+import { fakerPT_BR } from "@faker-js/faker";
+import dayjs from "dayjs";
 
 export default function SubeventModal({
   modalState,
@@ -53,6 +56,31 @@ export default function SubeventModal({
   const {
     colors: { primaryColor, secondaryColor },
   } = usePanel();
+
+  useMocker({
+    form: form,
+    data: async () => ({
+      dateEnd: dayjs(
+        fakerPT_BR.date
+          .future({ refDate: "01/03/2024", years: 0.5 })
+          .toISOString()
+      ).format("DD/MM/YYYY"),
+      dateStart: dayjs(
+        fakerPT_BR.date
+          .future({ refDate: "01/01/2024", years: 0.2 })
+          .toISOString()
+      ).format("DD/MM/YYYY"),
+      description: fakerPT_BR.lorem.paragraphs(3),
+      image: [
+        await fileFromUrl(
+          "https://placehold.co/600x400?text=" +
+            encodeURI(fakerPT_BR.lorem.words(2))
+        ),
+      ],
+      location: fakerPT_BR.location.street(),
+      name: fakerPT_BR.lorem.words(3),
+    }),
+  });
 
   return (
     <Dialog
@@ -118,7 +146,7 @@ export default function SubeventModal({
                           {form.watch("image")?.[0].name}{" "}
                           <span
                             onClick={() => {
-                              form.reset();
+                              form.setValue("image", undefined);
                             }}
                             className="cursor-pointer font-semibold text-emerald-600"
                           >
@@ -133,6 +161,7 @@ export default function SubeventModal({
               <div className="my-3">
                 <FileImagePreview defaultValue={subevent?.imageUrl || ""} />
               </div>
+              <ErrorMessage />
             </SubeventField>
             <SubeventField
               className="col-span-2 lg:col-span-2"

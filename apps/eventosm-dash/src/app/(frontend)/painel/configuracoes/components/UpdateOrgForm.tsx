@@ -30,7 +30,7 @@ import {
   Text,
   formatPhone,
 } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 import GeneralInfoSection from "./GeneralInfoSection";
 import PersonalizationSection from "./PersonalizationSection";
 import { Organization } from "@prisma/client";

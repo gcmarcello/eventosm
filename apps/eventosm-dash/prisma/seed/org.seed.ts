@@ -142,6 +142,7 @@ export const orgSeed = async (userId: string) => {
 
   const registration = await prisma.eventRegistration.create({
     data: {
+      qrCode: "123456",
       code: "1",
       status: "active",
       batchId,

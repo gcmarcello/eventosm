@@ -1,5 +1,5 @@
 import { readDto } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export const readTeamsDto = readDto(
   z.object({

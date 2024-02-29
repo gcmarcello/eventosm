@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "odinkit";
 import { readDto } from "../_shared/dto/read";
 import { dateRegex, dateTimeRegex, timeRegex } from "@/utils/regex";
 import dayjs from "dayjs";

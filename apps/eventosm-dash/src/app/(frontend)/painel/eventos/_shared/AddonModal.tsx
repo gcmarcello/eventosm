@@ -24,7 +24,7 @@ import {
   useForm,
 } from "odinkit/client";
 import { useEffect, useMemo } from "react";
-import { z } from "zod";
+import { z } from "odinkit";
 import { usePanel } from "../../_shared/components/PanelStore";
 import { useFieldArray } from "react-hook-form";
 import { PlusIcon } from "@heroicons/react/24/solid";

@@ -22,7 +22,7 @@ import {
   useForm,
 } from "odinkit/client";
 import { Logo } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 import { chooseTextColor, compareContrasts } from "@/utils/colors";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";

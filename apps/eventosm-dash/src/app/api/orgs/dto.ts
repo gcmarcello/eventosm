@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "odinkit";
 import { readDto } from "../_shared/dto/read";
 import { ColorId } from "@prisma/client";
 

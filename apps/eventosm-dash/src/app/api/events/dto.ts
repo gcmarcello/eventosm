@@ -1,5 +1,6 @@
 import { dateRegex } from "@/utils/regex";
-import { ZodEffects, ZodObject, ZodRawShape, ZodTypeAny, z } from "zod";
+import { z } from "odinkit";
+
 import { readDto } from "../_shared/dto/read";
 import { EventStatus } from "@prisma/client";
 

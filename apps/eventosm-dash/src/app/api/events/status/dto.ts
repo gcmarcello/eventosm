@@ -1,5 +1,5 @@
 import { EventStatus } from "@prisma/client";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export const updateEventStatusDto = z.object({
   eventId: z.string().uuid(),

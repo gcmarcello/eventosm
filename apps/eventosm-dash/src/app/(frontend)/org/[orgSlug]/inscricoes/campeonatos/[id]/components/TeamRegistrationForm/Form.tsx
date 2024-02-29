@@ -66,7 +66,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { read, utils } from "xlsx";
-import { z } from "zod";
+import { z } from "odinkit";
 import { filterCategories } from "../../../../utils/categories";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -332,9 +332,14 @@ export default function TeamTournamentRegistration({
                       </Button>
                     )}
                     {!hasNextStep && (
-                      <SubmitButton color={
-                        organization.options.colors.primaryColor.tw.color
-                      } color="indigo">Inscrever</SubmitButton>
+                      <SubmitButton
+                        color={
+                          organization.options.colors.primaryColor.tw.color
+                        }
+                        color="indigo"
+                      >
+                        Inscrever
+                      </SubmitButton>
                     )}
                     {hasPrevStep && (
                       <Button

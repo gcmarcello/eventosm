@@ -1,4 +1,5 @@
-import { ZodRawShape, z } from "zod";
+import { z } from "odinkit";
+import { ZodRawShape } from "zod";
 
 export const updateDto = <D extends ZodRawShape, W extends ZodRawShape>(
   where: W,

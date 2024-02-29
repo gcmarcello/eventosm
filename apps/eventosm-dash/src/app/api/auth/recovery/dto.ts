@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "odinkit";
 
 export const upsertPasswordRecoveryTokenDto = z.object({
   identifier: z.string(),

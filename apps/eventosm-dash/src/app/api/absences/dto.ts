@@ -1,6 +1,6 @@
 import { EventAbsenceStatus } from "@prisma/client";
 import { ZodDto, ZodDtoEnv } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 
 const createAbsenceJustificationDto = <E extends "client" | "server">(
   env: E

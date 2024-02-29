@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "odinkit";
 import { cpfValidator } from "@/utils/validators/cpf.validator";
 import { birthDateValidator } from "@/utils/validators/birthDate.validator";
 

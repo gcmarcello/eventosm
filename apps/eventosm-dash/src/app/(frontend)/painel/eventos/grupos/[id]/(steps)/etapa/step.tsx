@@ -4,7 +4,7 @@ import { upsertEventDto } from "@/app/api/events/dto";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import dayjs from "dayjs";
-import { Table, Badge, ExtractSuccessResponse, date } from "odinkit";
+import { Table, Badge, ExtractSuccessResponse, date, z } from "odinkit";
 import {
   useAction,
   showToast,
@@ -17,14 +17,13 @@ import {
   Button,
 } from "odinkit/client";
 import { useState } from "react";
-import { z } from "zod";
 import SubeventModal from "./components/NewSubeventModal";
 import { readEventGroups, upsertEvent } from "@/app/api/events/action";
 import Image from "next/image";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
-  .merge(z.object({ image: z.array(z.any()).optional() }));
+  .merge(z.object({ image: z.array(z.instanceof(File)) }));
 
 type Schema = z.infer<typeof schema>;
 
@@ -75,6 +74,11 @@ export function EtapasForm({
     },
     onSuccess: () => {
       setIsModalOpen(false);
+      showToast({
+        message: "Etapa salva com sucesso!",
+        title: "Sucesso!",
+        variant: "success",
+      });
     },
     onError: (error) => {
       showToast({
@@ -106,13 +110,7 @@ export function EtapasForm({
 
   return (
     <>
-      <Form
-        id="SubeventForm"
-        hform={form}
-        onSubmit={async (data) => {
-          trigger(data);
-        }}
-      >
+      <Form hform={form} onSubmit={trigger}>
         <SubeventModal
           modalState={{ isModalOpen, setIsModalOpen }}
           subevent={eventGroup.Event.find(
