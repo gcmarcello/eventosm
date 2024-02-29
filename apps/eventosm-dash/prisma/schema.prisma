@@ -19,22 +19,37 @@ generator json {
 }
 
 model User {
-  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  fullName          String
-  email             String              @unique
-  document          String              @unique
-  phone             String?             @unique
-  password          String?
-  role              String
-  info              UserInfo            @relation(fields: [infoId], references: [id])
-  infoId            String              @unique @db.Uuid
-  Organization      Organization[]
-  EventRegistration EventRegistration[]
-  Team              Team[]
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime?           @updatedAt
-  TeamOwnership     Team[]              @relation(name: "teamOwner")
-  UserOrgLink       UserOrgLink[]
+  id                    String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  fullName              String
+  email                 String                 @unique
+  document              String                 @unique
+  phone                 String?                @unique
+  password              String?
+  role                  String
+  info                  UserInfo               @relation(fields: [infoId], references: [id])
+  infoId                String                 @unique @db.Uuid
+  Organization          Organization[]
+  EventRegistration     EventRegistration[]
+  Team                  Team[]
+  TeamOwnership         Team[]                 @relation(name: "teamOwner")
+  UserOrgLink           UserOrgLink[]
+  PasswordRecoveryToken PasswordRecoveryToken?
+  confirmed             Boolean                @default(false)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime?              @updatedAt
+
+  @@schema("public")
+}
+
+model PasswordRecoveryToken {
+  id             String        @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  token          String        @unique
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String        @unique @db.Uuid
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.Uuid
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?     @updatedAt
 
   @@schema("public")
 }
@@ -70,24 +85,25 @@ model UserInfo {
 }
 
 model Organization {
-  id              String            @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  name            String
-  email           String
-  phone           String?
-  owner           User              @relation(fields: [ownerId], references: [id])
-  ownerId         String            @db.Uuid
-  document        String?           @unique
-  slug            String            @unique
-  domain          String?           @unique
+  id                    String                  @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                  String
+  email                 String
+  phone                 String?
+  owner                 User                    @relation(fields: [ownerId], references: [id])
+  ownerId               String                  @db.Uuid
+  document              String?                 @unique
+  slug                  String                  @unique
+  domain                String?                 @unique
   /// [OrganizationOptions]
-  options         Json              @db.JsonB
-  abbreviation    String
-  Event           Event[]
-  EventGroup      EventGroup[]
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime?         @updatedAt
-  OrgCustomDomain OrgCustomDomain[]
-  UserOrgLink     UserOrgLink[]
+  options               Json                    @db.JsonB
+  abbreviation          String
+  Event                 Event[]
+  EventGroup            EventGroup[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime?               @updatedAt
+  OrgCustomDomain       OrgCustomDomain[]
+  UserOrgLink           UserOrgLink[]
+  PasswordRecoveryToken PasswordRecoveryToken[]
 
   @@schema("public")
 }
@@ -349,38 +365,37 @@ model Event {
 }
 
 model EventRegistration {
-  id                        String                      @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  code                      String                      @db.VarChar
-  user                      User                        @relation(fields: [userId], references: [id])
-  userId                    String                      @db.Uuid
-  event                     Event?                      @relation(fields: [eventId], references: [id])
-  eventId                   String?                     @db.Uuid
-  eventGroup                EventGroup?                 @relation(fields: [eventGroupId], references: [id])
-  eventGroupId              String?                     @db.Uuid
-  modality                  EventModality?              @relation(fields: [modalityId], references: [id])
-  modalityId                String?                     @db.Uuid
-  category                  ModalityCategory            @relation(fields: [categoryId], references: [id])
-  categoryId                String                      @db.Uuid
-  batch                     EventRegistrationBatch      @relation(fields: [batchId], references: [id])
-  batchId                   String                      @db.Uuid
-  coupon                    BatchCoupon?                @relation(fields: [couponId], references: [id])
-  couponId                  String?                     @db.Uuid
-  team                      Team?                       @relation(fields: [teamId], references: [id])
-  teamId                    String?                     @db.Uuid
-  addon                     EventAddon?                 @relation(fields: [addonId], references: [id])
-  addonId                   String?                     @db.Uuid
-  addonOption               String?
-  status                    String
-  order                     Order?                      @relation(fields: [orderId], references: [id])
-  orderId                   String?                     @db.Uuid
-  qrCode                    String
-  justifiedAbsences         Int                         @default(0) @db.Integer
-  unjustifiedAbsences       Int                         @default(0) @db.Integer
-  createdAt                 DateTime                    @default(now())
-  updatedAt                 DateTime?                   @updatedAt
-  EventAbsenceJustification EventAbsenceJustification[]
-  EventCheckIn              EventCheckIn[]
-  EventAbsences             EventAbsences[]
+  id                  String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  code                String                 @db.VarChar
+  user                User                   @relation(fields: [userId], references: [id])
+  userId              String                 @db.Uuid
+  event               Event?                 @relation(fields: [eventId], references: [id])
+  eventId             String?                @db.Uuid
+  eventGroup          EventGroup?            @relation(fields: [eventGroupId], references: [id])
+  eventGroupId        String?                @db.Uuid
+  modality            EventModality?         @relation(fields: [modalityId], references: [id])
+  modalityId          String?                @db.Uuid
+  category            ModalityCategory       @relation(fields: [categoryId], references: [id])
+  categoryId          String                 @db.Uuid
+  batch               EventRegistrationBatch @relation(fields: [batchId], references: [id])
+  batchId             String                 @db.Uuid
+  coupon              BatchCoupon?           @relation(fields: [couponId], references: [id])
+  couponId            String?                @db.Uuid
+  team                Team?                  @relation(fields: [teamId], references: [id])
+  teamId              String?                @db.Uuid
+  addon               EventAddon?            @relation(fields: [addonId], references: [id])
+  addonId             String?                @db.Uuid
+  addonOption         String?
+  status              String
+  order               Order?                 @relation(fields: [orderId], references: [id])
+  orderId             String?                @db.Uuid
+  qrCode              String
+  justifiedAbsences   Int                    @default(0) @db.Integer
+  unjustifiedAbsences Int                    @default(0) @db.Integer
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime?              @updatedAt
+  EventCheckIn        EventCheckIn[]
+  EventAbsences       EventAbsences[]
 
   @@schema("public")
 }
@@ -440,18 +455,6 @@ model EventAbsences {
   status           EventAbsenceStatus @default(pending)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime?          @updatedAt
-
-  @@schema("public")
-}
-
-model EventAbsenceJustification {
-  id                  String                          @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  eventRegistration   EventRegistration               @relation(fields: [eventRegistrationId], references: [id])
-  eventRegistrationId String                          @db.Uuid
-  justification       String
-  status              EventAbsenceJustificationStatus
-  createdAt           DateTime                        @default(now())
-  updatedAt           DateTime?                       @updatedAt
 
   @@schema("public")
 }

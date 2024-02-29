@@ -3,6 +3,7 @@ import { uploadFile } from "../uploads/service";
 import { prisma } from "prisma/prisma";
 import {
   ReadEventDto,
+  ReadEventGroupCheckinsAndAbsencesDto,
   ReadEventGroupDto,
   ReadEventModalitiesDto,
   ReadEventTypeDto,
@@ -185,6 +186,22 @@ export async function readEventGroups(request: ReadEventGroupDto) {
   });
 
   return events;
+}
+
+export async function readEventGroupCheckinsAndAbsences(
+  request: ReadEventGroupCheckinsAndAbsencesDto
+) {
+  const userData = await prisma.event.findMany({
+    where: { eventGroupId: request.where?.eventGroupId },
+    include: {
+      EventRegistration: {
+        where: { userId: request.where?.userId },
+        include: { EventAbsences: true, EventCheckIn: true },
+      },
+    },
+  });
+
+  return userData;
 }
 
 export async function readEventModalities(request: ReadEventModalitiesDto) {

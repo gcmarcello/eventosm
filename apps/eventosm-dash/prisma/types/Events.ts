@@ -1,6 +1,8 @@
 import {
   Event,
+  EventAbsences,
   EventAddon,
+  EventCheckIn,
   EventGroup,
   EventGroupRules,
   EventModality,
@@ -34,3 +36,10 @@ export type EventGroupWithInfo = EventGroup & {
 };
 
 export type EventGroupWithEvents = EventGroup & { Event: Event[] };
+
+export type EventGroupEventCheckinsAndAbsences = Event & {
+  EventRegistration: EventRegistration & {
+    EventAbsences: EventAbsences;
+    EventCheckIn: EventCheckIn;
+  };
+};

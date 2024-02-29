@@ -13,6 +13,8 @@ import {
 } from "odinkit";
 import { cookies } from "next/headers";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
+import { sendEmail } from "../emails/service";
+import { chooseTextColor } from "@/utils/colors";
 dayjs.extend(customParseFormat);
 
 export async function signup(request: SignupDto) {
@@ -20,7 +22,7 @@ export async function signup(request: SignupDto) {
     data: {
       fullName: request.fullName,
       email: normalizeEmail(request.email),
-      document: normalize(request.document),
+      document: normalize(request.document as string),
       phone: normalizePhone(request.phone),
       password: await hashInfo(request.passwords.password),
       role: "user",
@@ -33,6 +35,40 @@ export async function signup(request: SignupDto) {
       },
     },
   });
+
+  let organization;
+  if (request.organizationId) {
+    organization = await prisma.organization.findUnique({
+      where: { id: request.organizationId },
+      include: { OrgCustomDomain: true },
+    });
+    await prisma.userOrgLink.create({
+      data: {
+        userId: newUser.id,
+        organizationId: request.organizationId,
+      },
+    });
+  }
+
+  const url =
+    organization?.OrgCustomDomain[0]?.domain || getEnv("NEXT_PUBLIC_SITE_URL");
+
+  await sendEmail(
+    "welcome_email",
+    {
+      subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+      to: newUser.email,
+    },
+    {
+      headerTextColor: chooseTextColor(
+        organization?.options.colors.primaryColor.hex || "#4F46E5"
+      ),
+      mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+      orgName: organization?.name || "EventoSM",
+      name: newUser.fullName.split(" ")[0] as string,
+      siteLink: `${url}/confirmar/${newUser.id}`,
+    }
+  );
   return newUser;
 }
 
@@ -70,7 +106,9 @@ export async function login(request: LoginDto) {
   });
 
   if (!potentialUser) throw `Informações de login incorretas!`;
-  if (!potentialUser.password) throw `Usuário não possui uma conta configurada`;
+  if (!potentialUser.password)
+    throw `Usuário não possui uma conta configurada.`;
+  if (!potentialUser.confirmed) throw `Usuário não confirmado.`;
 
   if (!(await compareHash(request.password, potentialUser.password)))
     throw `Dados de login ou senha incorretos.`;

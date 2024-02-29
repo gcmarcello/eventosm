@@ -40,6 +40,7 @@ export const signupDto = z.object({
     zipCode: z.string().min(9),
   }),
   eventRedirect: z.object({ name: z.string(), id: z.string() }).optional(),
+  organizationId: z.string().optional(),
 });
 
 export type SignupDto = z.infer<typeof signupDto>;

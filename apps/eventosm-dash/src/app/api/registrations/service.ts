@@ -30,6 +30,8 @@ import dayjs from "dayjs";
 import { formatCPF, normalizeDocument, normalizeZipCode } from "odinkit";
 import { uploadFile } from "../uploads/service";
 import { createMultipleUsers } from "../users/service";
+import { sendEmail } from "../emails/service";
+import { chooseTextColor } from "@/utils/colors";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -113,11 +115,42 @@ export async function createRegistration(
 
   if (!event && !eventGroup) throw "Evento não encontrado.";
 
-  const organization = (
-    await readOrganizations({
-      where: { id: event?.organizationId || eventGroup?.organizationId },
-    })
-  )[0];
+  const organization = await prisma.organization.findUnique({
+    where: { id: event?.organizationId || eventGroup?.organizationId },
+    include: { OrgCustomDomain: true },
+  });
+
+  await sendEmail(
+    "registration_email",
+    {
+      to: userSession.email,
+      subject: "Inscrição confirmada",
+    },
+    {
+      mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+      headerTextColor: chooseTextColor(
+        organization?.options.colors.primaryColor.hex || "#4F46E5"
+      ),
+      category: category.name,
+      modality: (event
+        ? event.EventModality.find((m) => m.id === request.modalityId)?.name
+        : eventGroup?.EventModality.find((m) => m.id === request.modalityId)
+            ?.name)!,
+      dateEnd: dayjs(event?.dateEnd).format("DD/MM/YYYY"),
+      dateStart: event
+        ? dayjs(event.dateStart).format("DD/MM/YYYY")
+        : dayjs(eventGroup!.Event[0]!.dateStart).format("DD/MM/YYYY"),
+      eventName: event ? event.name : eventGroup!.name,
+      location: event?.location,
+      name: userSession.fullName,
+      orgName: organization!.name,
+      qrCode: createRegistration.qrCode,
+      siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
+      eventLink: event
+        ? `/eventos/${event.id}`
+        : `/eventos/campeonatos/${eventGroup?.id}`,
+    }
+  );
 
   return { registration: createRegistration, event, eventGroup, organization };
 }

@@ -26,13 +26,15 @@ export default function EventCard({
 
   const isEventGroup = "Event" in event;
 
+  console.log(event.EventRegistrationBatch[0]?.dateStart);
+
   const availableBatch = event.EventRegistrationBatch?.find(
     (batch) =>
-      dayjs().isBetween(batch.dateStart, batch.dateEnd, "day") &&
+      dayjs().utc().isBetween(batch.dateStart, batch.dateEnd, "day") &&
       batch.maxRegistrations > batch._count?.EventRegistration
   );
   const futureBatches = event.EventRegistrationBatch?.find((batch) =>
-    dayjs().isBefore(batch.dateStart)
+    dayjs().utc().isBefore(batch.dateStart)
   );
 
   return (

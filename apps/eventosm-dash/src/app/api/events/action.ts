@@ -1,6 +1,7 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import {
+  ReadEventGroupCheckinsAndAbsencesDto,
   ReadEventGroupDto,
   ReadEventTypeDto,
   UpsertEventDto,
@@ -19,6 +20,23 @@ import { UpdateEventStatusDto } from "./status/dto";
 export async function readEventGroups(request: ReadEventGroupDto) {
   try {
     const eventGroups = await service.readEventGroups(request);
+
+    return ActionResponse.success({
+      data: eventGroups,
+    });
+  } catch (err) {
+    return ActionResponse.error({
+      message: err,
+    });
+  }
+}
+
+export async function readEventGroupCheckinsAndAbsences(
+  request: ReadEventGroupCheckinsAndAbsencesDto
+) {
+  try {
+    const eventGroups =
+      await service.readEventGroupCheckinsAndAbsences(request);
 
     return ActionResponse.success({
       data: eventGroups,

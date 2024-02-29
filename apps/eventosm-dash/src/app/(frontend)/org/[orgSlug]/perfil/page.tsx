@@ -32,5 +32,10 @@ export default async function RegistrationsPage({
     },
   });
 
-  return <RegistrationsContainer registrations={registrations} />;
+  return (
+    <RegistrationsContainer
+      registrations={registrations}
+      organization={organization}
+    />
+  );
 }

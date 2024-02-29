@@ -26,6 +26,7 @@ export async function UserSessionMiddleware<P>({
     .then((user) => user!);
 
   if (!user) throw "Usuário não encontrado";
+  if (!user.confirmed) throw "Usuário não confirmado";
 
   const { password, ...rest } = user;
 
