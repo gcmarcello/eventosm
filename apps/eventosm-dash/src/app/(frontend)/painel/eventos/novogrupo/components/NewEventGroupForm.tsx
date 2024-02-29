@@ -1,6 +1,12 @@
 "use client";
 import { UpsertEventGroupDto, upsertEventGroupDto } from "@/app/api/events/dto";
-import { BottomNavigation, ButtonSpinner, For, Text } from "odinkit";
+import {
+  BottomNavigation,
+  ButtonSpinner,
+  For,
+  SubmitButton,
+  Text,
+} from "odinkit";
 import {
   Button,
   Description,
@@ -147,14 +153,12 @@ export default function EventGroupForm({
               )}
 
               {!hasNextStep && (
-                <Button
-                  type="submit"
+                <SubmitButton
                   color={organization.options.colors.primaryColor.tw.color}
                   disabled={!isCurrentStepValid}
-                  loading={isMutating}
                 >
                   Inscrever
-                </Button>
+                </SubmitButton>
               )}
             </div>
             <BottomNavigation className={"block p-2 lg:hidden"}>
@@ -189,14 +193,12 @@ export default function EventGroupForm({
                 )}
 
                 {!hasNextStep && (
-                  <Button
-                    type="submit"
+                  <SubmitButton
                     color={organization.options.colors.primaryColor.tw.color}
                     disabled={!isCurrentStepValid}
-                    loading={isMutating}
                   >
                     Inscrever
-                  </Button>
+                  </SubmitButton>
                 )}
               </div>
             </BottomNavigation>

@@ -7,7 +7,7 @@ import {
 } from "@/app/api/orgs/dto";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Container, Text, formatPhone } from "odinkit";
+import { Container, SubmitButton, Text, formatPhone } from "odinkit";
 import {
   Button,
   Description,
@@ -124,15 +124,13 @@ export default function NewOrganizationForm({
                 </Field>
               </FieldGroup>
             </Fieldset>
-            <Button
+            <SubmitButton
               disabled={!form.formState.isValid}
-              type="submit"
               color="indigo"
               className="mt-6 w-full"
-              loading={isLoading}
             >
               Criar Organização
-            </Button>
+            </SubmitButton>
           </Form>
         </Container>
       </div>

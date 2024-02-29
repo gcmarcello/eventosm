@@ -14,7 +14,7 @@ import {
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { usePanel } from "../../_shared/components/PanelStore";
 
-import { For } from "odinkit";
+import { For, SubmitButton } from "odinkit";
 
 import Link from "next/link";
 import { useFieldArray } from "react-hook-form";
@@ -198,14 +198,7 @@ export default function ModalityCategoryModal({
               ? "Adicionar"
               : "Editar Categorias"}
           </Button>
-          <Button
-            type="submit"
-            form="categoryForm"
-            loading={isLoading}
-            color={primaryColor?.tw.color}
-          >
-            Salvar
-          </Button>
+          <SubmitButton color={primaryColor?.tw.color}>Salvar</SubmitButton>
         </DialogActions>
       </Dialog>
     </Form>

@@ -23,7 +23,13 @@ import {
   useForm,
   useMocker,
 } from "odinkit/client";
-import { BottomNavigation, ButtonSpinner, Container, For } from "odinkit";
+import {
+  BottomNavigation,
+  ButtonSpinner,
+  Container,
+  For,
+  SubmitButton,
+} from "odinkit";
 import { Transition } from "@headlessui/react";
 import { State } from "@prisma/client";
 
@@ -158,14 +164,7 @@ export default function FormContainer({ states }: { states: State[] }) {
                   </Button>
                 )}
                 {!hasNextStep && (
-                  <Button
-                    type="submit"
-                    color="indigo"
-                    loading={isLoading}
-                    disabled={!isCurrentStepValid}
-                  >
-                    Cadastrar
-                  </Button>
+                  <SubmitButton color="indigo">Cadastrar</SubmitButton>
                 )}
                 {hasPrevStep && (
                   <Button
@@ -182,14 +181,9 @@ export default function FormContainer({ states }: { states: State[] }) {
               <BottomNavigation className="block p-2 lg:hidden">
                 <div className="flex flex-row-reverse justify-between">
                   {!hasNextStep && (
-                    <Button
-                      type="submit"
-                      color="indigo"
-                      loading={isLoading}
-                      disabled={!isCurrentStepValid}
-                    >
+                    <SubmitButton color="indigo" disabled={!isCurrentStepValid}>
                       Inscrever
-                    </Button>
+                    </SubmitButton>
                   )}
                   {hasNextStep && (
                     <Button

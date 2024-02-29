@@ -7,6 +7,7 @@ import {
   Container,
   ExtractSuccessResponse,
   FileImagePreview,
+  SubmitButton,
   Text,
 } from "odinkit";
 import {
@@ -92,9 +93,8 @@ export function GeralForm({
           "events/groups/"
         );
 
-        trigger({ ...rest, imageUrl: uploadedFiles?.file?.url });
+        await trigger({ ...rest, imageUrl: uploadedFiles?.file?.url });
       }}
-      id="generalEventGroupForm"
     >
       <Fieldset>
         <div className="flex justify-between">
@@ -105,14 +105,13 @@ export function GeralForm({
               essas informações a qualquer momento.
             </Text>
           </div>
-          <Button
+          <SubmitButton
             type="submit"
-            form="generalEventGroupForm"
             className={"my-auto hidden lg:block"}
             color={color.tw.color}
           >
             Salvar
-          </Button>
+          </SubmitButton>
         </div>
         <FieldGroup className="grid grid-cols-2 gap-3 lg:divide-x ">
           <div className="col-span-2 space-y-3 px-2 lg:col-span-1">

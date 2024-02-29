@@ -1,7 +1,7 @@
 import { UpsertRegistrationBatchDto } from "@/app/api/batches/dto";
 
 import clsx from "clsx";
-import { Alertbox, For, Text } from "odinkit";
+import { Alertbox, For, SubmitButton, Text } from "odinkit";
 import {
   DialogBody,
   FieldGroup,
@@ -268,14 +268,9 @@ export default function BatchModal({
           </Button>
         )}
         <div className="flex gap-2">
-          <Button
-            form="eventBatchForm"
-            type="submit"
-            loading={isLoading}
-            color={primaryColor?.tw.color}
-          >
+          <SubmitButton color={primaryColor?.tw.color}>
             {batchForm.getValues("id") ? "Salvar" : "Criar"}
-          </Button>
+          </SubmitButton>
         </div>
       </DialogActions>
     </Dialog>

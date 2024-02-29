@@ -22,7 +22,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ButtonSpinner, For, Text, date } from "odinkit";
+import { ButtonSpinner, For, SubmitButton, Text, date } from "odinkit";
 import { useOrg } from "../../../components/OrgStore";
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -113,14 +113,14 @@ export default function LoginPage() {
             <Button color={colors.secondaryColor.tw.color} href="./cadastro">
               Cadastrar nova conta
             </Button>
-            <Button
+            <SubmitButton
               color={colors.primaryColor.tw.color}
               onClick={() =>
                 loginTrigger({ ...form.getValues(), acceptTerms: true })
               }
             >
               Conectar conta com {abbreviation ?? name}
-            </Button>
+            </SubmitButton>
           </DialogActions>
         </Dialog>
       )}
@@ -200,14 +200,12 @@ export default function LoginPage() {
               </div>
 
               <div className="flex">
-                <Button
-                  loading={isLoading}
-                  type="submit"
+                <SubmitButton
                   className={"w-full"}
                   color={colors.primaryColor.tw.color}
                 >
                   Login
-                </Button>
+                </SubmitButton>
               </div>
             </Form>
             <div className="mt-5 text-center text-xs leading-6 text-gray-500 lg:mt-8 lg:text-start">

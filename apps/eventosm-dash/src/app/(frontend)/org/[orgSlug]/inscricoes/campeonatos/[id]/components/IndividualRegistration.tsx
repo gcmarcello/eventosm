@@ -10,6 +10,7 @@ import {
   BottomNavigation,
   ButtonSpinner,
   For,
+  SubmitButton,
   Text,
   scrollToElement,
   toProperCase,
@@ -426,14 +427,7 @@ export default function IndividualTournamentRegistration({
                       </Button>
                     )}
                     {!hasNextStep && (
-                      <Button
-                        type="submit"
-                        color="indigo"
-                        disabled={!isCurrentStepValid}
-                        loading={isMutating}
-                      >
-                        Inscrever
-                      </Button>
+                      <SubmitButton color="indigo">Inscrever</SubmitButton>
                     )}
                     {hasPrevStep && (
                       <Button
@@ -450,9 +444,7 @@ export default function IndividualTournamentRegistration({
                   <BottomNavigation className="block p-2 lg:hidden">
                     <div className="flex flex-row-reverse justify-between">
                       {!hasNextStep && (
-                        <Button
-                          type="submit"
-                          loading={isMutating}
+                        <SubmitButton
                           color="indigo"
                           disabled={!isCurrentStepValid}
                         >
@@ -460,7 +452,7 @@ export default function IndividualTournamentRegistration({
                             Inscrever
                             {isMutating && <ButtonSpinner />}
                           </div>
-                        </Button>
+                        </SubmitButton>
                       )}
                       {hasNextStep && (
                         <Button
