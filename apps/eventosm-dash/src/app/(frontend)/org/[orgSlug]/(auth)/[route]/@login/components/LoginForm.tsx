@@ -21,7 +21,15 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Alertbox, ButtonSpinner, For, Heading, Text, date } from "odinkit";
+import {
+  Alertbox,
+  ButtonSpinner,
+  For,
+  Heading,
+  SubmitButton,
+  Text,
+  date,
+} from "odinkit";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { Organization, User, UserOrgLink } from "@prisma/client";
@@ -205,14 +213,12 @@ export default function LoginForm({
               </div>
 
               <div className="flex">
-                <Button
-                  loading={isLoading}
-                  type="submit"
+                <SubmitButton
                   className={"w-full"}
                   color={organization.options.colors.primaryColor.tw.color}
                 >
                   Login
-                </Button>
+                </SubmitButton>
               </div>
             </Form>
             <div className="mt-5 text-center text-xs leading-6 text-gray-500 lg:mt-8 lg:text-start">

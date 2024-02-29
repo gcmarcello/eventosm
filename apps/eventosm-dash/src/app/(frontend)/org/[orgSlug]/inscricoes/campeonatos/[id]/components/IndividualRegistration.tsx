@@ -10,6 +10,7 @@ import {
   BottomNavigation,
   ButtonSpinner,
   For,
+  SubmitButton,
   Text,
   scrollToElement,
   toProperCase,
@@ -436,16 +437,9 @@ export default function IndividualTournamentRegistration({
                       </Button>
                     )}
                     {!hasNextStep && (
-                      <Button
-                        type="submit"
-                        color={
-                          organization.options.colors.primaryColor.tw.color
-                        }
-                        disabled={!isCurrentStepValid}
-                        loading={isMutating}
-                      >
-                        Inscrever
-                      </Button>
+                      <SubmitButton color={
+                        organization.options.colors.primaryColor.tw.color
+                      }>Inscrever</SubmitButton>
                     )}
                     {hasPrevStep && (
                       <Button
@@ -462,19 +456,14 @@ export default function IndividualTournamentRegistration({
                   <BottomNavigation className="block p-2 lg:hidden">
                     <div className="flex flex-row-reverse justify-between">
                       {!hasNextStep && (
-                        <Button
-                          type="submit"
-                          loading={isMutating}
-                          color={
-                            organization.options.colors.primaryColor.tw.color
-                          }
-                          disabled={!isCurrentStepValid}
+                        <SubmitButton
+                          color="indigo"
                         >
                           <div className="flex items-center gap-2">
                             Inscrever
                             {isMutating && <ButtonSpinner />}
                           </div>
-                        </Button>
+                        </SubmitButton>
                       )}
                       {hasNextStep && (
                         <Button

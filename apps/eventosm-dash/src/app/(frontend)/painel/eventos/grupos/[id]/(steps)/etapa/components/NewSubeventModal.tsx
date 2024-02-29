@@ -29,7 +29,7 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore";
-import { FileImagePreview, Text } from "odinkit";
+import { FileImagePreview, SubmitButton, Text } from "odinkit";
 import { Event } from "@prisma/client";
 
 export default function SubeventModal({
@@ -150,14 +150,9 @@ export default function SubeventModal({
         <Button color="white" onClick={() => modalState.setIsModalOpen(false)}>
           Cancelar
         </Button>
-        <Button
-          form="SubeventForm"
-          type="submit"
-          loading={isLoading}
-          color={primaryColor?.tw.color}
-        >
+        <SubmitButton color={primaryColor?.tw.color}>
           {form.getValues("id") ? "Salvar" : "Criar"}
-        </Button>
+        </SubmitButton>
       </DialogActions>
     </Dialog>
   );

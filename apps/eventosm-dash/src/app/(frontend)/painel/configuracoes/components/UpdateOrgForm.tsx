@@ -26,6 +26,7 @@ import {
   ButtonSpinner,
   Step,
   Steps,
+  SubmitButton,
   Text,
   formatPhone,
 } from "odinkit";
@@ -146,22 +147,18 @@ export default function UpdateOrgForm({
         color={organization.options.colors.primaryColor?.hex}
       />
       <div className="hidden justify-end lg:flex">
-        <Button
-          loading={isLoading}
-          type="submit"
+        <SubmitButton
           color={organization.options.colors.primaryColor?.tw.color}
         >
           Salvar
-        </Button>
+        </SubmitButton>
       </div>
       <BottomNavigation className="flex justify-end p-2 lg:hidden">
-        <Button
-          loading={isLoading}
-          type="submit"
+        <SubmitButton
           color={organization.options.colors.primaryColor?.tw.color}
         >
           Salvar
-        </Button>
+        </SubmitButton>
       </BottomNavigation>
     </Form>
   );

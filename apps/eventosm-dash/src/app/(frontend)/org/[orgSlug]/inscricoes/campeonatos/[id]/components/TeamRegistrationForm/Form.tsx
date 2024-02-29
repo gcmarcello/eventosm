@@ -25,6 +25,7 @@ import {
   ButtonSpinner,
   For,
   List,
+  SubmitButton,
   Table,
   TableBody,
   TableCell,
@@ -331,16 +332,9 @@ export default function TeamTournamentRegistration({
                       </Button>
                     )}
                     {!hasNextStep && (
-                      <Button
-                        type="submit"
-                        color={
-                          organization.options.colors.primaryColor.tw.color
-                        }
-                        loading={isMutating}
-                        disabled={!isCurrentStepValid}
-                      >
-                        Inscrever
-                      </Button>
+                      <SubmitButton color={
+                        organization.options.colors.primaryColor.tw.color
+                      } color="indigo">Inscrever</SubmitButton>
                     )}
                     {hasPrevStep && (
                       <Button
