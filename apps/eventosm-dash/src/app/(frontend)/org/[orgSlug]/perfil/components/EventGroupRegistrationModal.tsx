@@ -1,5 +1,5 @@
-import { readEventGroups, readEventGroupsInfo } from "@/app/api/events/action";
 import { ReadEventGroupDto } from "@/app/api/events/dto";
+import { readEventGroupCheckinsAndAbsences } from "@/app/api/events/action";
 import { ReadEventAddonDto } from "@/app/api/products/dto";
 import { cancelRegistration } from "@/app/api/registrations/action";
 import {
@@ -26,7 +26,10 @@ import {
   showToast,
   useAction,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import {
+  EventGroupEventCheckinsAndAbsences,
+  EventGroupWithEvents,
+} from "prisma/types/Events";
 import { EventGroupRegistration } from "prisma/types/Registrations";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -44,7 +47,7 @@ export function EventGroupRegistrationModal({
   const [showCancelAlert, setShowCancelAlert] = useState(false);
   const [screen, setScreen] = useState("general");
   const [eventGroup, setEventGroup] = useState<
-    EventGroupWithEvents | undefined
+    EventGroupEventCheckinsAndAbsences | undefined
   >(undefined);
   const {
     data: cancelData,
@@ -70,15 +73,20 @@ export function EventGroupRegistrationModal({
     trigger: eventGroupTrigger,
     isMutating: eventGroupMutating,
   } = useAction({
-    action: readEventGroupsInfo,
+    action: readEventGroupCheckinsAndAbsences,
     onSuccess: (data) => {
-      if (data.data) setEventGroup(data.data[0] as any);
+      if (data.data)
+        setEventGroup(data.data as EventGroupEventCheckinsAndAbsences);
     },
   });
 
   useEffect(() => {
-    if (registration && isOpen) {
-      eventGroupTrigger({ where: { id: registration.eventGroup?.id } });
+    if (registration?.id && isOpen) {
+      eventGroupTrigger({
+        where: {
+          registrationId: registration.id,
+        },
+      });
     }
   }, [isOpen]);
 
@@ -206,7 +214,7 @@ export function EventGroupRegistrationModal({
             <>
               <dl className="divide-y divide-gray-100">
                 {eventGroup && (
-                  <For each={eventGroup?.Event}>
+                  <For each={eventGroup?.eventGroup.Event}>
                     {(event) => (
                       <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-gray-900 sm:col-span-2">

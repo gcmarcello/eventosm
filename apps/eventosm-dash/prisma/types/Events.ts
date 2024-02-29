@@ -37,9 +37,8 @@ export type EventGroupWithInfo = EventGroup & {
 
 export type EventGroupWithEvents = EventGroup & { Event: Event[] };
 
-export type EventGroupEventCheckinsAndAbsences = Event & {
-  EventRegistration: EventRegistration & {
-    EventAbsences: EventAbsences;
-    EventCheckIn: EventCheckIn;
-  };
+export type EventGroupEventCheckinsAndAbsences = EventRegistration & {
+  eventGroup: EventGroup & { Event: Event[] };
+  EventCheckIn: EventCheckIn[];
+  EventAbsences: EventAbsences[];
 };

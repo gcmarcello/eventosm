@@ -191,13 +191,12 @@ export async function readEventGroups(request: ReadEventGroupDto) {
 export async function readEventGroupCheckinsAndAbsences(
   request: ReadEventGroupCheckinsAndAbsencesDto
 ) {
-  const userData = await prisma.event.findMany({
-    where: { eventGroupId: request.where?.eventGroupId },
+  const userData = await prisma.eventRegistration.findUnique({
+    where: { id: request.where?.registrationId },
     include: {
-      EventRegistration: {
-        where: { userId: request.where?.userId },
-        include: { EventAbsences: true, EventCheckIn: true },
-      },
+      eventGroup: { include: { Event: true } },
+      EventAbsences: true,
+      EventCheckIn: true,
     },
   });
 
