@@ -7,24 +7,24 @@ export async function SignupMiddleware({ request }: { request: SignupDto }) {
 
   const existingDocument = await prisma.user.findFirst({
     where: {
-      document: normalize(request.document.value),
+      document: normalize(request.document as string),
     },
   });
-  if (existingDocument) throw "Documento já cadastrado";
+  if (existingDocument) throw "Documento já cadastrado.";
 
   const existingEmail = await prisma.user.findFirst({
     where: {
       email: normalizeEmail(request.email),
     },
   });
-  if (existingEmail) throw "Email já cadastrado";
+  if (existingEmail) throw "Email já cadastrado.";
 
   const existingPhone = await prisma.user.findFirst({
     where: {
       phone: normalizePhone(request.phone),
     },
   });
-  if (existingPhone) throw "Telefone já cadastrado";
+  if (existingPhone) throw "Telefone já cadastrado.";
 
   return {
     request,

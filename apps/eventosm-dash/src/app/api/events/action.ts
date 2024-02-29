@@ -3,7 +3,6 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import {
   ReadEventGroupDto,
   ReadEventTypeDto,
-  UpdateEventStatusDto,
   UpsertEventDto,
   UpsertEventGroupDto,
   UpsertEventModalityCategoriesDto,
@@ -15,6 +14,7 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { upsertEventModalityCategories } from "../categories/service";
 import { revalidatePath } from "next/cache";
 import { ActionResponse } from "odinkit";
+import { UpdateEventStatusDto } from "./status/dto";
 
 export async function readEventGroups(request: ReadEventGroupDto) {
   try {

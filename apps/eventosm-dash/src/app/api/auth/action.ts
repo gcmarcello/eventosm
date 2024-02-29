@@ -20,7 +20,7 @@ export async function signup(request: SignupDto) {
   }
 
   return ActionResponse.success({
-    redirect: `/login`,
+    redirect: `/login?alert=successRegistration`,
     data: signup,
     message: "Usuário cadastrado com sucesso!",
   });
@@ -50,6 +50,6 @@ export async function logout(pathName?: string) {
     return ActionResponse.error(error);
   }
   return ActionResponse.success({
-    redirect: pathName || "/login",
+    redirect: "/",
   });
 }

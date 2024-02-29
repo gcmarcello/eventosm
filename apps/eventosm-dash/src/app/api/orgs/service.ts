@@ -121,3 +121,19 @@ export async function readOrganizations(request: ReadOrganizationDto) {
     where: request.where,
   });
 }
+
+export async function readConnectedOrganizations({
+  userId,
+}: {
+  userId: string;
+}) {
+  return await prisma.organization.findMany({
+    where: {
+      UserOrgLink: {
+        some: {
+          userId,
+        },
+      },
+    },
+  });
+}

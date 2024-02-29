@@ -20,8 +20,28 @@ export async function generateViewport(props: { orgSlug: string }) {
     })
   )[0];
 
+  if (!organization) {
+    return notFound();
+  }
+
   return {
-    themeColor: "#059669",
+    themeColor: organization.options.colors.primaryColor.hex,
+  };
+}
+
+export async function generateMetadata(props: { orgSlug: string }) {
+  const organization = (
+    await readOrganizations({
+      where: { slug: props.orgSlug },
+    })
+  )[0];
+
+  if (!organization) {
+    return notFound();
+  }
+
+  return {
+    title: organization.name,
   };
 }
 

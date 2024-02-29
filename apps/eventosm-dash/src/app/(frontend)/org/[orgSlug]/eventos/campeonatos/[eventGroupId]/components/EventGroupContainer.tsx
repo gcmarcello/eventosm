@@ -28,25 +28,30 @@ import {
   Button,
   DisclosureAccordion,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useOrg } from "../../../../components/OrgStore";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventRegistrationBatch } from "@prisma/client";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import { useEffect, useRef, useState } from "react";
+import dayjs from "dayjs";
 
 export default function EventGroupContainer({
   eventGroup,
   isUserRegistered,
   batch,
+  organization,
+  nextBatch,
 }: {
   isUserRegistered: boolean;
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
+  organization: Organization;
+  nextBatch: EventRegistrationBatch | null;
 }) {
   const generalTabs: TabItem[] = [
     {
@@ -132,7 +137,7 @@ export default function EventGroupContainer({
 
   const { slug, colors, image } = useOrg();
   const contentRef = useRef(null);
-  const [contentHeight, setContentHeight] = useState(0);
+  /* const [contentHeight, setContentHeight] = useState(0);
 
   useEffect(() => {
     if (typeof ResizeObserver !== "undefined") {
@@ -153,21 +158,24 @@ export default function EventGroupContainer({
         }
       };
     }
-  }, []);
+  }, []); */
 
   return (
     <>
       <div
-        style={{
+        /* style={{
           backgroundImage: image ? `url(${image})` : "",
-          height: window.innerHeight > contentHeight ? "100dvh" : contentHeight,
-        }}
-        className={clsx(!image && "bg-slate-200", "bg-cover")}
+          height:
+            (window && window.innerHeight) > contentHeight
+              ? "100dvh"
+              : contentHeight, "100dvh",
+        }} */
+        className={clsx(!image && "bg-slate-200", "bg-cover, h-[100dvh]")}
       >
         <div
           ref={contentRef}
           className={clsx(
-            "xxl:mx-96 mb-4 rounded-b bg-white shadow-md lg:mx-40"
+            "xxl:mx-96 xs:mx-16 mb-4 rounded-b bg-white shadow-md lg:mx-40"
           )}
         >
           <div className="grid grid-cols-4 gap-4 ">
@@ -177,19 +185,14 @@ export default function EventGroupContainer({
                 className="xs:block h-full w-full rounded-none object-fill"
               />
               <div className="-mt-7 flex w-full flex-col items-center justify-center gap-2 px-4 lg:flex-row lg:justify-between">
-                <div className="flex flex-col items-center gap-4  lg:flex-row">
-                  <img
-                    src={eventGroup?.imageUrl || ""}
-                    className="xs:hidden absolute -z-10"
-                    alt=""
-                  />
+                <div className="flex flex-col items-center gap-4 lg:flex-row">
                   <div className="xs:pt-0 flex flex-col items-center justify-center gap-3 lg:flex-row lg:pt-0">
                     <img
                       src={eventGroup?.imageUrl || ""}
-                      className="h-32 w-32 rounded-full border-2 border-white object-fill lg:ms-4"
+                      className="hidden h-32 w-32 rounded-full border-2 border-white object-fill lg:ms-4 lg:block"
                     />
-                    <div className="flex flex-col px-4 lg:px-0">
-                      <span className=" text-center text-2xl font-semibold">
+                    <div className="mt-16 flex flex-col px-4 lg:mt-0 lg:px-0">
+                      <span className="text-center text-2xl font-semibold">
                         {eventGroup.name}
                       </span>
                       <Text className="text-center lg:text-start">
@@ -209,11 +212,14 @@ export default function EventGroupContainer({
               </div>
             </div>
           </div>
-          <div className="mt-52 grid grid-cols-4 px-5 pb-20 lg:mt-32 lg:divide-x lg:pb-4">
+          <div className="mt-32 grid grid-cols-4 px-1 pb-20 lg:divide-x  lg:px-5 lg:pb-4">
             <div
               className={clsx("col-span-4 px-2 lg:col-span-3 lg:px-0 lg:pe-5")}
             >
-              <Tabs tabs={tabs} />
+              <Tabs
+                color={organization.options.colors.primaryColor.hex}
+                tabs={tabs}
+              />
             </div>
             <div
               className={clsx(
@@ -225,7 +231,11 @@ export default function EventGroupContainer({
                   <Dropdown>
                     <DropdownButton
                       className={"w-full"}
-                      color={isUserRegistered ? "amber" : "green"}
+                      color={
+                        isUserRegistered
+                          ? "amber"
+                          : organization.options.colors.primaryColor.tw.color
+                      }
                     >
                       {isUserRegistered ? "Inscrito!" : "Inscrição"}
 
@@ -277,6 +287,15 @@ export default function EventGroupContainer({
                     </DropdownMenu>
                   </Dropdown>
                 </>
+              ) : isUserRegistered ? (
+                <Button disabled color="amber" className={"w-full"}>
+                  Inscrito!
+                </Button>
+              ) : nextBatch ? (
+                <Button disabled color="red" className={"w-full"}>
+                  Inscrições à partir de{" "}
+                  {dayjs(nextBatch.dateStart).format("DD/MM/YYYY")}
+                </Button>
               ) : (
                 <Button disabled color="red" className={"w-full"}>
                   Inscrições Indisponíveis

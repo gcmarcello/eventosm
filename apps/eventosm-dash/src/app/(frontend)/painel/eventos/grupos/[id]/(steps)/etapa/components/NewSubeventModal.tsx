@@ -18,6 +18,7 @@ import {
   FileInput,
   Form,
   Label,
+  RichTextEditor,
   UseFormReturn,
   showToast,
   useFormContext,
@@ -92,7 +93,7 @@ export default function SubeventModal({
               <Input mask={"99/99/9999"} placeholder="02/01/2024" />
               <ErrorMessage />
             </SubeventField>
-            <SubeventField name="image">
+            <SubeventField name="image" className="col-span-2">
               <Label>Capa do Evento</Label>
               <FileInput
                 fileTypes={["png", "jpg", "jpeg"]}
@@ -132,6 +133,14 @@ export default function SubeventModal({
               <div className="my-3">
                 <FileImagePreview defaultValue={subevent?.imageUrl || ""} />
               </div>
+            </SubeventField>
+            <SubeventField
+              className="col-span-2 lg:col-span-2"
+              name="description"
+            >
+              <Label>Descrição da Etapa</Label>
+              <RichTextEditor />
+              <ErrorMessage />
             </SubeventField>
           </FieldGroup>
         </Fieldset>

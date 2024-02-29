@@ -6,23 +6,12 @@ export const signupDto = z.object({
   fullName: z.string().min(3).max(255),
   email: z.string().email({ message: "Email inválido" }),
   document: z
-    .object({
-      value: z.string(),
-      foreigner: z.boolean().default(false).optional(),
+    .custom((data) => cpfValidator(data as string), {
+      message: "CPF inválido.",
     })
-    .refine(
-      (data) => {
-        if (data.foreigner) {
-          return true;
-        }
-        const isCpfValid = cpfValidator(data.value);
-        return isCpfValid;
-      },
-      {
-        message: "CPF inválido",
-        path: ["document", "value"],
-      }
-    ),
+    .optional(),
+  foreigner: z.boolean().optional(),
+  foreignDocument: z.string().optional(),
   phone: z
     .string()
     .min(14, { message: "Telefone Inválido" })
@@ -68,3 +57,25 @@ export const loginDto = z.object({
 });
 
 export type LoginDto = z.infer<typeof loginDto>;
+
+export const teamSignUpDto = z.object({
+  fullName: z.string().min(3).max(255),
+  email: z.string().email(),
+  phone: z
+    .string()
+    .min(14, { message: "Telefone Inválido" })
+    .max(15, { message: "Telefone inválido" }),
+  document: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
+  birthDate: z
+    .string()
+    .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/),
+  zipCode: z.string().regex(/^\d{5}-\d{3}$/),
+  gender: z.string(),
+  address: z.string().optional(),
+  number: z.string().optional(),
+  complement: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+});
+
+export type TeamSignUpDto = z.infer<typeof teamSignUpDto>;

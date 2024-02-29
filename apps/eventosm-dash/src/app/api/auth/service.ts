@@ -5,7 +5,12 @@ import * as jose from "jose";
 import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { normalize, normalizeEmail, normalizePhone } from "odinkit";
+import {
+  normalize,
+  normalizeEmail,
+  normalizePhone,
+  normalizeZipCode,
+} from "odinkit";
 import { cookies } from "next/headers";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 dayjs.extend(customParseFormat);
@@ -15,7 +20,7 @@ export async function signup(request: SignupDto) {
     data: {
       fullName: request.fullName,
       email: normalizeEmail(request.email),
-      document: normalize(request.document.value),
+      document: normalize(request.document),
       phone: normalizePhone(request.phone),
       password: await hashInfo(request.passwords.password),
       role: "user",
@@ -23,6 +28,7 @@ export async function signup(request: SignupDto) {
         create: {
           ...request.info,
           birthDate: dayjs(request.info.birthDate, "DD/MM/YYYY").toISOString(),
+          zipCode: normalizeZipCode(request.info.zipCode),
         },
       },
     },

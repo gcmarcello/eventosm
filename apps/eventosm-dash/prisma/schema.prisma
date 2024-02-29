@@ -62,6 +62,7 @@ model UserInfo {
   address    String
   number     String
   complement String?
+  support    String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
 
@@ -219,23 +220,25 @@ model ModalityCategory {
 }
 
 model EventRegistrationBatch {
-  id                String                @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  name              String?
-  event             Event?                @relation(fields: [eventId], references: [id])
-  eventId           String?               @db.Uuid
-  eventGroup        EventGroup?           @relation(fields: [eventGroupId], references: [id])
-  eventGroupId      String?               @db.Uuid
-  coupon            BatchCoupon[]
-  registrationType  EventRegistrationType
-  maxRegistrations  Int
-  dateStart         DateTime
-  dateEnd           DateTime
-  price             Float
-  categoryControl   Boolean               @default(false) @db.Boolean
-  EventRegistration EventRegistration[]
-  CategoryBatch     CategoryBatch[]
-  createdAt         DateTime              @default(now())
-  updatedAt         DateTime?             @updatedAt
+  id                        String                @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                      String?
+  event                     Event?                @relation(fields: [eventId], references: [id])
+  eventId                   String?               @db.Uuid
+  eventGroup                EventGroup?           @relation(fields: [eventGroupId], references: [id])
+  eventGroupId              String?               @db.Uuid
+  coupon                    BatchCoupon[]
+  registrationType          EventRegistrationType
+  maxRegistrations          Int
+  dateStart                 DateTime
+  dateEnd                   DateTime
+  price                     Float
+  multipleRegistrationLimit Int?                  @db.Integer
+  protectedBatch            Boolean               @default(false) @db.Boolean
+  categoryControl           Boolean               @default(false) @db.Boolean
+  EventRegistration         EventRegistration[]
+  CategoryBatch             CategoryBatch[]
+  createdAt                 DateTime              @default(now())
+  updatedAt                 DateTime?             @updatedAt
 
   @@schema("public")
 }
@@ -264,12 +267,22 @@ model EventAddon {
   description       String?
   price             Float
   eventId           String?             @db.Uuid
+  status            ProductStatus
   Event             Event?              @relation(fields: [eventId], references: [id])
   eventGroup        EventGroup?         @relation(fields: [eventGroupId], references: [id])
   eventGroupId      String?             @db.Uuid
   createdAt         DateTime            @default(now())
   updatedAt         DateTime?           @updatedAt
   EventRegistration EventRegistration[]
+
+  @@schema("public")
+}
+
+enum ProductStatus {
+  active
+  deleted
+  inactive
+  archived
 
   @@schema("public")
 }
@@ -297,12 +310,12 @@ model BatchCoupon {
 }
 
 enum EventStatus {
+  archived
   draft
   published
-  review
   cancelled
-  completed
-  archived
+  review
+  finished
 
   @@schema("public")
 }
@@ -330,6 +343,7 @@ model Event {
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime?                @updatedAt
   EventCheckIn           EventCheckIn[]
+  EventAbsences          EventAbsences[]
 
   @@schema("public")
 }
@@ -359,10 +373,14 @@ model EventRegistration {
   status                    String
   order                     Order?                      @relation(fields: [orderId], references: [id])
   orderId                   String?                     @db.Uuid
+  qrCode                    String
+  justifiedAbsences         Int                         @default(0) @db.Integer
+  unjustifiedAbsences       Int                         @default(0) @db.Integer
   createdAt                 DateTime                    @default(now())
   updatedAt                 DateTime?                   @updatedAt
   EventAbsenceJustification EventAbsenceJustification[]
   EventCheckIn              EventCheckIn[]
+  EventAbsences             EventAbsences[]
 
   @@schema("public")
 }
@@ -400,6 +418,28 @@ model EventCheckIn {
   registrationId String            @db.Uuid
   createdAt      DateTime          @default(now())
   updatedAt      DateTime?         @updatedAt
+
+  @@schema("public")
+}
+
+enum EventAbsenceStatus {
+  pending
+  approved
+  denied
+
+  @@schema("public")
+}
+
+model EventAbsences {
+  id               String             @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  event            Event              @relation(fields: [eventId], references: [id])
+  eventId          String             @db.Uuid
+  registration     EventRegistration  @relation(fields: [registrationId], references: [id])
+  registrationId   String             @db.Uuid
+  justificationUrl String?
+  status           EventAbsenceStatus @default(pending)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime?          @updatedAt
 
   @@schema("public")
 }

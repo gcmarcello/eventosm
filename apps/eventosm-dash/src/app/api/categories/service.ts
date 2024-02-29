@@ -93,8 +93,8 @@ export async function verifyCategoryDisponibility({
   for (const member of participants) {
     const memberRegistrations = await prisma.eventRegistration.findFirst({
       where: eventId
-        ? { userId: member.id, eventId }
-        : { userId: member.id, eventGroupId },
+        ? { userId: member.id, eventId, status: { not: "cancelled" } }
+        : { userId: member.id, eventGroupId, status: { not: "cancelled" } },
     });
 
     if (memberRegistrations)

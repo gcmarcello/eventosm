@@ -22,7 +22,7 @@ export type EventModalityWithCategories = EventModality & {
   modalityCategory: ModalityCategory[];
 };
 
-export type EventGroupWithEvents = EventGroup & {
+export type EventGroupWithInfo = EventGroup & {
   Event: Event[];
   Rules?: EventGroupRules;
   EventAddon?: EventAddon[];
@@ -32,3 +32,5 @@ export type EventGroupWithEvents = EventGroup & {
     _count: { EventRegistration: number };
   })[];
 };
+
+export type EventGroupWithEvents = EventGroup & { Event: Event[] };

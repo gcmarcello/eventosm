@@ -31,9 +31,15 @@ import {
   SubmitButton,
 } from "odinkit";
 import { Transition } from "@headlessui/react";
-import { State } from "@prisma/client";
+import { Organization, State } from "@prisma/client";
 
-export default function FormContainer({ states }: { states: State[] }) {
+export default function FormContainer({
+  states,
+  organization,
+}: {
+  states: State[];
+  organization: Organization;
+}) {
   const searchParams = useSearchParams();
 
   const form = useForm({
@@ -43,10 +49,9 @@ export default function FormContainer({ states }: { states: State[] }) {
       fullName: "",
       email: "",
       phone: "",
-      document: {
-        foreigner: false,
-        value: "",
-      },
+      document: "",
+      foreigner: false,
+      foreignDocument: "",
       passwords: {
         password: "",
         passwordConfirm: "",
@@ -71,7 +76,7 @@ export default function FormContainer({ states }: { states: State[] }) {
       fullName: fakerPT_BR.person.fullName(),
       email: fakerPT_BR.internet.email(),
       phone: fakerPT_BR.phone.number(),
-      "document.value": cpfMock(),
+      document: cpfMock(),
       "passwords.password": "123456",
       "passwords.passwordConfirm": "123456",
       "info.birthDate": dayjs(fakerPT_BR.date.birthdate()).format("DD/MM/YYYY"),
@@ -96,9 +101,9 @@ export default function FormContainer({ states }: { states: State[] }) {
     redirect: true,
     onError: (error) => {
       showToast({
-        message: "Erro inesperado",
+        message: error,
         variant: "error",
-        title: "Erro",
+        title: "Erro!",
       });
       /* form.setError("root.serverError", {
         type: "400",
@@ -114,10 +119,27 @@ export default function FormContainer({ states }: { states: State[] }) {
         hform={form}
         order={["general", "personal", "confirm"]}
         steps={{
-          general: { form: <GeneralDetailsSection />, fields: [] },
+          general: {
+            form: <GeneralDetailsSection />,
+            fields: [
+              "fullName",
+              "phone",
+              "email",
+              "passwords.password",
+              "passwords.passwordConfirm",
+              form.getValues("foreigner") ? "foreignDocument" : "document",
+            ],
+          },
           personal: {
             form: <PersonalDetailSections states={states} />,
-            fields: [],
+            fields: [
+              "info.address",
+              "info.birthDate",
+              "info.cityId",
+              "info.stateId",
+              "info.gender",
+              "info.number",
+            ],
           },
           confirm: { form: <ConfirmDetailsSection />, fields: [] },
         }}
@@ -154,7 +176,7 @@ export default function FormContainer({ states }: { states: State[] }) {
                 {hasNextStep && (
                   <Button
                     type="button"
-                    color="indigo"
+                    color={organization.options.colors.primaryColor.tw.color}
                     onClick={() => {
                       walk(1);
                     }}
@@ -181,7 +203,8 @@ export default function FormContainer({ states }: { states: State[] }) {
               <BottomNavigation className="block p-2 lg:hidden">
                 <div className="flex flex-row-reverse justify-between">
                   {!hasNextStep && (
-                    <SubmitButton color="indigo" disabled={!isCurrentStepValid}>
+                    <SubmitButton                     color={organization.options.colors.primaryColor.tw.color}
+                    disabled={!isCurrentStepValid}>
                       Inscrever
                     </SubmitButton>
                   )}

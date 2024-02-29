@@ -287,11 +287,7 @@ const colors = [
   "white",
 ];
 
-export function chooseTextColor(tailwindColor: string): string {
-  const [color, shade] = tailwindColor.split("-");
-
-  if (!color || !colors.includes(color) || !shade) return "white";
-  const hexColor = colorsObject[color]?.[Number(shade)] ?? "#FFFFFF";
+export function chooseTextColor(hexColor: string): string {
   const rgbColor = hexToRgb(hexColor ?? "");
   if (!rgbColor) {
     return "white";
@@ -299,7 +295,7 @@ export function chooseTextColor(tailwindColor: string): string {
   const darkContrast = contrast(rgbColor, { r: 55, g: 65, b: 81 });
   const whiteContrast = contrast(rgbColor, { r: 255, g: 255, b: 255 });
 
-  return darkContrast > whiteContrast ? "gray-800" : "white";
+  return darkContrast > whiteContrast ? "#1F2937" : "white";
 }
 
 export function alterColorShade(tailwindColor: string, shade: number): string {

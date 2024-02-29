@@ -7,6 +7,7 @@ import {
   DocumentArrowUpIcon,
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
 import {
   Alertbox,
   For,
@@ -32,8 +33,12 @@ import {
   useFormContext,
   Input,
   Select,
+  Label,
+  Description,
+  Switch,
+  ErrorMessage,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useMemo } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
 
@@ -43,9 +48,13 @@ export function ParticipantsForm({
   fieldArray,
   eventGroup,
   addEmptyTeamMember,
+  organization,
+  batch,
 }: {
   addEmptyTeamMember: () => void;
-  eventGroup: EventGroupWithEvents;
+  organization: Organization;
+  batch: EventRegistrationBatch;
+  eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
     CreateMultipleRegistrationsDto,
     "teamMembers",
@@ -63,18 +72,19 @@ export function ParticipantsForm({
   function formatSheetData(sheetData: ExcelDataSchema) {
     return sheetData.map((row) => ({
       user: {
-        name: row["Nome Completo"],
+        fullName: row["Nome Completo"],
         email: row["E-mail"],
         phone: formatPhone(normalize(row.Celular)),
-        document: formatCPF(row.CPF),
-        birthDate: row["Data de Nascimento"],
+        document: formatCPF(normalize(row.CPF)),
+        birthDate: row["Data de Nascimento (DD/MM/AAAA)"],
         zipCode: formatCEP(row.CEP),
-        gender:
-          normalize(row.Sexo) === "masculino" ||
-          normalize(row.Sexo) === "masc" ||
-          normalize(row.Sexo) === "m"
-            ? "male"
-            : "female",
+        number: row["Número"],
+        complemento: row["Complemento (Opcional)"],
+        gender: ["masc", "masculino", "m", "homem", "h", "homen"].includes(
+          normalize(row.Sexo)
+        )
+          ? "male"
+          : "female",
       },
       registration: {
         modalityId:
@@ -96,25 +106,59 @@ export function ParticipantsForm({
     <>
       <div className="grid grid-cols-4">
         {!inputMode && (
-          <div className="col-span-4 flex flex-col justify-center gap-2 lg:flex-row lg:gap-4">
-            <div
-              onClick={() => setInputMode("file")}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
-            >
-              <DocumentArrowUpIcon className="size-16 text-emerald-600" />{" "}
-              <p className="px-2 text-center">Importar de Arquivo</p>
+          <>
+            <div className="col-span-2 col-start-2 mb-3 space-y-4 bg-white lg:mb-6">
+              <Field name="createTeam" variant="switch">
+                <Label>Salvar atletas em um time</Label>
+                <Description>
+                  Selecione se deseja salvar os atletas em um time, agilizando
+                  futuras inscrições.
+                </Description>
+                <Switch
+                  color={organization.options.colors.primaryColor.tw.color}
+                />
+              </Field>
+
+              {form.watch("createTeam") && (
+                <div className="col-span-4 mb-3 lg:col-span-2 lg:mb-4">
+                  <Field name="teamName">
+                    <Label>Nome do Time</Label>
+                    <Input placeholder="Academia X" />
+                    <ErrorMessage />
+                  </Field>
+                </div>
+              )}
             </div>
-            <div
-              onClick={() => {
-                setInputMode("manual");
-                addEmptyTeamMember();
-              }}
-              className="flex cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
-            >
-              <PencilSquareIcon className="size-16 text-emerald-600" />{" "}
-              <p className="px-2 text-center">Inscrever Manualmente</p>
+            <div className="col-span-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
+              <div
+                onClick={() => setInputMode("file")}
+                className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+              >
+                <DocumentArrowUpIcon
+                  style={{
+                    color: organization.options.colors.primaryColor.hex,
+                  }}
+                  className="size-16 "
+                />{" "}
+                <p className="px-2 text-center">Importar de Arquivo</p>
+              </div>
+              <div
+                onClick={() => {
+                  setInputMode("manual");
+                  addEmptyTeamMember();
+                }}
+                className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  hover:bg-slate-50"
+              >
+                <PencilSquareIcon
+                  style={{
+                    color: organization.options.colors.primaryColor.hex,
+                  }}
+                  className="size-16 "
+                />{" "}
+                <p className="px-2 text-center">Inscrever Manualmente</p>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {inputMode === "file" && (
@@ -175,8 +219,14 @@ export function ParticipantsForm({
 
                   const sheetJson = sheetToJson(sheetArrayBuffer);
 
-                  if (!sheetJson?.length)
-                    return "Sua planilha não possui dados";
+                  if (!sheetJson?.length) throw "Sua planilha não possui dados";
+
+                  if (
+                    batch.multipleRegistrationLimit &&
+                    sheetJson.length > batch.multipleRegistrationLimit
+                  ) {
+                    throw "O número de inscrições excede o limite de inscrições permitido.";
+                  }
 
                   const sheetJsonValidation =
                     excelDataSchema.safeParse(sheetJson);
@@ -185,6 +235,7 @@ export function ParticipantsForm({
                     const data = sheetJsonValidation.data;
 
                     insert(0, formatSheetData(data));
+                    form.trigger();
 
                     return true;
                   }
@@ -193,12 +244,13 @@ export function ParticipantsForm({
                     const errorLocation = i.path;
                     const errorRow = Number(errorLocation[0]) + 1;
                     const errorColumn = errorLocation[1];
-                    return `Erro na linha ${errorRow}, coluna ${errorColumn}`;
+                    throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
                   });
 
-                  return error;
+                  throw error;
                 }}
                 onError={(error) => {
+                  console.log(error);
                   if (typeof error === "string") {
                     showToast({
                       message: error,
@@ -250,7 +302,7 @@ export function ParticipantsForm({
                 <TableBody>
                   <TableRow>
                     <TableCell>
-                      <Field name={`teamMembers.${index}.user.name`}>
+                      <Field name={`teamMembers.${index}.user.fullName`}>
                         <div className="min-w-[150px]">
                           <Input />
                         </div>

@@ -143,7 +143,7 @@ export const orgSeed = async (userId: string) => {
   const registration = await prisma.eventRegistration.create({
     data: {
       code: "1",
-      status: "completed",
+      status: "active",
       batchId,
       categoryId,
       userId: userId,

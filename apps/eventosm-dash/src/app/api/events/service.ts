@@ -7,7 +7,6 @@ import {
   ReadEventModalitiesDto,
   ReadEventTypeDto,
   UpdateEventStatusDto,
-  UpsertEventAddonDto,
   UpsertEventDto,
   UpsertEventGroupDto,
   UpsertEventGroupRulesDto,
@@ -152,52 +151,6 @@ export async function upsertEventModality(
   });
 
   return newEventModality;
-}
-
-export async function upsertEventAddon(
-  request: UpsertEventAddonDto & {
-    organization: Organization;
-    userSession: UserSession;
-  }
-) {
-  const { organization, userSession, ...rest } = request;
-
-  const event = await prisma.event.findFirst({
-    where: { id: request.id, organizationId: organization.id },
-    include: { EventAddon: true },
-  });
-  if (!event) throw "Evento não encontrado nessa organização.";
-
-  let newImage = event.EventAddon.find(
-    (addon) => addon.id === request.id
-  )?.image;
-
-  if (request.image) {
-    const uploadedImage = await uploadFile(
-      request.image,
-      `events/${event.slug}/${request.image.name}`
-    );
-
-    if (!uploadedImage) {
-      throw "Erro ao fazer upload da imagem";
-    }
-
-    newImage = uploadedImage;
-  }
-
-  const newEventAddon = await prisma.eventAddon.upsert({
-    where: { id: request.id },
-    update: {
-      ...rest,
-      image: newImage,
-    },
-    create: {
-      ...rest,
-      image: newImage,
-    },
-  });
-
-  return newEventAddon;
 }
 
 export async function readEvents(request: ReadEventDto) {

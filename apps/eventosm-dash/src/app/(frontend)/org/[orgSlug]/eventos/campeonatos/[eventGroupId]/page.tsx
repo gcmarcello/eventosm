@@ -1,31 +1,13 @@
 import { readEventGroups } from "@/app/api/events/service";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  UserGroupIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
-import clsx from "clsx";
 import { notFound } from "next/navigation";
-import { BottomNavigation, TabItem, Tabs, Text, isUUID } from "odinkit";
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  DropdownDescription,
-  DropdownItem,
-  DropdownLabel,
-  DropdownMenu,
-  DropdownSeparator,
-} from "odinkit/client";
-import { DisclosureAccordion } from "odinkit/client";
-import { useOrg } from "../../../components/OrgStore";
+import { isUUID } from "odinkit";
+
 import EventGroupContainer from "./components/EventGroupContainer";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { readRegistrations } from "@/app/api/registrations/service";
-import { readActiveBatch } from "@/app/api/batches/service";
+import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
+import { readOrganizations } from "@/app/api/orgs/service";
 
 export default async function TorneioPage({
   params,
@@ -35,6 +17,14 @@ export default async function TorneioPage({
   const {
     request: { userSession },
   } = await UseMiddlewares().then(OptionalUserSessionMiddleware);
+
+  const organization = (
+    await readOrganizations({
+      where: { slug: params.orgSlug },
+    })
+  )[0];
+
+  if (!organization) return notFound();
 
   const isEventGroupUUID = isUUID(params.eventGroupId);
 
@@ -60,6 +50,7 @@ export default async function TorneioPage({
           where: {
             eventGroupId: eventGroup.id,
             userId: userSession?.id,
+            status: { not: "cancelled" },
           },
         })
       ).length > 0
@@ -69,11 +60,17 @@ export default async function TorneioPage({
     where: { eventGroupId: eventGroup?.id },
   });
 
+  const nextBatch = await readNextBatch({
+    where: { eventGroupId: eventGroup?.id },
+  });
+
   return (
     <EventGroupContainer
       eventGroup={eventGroup}
       isUserRegistered={isUserRegistered}
       batch={batch}
+      nextBatch={nextBatch}
+      organization={organization}
     />
   );
 }

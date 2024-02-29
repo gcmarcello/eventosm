@@ -42,7 +42,7 @@ export default function GeneralDetailsSection() {
                   if (fieldValue.length > 14) {
                     return "(99) 99999-9999";
                   } else {
-                    return "(99) 9999-9999";
+                    return "(99) 9999-99999";
                   }
                 }}
               />
@@ -58,29 +58,29 @@ export default function GeneralDetailsSection() {
             </Field>
           </div>
           <div>
-            <Field name="document.value" className="my-2 space-y-3">
-              <Label>
-                Documento{" "}
-                {form.watch("document.foreigner")
-                  ? "(Passaporte ou RNE)"
-                  : "(CPF)"}
-              </Label>
-              <Input
-                mask={() => {
-                  if (form.getValues("document.foreigner")) return null;
-                  return "999.999.999-99";
-                }}
-              />
-              <ErrorMessage />
-            </Field>
-            <Field name="document.foreigner">
+            {!form.getValues("foreigner") ? (
+              <Field name="document" className="my-2 space-y-3">
+                <Label>Documento {"(CPF)"}</Label>
+                <Input
+                  mask={() => {
+                    return "999.999.999-99";
+                  }}
+                />
+                <ErrorMessage />
+              </Field>
+            ) : (
+              <Field name="foreignDocument" className="my-2 space-y-3">
+                <Label>Documento {"(CPF)"}</Label>
+                <Input />
+                <ErrorMessage />
+              </Field>
+            )}
+            <Field name="foreigner">
               <Switch
                 onChange={() => {
-                  form.setValue(
-                    "document.foreigner",
-                    !form.getValues("document.foreigner")
-                  );
-                  form.resetField("document.value");
+                  form.setValue("foreigner", !form.getValues("foreigner"));
+                  form.resetField("document");
+                  form.resetField("foreignDocument");
                 }}
               >
                 {({ checked }) => (

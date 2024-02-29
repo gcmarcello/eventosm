@@ -6,15 +6,16 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { readTeams } from "@/app/api/teams/service";
 import { readModalityCategories } from "@/app/api/categories/service";
-import { readActiveBatch } from "@/app/api/batches/service";
+import { readActiveBatch, readProtectedBatch } from "@/app/api/batches/service";
 import { readUserInfo } from "@/app/api/users/service";
 import { readRegistrations } from "@/app/api/registrations/service";
+import { readOrganizations } from "@/app/api/orgs/service";
 
 export default async function InscricaoPage({
   searchParams,
   params,
 }: {
-  searchParams: { team: string };
+  searchParams: { team: string; batch: string };
   params: { orgSlug: string; id: string };
 }) {
   const eventGroup = (
@@ -23,7 +24,11 @@ export default async function InscricaoPage({
     })
   )[0];
 
-  if (!eventGroup) return notFound();
+  const organization = (
+    await readOrganizations({ where: { slug: params.orgSlug } })
+  )[0];
+
+  if (!eventGroup || !organization) return notFound();
 
   const {
     request: { userSession },
@@ -32,16 +37,23 @@ export default async function InscricaoPage({
   const userInfo = await readUserInfo({ id: userSession.infoId });
 
   const isUserRegistered = eventGroup.EventRegistration.find(
-    (reg) => reg.userId === userSession?.id
+    (reg) => reg.userId === userSession?.id && reg.status !== "cancelled"
   );
 
   if (isUserRegistered && !searchParams.team) {
     return redirect(`/eventos/campeonatos/${params.id}`);
   }
 
-  const batch = await readActiveBatch({
-    where: { eventGroupId: eventGroup.id },
-  });
+  let batch;
+  if (searchParams.batch) {
+    batch = await readProtectedBatch({ where: { id: searchParams.batch } });
+  } else {
+    batch = await readActiveBatch({
+      where: { eventGroupId: eventGroup.id },
+    });
+  }
+
+  if (!batch) redirect(`/eventos/campeonatos/${params.id}`);
 
   // Redirect if registrationType is "individual" and team parameter exists
   if (batch?.registrationType === "individual" && searchParams.team) {
@@ -49,8 +61,6 @@ export default async function InscricaoPage({
   } else if (batch?.registrationType === "team" && !searchParams.team) {
     redirect(`/eventos/campeonatos/${params.id}`);
   }
-
-  if (!batch) redirect(`/eventos/campeonatos/${params.id}`);
 
   if (
     searchParams.team &&
@@ -61,6 +71,7 @@ export default async function InscricaoPage({
     return (
       <TeamTournamentRegistration
         eventGroup={eventGroup}
+        organization={organization}
         batch={batch}
         userSession={userSession}
       />
@@ -69,6 +80,7 @@ export default async function InscricaoPage({
     return (
       <IndividualTournamentRegistration
         eventGroup={eventGroup}
+        organization={organization}
         batch={batch}
         userSession={userSession}
         userInfo={userInfo}

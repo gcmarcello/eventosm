@@ -18,6 +18,7 @@ import RegistrationsPage from "../../_shared/RegistrationsPage";
 import EventBatches from "../../_shared/EventBatches";
 import EventModalities from "../../_shared/EventModalities";
 import { BottomNavigationScrollButton } from "./_shared/components/BottomNavigationScrollButton";
+import EventAddons from "../../_shared/EventAddons";
 
 type Route = {
   geral: typeof GeralForm;
@@ -120,6 +121,15 @@ export default async function EditEventGroupLayout({
             content: <EtapasForm eventGroup={eventGroup} />,
           },
           {
+            title: "Kits e Brindes",
+            content: (
+              <EventAddons
+                addons={eventGroup.EventAddon}
+                eventGroup={eventGroup}
+              />
+            ),
+          },
+          {
             title: "Modalidades",
             content: (
               <EventModalities
@@ -135,6 +145,7 @@ export default async function EditEventGroupLayout({
                 eventGroup={eventGroup}
                 batches={batches}
                 modalities={modalities}
+                organization={organization}
               />
             ),
             disabled: modalities.every(
@@ -154,7 +165,7 @@ export default async function EditEventGroupLayout({
         ]}
       />
 
-      <BottomNavigation className="flex px-3 lg:hidden">
+      <BottomNavigation className="flex justify-between px-3 lg:hidden">
         {!canPublish ? (
           <div className="p-2">
             <BottomNavigationScrollButton />

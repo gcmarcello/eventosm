@@ -37,10 +37,9 @@ export default function FormContainer({ states }: { states: State[] }) {
       fullName: "",
       email: "",
       phone: "",
-      document: {
-        foreigner: false,
-        value: "",
-      },
+      document: "",
+      foreigner: false,
+      foreignDocument: "",
       passwords: {
         password: "",
         passwordConfirm: "",

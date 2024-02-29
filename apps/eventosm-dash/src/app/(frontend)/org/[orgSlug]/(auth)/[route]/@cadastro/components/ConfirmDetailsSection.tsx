@@ -35,7 +35,7 @@ export default function ConfirmDetailsSection() {
           <Text className="my-1">CEP: {form.getValues("info.zipCode")}</Text>
         </div>
         <Text className="py-4">
-          {form.getValues("eventRedirect") && (
+          {form.getValues("eventRedirect.name") && (
             <>
               <span>Você será redirecionado para a inscrição do </span>
               <span className="text-violet-500 underline">

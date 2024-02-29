@@ -52,7 +52,7 @@ export function CompanyNavbar({
   const pathName = usePathname();
 
   const userNavigation = [
-    { name: "Meu Perfil", href: "#" },
+    { name: "Meu Perfil", href: "/perfil" },
     { name: "Configurações", href: "#" },
     { name: "Sair", onClick: () => logout(pathName) },
   ];
@@ -202,6 +202,7 @@ export function CompanyNavbar({
                                 {({ active }) => (
                                   <a
                                     onClick={item.onClick}
+                                    href={item.href}
                                     className={clsx(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700"
@@ -317,6 +318,7 @@ export function CompanyNavbar({
                         <Disclosure.Button
                           key={item.name}
                           as="a"
+                          href={item.href || undefined}
                           onClick={item.onClick}
                           className={clsx(
                             "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800"

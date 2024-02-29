@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Badge, For, Link, date } from "odinkit";
 import {
   EventGroupWithEvents,
+  EventGroupWithInfo,
   EventWithRegistrationCount,
 } from "prisma/types/Events";
 import { useEffect } from "react";
@@ -17,9 +18,10 @@ export default function EventCard({
   event,
   orgSlug,
 }: {
-  event?: EventWithRegistrationCount | EventGroupWithEvents;
+  event?: EventWithRegistrationCount | EventGroupWithInfo;
   orgSlug: string;
 }) {
+  // @TODO REMOVE BATCH ID FROM TYPE
   if (!event) throw new Error("Event or EventGroup not found");
 
   const isEventGroup = "Event" in event;
@@ -30,7 +32,7 @@ export default function EventCard({
       batch.maxRegistrations > batch._count?.EventRegistration
   );
   const futureBatches = event.EventRegistrationBatch?.find((batch) =>
-    dayjs().isBefore(batch.dateStart, "day")
+    dayjs().isBefore(batch.dateStart)
   );
 
   return (

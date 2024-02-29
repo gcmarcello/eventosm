@@ -30,15 +30,16 @@ export default function PersonalDetailSections({
     trigger: findCep,
     isMutating: loadingCep,
     data: viaCEPInfo,
+    reset,
   } = useAction({
     action: readAddressFromZipCode,
     onSuccess: ({ data }) => {
       form.resetField("info.number");
       form.resetField("info.complement");
-      if (!data || !data.city.name || !data.state.name) throw "CEP Inválido";
+      if (!data || !data.city.id || !data.state.id) throw "CEP Inválido!";
       form.setValue("info.address", data.address);
-      form.setValue("info.cityId", data.city.name);
-      form.setValue("info.stateId", data.state.name);
+      form.setValue("info.cityId", data.city.id);
+      form.setValue("info.stateId", data.state.id);
       form.trigger();
       setAddressMode("show");
       setTimeout(() => {
@@ -46,9 +47,12 @@ export default function PersonalDetailSections({
       }, 500);
     },
     onError: (error) => {
-      console.log(error);
+      form.resetField("info.address");
+      form.resetField("info.cityId");
+      form.resetField("info.stateId");
+      reset();
       showToast({
-        message: "Erro inesperado",
+        message: error,
         variant: "error",
         title: "Erro",
       });

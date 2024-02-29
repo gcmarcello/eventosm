@@ -58,6 +58,8 @@ export const upsertRegistrationBatchDto = z.object({
       !Number.isNaN(value.replaceAll(",", ".")) &&
       Number(value.replaceAll(",", ".")) >= 0
   ),
+  multipleRegistrationLimit: z.number().optional(),
+  protectedBatch: z.boolean().optional(),
 });
 
 export type UpsertRegistrationBatchDto = z.infer<
