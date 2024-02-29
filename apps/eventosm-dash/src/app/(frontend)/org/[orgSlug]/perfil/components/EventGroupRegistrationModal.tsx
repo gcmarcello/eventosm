@@ -3,15 +3,17 @@ import { readEventGroupCheckinsAndAbsences } from "@/app/api/events/action";
 import { ReadEventAddonDto } from "@/app/api/products/dto";
 import { cancelRegistration } from "@/app/api/registrations/action";
 import {
+  CheckIcon,
   ClipboardDocumentCheckIcon,
+  InformationCircleIcon,
   UserCircleIcon,
   UsersIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import { Organization } from "@prisma/client";
 import clsx from "clsx";
 import { set } from "lodash";
 import Image from "next/image";
-import { For } from "odinkit";
+import { Badge, For } from "odinkit";
 import {
   Alert,
   AlertActions,
@@ -95,13 +97,18 @@ export function EventGroupRegistrationModal({
   const secondaryNavigation = [
     {
       name: "Geral",
-      icon: ClipboardDocumentCheckIcon,
+      icon: InformationCircleIcon,
       screen: "general",
     },
     {
-      name: "Atestados",
-      icon: UserCircleIcon,
-      screen: "justifications",
+      name: "Presença",
+      icon: CheckIcon,
+      screen: "attendance",
+    },
+    {
+      name: "Resultados",
+      icon: ClipboardDocumentCheckIcon,
+      screen: "results",
     },
   ];
 
@@ -112,7 +119,7 @@ export function EventGroupRegistrationModal({
         <DialogDescription>
           Aqui você encontra as informações do evento e da sua inscrição.
         </DialogDescription>
-        <DialogBody>
+        <DialogBody className="min-h-72">
           <CancelEventGroupRegistrationAlert
             isLoading={isMutating}
             isOpen={showCancelAlert}
@@ -120,7 +127,7 @@ export function EventGroupRegistrationModal({
             triggerCancellation={cancelTrigger}
             registration={registration}
           />
-          <aside className="flex overflow-x-scroll pt-2 lg:block lg:w-64 lg:flex-none lg:border-0 lg:py-4 ">
+          <aside className="mb-3 flex overflow-x-scroll pt-2  lg:block lg:flex-none lg:border-0 lg:py-4">
             <nav className="flex-none px-4 sm:px-6 lg:px-0">
               <ul
                 role="list"
@@ -210,21 +217,83 @@ export function EventGroupRegistrationModal({
               </dl>
             </div>
           )}
-          {screen === "justifications" && (
+          {screen === "attendance" && (
             <>
               <dl className="divide-y divide-gray-100">
                 {eventGroup && (
                   <For each={eventGroup?.eventGroup.Event}>
-                    {(event) => (
-                      <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt className="text-sm font-medium leading-6 text-gray-900 sm:col-span-2">
-                          {event.name}
-                        </dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700  sm:mt-0">
-                          {registration.eventGroup?.name}
-                        </dd>
-                      </div>
-                    )}
+                    {(event) => {
+                      function handleCheckinOrAbsence() {
+                        const eventCheckin = eventGroup?.EventCheckIn.find(
+                          (checkin) => checkin.eventId === event.id
+                        );
+
+                        const absenceJustification =
+                          eventGroup?.EventAbsences.find(
+                            (absence) => absence.eventId === event.id
+                          );
+
+                        if (eventCheckin) {
+                          return (
+                            <Badge className="my-auto" color="green">
+                              Presente
+                            </Badge>
+                          );
+                        } else {
+                          if (event.status === "review") {
+                            switch (absenceJustification?.status) {
+                              case "approved":
+                                return (
+                                  <Badge className="my-auto" color="purple">
+                                    Ausência justificada
+                                  </Badge>
+                                );
+                              case "denied":
+                                return (
+                                  <Badge className="my-auto" color="red">
+                                    Atestado não aprovado
+                                  </Badge>
+                                );
+                              case "pending":
+                                if (absenceJustification.justificationUrl) {
+                                  return (
+                                    <Badge className="my-auto" color="yellow">
+                                      Atestado pendente
+                                    </Badge>
+                                  );
+                                } else {
+                                  return (
+                                    <Badge
+                                      className="my-auto cursor-pointer underline"
+                                      color="amber"
+                                    >
+                                      Enviar Atestado
+                                    </Badge>
+                                  );
+                                }
+
+                              default:
+                                break;
+                            }
+                          }
+                        }
+                      }
+
+                      return (
+                        <div className="grid grid-cols-3 px-4 py-3 sm:gap-4 sm:px-0">
+                          <dt className="col-span-1 text-sm font-medium leading-6 text-gray-900 lg:col-span-2">
+                            {event.name}
+                          </dt>
+                          <dd className="col-span-2 mt-1 flex  justify-end text-sm leading-6 text-gray-700 sm:mt-0  lg:col-span-1">
+                            {event.status === "published" ? (
+                              <Badge className="my-auto">Aberto</Badge>
+                            ) : (
+                              handleCheckinOrAbsence()
+                            )}
+                          </dd>
+                        </div>
+                      );
+                    }}
                   </For>
                 )}
               </dl>
