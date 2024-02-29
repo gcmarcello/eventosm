@@ -180,6 +180,7 @@ export async function updateEventStatus({
   userSession: UserSession;
   organization: Organization;
 }) {
+  if (!eventId) throw "ID do evento é obrigatório.";
   const args = { eventId, eventGroupId, userSession, organization };
   switch (status) {
     case "review":

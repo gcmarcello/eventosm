@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import UpdateEventPage from "./components/EventPage";
 import { readRegistrationBatches } from "@/app/api/batches/service";
+import { readOrganizations } from "@/app/api/orgs/service";
 
 export default async function EditEventPage({
   params,
@@ -11,7 +12,11 @@ export default async function EditEventPage({
 }) {
   const organizationId = cookies().get("activeOrg")?.value;
 
-  if (!organizationId) return redirect("/painel");
+  const organization = (
+    await readOrganizations({ where: { id: organizationId } })
+  )[0];
+
+  if (!organization) return redirect("/painel");
 
   const event = await readEvents({
     where: { id: params.id, organizationId: organizationId },
@@ -29,6 +34,7 @@ export default async function EditEventPage({
 
   return (
     <UpdateEventPage
+      organization={organization}
       event={event[0]}
       modalities={modalities}
       batches={batches}

@@ -2,7 +2,7 @@ import { EventStatus } from "@prisma/client";
 import { z } from "odinkit";
 
 export const updateEventStatusDto = z.object({
-  eventId: z.string().uuid(),
+  eventId: z.string().uuid().optional(),
   eventGroupId: z.string().uuid().optional(),
   status: z.nativeEnum(EventStatus),
 });

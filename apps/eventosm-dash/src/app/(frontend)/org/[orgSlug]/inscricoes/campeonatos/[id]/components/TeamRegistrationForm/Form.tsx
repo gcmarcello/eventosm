@@ -281,6 +281,7 @@ export default function TeamTournamentRegistration({
                 form: (
                   <ConfirmationForm
                     eventGroup={eventGroup}
+                    organization={organization}
                     fieldArray={fieldArray}
                   />
                 ),
