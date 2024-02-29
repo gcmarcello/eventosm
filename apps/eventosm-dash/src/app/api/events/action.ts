@@ -75,29 +75,28 @@ export async function upsertEventGroup(request: UpsertEventGroupDto) {
 }
 
 export async function upsertEvent(request: UpsertEventDto) {
-  let newEvent;
   try {
     const { request: parsedRequest } = await UseMiddlewares(request)
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
 
-    newEvent = await service.upsertEvent(parsedRequest);
-  } catch (error) {
-    console.log(error);
-    return ActionResponse.error(error);
-  }
+    const newEvent = await service.upsertEvent(parsedRequest);
 
-  if (!request.id || !request.eventGroupId) {
+    if (request.eventGroupId) {
+      revalidatePath(`/painel/eventos/grupos/${request.eventGroupId}`);
+      return ActionResponse.success({
+        data: newEvent,
+        message: "Evento atualizado com sucesso.",
+      });
+    }
+
+    revalidatePath(`/painel/eventos/${request.id}`);
     return ActionResponse.success({
       redirect: `/painel/eventos/`,
       message: "Evento criado com sucesso.",
     });
-  } else {
-    revalidatePath(`/painel/eventos/${request.id}`);
-    return ActionResponse.success({
-      data: newEvent,
-      message: "Evento atualizado com sucesso.",
-    });
+  } catch (error) {
+    return ActionResponse.error(error);
   }
 }
 

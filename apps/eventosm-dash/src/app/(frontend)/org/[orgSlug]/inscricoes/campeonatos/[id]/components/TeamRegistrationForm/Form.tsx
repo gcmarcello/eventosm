@@ -67,7 +67,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { read, utils } from "xlsx";
-import { z } from "zod";
+import { z } from "odinkit";
 import { filterCategories } from "../../../../utils/categories";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";

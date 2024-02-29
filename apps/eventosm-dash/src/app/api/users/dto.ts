@@ -1,5 +1,5 @@
 import { cpfValidator } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export const updateUserDto = z.object({
   fullName: z.string(),

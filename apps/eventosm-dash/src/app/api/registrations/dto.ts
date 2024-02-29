@@ -1,6 +1,6 @@
 import { dateRegex } from "@/utils/regex";
 import { readDto, sheetToJson } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 import { teamSignUpDto } from "../auth/dto";
 
 export const upsertCouponBatchDto = z.object({

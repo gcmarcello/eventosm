@@ -1,6 +1,6 @@
 import { EventStatus } from "@prisma/client";
 import { readDto } from "odinkit";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export const readEventAddonsDto = readDto(
   z

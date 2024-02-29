@@ -56,15 +56,6 @@
       "title": "To do",
       "cards": [
         {
-          "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Corrigir asteriscos (nando)",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "6309292f-b5c7-4c37-97d6-8f9c53d22b37",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "erro no file input",
@@ -142,6 +133,15 @@
           "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Feature para senha de lotes",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Corrigir asteriscos (nando)",
           "description": "",
           "labels": [],
           "checkboxes": [],

@@ -15,7 +15,7 @@ import { Steps, BottomNavigation } from "odinkit";
 import EventInfo from "./components/EventInfo";
 import SportInfo from "./components/SportInfo";
 import StepControl from "./components/StepControl";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export default function NewEventPage() {
   const form = useForm({

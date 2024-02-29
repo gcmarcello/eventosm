@@ -31,7 +31,7 @@ import {
   useForm,
 } from "odinkit/client";
 import { useMemo } from "react";
-import { z } from "zod";
+import { z } from "odinkit";
 
 export function GeralForm({
   eventGroup,
