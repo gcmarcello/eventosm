@@ -4,6 +4,7 @@
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "forwardPorts": [1212, 5430, 4040, 3000],
+  "initializeCommand": "ls",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -43,9 +44,9 @@
         "material-icon-theme.folders.associations": {
           "_shared": "shared",
         },
-        "material-icon-theme.activeIconPack": "none",
         "editor.formatOnSave": true,
         "editor.formatOnPaste": false,
+        "material-icon-theme.activeIconPack": "nest",
         "prettier.useEditorConfig": false,
         "prettier.configPath": "./.prettierrc.js",
         "prettier.prettierPath": "./node_modules/prettier",

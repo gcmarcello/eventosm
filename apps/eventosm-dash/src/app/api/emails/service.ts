@@ -4,37 +4,96 @@ import { getEnv, isDev } from "@/utils/settings";
 
 sgMail.setApiKey(getEnv("SENDGRID_API_KEY") || "SENDGRID_API_KEY not set");
 
+sgMail.setApiKey(getEnv("SENDGRID_API_KEY") || "SENDGRID_API_KEY not set");
+
 export async function sendEmail<
   T extends keyof typeof templates,
   P extends Parameters<(typeof templates)[T]>[0],
 >(
-  template: T,
+  arg: Array<{
+    template: T;
+    setup: {
+      subject: string;
+      to: string | string[];
+      bcc?: string | string[];
+    };
+    templateParameters: P;
+  }>
+): Promise<void>;
+
+export async function sendEmail<T extends keyof typeof templates>(
+  arg: T,
   setup: { subject: string; to: string | string[]; bcc?: string | string[] },
-  templateParameters: P
+  templateParameters: Parameters<(typeof templates)[T]>[0]
+): Promise<void>;
+
+export async function sendEmail<
+  T extends keyof typeof templates,
+  P extends Parameters<(typeof templates)[T]>[0],
+>(
+  arg:
+    | {
+        template: T;
+        setup: {
+          subject: string;
+          to: string | string[];
+          bcc?: string | string[];
+        };
+        templateParameters: P;
+      }[]
+    | T,
+  setup?: {
+    subject: string;
+    to: string | string[];
+    bcc?: string | string[];
+  },
+  templateParameters?: P
 ) {
-  /* if (isDev) return; */
-
-  const html = (templates[template] as any)(templateParameters);
-
   const sendGridEmail = getEnv("SENDGRID_EMAIL");
 
   if (!sendGridEmail) throw "SENDGRID_EMAIL not set";
-  await sgMail
-    .send({
+
+  let request;
+  if (Array.isArray(arg)) {
+    request = arg.map((arg) => {
+      const { template, setup, templateParameters } = arg;
+      const html = (templates[template] as any)(templateParameters);
+
+      return {
+        from: sendGridEmail,
+        to: setup.to,
+        bcc: setup.bcc,
+        subject: setup.subject,
+        html,
+        mailSettings: {
+          sandboxMode: {
+            enable: isDev,
+          },
+        },
+      };
+    });
+  } else {
+    const html = (templates[arg] as any)(templateParameters);
+
+    request = {
       from: sendGridEmail,
-      to: setup.to,
-      bcc: setup.bcc,
-      subject: setup.subject,
+      to: setup!.to,
+      bcc: setup!.bcc,
+      subject: setup!.subject,
       html,
       mailSettings: {
         sandboxMode: {
           enable: isDev,
         },
       },
-    })
-    .then(() => console.log("Email sent"))
-    .catch((err) => {
-      console.log(err.response.body.errors);
-      throw "Failed to send email";
-    });
+    };
+  }
+
+  await fetch(getEnv("QUEUE_URL") + "/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
 }

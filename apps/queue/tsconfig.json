@@ -1,0 +1,12 @@
+{
+  "extends": "./node_modules/@repo/config/ts/nest.tsconfig.json",
+  "allowJs": true,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["src/*"],
+      "prisma/*": ["src/prisma/*"],
+    },
+  },
+}
