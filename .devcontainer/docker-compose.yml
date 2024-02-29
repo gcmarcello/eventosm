@@ -31,7 +31,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     ports:
-      - 5432:5432
+      - 1212:1212
+    command: -p 1212
     extra_hosts:
       - host.docker.internal:host-gateway
 
