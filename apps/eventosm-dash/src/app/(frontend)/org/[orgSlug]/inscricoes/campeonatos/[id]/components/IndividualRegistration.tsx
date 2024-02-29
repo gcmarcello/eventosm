@@ -62,6 +62,7 @@ export default function IndividualTournamentRegistration({
 }) {
   const [showRules, setShowRules] = useState(false);
   const form = useForm({
+    id: "TournamentIndividualRegistrationForm",
     schema: upsertRegistrationDto,
     defaultValues: {
       eventGroupId: eventGroup.id,
@@ -144,7 +145,6 @@ export default function IndividualTournamentRegistration({
         </div>
         <div className="p-2">
           <MultistepForm
-            id="TournamentIndividualRegistrationForm"
             hform={form}
             onSubmit={(data) => trigger(data)}
             order={["general", "addon", "confirmation"]}
@@ -374,7 +374,11 @@ export default function IndividualTournamentRegistration({
                     <Fieldset>
                       <FieldGroup>
                         <Field enableAsterisk={false} name="acceptedTerms">
-                          <Checkbox color="emerald" />
+                          <Checkbox
+                            color={
+                              organization.options.colors.primaryColor.tw.color
+                            }
+                          />
                           <Label className={"ms-3"}>Eu aceito o </Label>
                           <span
                             className="cursor-pointer select-none text-base/6 font-medium text-zinc-950 underline data-[disabled]:opacity-50 sm:text-sm/6"
@@ -437,9 +441,13 @@ export default function IndividualTournamentRegistration({
                       </Button>
                     )}
                     {!hasNextStep && (
-                      <SubmitButton color={
-                        organization.options.colors.primaryColor.tw.color
-                      }>Inscrever</SubmitButton>
+                      <SubmitButton
+                        color={
+                          organization.options.colors.primaryColor.tw.color
+                        }
+                      >
+                        Inscrever
+                      </SubmitButton>
                     )}
                     {hasPrevStep && (
                       <Button
@@ -457,12 +465,11 @@ export default function IndividualTournamentRegistration({
                     <div className="flex flex-row-reverse justify-between">
                       {!hasNextStep && (
                         <SubmitButton
-                          color="indigo"
+                          color={
+                            organization.options.colors.primaryColor.tw.color
+                          }
                         >
-                          <div className="flex items-center gap-2">
-                            Inscrever
-                            {isMutating && <ButtonSpinner />}
-                          </div>
+                          Inscrever
                         </SubmitButton>
                       )}
                       {hasNextStep && (

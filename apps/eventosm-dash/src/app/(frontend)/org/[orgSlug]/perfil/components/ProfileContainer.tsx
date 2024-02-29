@@ -184,7 +184,7 @@ export default function ProfileContainer({
 
   return (
     <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-      <Form id="updateUserForm" hform={form} onSubmit={(data) => trigger(data)}>
+      <Form hform={form} onSubmit={(data) => trigger(data)}>
         <Dialog open={showAddressModal} onClose={setShowAddressModal}>
           <DialogTitle>Atualizar Endereço</DialogTitle>
           <DialogDescription>
@@ -299,9 +299,7 @@ export default function ProfileContainer({
                           >
                             Cancelar
                           </button>
-                          <button
-                            type="submit"
-                            form="updateUserForm"
+                          <SubmitButton
                             className="rounded-md p-2 font-semibold hover:bg-gray-50"
                             style={{
                               color:
@@ -309,7 +307,7 @@ export default function ProfileContainer({
                             }}
                           >
                             Salvar
-                          </button>
+                          </SubmitButton>
                         </div>
                       </>
                     ) : (

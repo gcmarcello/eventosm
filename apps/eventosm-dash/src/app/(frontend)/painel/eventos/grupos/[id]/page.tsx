@@ -160,7 +160,7 @@ export default async function EditEventGroupLayout({
           {
             title: "Resultados",
             content: <>xd</>,
-            disabled: eventGroup.status !== "completed",
+            disabled: eventGroup.status !== "review",
           },
         ]}
       />

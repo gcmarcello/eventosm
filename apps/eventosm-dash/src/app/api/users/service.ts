@@ -26,6 +26,7 @@ export async function readUser({
       role: true,
       updatedAt: true,
       createdAt: true,
+      confirmed: true,
     },
   });
   if (!user) throw "Usuário não encontrado";
@@ -78,11 +79,7 @@ export async function createMultipleUsers(users: TeamSignUpDto[]) {
     const userRecord = users.find((member) => member.document === newDocument);
 
     if (!userRecord) throw "User not found";
-    const address = await readAddressFromZipCode({
-      zipCode: userRecord.zipCode,
-    });
-    if (!address.state.id || !address.city || !address.address)
-      throw "Erro ao calcular CEPs";
+
     const infoId = crypto.randomUUID();
     newUsersArrays.user.push({
       fullName: userRecord.fullName,
@@ -97,9 +94,6 @@ export async function createMultipleUsers(users: TeamSignUpDto[]) {
       birthDate: dayjs(userRecord.birthDate, "DD/MM/YYYY").toISOString(),
       zipCode: normalizeZipCode(userRecord.zipCode),
       gender: userRecord.gender,
-      address: address.address,
-      cityId: address.city.id,
-      stateId: address.state.id,
       number: userRecord.number,
       complement: userRecord.complement,
     });

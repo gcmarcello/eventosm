@@ -115,7 +115,7 @@ export default function AddonModal({
 
   const Field = useMemo(() => form.createField(), []);
   return (
-    <Form id="addonForm" hform={form} onSubmit={(data) => trigger(data)}>
+    <Form hform={form} onSubmit={(data) => trigger(data)}>
       <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
         <DialogTitle>
           {form.getValues("id") ? "Editar" : "Criar"} Kit

@@ -145,7 +145,6 @@ export default function EventBatches({
   return (
     <>
       <Form
-        id="eventBatchForm"
         hform={eventBatchForm}
         onSubmit={(data) => triggerRegistrationBatch(data)}
       >

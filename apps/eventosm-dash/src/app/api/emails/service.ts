@@ -26,6 +26,11 @@ export async function sendEmail<
       bcc: setup.bcc,
       subject: setup.subject,
       html,
+      mailSettings: {
+        sandboxMode: {
+          enable: isDev,
+        },
+      },
     })
     .then(() => console.log("Email sent"))
     .catch((err) => {
