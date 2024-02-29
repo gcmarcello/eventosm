@@ -3,13 +3,13 @@ import { readRegistrations } from "@/app/api/registrations/action";
 import { date } from "odinkit";
 import { Badge, Table, formatPhone } from "odinkit";
 import { useAction } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
 
 export default function RegistrationsPage({
   eventGroup,
 }: {
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
 }) {
   return (
     <Table

@@ -1,5 +1,6 @@
 import { CreateMultipleRegistrationsDto } from "@/app/api/registrations/dto";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/20/solid";
+import { Organization } from "@prisma/client";
 import {
   TableMock,
   TableHead,
@@ -25,7 +26,9 @@ import { UseFieldArrayReturn } from "react-hook-form";
 export function ConfirmationForm({
   fieldArray,
   eventGroup,
+  organization,
 }: {
+  organization: Organization;
   eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
     CreateMultipleRegistrationsDto,
@@ -42,7 +45,10 @@ export function ConfirmationForm({
   return (
     <>
       <div className="flex flex-col items-center gap-4">
-        <ClipboardDocumentCheckIcon className="h-20 w-20 text-emerald-600" />
+        <ClipboardDocumentCheckIcon
+          color={organization.options.colors.primaryColor.hex}
+          className="h-20 w-20"
+        />
         <Text>Confirme os dados dos atletas e finalize a inscrição.</Text>
         <div className="grid grid-cols-4">
           <div className="col-span-4">
