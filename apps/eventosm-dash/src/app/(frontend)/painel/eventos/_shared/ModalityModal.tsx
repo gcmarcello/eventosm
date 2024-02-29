@@ -40,7 +40,7 @@ export default function ModalityModal({
     colors: { primaryColor, secondaryColor },
   } = usePanel();
   return (
-    <Form id="ModalityForm" hform={modalityForm} onSubmit={trigger}>
+    <Form hform={modalityForm} onSubmit={trigger}>
       <Dialog
         size="5xl"
         open={modalState.isModalityModalOpen}

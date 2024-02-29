@@ -41,6 +41,7 @@ export function GeralForm({
   eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
 }) {
   const form = useForm({
+    id: "generalEventGroupForm",
     schema: upsertEventGroupDto.omit({ imageUrl: true }).merge(
       z.object({
         file: eventGroup.imageUrl

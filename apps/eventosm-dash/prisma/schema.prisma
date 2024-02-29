@@ -70,11 +70,11 @@ model UserInfo {
   birthDate  DateTime
   gender     Gender
   zipCode    String
-  state      State     @relation(fields: [stateId], references: [id])
-  stateId    String
-  city       City      @relation(fields: [cityId], references: [id])
-  cityId     String
-  address    String
+  state      State?    @relation(fields: [stateId], references: [id])
+  stateId    String?
+  city       City?     @relation(fields: [cityId], references: [id])
+  cityId     String?
+  address    String?
   number     String
   complement String?
   support    String?

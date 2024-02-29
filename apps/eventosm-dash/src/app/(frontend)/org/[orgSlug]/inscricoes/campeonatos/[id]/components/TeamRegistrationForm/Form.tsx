@@ -78,6 +78,7 @@ import { EventForm } from "./EventForm";
 import { ConfirmationForm } from "./ConfirmationForm";
 import { rest } from "lodash";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import { useSearchParams } from "next/navigation";
 
 dayjs.extend(customParseFormat);
 
@@ -93,7 +94,7 @@ export default function TeamTournamentRegistration({
   organization: Organization;
 }) {
   const [inputMode, setInputMode] = useState<"manual" | "file" | null>(null);
-
+  const searchParams = useSearchParams();
   const emptyTeamMember = {
     user: {
       fullName: "",
@@ -130,7 +131,7 @@ export default function TeamTournamentRegistration({
       teamMembers: [],
       createTeam: true,
       teamName: "",
-      batchId: batch.id,
+      batchId: searchParams.get("batchId") || undefined,
     },
   });
 
@@ -142,7 +143,7 @@ export default function TeamTournamentRegistration({
   const { fields, append } = fieldArray;
 
   function requiredFieldsForParticipant() {
-    return fields.flatMap((_, index) => [
+    const array = fields.flatMap((_, index) => [
       `teamMembers.${index}.user.fullName`,
       `teamMembers.${index}.user.email`,
       `teamMembers.${index}.user.phone`,
@@ -151,6 +152,8 @@ export default function TeamTournamentRegistration({
       `teamMembers.${index}.user.zipCode`,
       `teamMembers.${index}.user.gender`,
     ]);
+    if (form.watch("createTeam")) return [...array, "teamName"];
+    return array;
   }
 
   function requiredFieldsForEvent() {
@@ -336,7 +339,6 @@ export default function TeamTournamentRegistration({
                         color={
                           organization.options.colors.primaryColor.tw.color
                         }
-                        color="indigo"
                       >
                         Inscrever
                       </SubmitButton>

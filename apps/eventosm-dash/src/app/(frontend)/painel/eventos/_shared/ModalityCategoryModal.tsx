@@ -71,11 +71,7 @@ export default function ModalityCategoryModal({
   }
 
   return (
-    <Form
-      id="categoryForm"
-      hform={categoryForm}
-      onSubmit={(data) => categoriesTrigger(data)}
-    >
+    <Form hform={categoryForm} onSubmit={(data) => categoriesTrigger(data)}>
       <Dialog
         size="5xl"
         open={modalState.isCategoryModalOpen}

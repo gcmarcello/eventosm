@@ -67,11 +67,7 @@ export default function EventGeneralInfo({
 
   const Field = useMemo(() => form.createField(), []);
   return (
-    <Form
-      id="EventGeneralInfoForm"
-      hform={form}
-      onSubmit={(data) => generalInfoTrigger(data)}
-    >
+    <Form hform={form} onSubmit={(data) => generalInfoTrigger(data)}>
       <Fieldset className="grid grid-cols-2 gap-x-4 gap-y-4">
         <Field className="col-span-2 lg:col-span-1" name="name">
           <Label>Nome do Evento</Label>
