@@ -1,18 +1,18 @@
-import { getEnv } from "@/utils/settings";
+import { getServerEnv } from "@/app/api/env";
 import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 
-const bucketName = getEnv("AWS_BUCKET_NAME") || "";
-const region = getEnv("AWS_REGION") || "";
+const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
+const region = getServerEnv("AWS_REGION") || "";
 
 const s3 = new S3Client({
   endpoint: `https://s3.${region}.backblazeb2.com`,
   credentials: {
-    accessKeyId: getEnv("AWS_ACCESS_KEY_ID") || "",
-    secretAccessKey: getEnv("AWS_SECRET_ACCESS_KEY") || "",
+    accessKeyId: getServerEnv("AWS_ACCESS_KEY_ID") || "",
+    secretAccessKey: getServerEnv("AWS_SECRET_ACCESS_KEY") || "",
   },
 });
 
@@ -36,7 +36,7 @@ export async function uploadFile(file: File, key: string) {
 
 export async function deleteFile(key: string) {
   const command = new DeleteObjectCommand({
-    Bucket: getEnv("AWS_BUCKET_NAME") || "",
+    Bucket: getServerEnv("AWS_BUCKET_NAME") || "",
     Key: key,
   });
 

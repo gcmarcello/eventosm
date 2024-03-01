@@ -26,8 +26,6 @@ export default function EventCard({
 
   const isEventGroup = "Event" in event;
 
-  console.log(event.EventRegistrationBatch[0]?.dateStart);
-
   const availableBatch = event.EventRegistrationBatch?.find(
     (batch) =>
       dayjs().utc().isBetween(batch.dateStart, batch.dateEnd, "day") &&

@@ -3,13 +3,14 @@ import { AuthMiddleware } from "./middleware/functions/auth.middleware";
 import authRedirect from "./middleware/utils/authRedirect";
 import { customDomainMiddleware } from "./customDomainMiddleware";
 import { startsWith } from "./middleware/utils/startsWith";
+import { getServerEnv } from "./app/api/env";
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const host = request.headers.get("host");
   if (!host) throw "Host não encontrado.";
 
-  if (host !== process.env.HOST) {
+  if (host !== getServerEnv("HOST")) {
     return await customDomainMiddleware({ request, host, token });
   }
 

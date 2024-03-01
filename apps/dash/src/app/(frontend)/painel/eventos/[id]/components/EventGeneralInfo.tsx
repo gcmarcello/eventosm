@@ -19,6 +19,7 @@ import { useMemo } from "react";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 import { upsertEvent } from "@/app/api/events/action";
+import { getClientEnv } from "@/app/(frontend)/env";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -98,7 +99,7 @@ export default function EventGeneralInfo({
             Letras minúsculas, números e hífens.
           </Description>
           <Text className="text-wrap italic">
-            {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
+            {getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1]}/org/
             {"exemplo"}
           </Text>
         </Field>

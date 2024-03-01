@@ -322,7 +322,7 @@ export function ParticipantsForm({
                         {form.watch("files")[0].name}{" "}
                         <span
                           onClick={() => {
-                            form.reset();
+                            form.resetField("files");
                           }}
                           className="cursor-pointer font-semibold "
                         >

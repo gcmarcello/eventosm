@@ -32,6 +32,9 @@ import { uploadFile } from "../uploads/service";
 import { createMultipleUsers } from "../users/service";
 import { sendEmail } from "../emails/service";
 import { chooseTextColor } from "@/utils/colors";
+import { getServerEnv } from "@/app/api/env";
+import { Email } from "email-templates";
+import { generateQrCodes } from "../qrcode/service";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -87,13 +90,14 @@ export async function createRegistration(
 
   const orderId = categoryPrice ? await createOrder("@todo") : null;
   const status = categoryPrice ? "pending" : "active";
-
+  const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
+  const region = getServerEnv("AWS_REGION") || "";
   const createRegistration = await prisma.eventRegistration.create({
     data: {
       ...registration,
       userId: userSession.id,
       id: registrationId,
-      qrCode: await generateQrCode(registrationId),
+      qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${id}.png`,
       code,
       status,
       orderId,
@@ -119,38 +123,6 @@ export async function createRegistration(
     where: { id: event?.organizationId || eventGroup?.organizationId },
     include: { OrgCustomDomain: true },
   });
-
-  await sendEmail(
-    "registration_email",
-    {
-      to: userSession.email,
-      subject: "Inscrição confirmada",
-    },
-    {
-      mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-      headerTextColor: chooseTextColor(
-        organization?.options.colors.primaryColor.hex || "#4F46E5"
-      ),
-      category: category.name,
-      modality: (event
-        ? event.EventModality.find((m) => m.id === request.modalityId)?.name
-        : eventGroup?.EventModality.find((m) => m.id === request.modalityId)
-            ?.name)!,
-      dateEnd: dayjs(event?.dateEnd).format("DD/MM/YYYY"),
-      dateStart: event
-        ? dayjs(event.dateStart).format("DD/MM/YYYY")
-        : dayjs(eventGroup!.Event[0]!.dateStart).format("DD/MM/YYYY"),
-      eventName: event ? event.name : eventGroup!.name,
-      location: event?.location,
-      name: userSession.fullName,
-      orgName: organization!.name,
-      qrCode: createRegistration.qrCode,
-      siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
-      eventLink: event
-        ? `/eventos/${event.id}`
-        : `/eventos/campeonatos/${eventGroup?.id}`,
-    }
-  );
 
   return { registration: createRegistration, event, eventGroup, organization };
 }
@@ -225,7 +197,15 @@ export async function createMultipleRegistrations(
       : { eventGroupId: request.eventGroupId },
   });
 
+  const organization = await prisma.organization.findUnique({
+    where: { id: event?.organizationId || eventGroup?.organizationId },
+    include: { OrgCustomDomain: true },
+  });
+
   const participantsArray = [];
+  let emailArray: Email<"registration_email">[] = [];
+  const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
+  const region = getServerEnv("AWS_REGION") || "";
   for (const [index, user] of userRegistrationsInfo.entries()) {
     if (!user.userId) throw "Usuário não encontrado";
 
@@ -234,7 +214,8 @@ export async function createMultipleRegistrations(
     const id = crypto.randomUUID();
     participantsArray.push({
       ...parsedUser,
-      qrCode: await generateQrCode(id),
+      id,
+      qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${id}.png`,
       batchId: batch.id,
       addonId: addon?.id,
       addonOption: addon?.option,
@@ -245,19 +226,61 @@ export async function createMultipleRegistrations(
       code: (eventRegistrations + (index + 1)).toString(),
       status: "active",
     });
+
+    emailArray.push({
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: allUserIds.find((u) => u.id === user.userId)?.email!,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        category: (event
+          ? event.EventModality.find((m) => m.id === parsedUser.categoryId)
+              ?.name
+          : eventGroup?.EventModality.flatMap((m) => m.modalityCategory).find(
+              (category) => category.id === parsedUser.categoryId
+            )?.name)!,
+        modality: (event
+          ? event.EventModality.find((m) => m.id === parsedUser.modalityId)
+              ?.name
+          : eventGroup?.EventModality.find(
+              (m) => m.id === parsedUser.modalityId
+            )?.name)!,
+        dateEnd: dayjs(event?.dateEnd).format("DD/MM/YYYY"),
+        dateStart: event
+          ? dayjs(event.dateStart).format("DD/MM/YYYY")
+          : dayjs(eventGroup!.Event[0]!.dateStart).format("DD/MM/YYYY"),
+        eventName: event ? event.name : eventGroup!.name,
+        location: event?.location,
+        name: allUserIds.find((u) => u.id === user.userId)?.fullName || "Amigo",
+        orgName: organization!.name,
+        qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${id}.png`,
+        siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: event
+          ? `/eventos/${event.id}`
+          : `/eventos/campeonatos/${eventGroup?.id}`,
+      },
+    });
   }
 
-  await prisma.eventRegistration.createMany({
+  const registrations = await prisma.eventRegistration.createMany({
     data: participantsArray,
   });
 
-  const organization = (
-    await readOrganizations({
-      where: { id: event?.organizationId || eventGroup?.organizationId },
-    })
-  )[0];
+  if (!registrations) throw "Erro ao criar inscrições.";
 
-  return { event, eventGroup, organization };
+  const registrationsIds = participantsArray.map((reg) => reg.id);
+
+  if (emailArray.length) await sendEmail(emailArray);
+
+  await generateQrCodes(registrationsIds);
+
+  return { event, eventGroup };
 }
 
 export async function updateRegistrationStatus(request: {
@@ -375,40 +398,4 @@ async function readRegistrationPrice({
 
   if (category && category.price) return category.price;
   return batch.price || 0;
-}
-
-async function generateQrCode(id: string) {
-  try {
-    // Generate QR code with specified data
-    const qrCodeData = await QRCode.toDataURL(id);
-    const fileName = crypto.randomUUID();
-
-    // Convert base64 string to a buffer
-    const dataUrlToBlob = (dataUrl: string) => {
-      const arr = dataUrl.split(",");
-      const match = arr[0]?.match(/:(.*?);/);
-
-      // Check if the match was successful
-      if (!match || !match[1] || !arr[1]) {
-        throw "Unable to extract MIME type from data URL";
-      }
-
-      const mime = match[1];
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-
-      return new Blob([u8arr], { type: mime });
-    };
-
-    const blob = dataUrlToBlob(qrCodeData);
-    const file = new File([blob], fileName, { type: "image/png" });
-    return await uploadFile(file, `qr-codes/${fileName}.png`);
-  } catch (error) {
-    throw "Erro ao gerar QR Code. " + error;
-  }
 }

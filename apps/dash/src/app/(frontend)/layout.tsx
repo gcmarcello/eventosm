@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { cookies } from "next/headers";
 import MainNavbar from "./_shared/components/MainNavbar";
 import { Mocker } from "odinkit/client";
-import { isDev } from "@/utils/settings";
+import { isDev } from "@/app/api/env";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });

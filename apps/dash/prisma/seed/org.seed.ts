@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { prisma } from "../prisma";
 import { createOrganization } from "@/app/api/orgs/service";
 import { generateColorJson } from "@/app/api/colors/service";
+import { getServerEnv } from "@/app/api/env";
 
 export const orgSeed = async (userId: string) => {
   const orgUUID = "0ce7d854-e9c8-468b-b28b-28d32d725676";
@@ -37,7 +38,7 @@ export const orgSeed = async (userId: string) => {
       },
       OrgCustomDomain: {
         create: {
-          domain: process.env.SECOND_HOST + ":3000",
+          domain: getServerEnv("SECOND_HOST") + ":3000",
         },
       },
 

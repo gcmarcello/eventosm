@@ -1,4 +1,5 @@
-import { getEnv } from "@/utils/settings";
+import { getClientEnv } from "@/app/(frontend)/env";
+import { getServerEnv } from "@/app/api/env";
 import { jwtVerify } from "jose";
 
 export async function AuthMiddleware({
@@ -13,12 +14,12 @@ export async function AuthMiddleware({
 
     const { payload } = await jwtVerify(
       request.token,
-      new TextEncoder().encode(getEnv("JWT_KEY"))
+      new TextEncoder().encode(getServerEnv("JWT_KEY"))
     );
 
     const roles: string[] = additionalArguments.roles;
 
-    const url = getEnv("NEXT_PUBLIC_SITE_URL");
+    const url = getClientEnv("NEXT_PUBLIC_SITE_URL");
 
     if (!url) return false;
     if (!payload.id) return false;

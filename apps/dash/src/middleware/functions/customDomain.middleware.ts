@@ -1,8 +1,8 @@
-import { getEnv } from "@/utils/settings";
+import { getClientEnv } from "@/app/(frontend)/env";
 
 export async function CustomDomainMiddleware({ host }: { host: string }) {
   try {
-    const url = getEnv("NEXT_PUBLIC_SITE_URL");
+    const url = getClientEnv("NEXT_PUBLIC_SITE_URL");
 
     if (!url) return false;
 

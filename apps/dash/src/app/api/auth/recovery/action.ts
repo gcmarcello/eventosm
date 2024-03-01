@@ -14,6 +14,7 @@ export async function generateRecoveryToken(
 
     parsedEmail = email;
   } catch (error) {
+    console.log(error);
     return ActionResponse.error(error);
   }
 

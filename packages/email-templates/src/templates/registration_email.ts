@@ -90,7 +90,7 @@ export function registration_email({
         <p>Aqui est&atilde;o as informa&ccedil;&otilde;es do evento e da sua inscri&ccedil;&atilde;o.&nbsp;Imprima este e-mail ou leve seu celular ao evento para facilitar o check-in!</p>
         
         <strong>QR Code para Check-in</strong><br/>
-        <img src="${qrCode}"/>
+        <img alt="Seu QR Code está sendo processado, volte em instantes..." src="${qrCode}"/>
   
         <ul>
           <li><strong>Data:</strong>&nbsp;${dateStart} ${dateEnd && `-&nbsp;${dateEnd}`}</li>

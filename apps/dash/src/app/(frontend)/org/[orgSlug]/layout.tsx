@@ -8,7 +8,7 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { OrgStore } from "./components/OrgStore";
 import type { Metadata, ResolvingMetadata } from "next";
-import { isDev } from "@/utils/settings";
+import { isDev } from "@/app/api/env";
 import dayjs from "dayjs";
 
 const inter = Inter({ subsets: ["latin"] });

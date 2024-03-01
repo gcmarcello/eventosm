@@ -107,6 +107,6 @@ export async function createMultipleUsers(users: TeamSignUpDto[]) {
         in: documents,
       },
     },
-    select: { id: true, document: true },
+    select: { id: true, document: true, email: true, fullName: true },
   });
 }

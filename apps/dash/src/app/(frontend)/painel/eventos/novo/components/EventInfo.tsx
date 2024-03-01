@@ -1,3 +1,4 @@
+import { getClientEnv } from "@/app/(frontend)/env";
 import {
   ErrorMessage,
   FieldGroup,
@@ -40,7 +41,8 @@ export default function EventInfo({ Field }: { Field: any }) {
           <Label>Link do perfil</Label>
           <Input
             placeholder={
-              process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1] + "/org/exemplo"
+              getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1] +
+              "/org/exemplo"
             }
           />
 

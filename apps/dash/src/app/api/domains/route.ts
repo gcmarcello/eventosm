@@ -1,4 +1,5 @@
-import { getEnv } from "@/utils/settings";
+import { getClientEnv } from "@/app/(frontend)/env";
+import { getServerEnv } from "@/app/api/env";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
       include: { Organization: { select: { slug: true } } },
     });
 
-    const redirectUrl = getEnv(`NEXT_PUBLIC_SITE_URL`);
+    const redirectUrl = getClientEnv(`NEXT_PUBLIC_SITE_URL`);
 
     if (!redirectUrl) throw "URL de redirecionamento não encontrada.";
 

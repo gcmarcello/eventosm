@@ -9,7 +9,6 @@ import { useSidebar } from "./lib/useSidebar";
 import { usePathname } from "next/navigation";
 import ProfileDropdown from "@/app/(frontend)/_shared/components/ProfileDropdown";
 import { getPageName } from "../../utils/pageName";
-import { getEnv } from "@/utils/settings";
 import { Link } from "odinkit";
 
 export function SupporterTopBar() {

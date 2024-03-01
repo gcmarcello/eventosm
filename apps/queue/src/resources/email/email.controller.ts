@@ -1,18 +1,13 @@
 import { Controller, Post, Body } from "@nestjs/common";
-import { SendEmailDto } from "./dto/sendEmail.dto";
-import { InjectQueue } from "@nestjs/bull";
-import { Queue } from "bull";
+import { EmailService } from "./email.service";
+import { Email, EmailTemplate } from "email-templates";
 
 @Controller("email")
 export class EmailController {
-  constructor(@InjectQueue("email") private emailQueue: Queue) {}
+  constructor(private emailService: EmailService) {}
 
   @Post()
-  send(@Body() sendEmailDto: SendEmailDto[]) {
-    return this.emailQueue.addBulk(
-      sendEmailDto.map((data) => ({
-        data,
-      }))
-    );
+  async sendEmails<E extends EmailTemplate>(@Body() sendEmailDto: Email<E>[]) {
+    return await this.emailService.queueEmails(sendEmailDto);
   }
 }

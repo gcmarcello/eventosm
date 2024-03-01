@@ -56,15 +56,6 @@
       "title": "To do",
       "cards": [
         {
-          "id": "6309292f-b5c7-4c37-97d6-8f9c53d22b37",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "erro no file input",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "de183c88-3f9b-42e7-9e1b-623ec8a1708e",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Resultados baseados nas regras do evento",
@@ -83,24 +74,6 @@
           "comments": []
         },
         {
-          "id": "6bc9072d-dbab-41ce-a951-112d5000e2d8",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Emails",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "b6d4ac8f-69c5-44f3-9e4d-67b190d5f18e",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Atestados",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "3ba348fb-e70f-4978-9896-ad046c2dcc5d",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "fuso horario de data de evento",
@@ -110,9 +83,27 @@
           "comments": []
         },
         {
-          "id": "6fc82046-53b1-4dba-a148-1572d901a320",
+          "id": "452cc110-0143-4347-a557-d502f043683a",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "recuperacao de senha",
+          "title": "email com astericos na recuperacao login",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "9d378237-c71b-491b-8917-f26830459fd1",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "scrollar ate o topo na inscricao de equipe",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "0852bbbf-15df-40d5-b1c8-6226d529cf39",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "arrumar vercel",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -122,13 +113,50 @@
     },
     {
       "id": "b3345057-2ade-4c51-b359-446bcfd7648b",
-      "title": "Testing",
-      "cards": []
+      "title": "On going",
+      "cards": [
+        {
+          "id": "b6d4ac8f-69c5-44f3-9e4d-67b190d5f18e",
+          "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
+          "title": "Atestados",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     },
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
       "cards": [
+        {
+          "id": "6fc82046-53b1-4dba-a148-1572d901a320",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "recuperacao de senha",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6309292f-b5c7-4c37-97d6-8f9c53d22b37",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "erro no file input",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6bc9072d-dbab-41ce-a951-112d5000e2d8",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Emails",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
         {
           "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",

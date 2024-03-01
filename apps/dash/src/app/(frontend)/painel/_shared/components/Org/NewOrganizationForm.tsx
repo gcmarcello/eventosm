@@ -1,5 +1,6 @@
 "use client";
 
+import { getClientEnv } from "@/app/(frontend)/env";
 import { createOrganization } from "@/app/api/orgs/action";
 import {
   UpsertOrganizationDto,
@@ -117,7 +118,7 @@ export default function NewOrganizationForm({
                     Letras minúsculas, números e hífens.
                   </Description>
                   <Text className="text-wrap italic">
-                    {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
+                    {getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1]}/org/
                     {form.watch("slug") || "exemplo"}
                   </Text>
                   <ErrorMessage />

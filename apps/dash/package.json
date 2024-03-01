@@ -14,7 +14,9 @@
     "db:push": "prisma db push --force-reset && prisma db seed"
   },
   "dependencies": {
+    "@t3-oss/env-nextjs": "0.9.2",
     "@aws-sdk/client-s3": "^3.478.0",
+    "email-templates": "workspace:*",
     "xlsx": "0.18.5",
     "@faker-js/faker": "^8.3.1",
     "@floating-ui/react": "^0.26.4",

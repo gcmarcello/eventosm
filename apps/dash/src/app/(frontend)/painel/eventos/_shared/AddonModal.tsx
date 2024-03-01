@@ -92,8 +92,6 @@ export default function AddonModal({
         [{ name: "image", file: data.image ? data.image[0] : [] }],
         "events/addons/"
       );
-
-      console.log({ ...data, image: uploadedFiles?.image?.url });
       return { ...data, image: uploadedFiles?.image?.url };
     },
     onSuccess: (data) => {
@@ -175,7 +173,7 @@ export default function AddonModal({
                                   {form.watch("image")?.[0].name}{" "}
                                   <span
                                     onClick={() => {
-                                      form.reset();
+                                      form.resetField("image");
                                     }}
                                     className="cursor-pointer font-semibold text-emerald-600"
                                   >

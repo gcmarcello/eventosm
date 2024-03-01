@@ -135,7 +135,6 @@ export default function ProfileContainer({
           zipCode: normalizeZipCode(data.info.zipCode),
         },
       };
-      console.log(parsedData);
       return parsedData;
     },
     onSuccess: (data) => {

@@ -1,3 +1,4 @@
+import { getClientEnv } from "@/app/(frontend)/env";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { Text } from "odinkit";
 import {
@@ -61,7 +62,7 @@ export default function GeneralInfoSection() {
           Letras minúsculas, números e hífens.
         </Description>
         <Text className="text-wrap italic">
-          {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
+          {getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1]}/org/
           {form.watch("slug") || "exemplo"}
         </Text>
         <ErrorMessage />

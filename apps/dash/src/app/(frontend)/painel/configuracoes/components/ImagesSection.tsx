@@ -56,7 +56,7 @@ export default function ImagesSection({
                     {form.watch("images.logo")?.[0]?.name ?? ""}
                     <span
                       onClick={() => {
-                        form.reset();
+                        form.resetField("images.logo");
                       }}
                       className="cursor-pointer font-semibold text-emerald-600"
                     >
@@ -100,7 +100,7 @@ export default function ImagesSection({
                     {form.watch("images.hero")?.[0]?.name ?? ""}
                     <span
                       onClick={() => {
-                        form.reset();
+                        form.resetField("images.hero");
                       }}
                       className="cursor-pointer font-semibold text-emerald-600"
                     >
@@ -144,7 +144,7 @@ export default function ImagesSection({
                     {form.watch("images.bg")?.[0]?.name ?? ""}
                     <span
                       onClick={() => {
-                        form.reset();
+                        form.resetField("images.bg");
                       }}
                       className="cursor-pointer font-semibold text-emerald-600"
                     >

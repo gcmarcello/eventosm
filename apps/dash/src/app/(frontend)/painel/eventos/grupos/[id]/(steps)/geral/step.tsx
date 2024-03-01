@@ -188,7 +188,7 @@ export function GeralForm({
                           {form.watch("file")?.[0].name}{" "}
                           <span
                             onClick={() => {
-                              form.reset();
+                              form.resetField("file");
                             }}
                             className="cursor-pointer font-semibold text-emerald-600"
                           >

@@ -10,12 +10,13 @@ import {
   updateRecoveryToken,
   upsertRecoveryToken,
 } from "./repository";
-import { getEnv, isProd } from "@/utils/settings";
+import { getServerEnv, isProd } from "@/app/api/env";
 import { updateUser } from "../../users/repository";
 import { hashInfo } from "@/utils/bCrypt";
 import { createToken } from "../service";
 import { sendEmail } from "../../emails/service";
 import { chooseTextColor } from "@/utils/colors";
+import { getClientEnv } from "@/app/(frontend)/env";
 
 export async function generateRecoveryToken(
   data: UpsertPasswordRecoveryTokenDto
@@ -57,21 +58,28 @@ export async function generateRecoveryToken(
   });
 
   const url =
-    organization?.OrgCustomDomain[0]?.domain || getEnv("NEXT_PUBLIC_SITE_URL");
+    organization?.OrgCustomDomain[0]?.domain ||
+    getClientEnv("NEXT_PUBLIC_SITE_URL");
 
-  await sendEmail(
-    "recover_pass",
-    { subject: "Recuperação de senha", to: user.email },
+  await sendEmail([
     {
-      headerTextColor: chooseTextColor(
-        organization?.options.colors.primaryColor.hex || "#4F46E5"
-      ),
-      mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-      orgName: organization?.name || "EventoSM",
-      name: user.fullName,
-      recoveryLink: `${url}/recuperar/${recoveryToken.token}`,
-    }
-  );
+      template: "recover_pass",
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL"),
+        subject: "Recuperação de senha",
+        to: user.email,
+      },
+      templateParameters: {
+        headerTextColor: chooseTextColor(
+          organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+        orgName: organization?.name || "EventoSM",
+        name: user.fullName,
+        recoveryLink: `${url}/recuperar/${recoveryToken.token}`,
+      },
+    },
+  ]);
 
   return { recoveryToken, email: maskEmail(user.email) };
 }
@@ -99,7 +107,7 @@ export async function createNewPassword(data: CreateNewPasswordDto) {
   const token = await validateRecoveryToken({ token: data.token });
 
   const user = await updateUser({
-    data: { password: await hashInfo(data.password) },
+    data: { password: await hashInfo(data.password), confirmed: true },
     where: { id: token.userId },
   });
 

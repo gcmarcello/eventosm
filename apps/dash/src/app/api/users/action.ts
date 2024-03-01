@@ -9,7 +9,6 @@ import { revalidatePath } from "next/cache";
 
 export async function updateUser(request: UpdateUserDto) {
   try {
-    console.log(request);
     const { request: parsedRequest } = await UseMiddlewares(request).then(
       UserSessionMiddleware
     );

@@ -27,7 +27,7 @@ import { chooseTextColor, compareContrasts } from "@/utils/colors";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { isProd } from "@/utils/settings";
+import { isProd } from "@/app/api/env";
 import { login, logout } from "@/app/api/auth/action";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";

@@ -9,7 +9,7 @@ export class SettingsService {
     const value = this.configService.get<string>(key);
 
     if (!value) {
-      throw new Error(key + " environment variable does not set");
+      throw new Error(key + " environment variable is not set");
     }
 
     return value;

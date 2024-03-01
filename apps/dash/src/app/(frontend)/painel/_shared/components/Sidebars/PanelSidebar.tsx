@@ -19,7 +19,7 @@ import {
 import { chooseTextColor } from "@/utils/colors";
 import { For, Logo } from "odinkit";
 import { usePanel } from "../PanelStore";
-import { isDev, isProd } from "@/utils/settings";
+import { isDev, isProd } from "@/app/api/env";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 
 export default function PanelSideBar() {

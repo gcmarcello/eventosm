@@ -1,6 +1,6 @@
 import { compareHash, hashInfo } from "@/utils/bCrypt";
 import { LoginDto, SignupDto } from "./dto";
-import { getEnv, isDev } from "@/utils/settings";
+import { getServerEnv, isDev } from "@/app/api/env";
 import * as jose from "jose";
 import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
@@ -15,6 +15,7 @@ import { cookies } from "next/headers";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { sendEmail } from "../emails/service";
 import { chooseTextColor } from "@/utils/colors";
+import { getClientEnv } from "@/app/(frontend)/env";
 dayjs.extend(customParseFormat);
 
 export async function signup(request: SignupDto) {
@@ -51,24 +52,28 @@ export async function signup(request: SignupDto) {
   }
 
   const url =
-    organization?.OrgCustomDomain[0]?.domain || getEnv("NEXT_PUBLIC_SITE_URL");
+    organization?.OrgCustomDomain[0]?.domain ||
+    getClientEnv("NEXT_PUBLIC_SITE_URL");
 
-  await sendEmail(
-    "welcome_email",
+  await sendEmail([
     {
-      subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
-      to: newUser.email,
+      template: "welcome_email",
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+        to: newUser.email,
+      },
+      templateParameters: {
+        headerTextColor: chooseTextColor(
+          organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+        orgName: organization?.name || "EventoSM",
+        name: newUser.fullName.split(" ")[0] as string,
+        siteLink: `${url}/confirmar/${newUser.id}`,
+      },
     },
-    {
-      headerTextColor: chooseTextColor(
-        organization?.options.colors.primaryColor.hex || "#4F46E5"
-      ),
-      mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-      orgName: organization?.name || "EventoSM",
-      name: newUser.fullName.split(" ")[0] as string,
-      siteLink: `${url}/confirmar/${newUser.id}`,
-    }
-  );
+  ]);
   return newUser;
 }
 
@@ -78,7 +83,7 @@ export async function linkUserToOrg(request: {
 }) {}
 
 export function createToken(request: { id: string }) {
-  const JWT_KEY = new TextEncoder().encode(getEnv("JWT_KEY"));
+  const JWT_KEY = new TextEncoder().encode(getServerEnv("JWT_KEY"));
   if (!JWT_KEY)
     throw "O serviço de autenticação se encontra fora do ar. ERROR: MISSING JWTKEY";
   const token = new jose.SignJWT({ id: request.id })
