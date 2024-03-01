@@ -104,6 +104,7 @@ model Organization {
   OrgCustomDomain       OrgCustomDomain[]
   UserOrgLink           UserOrgLink[]
   PasswordRecoveryToken PasswordRecoveryToken[]
+  News                  News[]
 
   @@schema("public")
 }
@@ -472,6 +473,19 @@ model OrgCustomDomain {
   domain         String       @unique
   Organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @db.Uuid
+
+  @@schema("public")
+}
+
+model News {
+  id             String        @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  title          String
+  content        String
+  imageUrl       String?
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.Uuid
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?     @updatedAt
 
   @@schema("public")
 }
