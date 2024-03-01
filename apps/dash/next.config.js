@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: "https",
       },
       {
+        hostname: "eventosmpreview.s3.us-east-005.backblazeb2.com",
+        protocol: "https",
+      },
+      {
         hostname: "i.imgur.com",
         protocol: "https",
       },
