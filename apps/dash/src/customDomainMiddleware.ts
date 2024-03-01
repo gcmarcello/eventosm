@@ -13,6 +13,17 @@ export async function customDomainMiddleware({
   host: string;
   token: string | undefined;
 }) {
+  const startsWith = (arg: (string | RegExp)[]) => {
+    const testArray = [];
+    for (const a of arg) {
+      if (typeof a === "string") {
+        testArray.push(request.nextUrl.pathname.startsWith(a));
+      } else {
+        testArray.push(a.test(request.nextUrl.pathname));
+      }
+      return testArray.some((a) => a);
+    }
+  };
   const customDomain = await CustomDomainMiddleware({ host });
   const isAuthenticated = await AuthMiddleware({
     request: { token },
@@ -24,9 +35,7 @@ export async function customDomainMiddleware({
   requestHeaders.set("x-url", request.url);
   const redirect = request.nextUrl.searchParams.get("redirect") || "/";
 
-  if (
-    startsWith({ arg: ["/inscricoes", /^\/org\/[^\/]+\/inscricoes/], request })
-  ) {
+  if (startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/])) {
     if (!isAuthenticated)
       return authRedirect({
         url: `/login?&redirect=${request.nextUrl.pathname}`,
@@ -34,7 +43,7 @@ export async function customDomainMiddleware({
       });
   }
 
-  if (startsWith({ arg: ["/login", "/painel"], request })) {
+  if (startsWith(["/login", "/painel"])) {
     isAuthenticated &&
       authRedirect({
         url: new URL(redirect, request.nextUrl).href,
