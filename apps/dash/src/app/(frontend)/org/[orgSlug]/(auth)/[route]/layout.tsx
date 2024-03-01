@@ -27,7 +27,7 @@ export default function Layout({
         <div className="col-span-0 hidden lg:col-span-5 lg:block">
           <img
             className="inset-0 h-full w-full object-cover"
-            src="https://c02.purpledshub.com/uploads/sites/39/2022/10/Fox-DHX-Factory-rear-mountain-bike-shock-2-3e0ee7f.jpg"
+            src="https://i.imgur.com/MNOnNVF.jpeg"
             alt=""
           />
         </div>
