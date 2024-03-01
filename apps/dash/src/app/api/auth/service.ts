@@ -6,6 +6,8 @@ import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
+  cpfValidator,
+  isEmail,
   normalize,
   normalizeEmail,
   normalizePhone,
@@ -97,17 +99,16 @@ export function createToken(request: { id: string }) {
 }
 
 export async function login(request: LoginDto) {
-  const potentialUser = await prisma.user.findFirst({
-    where: {
-      OR: [
-        { email: normalizeEmail(request.identifier) },
-        { document: normalize(request.identifier) },
-        { phone: normalizePhone(request.identifier) },
-      ],
-    },
-    include: {
-      UserOrgLink: { include: { Organization: { select: { name: true } } } },
-    },
+  const isIdentifierEmail = isEmail(request.identifier);
+  const isIdentifierCPF = cpfValidator(request.identifier);
+
+  const potentialUser = await prisma.user.findUnique({
+    where: isIdentifierEmail
+      ? { email: normalizeEmail(request.identifier) }
+      : isIdentifierCPF
+        ? { document: normalize(request.identifier) }
+        : { phone: normalizePhone(request.identifier) },
+    include: { info: true },
   });
 
   if (!potentialUser) throw `Informações de login incorretas!`;
