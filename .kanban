@@ -48,6 +48,15 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
+        },
+        {
+          "id": "f6f1fcbb-8861-484b-81dd-0ee7596eca86",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "Notificacoes Whatsapp",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
         }
       ]
     },
@@ -59,15 +68,6 @@
           "id": "de183c88-3f9b-42e7-9e1b-623ec8a1708e",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Resultados baseados nas regras do evento",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "f6f1fcbb-8861-484b-81dd-0ee7596eca86",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Notificacoes Whatsapp",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -103,7 +103,25 @@
         {
           "id": "0852bbbf-15df-40d5-b1c8-6226d529cf39",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "arrumar vercel",
+          "title": "arrumar ver site",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "b0646190-2edb-41bd-b72c-6743d4b14a55",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "arrumar pasta do projeto na vercel",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "e316146b-838c-4125-a33c-0d4970535ce7",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "icones de share",
           "description": "",
           "labels": [],
           "checkboxes": [],
