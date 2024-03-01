@@ -18,8 +18,14 @@ export const signupDto = z.object({
     .max(15, { message: "Telefone inválido" }),
   passwords: z
     .object({
-      password: z.string().min(6).max(255),
-      passwordConfirm: z.string().min(6).max(255),
+      password: z
+        .string()
+        .min(6, { message: "A senha deve ter ao menos 6 caracteres" })
+        .max(255),
+      passwordConfirm: z
+        .string()
+        .min(6, { message: "A senha deve ter ao menos 6 caracteres" })
+        .max(255),
     })
     .refine((data) => data.password === data.passwordConfirm, {
       message: "Senhas não conferem",
@@ -37,7 +43,7 @@ export const signupDto = z.object({
     complement: z.string().optional(),
     cityId: z.string(),
     stateId: z.string(),
-    zipCode: z.string().min(9),
+    zipCode: z.string().min(9, { message: "CEP inválido" }),
   }),
   eventRedirect: z.object({ name: z.string(), id: z.string() }).optional(),
   organizationId: z.string().optional(),
