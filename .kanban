@@ -1,67 +1,127 @@
 {
   "lists": [
     {
+      "id": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+      "title": "Backlog",
+      "cards": [
+        {
+          "id": "fd75bee6-6c00-4a6d-bb08-c39295eba867",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar individuo nao presente",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "97e8ebee-43df-43c9-8d00-3dae69608b06",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar evento",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "1f7eb177-de4b-4d34-b37c-7e89545a5224",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "bombar etapa",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "379efbcd-6477-4b69-8671-0371fe3818b9",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "checkin",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "bdcfeadf-20dc-4195-bf88-78ebb4bcf08d",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "nao pode checkin se registration cancelada",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "f6f1fcbb-8861-484b-81dd-0ee7596eca86",
+          "listId": "e26dfe7f-96e2-4390-bb9d-aa621bbc6a29",
+          "title": "Notificacoes Whatsapp",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
+    },
+    {
       "id": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
       "title": "To do",
       "cards": [
         {
-          "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
+          "id": "de183c88-3f9b-42e7-9e1b-623ec8a1708e",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Mudar url do primeiro step (novo grupo de eventos)",
+          "title": "Resultados baseados nas regras do evento",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
+          "id": "3ba348fb-e70f-4978-9896-ad046c2dcc5d",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Mudar cor do botão dos steps (novo grupo de eventos)",
+          "title": "fuso horario de data de evento",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "a7b1c667-fd60-4030-ab34-63768aa1e9d6",
+          "id": "452cc110-0143-4347-a557-d502f043683a",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Não é possivel escolher 0 para ausencias (novo grupo de eventos)",
+          "title": "email com astericos na recuperacao login",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
+          "id": "9d378237-c71b-491b-8917-f26830459fd1",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "adicionar toast de sucesso (novo grupo de eventos)",
+          "title": "scrollar ate o topo na inscricao de equipe",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
+          "id": "0852bbbf-15df-40d5-b1c8-6226d529cf39",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Corrigir asteriscos (nando)",
+          "title": "arrumar ver site",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "c159bd12-84b7-4037-b968-cf72573bce95",
+          "id": "b0646190-2edb-41bd-b72c-6743d4b14a55",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Adicionar descricao de subevento nos forms",
+          "title": "arrumar pasta do projeto na vercel",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "6309292f-b5c7-4c37-97d6-8f9c53d22b37",
+          "id": "e316146b-838c-4125-a33c-0d4970535ce7",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "erro no file input",
+          "title": "icones de share",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -71,13 +131,132 @@
     },
     {
       "id": "b3345057-2ade-4c51-b359-446bcfd7648b",
-      "title": "Testing",
-      "cards": []
+      "title": "On going",
+      "cards": [
+        {
+          "id": "b6d4ac8f-69c5-44f3-9e4d-67b190d5f18e",
+          "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
+          "title": "Atestados",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     },
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
-      "cards": []
+      "cards": [
+        {
+          "id": "6fc82046-53b1-4dba-a148-1572d901a320",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "recuperacao de senha",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6309292f-b5c7-4c37-97d6-8f9c53d22b37",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "erro no file input",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "6bc9072d-dbab-41ce-a951-112d5000e2d8",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Emails",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "45ea5ef2-0631-429c-97b9-3207ccc82d4c",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Feature para senha de lotes",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "5617b131-a848-4eb2-8608-b8adff36d3fc",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Corrigir asteriscos (nando)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "fb06d454-725e-4f16-b2c9-29ada09f281f",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Feature para limitar inscricoes de equipe",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "c159bd12-84b7-4037-b968-cf72573bce95",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Adicionar descricao de subevento nos forms",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "af26a6fc-5b3b-4a78-8ce9-67e2d43d21f6",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Mudar cor do botão dos steps (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "81f53026-7f01-44bd-b3da-2c75ef6c03ca",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "adicionar toast de sucesso (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "8e1ed45b-08a5-4ded-9985-90db69046f3e",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "arrastar arquivos para file input",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "a7b1c667-fd60-4030-ab34-63768aa1e9d6",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Não é possivel escolher 0 para ausencias (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Mudar url do primeiro step (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     }
   ],
   "archive": {
