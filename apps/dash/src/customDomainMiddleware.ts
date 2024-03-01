@@ -30,6 +30,8 @@ export async function customDomainMiddleware({
     additionalArguments: { roles: ["user"] },
   });
 
+  //Comment
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("userId", isAuthenticated);
   requestHeaders.set("x-url", request.url);
