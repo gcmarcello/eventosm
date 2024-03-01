@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { CustomDomainMiddleware } from "./middleware/functions/customDomain.middleware";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
-import { startsWith } from "./middleware/utils/startsWith";
 import authRedirect from "./middleware/utils/authRedirect";
 import rewrite from "./middleware/utils/rewrite";
 
