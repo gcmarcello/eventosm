@@ -24,8 +24,6 @@ export class EmailProcessor {
         })
         .then((res) => console.log(res));
 
-      console.log(email);
-
       return email;
     } catch (err) {
       console.log(err);
