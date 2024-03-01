@@ -79,6 +79,7 @@ export function ParticipantsForm({
         email: row["E-mail"],
         phone: formatPhone(normalize(row.Celular)),
         document: formatCPF(normalize(row.CPF)),
+        address: row.Endereço,
         birthDate: row["Data de Nascimento (DD/MM/AAAA)"],
         zipCode: formatCEP(row.CEP),
         number: row["Número"],
@@ -323,6 +324,7 @@ export function ParticipantsForm({
                         <span
                           onClick={() => {
                             form.resetField("files");
+                            form.resetField("teamMembers");
                           }}
                           className="cursor-pointer font-semibold "
                         >

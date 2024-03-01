@@ -8,6 +8,8 @@ export class QrCodeService {
   constructor(@InjectQueue("qrCode") private qrCodeQueue: Queue) {}
 
   async queueQrCodes(generateQrCodeDto: string[]) {
+    await this.qrCodeQueue.resume();
+
     return await this.qrCodeQueue.addBulk(
       generateQrCodeDto.map((data) => ({
         data,

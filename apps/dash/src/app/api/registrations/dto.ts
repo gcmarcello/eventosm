@@ -70,11 +70,12 @@ export const excelDataSchema = z.array(
     CEP: z.string(),
     CPF: z.string(),
     Celular: z.string(),
+    Endereço: z.string().optional(),
+    Número: z.string().optional(),
     "Complemento (Opcional)": z.string().optional(),
     "Data de Nascimento (DD/MM/AAAA)": z.string(),
     "E-mail": z.string(),
     "Nome Completo": z.string(),
-    Número: z.string().optional(),
     Sexo: z.string(),
   })
 );

@@ -317,7 +317,7 @@ export default function TeamTournamentRegistration({
                       )}
                     </For>
                   </div>
-                  <div className="hidden flex-row-reverse justify-between lg:flex">
+                  {/* <div className="hidden flex-row-reverse justify-between lg:flex">
                     {hasNextStep && (
                       <>
                         <Button
@@ -360,8 +360,13 @@ export default function TeamTournamentRegistration({
                         Voltar
                       </Button>
                     )}
-                  </div>
-                  <BottomNavigation className="block p-2 lg:hidden">
+                  </div> */}
+                  <BottomNavigation
+                    className={clsx(
+                      "block p-2",
+                      inputMode ? "lg:block" : "lg:hidden"
+                    )}
+                  >
                     <div className="flex flex-row-reverse justify-between">
                       {hasNextStep && (
                         <>

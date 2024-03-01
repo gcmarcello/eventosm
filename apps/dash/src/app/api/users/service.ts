@@ -93,6 +93,7 @@ export async function createMultipleUsers(users: TeamSignUpDto[]) {
       id: infoId,
       birthDate: dayjs(userRecord.birthDate, "DD/MM/YYYY").toISOString(),
       zipCode: normalizeZipCode(userRecord.zipCode),
+      address: userRecord.address,
       gender: userRecord.gender,
       number: userRecord.number,
       complement: userRecord.complement,

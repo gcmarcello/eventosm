@@ -127,7 +127,7 @@ export function EventGroupRegistrationModal({
             triggerCancellation={cancelTrigger}
             registration={registration}
           />
-          <aside className="mb-3 flex overflow-x-scroll pt-2  lg:block lg:flex-none lg:border-0 lg:py-4">
+          <aside className="mb-3 flex overflow-x-scroll pt-2 lg:block  lg:flex-none lg:overflow-x-hidden lg:border-0 lg:py-4">
             <nav className="flex-none px-4 sm:px-6 lg:px-0">
               <ul
                 role="list"

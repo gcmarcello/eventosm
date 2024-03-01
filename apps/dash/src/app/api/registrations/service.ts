@@ -97,7 +97,7 @@ export async function createRegistration(
       ...registration,
       userId: userSession.id,
       id: registrationId,
-      qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${id}.png`,
+      qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${registrationId}.png`,
       code,
       status,
       orderId,
@@ -123,6 +123,49 @@ export async function createRegistration(
     where: { id: event?.organizationId || eventGroup?.organizationId },
     include: { OrgCustomDomain: true },
   });
+
+  await generateQrCodes([registrationId]);
+
+  const emailArray: Email<"registration_email">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: userSession.email,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        category: (event
+          ? event.EventModality.find((m) => m.id === request.categoryId)?.name
+          : eventGroup?.EventModality.flatMap((m) => m.modalityCategory).find(
+              (category) => category.id === request.categoryId
+            )?.name)!,
+        modality: (event
+          ? event.EventModality.find((m) => m.id === request.modalityId)?.name
+          : eventGroup?.EventModality.find((m) => m.id === request.modalityId)
+              ?.name)!,
+        dateEnd: dayjs(event?.dateEnd).format("DD/MM/YYYY"),
+        dateStart: event
+          ? dayjs(event.dateStart).format("DD/MM/YYYY")
+          : dayjs(eventGroup!.Event[0]!.dateStart).format("DD/MM/YYYY"),
+        eventName: event ? event.name : eventGroup!.name,
+        location: event?.location,
+        name: userSession.fullName || "Amigo",
+        orgName: organization!.name,
+        qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${registrationId}.png`,
+        siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: event
+          ? `/eventos/${event.id}`
+          : `/eventos/campeonatos/${eventGroup?.id}`,
+      },
+    },
+  ];
+
+  await sendEmail(emailArray);
 
   return { registration: createRegistration, event, eventGroup, organization };
 }
