@@ -67,7 +67,7 @@ export async function upsertEventGroup(request: UpsertEventGroupDto) {
 
   if (!request.id) {
     return ActionResponse.success({
-      redirect: `/painel/eventos/grupos/${newEvent.eventGroupType === "championship" ? "campeonatos" : "series"}/${newEvent.id}`,
+      redirect: `/painel/eventos/grupos/${newEvent.id}`,
       message: "Evento criado com sucesso.",
     });
   } else {
