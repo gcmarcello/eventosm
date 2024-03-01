@@ -4,6 +4,8 @@ RUN npm install -g pnpm
 
 RUN npm install -g @nestjs/cli
 
+RUN npm install -g vercel
+
 RUN curl -L https://fly.io/install.sh | sh
 
 RUN echo 'export FLYCTL_INSTALL="/home/node/.fly"' >> /home/node/.bashrc && \

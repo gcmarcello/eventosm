@@ -19,7 +19,7 @@ export async function AuthMiddleware({
 
     const roles: string[] = additionalArguments.roles;
 
-    const url = getClientEnv("NEXT_PUBLIC_SITE_URL");
+    const url = process.env.NEXT_PUBLIC_SITE_URL;
 
     if (!url) return false;
     if (!payload.id) return false;
