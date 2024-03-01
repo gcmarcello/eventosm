@@ -2,7 +2,7 @@ import { getClientEnv } from "@/app/(frontend)/env";
 
 export async function CustomDomainMiddleware({ host }: { host: string }) {
   try {
-    const url = getClientEnv("NEXT_PUBLIC_SITE_URL");
+    const url = process.env.NEXT_PUBLIC_SITE_URL;
 
     if (!url) return false;
 

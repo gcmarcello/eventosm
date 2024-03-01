@@ -53,7 +53,7 @@ export async function signup(request: SignupDto) {
 
   const url =
     organization?.OrgCustomDomain[0]?.domain ||
-    getClientEnv("NEXT_PUBLIC_SITE_URL");
+    process.env.NEXT_PUBLIC_SITE_URL;
 
   await sendEmail([
     {

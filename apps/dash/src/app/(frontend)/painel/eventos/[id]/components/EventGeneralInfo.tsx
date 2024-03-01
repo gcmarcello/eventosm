@@ -99,7 +99,7 @@ export default function EventGeneralInfo({
             Letras minúsculas, números e hífens.
           </Description>
           <Text className="text-wrap italic">
-            {getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1]}/org/
+            {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
             {"exemplo"}
           </Text>
         </Field>

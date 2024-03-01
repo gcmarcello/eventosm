@@ -17,6 +17,8 @@ export async function middleware(request: NextRequest) {
     }
   };
 
+  const xd = "xd";
+
   const token = request.cookies.get("token")?.value;
   const host = request.headers.get("host");
   if (!host) throw "Host não encontrado.";

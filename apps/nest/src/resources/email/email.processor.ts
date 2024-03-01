@@ -1,11 +1,5 @@
-import {
-  Processor,
-  Process,
-  OnQueueActive,
-  OnQueueDrained,
-  InjectQueue,
-} from "@nestjs/bull";
-import { Job, Queue } from "bull";
+import { Processor, Process, OnQueueActive } from "@nestjs/bull";
+import { Job } from "bull";
 import { SendgridMailService } from "./sg";
 
 import { MailDataRequired } from "@sendgrid/mail";
@@ -15,25 +9,27 @@ import { SettingsService } from "../settings/settings.service";
 export class EmailProcessor {
   constructor(
     private sgMail: SendgridMailService,
-    @InjectQueue("email") private emailQueue: Queue,
     private readonly settingsService: SettingsService
   ) {}
 
   @Process()
   async sendEmail(job: Job<MailDataRequired>) {
-    return await this.sgMail
-      .send({
-        ...job.data,
-        mailSettings: {
-          sandboxMode: { enable: this.settingsService.isDevelopment },
-        },
-      })
-      .catch((error) => console.log(error));
-  }
+    try {
+      const email = await this.sgMail
+        .send({
+          ...job.data,
+          mailSettings: {
+            sandboxMode: { enable: this.settingsService.isDevelopment },
+          },
+        })
+        .then((res) => console.log(res));
 
-  @OnQueueDrained()
-  async onDrained() {
-    await this.emailQueue.pause();
+      console.log(email);
+
+      return email;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @OnQueueActive()

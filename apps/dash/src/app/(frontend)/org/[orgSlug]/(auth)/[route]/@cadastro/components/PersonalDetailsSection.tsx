@@ -159,7 +159,7 @@ export default function PersonalDetailSections({
             </>
           )}
 
-          {addressMode === "show" && (
+          {addressMode === "show" && viaCEPInfo.city && (
             <dl className="mb-1 divide-y divide-gray-100">
               <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                 <dt className=" font-medium leading-6 text-gray-900">
