@@ -37,6 +37,7 @@ export default function GeneralDetailsSection() {
             >
               <Label>Celular</Label>
               <Input
+                inputMode="tel"
                 placeholder="(99) 99999-9999"
                 mask={(fieldValue: string) => {
                   if (fieldValue.length > 14) {
@@ -62,6 +63,7 @@ export default function GeneralDetailsSection() {
               <Field name="document" className="my-2 space-y-3">
                 <Label>Documento {"(CPF)"}</Label>
                 <Input
+                  inputMode="tel"
                   mask={() => {
                     return "999.999.999-99";
                   }}
