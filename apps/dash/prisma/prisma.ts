@@ -10,9 +10,6 @@ declare global {
   var prisma: ReturnType<typeof prismaClientSingleton>;
   namespace PrismaJson {
     type OrganizationOptions = {
-      logos?: {
-        lg?: string;
-      };
       images?: {
         bg?: string;
         hero?: string;

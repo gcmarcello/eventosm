@@ -36,7 +36,7 @@ export const userSeed = async () => {
           address: "Rua do Catete",
           number: "123",
           zipCode: "22220000",
-          birthDate: dayjs("1980-01-01").toDate(),
+          birthDate: dayjs("1980-01-01").toISOString(),
           cityId: "3304557",
           stateId: "33",
           gender: "male",

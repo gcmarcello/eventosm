@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
 import authRedirect from "./middleware/utils/authRedirect";
 import { customDomainMiddleware } from "./customDomainMiddleware";
-import { startsWith } from "./middleware/utils/startsWith";
 import { getServerEnv } from "./app/api/env";
 
 export async function middleware(request: NextRequest) {
+  const startsWith = (arg: (string | RegExp)[]) => {
+    const testArray = [];
+    for (const a of arg) {
+      if (typeof a === "string") {
+        testArray.push(request.nextUrl.pathname.startsWith(a));
+      } else {
+        testArray.push(a.test(request.nextUrl.pathname));
+      }
+      return testArray.some((a) => a);
+    }
+  };
+
   const token = request.cookies.get("token")?.value;
   const host = request.headers.get("host");
   if (!host) throw "Host não encontrado.";
@@ -14,33 +25,34 @@ export async function middleware(request: NextRequest) {
     return await customDomainMiddleware({ request, host, token });
   }
 
-  const userId = await AuthMiddleware({
-    request: { token },
-    additionalArguments: { roles: ["user"] },
-  });
+  const userId = async (roles: string[] = ["user"]) =>
+    await AuthMiddleware({
+      request: { token },
+      additionalArguments: { roles },
+    });
 
-  if (startsWith({ arg: ["/login", "/registrar"], request })) {
+  if (startsWith(["/login", "/registrar"])) {
     const redirect = request.nextUrl.searchParams.get("redirect") || "/";
 
-    userId &&
+    (await userId()) &&
       authRedirect({
         url: new URL(redirect, request.nextUrl).href,
         request,
       });
   }
 
-  if (startsWith({ arg: ["/admin"], request })) {
-    !userId && authRedirect({ url: "/login?redirect=/painel", request });
+  if (startsWith(["/admin"])) {
+    !(await userId(["admin"])) &&
+      authRedirect({ url: "/login?redirect=/painel", request });
   }
 
-  if (startsWith({ arg: ["/painel"], request })) {
-    !userId && authRedirect({ url: "/login?redirect=/painel", request });
+  if (startsWith(["/painel"])) {
+    !(await userId(["admin"])) &&
+      authRedirect({ url: "/login?redirect=/painel", request });
   }
 
-  if (
-    startsWith({ arg: ["/inscricoes", /^\/org\/[^\/]+\/inscricoes/], request })
-  ) {
-    !userId &&
+  if (startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/])) {
+    !(await userId()) &&
       authRedirect({
         url: `/login?&redirect=${request.nextUrl.pathname}`,
         request,
@@ -50,7 +62,7 @@ export async function middleware(request: NextRequest) {
   if (!userId) return NextResponse.next();
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("userId", userId);
+  requestHeaders.set("userId", await userId());
   requestHeaders.set("x-url", request.url);
 
   return NextResponse.next({

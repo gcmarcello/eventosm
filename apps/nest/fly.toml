@@ -1,4 +1,4 @@
-app = "eventosm-queue"
+app = "eventosm-nest"
 primary_region = "gig"
 
 kill_signal = "SIGINT"
@@ -7,7 +7,7 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 8080
+  internal_port = 5000
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

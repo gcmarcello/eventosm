@@ -1,37 +1,46 @@
-# syntax = docker/dockerfile:1
 
-ARG NODE_VERSION=20.8.0
-FROM node:${NODE_VERSION}-slim as base
+FROM node:18-alpine AS base
 
-    LABEL fly_launch_runtime="NestJS/Prisma"
-
+FROM base AS builder
     WORKDIR /app
+    
+    ENV APP_NAME=nest
+    
+    RUN apk add --no-cache libc6-compat
+    RUN apk update
 
-    ENV NODE_ENV="production"
+    RUN npm install -g turbo
 
-    RUN apt-get update -y && apt install -y openssl
+    COPY . .
 
-    ARG PNPM_VERSION=8.8.0
-    RUN npm install -g pnpm@$PNPM_VERSION
+    RUN turbo prune --scope=nest --docker
 
-    FROM base as build
 
-    COPY --link package.json pnpm-lock.yaml ./
-    RUN pnpm install --frozen-lockfile --prod=false
+FROM base as installer
+    WORKDIR /app
+    ENV APP_NAME=nest
+    
+    RUN npm install -g pnpm
+    RUN npm install -g turbo
 
-    COPY --link prisma .
-    RUN npx prisma generate
+    # First install dependencies (as they change less often)
+    COPY .gitignore .gitignore
+    COPY --from=builder /app/out/json/ .
+    COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+    COPY --from=builder /app/out/full/ .
+    RUN pnpm install
+    
+    # Build the project and its dependencies
+    COPY turbo.json turbo.json
 
-    COPY --link . .
+    RUN turbo run build --filter=nest...
+    
+FROM base AS runner
+    WORKDIR /app
+    ENV APP_NAME=nest
+    
+    RUN npm install -g pnpm
 
-    RUN pnpm run build
+    COPY --from=installer /app .
 
-FROM base
-
-    RUN apt-get update -y && apt install -y openssl gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1   libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6    libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates  fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
-
-    COPY --from=build /app /app
-
-    EXPOSE 8080
-
-    CMD ["sh", "-c", "npx prisma migrate deploy && pnpm pm2 start dist/main.js --max-memory-restart 200M --node-args='--max-old-space-size=256'     --attach"]
+    CMD pnpm --filter nest start --max-old-space-size=256

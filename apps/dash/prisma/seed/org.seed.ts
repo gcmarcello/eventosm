@@ -10,9 +10,9 @@ export const orgSeed = async (userId: string) => {
   const { primaryColor, secondaryColor, tertiaryColor } =
     await generateColorJson({
       colors: {
-        primaryColor: "green_600",
-        secondaryColor: "yellow_300",
-        tertiaryColor: "blue_600",
+        primaryColor: "lime_600",
+        secondaryColor: "zinc_700",
+        tertiaryColor: "white",
       },
     });
 
@@ -23,12 +23,14 @@ export const orgSeed = async (userId: string) => {
     data: {
       id: orgUUID,
       ownerId: userId,
-      name: "Confederacao Brasileira de MTB",
-      slug: "cbmtb",
-      abbreviation: "CBMTB",
+      name: "Circuito Cubatense de Corrida de Rua",
+      slug: "cubatense",
+      abbreviation: "Cubatense",
       options: {
-        logos: {
-          lg: "https://cbmtb.s3.sa-east-1.amazonaws.com/assets/logonotxt.png",
+        images: {
+          logo: "https://i.imgur.com/fMAlJVi.png",
+          hero: "https://i.imgur.com/fMAlJVi.png",
+          bg: "https://i.imgur.com/fMAlJVi.png",
         },
         colors: {
           primaryColor,
@@ -51,15 +53,14 @@ export const orgSeed = async (userId: string) => {
   const batchId = "8f95a855-5c36-47fd-b09e-6e208243fd3d";
   const categoryId = "8f95a855-5c36-47fd-b09e-6e208243fd3d";
 
-  const eventGroup = await prisma.eventGroup.upsert({
-    where: { id: eventGroupUUID },
-    create: {
+  const eventGroup = await prisma.eventGroup.create({
+    data: {
       id: eventGroupUUID,
       organizationId: org.id,
-      name: "Copa Brasil de MTB",
-      slug: "copabrasil",
+      name: "Circuito Cubatense de Rua 2024",
+      slug: "cubatense",
       registrationType: "mixed",
-      location: "Rio de Janeiro",
+      location: "Cubatão",
       eventGroupType: "championship",
       EventGroupRules: {
         create: {
@@ -71,13 +72,25 @@ export const orgSeed = async (userId: string) => {
           unjustifiedAbsences: 0,
         },
       },
+      Event: {
+        create: {
+          name: "Circuito Cubatense de Rua 2024",
+          dateStart: dayjs("2024-03-17").toISOString(),
+          dateEnd: dayjs("2024-03-17").toISOString(),
+          status: "published",
+          location: "Cubatão",
+          details: "Circuito Cubatense de Rua 2024",
+          slug: "aaaaaaaaaa",
+          organizationId: org.id,
+        },
+      },
       EventModality: {
         create: {
-          name: "MTB",
+          name: "7km",
           modalityCategory: {
             create: {
               id: categoryId,
-              name: "Mountain Bike",
+              name: "Master",
               maxAge: 60,
               minAge: 16,
               gender: "unisex",
@@ -90,52 +103,18 @@ export const orgSeed = async (userId: string) => {
           registrationType: "mixed",
           id: batchId,
           name: "Lote 1",
-          dateStart: dayjs("2022-01-01").toDate(),
-          dateEnd: dayjs("2022-12-31").toDate(),
+          dateStart: dayjs("2024-03-01").toISOString(),
+          dateEnd: dayjs("2024-03-15").toISOString(),
           maxRegistrations: 100,
           price: 0,
         },
       },
-    },
-    update: {
-      id: eventGroupUUID,
-      organizationId: org.id,
-      name: "Copa Brasil de MTB",
-      slug: "copabrasil",
-      registrationType: "mixed",
-      location: "Rio de Janeiro",
-      eventGroupType: "championship",
-      EventGroupRules: {
+      EventAddon: {
         create: {
-          mode: "league",
-          resultType: "time",
-          discard: 3,
-          scoreCalculation: "average",
-          justifiedAbsences: 3,
-          unjustifiedAbsences: 0,
-        },
-      },
-      EventModality: {
-        create: {
-          name: "MTB",
-          modalityCategory: {
-            create: {
-              name: "Mountain Bike",
-              maxAge: 60,
-              minAge: 16,
-              gender: "unisex",
-            },
-          },
-        },
-      },
-      EventRegistrationBatch: {
-        create: {
-          registrationType: "mixed",
-          name: "Lote 1",
-          dateStart: dayjs("2022-01-01").toDate(),
-          dateEnd: dayjs("2022-12-31").toDate(),
-          maxRegistrations: 100,
-          price: 100,
+          name: "Camiseta",
+          price: 0,
+          status: "active",
+          options: ["P", "M", "G", "GG"],
         },
       },
     },
@@ -143,7 +122,8 @@ export const orgSeed = async (userId: string) => {
 
   const registration = await prisma.eventRegistration.create({
     data: {
-      qrCode: "123456",
+      qrCode:
+        "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg",
       code: "1",
       status: "active",
       batchId,

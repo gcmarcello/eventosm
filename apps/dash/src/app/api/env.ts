@@ -12,7 +12,6 @@ const env = z.object({
   AWS_BUCKET_NAME: z.string(),
   JWT_KEY: z.string(),
   SENDGRID_EMAIL: z.string(),
-  SENDGRID_API_KEY: z.string(),
 });
 
 export const getServerEnv = (key: keyof typeof env.shape) => {
