@@ -41,8 +41,7 @@ export default function EventInfo({ Field }: { Field: any }) {
           <Label>Link do perfil</Label>
           <Input
             placeholder={
-              getClientEnv("NEXT_PUBLIC_SITE_URL")?.split("//")[1] +
-              "/org/exemplo"
+              process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1] + "/org/exemplo"
             }
           />
 
