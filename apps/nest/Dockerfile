@@ -1,4 +1,6 @@
 
+# flyctl deploy --dockerfile ./apps/nest/Dockerfile --config ./apps/nest/fly.toml --ignorefile .dockerignore
+
 FROM node:18-alpine AS base
 
 FROM base AS builder
