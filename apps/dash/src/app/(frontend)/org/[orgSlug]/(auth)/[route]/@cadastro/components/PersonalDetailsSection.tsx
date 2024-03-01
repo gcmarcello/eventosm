@@ -71,7 +71,11 @@ export default function PersonalDetailSections({
           <div className="col-span-3">
             <Field name="info.birthDate" className="my-2 ">
               <Label>Data de Nascimento</Label>
-              <Input mask={"99/99/9999"} placeholder="DD/MM/AAAA" />
+              <Input
+                inputMode="numeric"
+                mask={"99/99/9999"}
+                placeholder="DD/MM/AAAA"
+              />
               <ErrorMessage />
             </Field>
           </div>
@@ -100,6 +104,7 @@ export default function PersonalDetailSections({
               >
                 <Label>CEP</Label>
                 <Input
+                  inputMode="numeric"
                   mask={"99999-999"}
                   loading={loadingCep}
                   onChange={(e) => {
