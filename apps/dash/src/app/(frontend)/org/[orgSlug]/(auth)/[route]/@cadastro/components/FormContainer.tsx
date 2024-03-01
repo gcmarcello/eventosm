@@ -187,7 +187,11 @@ export default function FormContainer({
                   </Button>
                 )}
                 {!hasNextStep && (
-                  <SubmitButton color="indigo">Cadastrar</SubmitButton>
+                  <SubmitButton
+                    color={organization.options.colors.primaryColor.tw.color}
+                  >
+                    Cadastrar
+                  </SubmitButton>
                 )}
                 {hasPrevStep && (
                   <Button
@@ -204,8 +208,10 @@ export default function FormContainer({
               <BottomNavigation className="block p-2 lg:hidden">
                 <div className="flex flex-row-reverse justify-between">
                   {!hasNextStep && (
-                    <SubmitButton                     color={organization.options.colors.primaryColor.tw.color}
-                    disabled={!isCurrentStepValid}>
+                    <SubmitButton
+                      color={organization.options.colors.primaryColor.tw.color}
+                      disabled={!isCurrentStepValid}
+                    >
                       Inscrever
                     </SubmitButton>
                   )}

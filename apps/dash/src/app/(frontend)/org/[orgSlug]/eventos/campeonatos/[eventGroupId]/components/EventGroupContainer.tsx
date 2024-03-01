@@ -39,6 +39,7 @@ import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 export default function EventGroupContainer({
   eventGroup,
@@ -203,10 +204,22 @@ export default function EventGroupContainer({
                 </div>
                 <div className="me-4 hidden flex-col gap-2 lg:flex">
                   <div className=" text-sm font-medium">Compartilhe!</div>
-                  <div className="flex gap-3">
-                    <FacebookIcon size={32} />
-                    <WhatsappIcon size={32} />
-                    <XIcon size={32} />
+                  <div className="flex justify-center gap-3">
+                    {/* <Link
+                      href={`https://www.facebook.com/sharer/sharer.php?u=%${encodeURIComponent("https://corridaderuacubatao.com.br/")}`}
+                    >
+                      <FacebookIcon size={32} />
+                    </Link> */}
+                    <Link
+                      href={`https://wa.me/?text=${encodeURI("https://corridaderuacubatao.com.br/")}`}
+                    >
+                      <WhatsappIcon size={32} />
+                    </Link>
+                    {/* <Link
+                      href={`https://twitter.com/intent/tweet?&url=${encodeURI("https://corridaderuacubatao.com.br/")}`}
+                    >
+                      <XIcon size={32} />
+                    </Link> */}
                   </div>
                 </div>
               </div>
