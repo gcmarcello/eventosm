@@ -3,7 +3,8 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "forwardPorts": [5432, 5430, 4040, 3000],
+  "forwardPorts": [1212, 5430, 4040, 3000, 6379],
+  "initializeCommand": "ls",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -19,7 +20,8 @@
         "rangav.vscode-thunder-client",
         "eamodio.gitlens",
         "yoavbls.pretty-ts-errors",
-        "ms-vsliveshare.vsliveshare"
+        "ms-vsliveshare.vsliveshare",
+        "harehare.portable-kanban",
       ],
       "settings": {
         "git.repositoryScanMaxDepth": 5,
@@ -28,20 +30,23 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
         "[typescriptreact]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+        },
+        "[prisma]": {
+          "editor.defaultFormatter": "Prisma.prisma-insider",
         },
         "editor.codeActionsOnSave": {
-          "source.fixAll.eslint": true
+          "source.fixAll.eslint": true,
         },
         "material-icon-theme.files.associations": {
-          ".kanban": "Mjml"
+          ".kanban": "Mjml",
         },
         "material-icon-theme.folders.associations": {
-          "_shared": "shared"
+          "_shared": "shared",
         },
-        "material-icon-theme.activeIconPack": "none",
         "editor.formatOnSave": true,
         "editor.formatOnPaste": false,
+        "material-icon-theme.activeIconPack": "nest",
         "prettier.useEditorConfig": false,
         "prettier.configPath": "./.prettierrc.js",
         "prettier.prettierPath": "./node_modules/prettier",
@@ -49,8 +54,8 @@
         "eslint.workingDirectories": ["./"],
         "explorer.compactFolders": false,
         "typescript.preferences.importModuleSpecifier": "shortest",
-        "workbench.tree.indent": 20
-      }
-    }
-  }
+        "workbench.tree.indent": 20,
+      },
+    },
+  },
 }
