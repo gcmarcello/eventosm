@@ -4,8 +4,6 @@ export async function CustomDomainMiddleware({ host }: { host: string }) {
   try {
     const url = process.env.NEXT_PUBLIC_SITE_URL;
 
-    console.log(url);
-
     if (!url) return false;
 
     const org = await fetch(`${url}/api/domains?host=${host}`)

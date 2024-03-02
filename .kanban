@@ -99,33 +99,6 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
-        },
-        {
-          "id": "0852bbbf-15df-40d5-b1c8-6226d529cf39",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "arrumar ver site",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "b0646190-2edb-41bd-b72c-6743d4b14a55",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "arrumar pasta do projeto na vercel",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "e316146b-838c-4125-a33c-0d4970535ce7",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "icones de share",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
         }
       ]
     },
@@ -167,9 +140,36 @@
           "comments": []
         },
         {
+          "id": "b0646190-2edb-41bd-b72c-6743d4b14a55",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "arrumar pasta do projeto na vercel",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
           "id": "6bc9072d-dbab-41ce-a951-112d5000e2d8",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Emails",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "e316146b-838c-4125-a33c-0d4970535ce7",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "icones de share",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "0852bbbf-15df-40d5-b1c8-6226d529cf39",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "arrumar ver site",
           "description": "",
           "labels": [],
           "checkboxes": [],

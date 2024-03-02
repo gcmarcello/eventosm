@@ -127,6 +127,7 @@ export default function LoginForm({
             </Button>
             <Button
               color={organization.options.colors.primaryColor.tw.color}
+              loading={isLoading}
               onClick={() =>
                 loginTrigger({ ...form.getValues(), acceptTerms: true })
               }
