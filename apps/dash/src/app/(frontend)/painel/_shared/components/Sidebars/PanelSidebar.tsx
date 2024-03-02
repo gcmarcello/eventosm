@@ -15,6 +15,7 @@ import {
   DocumentIcon,
   NewspaperIcon,
   PhotoIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { chooseTextColor } from "@/utils/colors";
 import { For, Logo } from "odinkit";
@@ -38,6 +39,12 @@ export default function PanelSideBar() {
       href: `/painel/eventos`,
       icon: CalendarDaysIcon,
       current: pathname.includes("/eventos"),
+    },
+    {
+      name: "Usuários",
+      href: `/painel/usuarios`,
+      icon: UserGroupIcon,
+      current: pathname.includes("/usuarios"),
     },
     /* {
       name: "Notícias",
