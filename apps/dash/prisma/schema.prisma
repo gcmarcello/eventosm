@@ -60,6 +60,8 @@ model UserOrgLink {
   userId         String       @db.Uuid
   Organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @db.Uuid
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime?    @updatedAt
 
   @@schema("public")
 }
