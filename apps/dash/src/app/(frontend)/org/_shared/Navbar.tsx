@@ -1,35 +1,18 @@
 "use client";
 import { Fragment, useMemo, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { For } from "odinkit";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogDescription,
-  DialogTitle,
-  ErrorMessage,
-  FieldGroup,
-  Fieldset,
-  Form,
-  Input,
-  Label,
-  showToast,
-  useAction,
-  useForm,
-} from "odinkit/client";
+import { Button, showToast, useAction, useForm } from "odinkit/client";
 import { Logo } from "odinkit";
-import { z } from "odinkit";
-import { chooseTextColor, compareContrasts } from "@/utils/colors";
+import { chooseTextColor } from "@/utils/colors";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { isProd } from "@/app/api/env";
+
 import { login, logout } from "@/app/api/auth/action";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginDto } from "@/app/api/auth/dto";
 import { Organization } from "@prisma/client";
@@ -50,6 +33,7 @@ export function CompanyNavbar({
   user?: UserSession | null;
 }) {
   const pathName = usePathname();
+  const router = useRouter();
 
   const userNavigation = [
     { name: "Meu Perfil", href: "/perfil" },
@@ -263,48 +247,52 @@ export function CompanyNavbar({
 
               {/* Mobile menu */}
               <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 pb-3 pt-2">
-                  <For each={navigation}>
-                    {(item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className={clsx(
-                          "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
+                {({ close }) => (
+                  <>
+                    <div className="space-y-1 pb-3 pt-2">
+                      <For each={navigation}>
+                        {(item) => (
+                          <Disclosure.Button
+                            key={item.name}
+                            as="a"
+                            href={item.href}
+                            className={clsx(
+                              "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
+                            )}
+                            aria-current={item.current ? "page" : undefined}
+                          >
+                            {item.name}
+                          </Disclosure.Button>
                         )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    )}
-                  </For>
-                </div>
-                {user ? (
-                  <div className="border-t border-gray-200 pb-3 pt-4">
-                    <div className="flex items-center border-l-8 px-4">
-                      <div className="flex-shrink-0">
-                        {/* <img
+                      </For>
+                    </div>
+                    {user ? (
+                      <div className="border-t border-gray-200 pb-3 pt-4">
+                        <div className="flex items-center border-l-8 px-4">
+                          <div className="flex-shrink-0">
+                            {/* <img
                         className="h-10 w-10 rounded-full"
                         src={user.imageUrl}
                         alt=""
                       /> */}
-                      </div>
-                      <div className="ml-3">
-                        <div
-                          className={clsx(
-                            "text-base font-medium text-gray-800"
-                          )}
-                        >
-                          {user.fullName.split(" ")[0]}
-                        </div>
-                        <div
-                          className={clsx("text-sm font-medium text-gray-500")}
-                        >
-                          {user.email}
-                        </div>
-                      </div>
-                      {/* <button
+                          </div>
+                          <div className="ml-3">
+                            <div
+                              className={clsx(
+                                "text-base font-medium text-gray-800"
+                              )}
+                            >
+                              {user.fullName.split(" ")[0]}
+                            </div>
+                            <div
+                              className={clsx(
+                                "text-sm font-medium text-gray-500"
+                              )}
+                            >
+                              {user.email}
+                            </div>
+                          </div>
+                          {/* <button
                         type="button"
                         className="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
@@ -312,41 +300,44 @@ export function CompanyNavbar({
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
                       </button> */}
-                    </div>
-                    <div className="mt-3 space-y-1">
-                      {userNavigation.map((item) => (
-                        <Disclosure.Button
-                          key={item.name}
-                          as="a"
-                          href={item.href || undefined}
-                          onClick={item.onClick}
-                          className={clsx(
-                            "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800"
-                          )}
+                        </div>
+                        <div className="mt-3 space-y-1">
+                          {userNavigation.map((item) => (
+                            <Disclosure.Button
+                              key={item.name}
+                              as="a"
+                              href={item.href || undefined}
+                              onClick={item.onClick}
+                              className={clsx(
+                                "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800"
+                              )}
+                            >
+                              {item.name}
+                            </Disclosure.Button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-3 p-3 pt-1">
+                        <Button
+                          className="my-auto"
+                          color={colors?.secondaryColor.tw.color}
+                          href="/login"
+                          onClick={() => close()}
                         >
-                          {item.name}
-                        </Disclosure.Button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-3 p-3 pt-1">
-                    <Button
-                      className="my-auto"
-                      color={colors?.secondaryColor.tw.color}
-                      href="/login"
-                    >
-                      Entrar
-                    </Button>
-                    <Button
-                      className="my-auto"
-                      color={colors?.tertiaryColor.tw.color}
-                      onClick={() => setIsOpen(false)}
-                      href={`/cadastro`}
-                    >
-                      Cadastrar
-                    </Button>
-                  </div>
+                          Entrar
+                        </Button>
+                        <Button
+                          className="my-auto"
+                          color={colors?.tertiaryColor.tw.color}
+                          href="/cadastro"
+                          onClick={() => close()}
+                        >
+                          Cadastrar
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 )}
               </Disclosure.Panel>
             </>
