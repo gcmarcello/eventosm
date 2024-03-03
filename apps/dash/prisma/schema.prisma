@@ -23,7 +23,7 @@ model User {
   fullName              String
   email                 String                 @unique
   document              String                 @unique
-  phone                 String?                @unique
+  phone                 String                 @unique
   password              String?
   role                  String
   info                  UserInfo               @relation(fields: [infoId], references: [id])

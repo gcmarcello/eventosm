@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
-import authRedirect from "./middleware/utils/authRedirect";
 import { customDomainMiddleware } from "./customDomainMiddleware";
 import { getServerEnv } from "./app/api/env";
 
@@ -17,14 +16,19 @@ export async function middleware(request: NextRequest) {
     }
   };
 
-  const xd = "xd";
+  function authRedirect({ url, redirect }: { url: string; redirect?: string }) {
+    return NextResponse.redirect(
+      new URL(redirect ?? url, request.nextUrl).href
+    );
+  }
 
   const token = request.cookies.get("token")?.value;
   const host = request.headers.get("host");
+  const redirect = request.nextUrl.searchParams.get("redirect") || "/";
   if (!host) throw "Host não encontrado.";
 
   if (host !== getServerEnv("HOST")) {
-    return await customDomainMiddleware({ request, host, token });
+    return await customDomainMiddleware({ request, host, token, redirect });
   }
 
   const userId = async (roles: string[] = ["user"]) =>
@@ -33,33 +37,23 @@ export async function middleware(request: NextRequest) {
       additionalArguments: { roles },
     });
 
-  if (startsWith(["/login", "/registrar"])) {
-    const redirect = request.nextUrl.searchParams.get("redirect") || "/";
-
-    (await userId()) &&
-      authRedirect({
-        url: new URL(redirect, request.nextUrl).href,
-        request,
-      });
+  if (startsWith(["/login", "/registrar"]) && (await userId())) {
+    return authRedirect({ url: redirect });
   }
 
-  if (startsWith(["/admin"])) {
-    !(await userId(["admin"])) &&
-      authRedirect({ url: "/login?redirect=/painel", request });
-  }
+  if (startsWith(["/admin"]) && !(await userId(["admin"])))
+    return authRedirect({ url: "/" });
 
-  if (startsWith(["/painel"])) {
-    !(await userId(["admin"])) &&
-      authRedirect({ url: "/login?redirect=/painel", request });
-  }
+  if (startsWith(["/painel"]) && !(await userId(["admin"])))
+    return authRedirect({ url: "/login?redirect=/painel" });
 
-  if (startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/])) {
-    !(await userId()) &&
-      authRedirect({
-        url: `/login?&redirect=${request.nextUrl.pathname}`,
-        request,
-      });
-  }
+  if (
+    startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/]) &&
+    !(await userId())
+  )
+    return authRedirect({
+      url: `/login?&redirect=${request.nextUrl.pathname}`,
+    });
 
   if (!userId) return NextResponse.next();
 

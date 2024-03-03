@@ -10,7 +10,7 @@ export const orgSeed = async (userId: string) => {
   const { primaryColor, secondaryColor, tertiaryColor } =
     await generateColorJson({
       colors: {
-        primaryColor: "lime_600",
+        primaryColor: "lime_500",
         secondaryColor: "zinc_700",
         tertiaryColor: "white",
       },

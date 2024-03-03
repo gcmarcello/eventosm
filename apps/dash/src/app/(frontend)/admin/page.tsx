@@ -1,3 +1,3 @@
-export default function AdminPage() {
-  return "Admin Page";
+export default async function PanelPage() {
+  return "xd";
 }

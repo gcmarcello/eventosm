@@ -4,18 +4,7 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import UsersPanelPageTable from "./components/UsersTable";
 
 export default async function UsersPanelPage() {
-  const { request: parsedRequest } = await UseMiddlewares()
-    .then(UserSessionMiddleware)
-    .then(OrganizationMiddleware);
-
   const users = await prisma.user.findMany({
-    where: {
-      UserOrgLink: {
-        some: {
-          organizationId: parsedRequest.organization.id,
-        },
-      },
-    },
     select: {
       password: false,
       fullName: true,
