@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { CustomDomainMiddleware } from "./middleware/functions/customDomain.middleware";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
 import authRedirect from "./middleware/utils/authRedirect";
@@ -8,10 +8,12 @@ export async function customDomainMiddleware({
   request,
   host,
   token,
+  redirect,
 }: {
   request: NextRequest;
   host: string;
   token: string | undefined;
+  redirect?: string;
 }) {
   const startsWith = (arg: (string | RegExp)[]) => {
     const testArray = [];
@@ -24,6 +26,12 @@ export async function customDomainMiddleware({
       return testArray.some((a) => a);
     }
   };
+
+  function authRedirect({ url }: { url: string }) {
+    return NextResponse.redirect(
+      new URL(redirect ?? url, request.nextUrl).href
+    );
+  }
   const customDomain = await CustomDomainMiddleware({ host });
   const isAuthenticated = await AuthMiddleware({
     request: { token },
@@ -33,22 +41,19 @@ export async function customDomainMiddleware({
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("userId", isAuthenticated);
   requestHeaders.set("x-url", request.url);
-  const redirect = request.nextUrl.searchParams.get("redirect") || "/";
 
-  if (startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/])) {
-    if (!isAuthenticated)
-      return authRedirect({
-        url: `/login?&redirect=${request.nextUrl.pathname}`,
-        request,
-      });
-  }
+  if (
+    startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/]) &&
+    !isAuthenticated
+  )
+    return authRedirect({
+      url: `/login?&redirect=${request.nextUrl.pathname}`,
+    });
 
-  if (startsWith(["/login", "/painel"])) {
-    isAuthenticated &&
-      authRedirect({
-        url: new URL(redirect, request.nextUrl).href,
-        request,
-      });
+  if (startsWith(["/login", "/painel"]) && isAuthenticated) {
+    return authRedirect({
+      url: "/",
+    });
   }
 
   return rewrite({ customDomain, request, headers: requestHeaders });
