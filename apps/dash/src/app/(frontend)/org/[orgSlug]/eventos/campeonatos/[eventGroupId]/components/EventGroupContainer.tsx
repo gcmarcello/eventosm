@@ -178,7 +178,7 @@ export default function EventGroupContainer({
         <div
           ref={contentRef}
           className={clsx(
-            "xxl:mx-96 xs:mx-16 mb-4 rounded-b bg-white shadow-md lg:mx-40 xl:mx-48"
+            "xxl:mx-96  mb-4 rounded-b bg-white shadow-md lg:mx-40 xl:mx-48"
           )}
         >
           <div className="grid grid-cols-4 gap-4 ">
