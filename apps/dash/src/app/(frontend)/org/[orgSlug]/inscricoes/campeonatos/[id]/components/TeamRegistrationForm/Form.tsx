@@ -69,7 +69,7 @@ export default function TeamTournamentRegistration({
       eventGroupId: eventGroup.id,
       teamMembers: [],
       teamId: "",
-      batchId: searchParams.get("batchId") || undefined,
+      batchId: searchParams.get("batch") || undefined,
     },
   });
 

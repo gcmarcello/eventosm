@@ -242,13 +242,18 @@ export default function EventBatches({
                   </DropdownItem>
                   <DropdownSeparator />
                   <DropdownItem
-                    onClick={() =>
-                      showToast({
-                        message: "Em desenvolvimento",
-                        title: "Em desenvolvimento",
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(
+                        process.env.NEXT_PUBLIC_APP_URL +
+                          "/inscricoes/campeonatos/" +
+                          info.row.original.id
+                      );
+                      return showToast({
+                        message: "Link copiado.",
+                        title: "Sucesso!",
                         variant: "success",
-                      })
-                    }
+                      });
+                    }}
                   >
                     Copiar link do lote
                   </DropdownItem>

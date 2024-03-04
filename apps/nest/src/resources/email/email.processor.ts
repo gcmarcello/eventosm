@@ -15,14 +15,12 @@ export class EmailProcessor {
   @Process()
   async sendEmail(job: Job<MailDataRequired>) {
     try {
-      const email = await this.sgMail
-        .send({
-          ...job.data,
-          mailSettings: {
-            sandboxMode: { enable: this.settingsService.isDevelopment },
-          },
-        })
-        .then((res) => console.log(res));
+      const email = await this.sgMail.send({
+        ...job.data,
+        mailSettings: {
+          sandboxMode: { enable: this.settingsService.isDevelopment },
+        },
+      });
 
       return email;
     } catch (err) {

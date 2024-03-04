@@ -185,7 +185,9 @@ export async function verifyConflictingBatches({
 }) {
   const potentialConflictingBatches =
     await prisma.eventRegistrationBatch.findMany({
-      where: eventGroupId ? { eventGroupId } : { eventId },
+      where: eventGroupId
+        ? { eventGroupId, protectedBatch: false }
+        : { eventId, protectedBatch: false },
     });
 
   if (!potentialConflictingBatches.length) return false;
@@ -227,6 +229,7 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
       },
     },
   });
+  console.log(batch?.dateStart, today.toISOString());
   return batch;
 }
 

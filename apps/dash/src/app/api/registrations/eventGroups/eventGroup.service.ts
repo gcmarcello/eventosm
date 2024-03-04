@@ -13,10 +13,10 @@ import {
   EventGroupCreateRegistrationDto,
 } from "../eventGroups/eventGroup.dto";
 import { BatchCoupon } from "@prisma/client";
-import { formatCPF } from "odinkit";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { RegistrationDto } from "../dto";
 import { readRegistrationPrice } from "../service";
+import { formatCPF } from "odinkit";
 
 export async function createEventGroupRegistration(
   request: EventGroupCreateRegistrationDto & { userSession: UserSession }
@@ -291,7 +291,7 @@ async function verifyEventGroupRegistrationAvailability({
 }) {
   let coupon: BatchCoupon | null = null;
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado, 283";
+  if (!batch) throw "Lote de inscrição ativo não encontrado";
   if (batch.registrationType === "team" && registrations.length <= 1)
     throw "Lote não permitido para inscrições individuais.";
   if (batch.registrationType === "individual" && registrations.length > 1)
