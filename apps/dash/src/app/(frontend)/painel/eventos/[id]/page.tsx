@@ -12,9 +12,10 @@ export default async function EditEventPage({
 }) {
   const organizationId = cookies().get("activeOrg")?.value;
 
-  const organization = (
-    await readOrganizations({ where: { id: organizationId } })
-  )[0];
+  const organization = await prisma.organization.findUnique({
+    where: { id: organizationId },
+    include: { OrgCustomDomain: true },
+  });
 
   if (!organization) return redirect("/painel");
 
