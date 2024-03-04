@@ -67,7 +67,7 @@ export default function ProfileContainer({
       info: {
         zipCode: formatCEP(userSession.info?.zipCode || ""),
         address: userSession.info?.address || "",
-        number: userSession.info?.number,
+        number: userSession.info?.number || "",
         gender: userSession.info?.gender,
         cityId: userSession.info?.cityId || "",
         stateId: userSession.info?.stateId || "",

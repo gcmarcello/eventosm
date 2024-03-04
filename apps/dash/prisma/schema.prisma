@@ -77,7 +77,7 @@ model UserInfo {
   city       City?     @relation(fields: [cityId], references: [id])
   cityId     String?
   address    String?
-  number     String
+  number     String?
   complement String?
   support    String?
   createdAt  DateTime  @default(now())

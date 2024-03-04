@@ -8,7 +8,6 @@ import { revalidatePath } from "next/cache";
 
 export async function adminUpdateUser(request: AdminUpdateUserDto) {
   try {
-    console.log("xd");
     const { request: parsedRequest } =
       await UseMiddlewares(request).then(AdminMiddleware);
 

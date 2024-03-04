@@ -59,7 +59,7 @@ export async function upsertEventModalityCategories(
   return { categories: newModalityCategories, eventId: modality.eventId };
 }
 
-export async function verifyCategoryDisponibility({
+export async function verifyCategoryEligibility({
   category,
   userId,
   team,

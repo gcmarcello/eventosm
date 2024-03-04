@@ -13,10 +13,6 @@ import {
   EventWithRegistrationCount,
 } from "prisma/types/Events";
 import { upsertRegistrationBatchDto } from "@/app/api/batches/dto";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import parseCustomFormat from "dayjs/plugin/customParseFormat";
 
 import {
   CheckIcon,
@@ -40,6 +36,10 @@ import {
   DropdownSeparator,
 } from "odinkit/client";
 import { Organization } from "@prisma/client";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import parseCustomFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);

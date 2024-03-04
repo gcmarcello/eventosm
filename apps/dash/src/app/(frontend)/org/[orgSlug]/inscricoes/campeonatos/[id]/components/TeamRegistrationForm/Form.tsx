@@ -1,123 +1,61 @@
 "use client";
-import {
-  CreateMultipleRegistrationsDto,
-  ExcelDataSchema,
-  createMultipleRegistrationsDto,
-  excelDataSchema,
-} from "@/app/api/registrations/dto";
+
 import { Transition } from "@headlessui/react";
-import {
-  ArrowRightIcon,
-  ClipboardDocumentCheckIcon,
-  DocumentArrowUpIcon,
-  PencilSquareIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
-import {
-  EventModality,
-  EventRegistrationBatch,
-  Organization,
-} from "@prisma/client";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
 import clsx from "clsx";
 import Image from "next/image";
-import {
-  Alertbox,
-  BottomNavigation,
-  ButtonSpinner,
-  For,
-  List,
-  SubmitButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableMock,
-  TableRow,
-  Text,
-  formatCEP,
-  formatCPF,
-  formatPhone,
-  normalize,
-  sheetToJson,
-} from "odinkit";
+import { Alertbox, BottomNavigation, For, SubmitButton, Text } from "odinkit";
 import {
   Button,
-  Description,
-  ErrorMessage,
-  FileDropArea,
-  FileInput,
-  Form,
-  ImageList,
-  Input,
-  Label,
-  Legend,
   MultistepForm,
-  Select,
-  Switch,
   showToast,
   useAction,
   useForm,
 } from "odinkit/client";
-import {
-  EventGroupWithEvents,
-  EventGroupWithInfo,
-  EventModalityWithCategories,
-} from "prisma/types/Events";
-import { useEffect, useMemo, useState } from "react";
+import { EventGroupWithInfo } from "prisma/types/Events";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
-import { read, utils } from "xlsx";
-import { z } from "odinkit";
-import { filterCategories } from "../../../../utils/categories";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { createMultipleRegistrations } from "@/app/api/registrations/action";
-import Link from "next/link";
 import { ParticipantsForm } from "./ParticipantsForm";
-import { EventForm } from "./EventForm";
 import { ConfirmationForm } from "./ConfirmationForm";
-import { rest } from "lodash";
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
+import { TeamWithUsers } from "prisma/types/Teams";
+import { AddonsForm } from "./AddonsForm";
+import { eventGroupCreateMultipleRegistrationsDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
+import { createEventGroupMultipleRegistrations } from "@/app/api/registrations/action";
 
 dayjs.extend(customParseFormat);
 
 export default function TeamTournamentRegistration({
   eventGroup,
   batch,
-  userSession,
   organization,
+  teams,
 }: {
   userSession: UserSession;
   eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatch;
   organization: Organization;
+  teams: TeamWithUsers[];
 }) {
   const [inputMode, setInputMode] = useState<"manual" | "file" | null>(null);
   const searchParams = useSearchParams();
   const emptyTeamMember = {
-    user: {
-      fullName: "",
-      email: "",
-      phone: "",
-      document: "",
-      birthDate: "",
-      zipCode: "",
-      gender: "",
+    userId: "",
+    modalityId:
+      eventGroup.EventModality.length > 1
+        ? ""
+        : eventGroup.EventModality[0]!.id,
+    categoryId: "",
+    addon: {
+      id: eventGroup.EventAddon?.find((addon) => !addon.price)?.id || undefined,
+      option: undefined,
     },
-    registration: {
-      modalityId:
-        eventGroup.EventModality.length > 1
-          ? ""
-          : eventGroup.EventModality[0]!.id,
-      categoryId: "",
-      addon: {
-        id:
-          eventGroup.EventAddon?.find((addon) => !addon.price)?.id || undefined,
-        option: undefined,
-      },
-    },
+    selected: true,
   };
 
   const addEmptyTeamMember = () => {
@@ -125,13 +63,12 @@ export default function TeamTournamentRegistration({
   };
 
   const form = useForm({
-    schema: createMultipleRegistrationsDto,
+    schema: eventGroupCreateMultipleRegistrationsDto,
     mode: "onChange",
     defaultValues: {
       eventGroupId: eventGroup.id,
       teamMembers: [],
-      createTeam: true,
-      teamName: "",
+      teamId: "",
       batchId: searchParams.get("batchId") || undefined,
     },
   });
@@ -143,58 +80,9 @@ export default function TeamTournamentRegistration({
 
   const { fields, append } = fieldArray;
 
-  function requiredFieldsForParticipant() {
-    const array = fields.flatMap((_, index) => [
-      `teamMembers.${index}.user.fullName`,
-      `teamMembers.${index}.user.email`,
-      `teamMembers.${index}.user.phone`,
-      `teamMembers.${index}.user.document`,
-      `teamMembers.${index}.user.birthDate`,
-      `teamMembers.${index}.user.zipCode`,
-      `teamMembers.${index}.user.gender`,
-    ]);
-    if (form.watch("createTeam")) return [...array, "teamName"];
-    return array;
-  }
-
-  function requiredFieldsForEvent() {
-    const registrationFields = fields.flatMap((_, index) => [
-      `teamMembers.${index}.registration.modalityId`,
-      `teamMembers.${index}.registration.categoryId`,
-    ]);
-
-    const addonFields = fields.flatMap((_, index) => {
-      const addon = eventGroup.EventAddon?.find(
-        (addon) =>
-          addon.id === form.watch(`teamMembers.${index}.registration.addon.id`)
-      );
-      if ((addon?.options as string[])?.length) {
-        return [
-          `teamMembers.${index}.registration.addon.id`,
-          `teamMembers.${index}.registration.addon.option`,
-        ];
-      } else {
-        return [];
-      }
-    });
-    return [...registrationFields, ...addonFields];
-  }
-
   const { data, trigger, isMutating } = useAction({
-    action: createMultipleRegistrations,
+    action: createEventGroupMultipleRegistrations,
     redirect: true,
-    requestParser: (data) => {
-      const parsedteamMembers = data.teamMembers.map((member) => ({
-        ...member,
-        user: {
-          ...member.user,
-          document: member.user.document?.replace(/[^a-zA-Z0-9]/g, ""),
-          phone: member.user.phone.replace(/[^a-zA-Z0-9]/g, ""),
-        },
-      }));
-      data.files = [];
-      return { ...data, teamMembers: parsedteamMembers };
-    },
     onSuccess: () => {
       showToast({
         message: "Inscrição realizada com sucesso!",
@@ -210,6 +98,32 @@ export default function TeamTournamentRegistration({
       });
     },
   });
+
+  function requiredParticipantFields() {
+    const registrationFields = fields.flatMap((_, index) => {
+      if (form.watch(`teamMembers.${index}.selected`)) {
+        return [
+          `teamMembers.${index}.userId`,
+          `teamMembers.${index}.modalityId`,
+          `teamMembers.${index}.categoryId`,
+        ];
+      }
+    });
+
+    registrationFields.push("teamId");
+
+    return registrationFields;
+  }
+
+  function requiredAddonFields() {
+    const registrationFields = fields.flatMap((_, index) => {
+      if (form.watch(`teamMembers.${index}.addon.id`)) {
+        return [`teamMembers.${index}.addon.option`];
+      }
+    });
+
+    return registrationFields;
+  }
 
   return (
     <>
@@ -254,32 +168,37 @@ export default function TeamTournamentRegistration({
           </div>
           <MultistepForm
             hform={form}
-            order={["participants", "event", "confirmation"]}
+            order={["participants", "addons", "confirmation"]}
             steps={{
               participants: {
-                fields: requiredFieldsForParticipant() as any,
+                fields: requiredParticipantFields() as any,
                 form: (
                   <ParticipantsForm
-                    batch={batch}
+                    teams={teams}
                     eventGroup={eventGroup}
                     organization={organization}
                     fieldArray={fieldArray}
                     inputMode={inputMode}
                     setInputMode={setInputMode}
-                    addEmptyTeamMember={addEmptyTeamMember}
                   />
                 ),
               },
-              event: {
-                fields: requiredFieldsForEvent() as any,
+              addons: {
+                fields: requiredAddonFields() as any,
                 form: (
-                  <EventForm eventGroup={eventGroup} fieldArray={fieldArray} />
+                  <AddonsForm
+                    organization={organization}
+                    eventGroup={eventGroup}
+                    fieldArray={fieldArray}
+                    teams={teams}
+                  />
                 ),
               },
               confirmation: {
                 fields: [],
                 form: (
                   <ConfirmationForm
+                    teams={teams}
                     eventGroup={eventGroup}
                     organization={organization}
                     fieldArray={fieldArray}
@@ -317,8 +236,11 @@ export default function TeamTournamentRegistration({
                       )}
                     </For>
                   </div>
-                  {/* <div className="hidden flex-row-reverse justify-between lg:flex">
-                    {hasNextStep && (
+                  <div className="hidden flex-row-reverse justify-between lg:flex">
+                    {hasNextStep &&
+                    form.watch("teamId") &&
+                    form.watch("teamMembers").filter((tm) => tm.selected)
+                      .length ? (
                       <>
                         <Button
                           type="button"
@@ -329,12 +251,15 @@ export default function TeamTournamentRegistration({
                             walk(1);
                             scrollTo({ top: 0, behavior: "smooth" });
                           }}
-                          disabled={!isCurrentStepValid}
+                          disabled={
+                            !isCurrentStepValid ||
+                            !form.watch("teamMembers").length
+                          }
                         >
                           Próximo
                         </Button>
                       </>
-                    )}
+                    ) : null}
                     {currentStep === 0 && inputMode === "manual" && (
                       <Button onClick={() => addEmptyTeamMember()}>
                         <PlusIcon className="h-6 w-6" /> Participante
@@ -360,7 +285,7 @@ export default function TeamTournamentRegistration({
                         Voltar
                       </Button>
                     )}
-                  </div> */}
+                  </div>
                   <BottomNavigation
                     className={clsx(
                       "block p-2",
@@ -383,16 +308,7 @@ export default function TeamTournamentRegistration({
                           </Button>
                         </>
                       )}
-                      {form.formState.errors.teamMembers ? (
-                        <Alertbox type="error">
-                          Linhas{" "}
-                          {Object.entries(
-                            form.formState.errors.teamMembers || {}
-                          )
-                            .map((value) => `${Number(value[0]) + 1}`)
-                            .join(", ")}
-                        </Alertbox>
-                      ) : null}
+
                       {currentStep === 0 && inputMode === "manual" && (
                         <Button onClick={() => addEmptyTeamMember()}>
                           <PlusIcon className="h-6 w-6" /> Participante
