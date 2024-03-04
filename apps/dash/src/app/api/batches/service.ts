@@ -229,7 +229,6 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
       },
     },
   });
-  console.log(batch?.dateStart, today.toISOString());
   return batch;
 }
 

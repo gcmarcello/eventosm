@@ -89,12 +89,6 @@ export async function createTeam(
       email: user.email,
     }));
 
-    existingUsersIds.push({
-      id: data.userSession.id,
-      document: data.userSession.document,
-      email: data.userSession.email,
-    });
-
     newUsers = data.members.filter(
       (member) =>
         !existingUsersIds
@@ -102,6 +96,12 @@ export async function createTeam(
           .includes(normalize(member.document))
     );
   }
+
+  existingUsersIds.push({
+    id: data.userSession.id,
+    document: data.userSession.document,
+    email: data.userSession.email,
+  });
 
   const team = await prisma.team.create({
     data: {
@@ -199,8 +199,6 @@ export async function createTeam(
       },
     })
   );
-
-  console.log(existingUsersEmailArray.length, newUsersEmailArray.length);
 
   await sendEmail([...existingUsersEmailArray, ...newUsersEmailArray]);
 

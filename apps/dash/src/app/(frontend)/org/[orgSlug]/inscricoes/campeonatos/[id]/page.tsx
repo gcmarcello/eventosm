@@ -53,8 +53,14 @@ export default async function InscricaoPage({
     });
   }
 
-  if (!batch || batch._count?.EventRegistration >= batch.maxRegistrations)
-    redirect(`/eventos/campeonatos/${params.id}`);
+  if (!batch) return notFound();
+
+  if (searchParams.batch) {
+    if (batch?.registrationType === "team" && !searchParams.team)
+      return redirect(
+        `/inscricoes/campeonatos/${params.id}?team=true&batch=${searchParams.batch}`
+      );
+  }
 
   // Redirect if registrationType is "individual" and team parameter exists
   if (batch?.registrationType === "individual" && searchParams.team) {

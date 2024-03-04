@@ -261,7 +261,10 @@ export default function EventBatches({
                         organization.OrgCustomDomain[0]?.domain +
                           "/inscricoes/campeonatos/" +
                           info.row.original.eventGroupId +
-                          `?batch=${info.row.original.id}`
+                          `?batch=${info.row.original.id}` +
+                          (info.row.original.registrationType === "team"
+                            ? "&team=true"
+                            : "")
                       );
                       return showToast({
                         message: "Link copiado.",
