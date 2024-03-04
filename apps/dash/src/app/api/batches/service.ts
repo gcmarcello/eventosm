@@ -116,7 +116,9 @@ export async function readRegistrationBatches(
     include: {
       CategoryBatch: { include: { category: true } },
       _count: {
-        select: { EventRegistration: true },
+        select: {
+          EventRegistration: { where: { status: { not: "cancelled" } } },
+        },
       },
     },
   });
@@ -153,7 +155,7 @@ export async function verifyBatchDisponibility({
   if (potentialCategoryBatch?.maxRegistrations) {
     const findCategoryBatchRegistrations = await prisma.eventRegistration.count(
       {
-        where: { batchId: batch.id, categoryId },
+        where: { batchId: batch.id, categoryId, status: { not: "cancelled" } },
       }
     );
     if (
@@ -219,11 +221,12 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
     include: {
       CategoryBatch: { include: { category: true } },
       _count: {
-        select: { EventRegistration: true },
+        select: {
+          EventRegistration: { where: { status: { not: "cancelled" } } },
+        },
       },
     },
   });
-
   return batch;
 }
 

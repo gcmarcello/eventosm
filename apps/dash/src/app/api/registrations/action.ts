@@ -1,43 +1,37 @@
 "use server";
 
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import {
-  CreateMultipleRegistrationsDto,
-  ReadRegistrationsDto,
-  UpsertRegistrationDto,
-} from "./dto";
+import { CreateMultipleRegistrationsDto, ReadRegistrationsDto } from "./dto";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
+import * as eventGroupService from "./eventGroups/eventGroup.service";
 import * as service from "./service";
 import { revalidatePath } from "next/cache";
+import {
+  EventGroupCreateMultipleRegistrationsDto,
+  EventGroupCreateRegistrationDto,
+} from "./eventGroups/eventGroup.dto";
 
-export async function createIndividualRegistration(
-  request: UpsertRegistrationDto
+export async function createEventGroupIndividualRegistration(
+  request: EventGroupCreateRegistrationDto
 ) {
-  let newRegistration;
   try {
     const { request: parsedRequest } = await UseMiddlewares(request).then(
       UserSessionMiddleware
     );
-    newRegistration = await service.createRegistration(parsedRequest);
+    await eventGroupService.createEventGroupRegistration(parsedRequest);
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
 
-  const redirectPath = newRegistration.event
-    ? `/eventos/${newRegistration.event?.id}`
-    : newRegistration.eventGroup?.eventGroupType === "free"
-      ? `/eventos/serie/${newRegistration.eventGroup?.id}`
-      : `/eventos/campeonatos/${newRegistration.eventGroup?.id}`;
-
   return ActionResponse.success({
-    redirect: redirectPath,
+    redirect: "/perfil",
   });
 }
 
-export async function createMultipleRegistrations(
-  request: CreateMultipleRegistrationsDto
+export async function createEventGroupMultipleRegistrations(
+  request: EventGroupCreateMultipleRegistrationsDto
 ) {
   let newRegistrations;
   try {
@@ -45,20 +39,17 @@ export async function createMultipleRegistrations(
       UserSessionMiddleware
     );
 
-    newRegistrations = await service.createMultipleRegistrations(parsedRequest);
+    newRegistrations =
+      await eventGroupService.createEventGroupMultipleRegistrations(
+        parsedRequest
+      );
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
 
-  const redirectPath = newRegistrations.event
-    ? `/eventos/${newRegistrations.event?.id}`
-    : newRegistrations.eventGroup?.eventGroupType === "free"
-      ? `/eventos/serie/${newRegistrations.eventGroup?.id}`
-      : `/eventos/campeonatos/${newRegistrations.eventGroup?.id}`;
-
   return ActionResponse.success({
-    redirect: redirectPath,
+    redirect: "/perfil",
   });
 }
 

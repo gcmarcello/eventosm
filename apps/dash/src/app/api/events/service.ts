@@ -180,7 +180,13 @@ export async function readEventGroups(request: ReadEventGroupDto) {
       EventModality: { include: { modalityCategory: true } },
       EventAddon: true,
       EventRegistrationBatch: {
-        include: { _count: { select: { EventRegistration: true } } },
+        include: {
+          _count: {
+            select: {
+              EventRegistration: { where: { status: { not: "cancelled" } } },
+            },
+          },
+        },
       },
     },
   });

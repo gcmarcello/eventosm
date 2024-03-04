@@ -53,7 +53,8 @@ export default async function InscricaoPage({
     });
   }
 
-  if (!batch) redirect(`/eventos/campeonatos/${params.id}`);
+  if (!batch || batch._count?.EventRegistration >= batch.maxRegistrations)
+    redirect(`/eventos/campeonatos/${params.id}`);
 
   // Redirect if registrationType is "individual" and team parameter exists
   if (batch?.registrationType === "individual" && searchParams.team) {
@@ -71,6 +72,7 @@ export default async function InscricaoPage({
     return (
       <TeamTournamentRegistration
         eventGroup={eventGroup}
+        teams={teams}
         organization={organization}
         batch={batch}
         userSession={userSession}

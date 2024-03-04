@@ -1,6 +1,4 @@
 "use client";
-import { upsertRegistrationDto } from "@/app/api/registrations/dto";
-import { createIndividualRegistration } from "@/app/api/registrations/action";
 import { Transition } from "@headlessui/react";
 import { EventRegistrationBatch, Organization, UserInfo } from "@prisma/client";
 import clsx from "clsx";
@@ -46,6 +44,8 @@ import { useEffect, useMemo, useState } from "react";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { calculatePrice } from "../../../utils/price";
 import { filterCategories } from "../../../utils/categories";
+import { eventGroupCreateRegistrationDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
+import { createEventGroupIndividualRegistration } from "@/app/api/registrations/action";
 
 export default function IndividualTournamentRegistration({
   eventGroup,
@@ -63,14 +63,14 @@ export default function IndividualTournamentRegistration({
   const [showRules, setShowRules] = useState(false);
   const form = useForm({
     id: "TournamentIndividualRegistrationForm",
-    schema: upsertRegistrationDto,
+    schema: eventGroupCreateRegistrationDto,
     defaultValues: {
       eventGroupId: eventGroup.id,
     },
   });
 
   const { data, isMutating, trigger } = useAction({
-    action: createIndividualRegistration,
+    action: createEventGroupIndividualRegistration,
     redirect: true,
     onSuccess: (data) =>
       showToast({
@@ -89,7 +89,7 @@ export default function IndividualTournamentRegistration({
       eventGroup.EventModality.length === 1 &&
       eventGroup.EventModality[0]?.id
     ) {
-      form.setValue("modalityId", eventGroup.EventModality[0].id);
+      form.setValue("registration.modalityId", eventGroup.EventModality[0].id);
     }
   }, [eventGroup]);
 
@@ -150,12 +150,12 @@ export default function IndividualTournamentRegistration({
             order={["general", "addon", "confirmation"]}
             steps={{
               general: {
-                fields: ["modalityId", "categoryId"],
+                fields: ["registration.modalityId", "registration.categoryId"],
                 form: (
                   <Fieldset className={"grid grid-cols-2 lg:divide-x"}>
                     <FieldGroup className="col-span-2 lg:col-span-2 lg:pe-4">
                       {eventGroup.EventModality.length > 1 ? (
-                        <Field name="modalityId">
+                        <Field name="registration.modalityId">
                           <Label>Selecionar Modalidade</Label>
                           <Select
                             data={eventGroup.EventModality}
@@ -168,18 +168,23 @@ export default function IndividualTournamentRegistration({
                           Modalidade Única -{" "}
                           {
                             eventGroup.EventModality.find(
-                              (mod) => mod.id === form.getValues("modalityId")
+                              (mod) =>
+                                mod.id ===
+                                form.getValues("registration.modalityId")
                             )?.name
                           }
                         </Text>
                       )}
-                      <Field name="categoryId">
+                      <Field name="registration.categoryId">
                         <Label>Selecionar Categoria</Label>
                         <Select
-                          disabled={form.watch("modalityId") === undefined}
+                          disabled={
+                            form.watch("registration.modalityId") === undefined
+                          }
                           data={filterCategories(
                             eventGroup.EventModality.find(
-                              (mod) => mod.id === form.watch("modalityId")
+                              (mod) =>
+                                mod.id === form.watch("registration.modalityId")
                             )?.modalityCategory || [],
                             {
                               birthDate: userInfo.birthDate,
@@ -190,7 +195,7 @@ export default function IndividualTournamentRegistration({
                           displayValueKey="name"
                         />
                         <Description>
-                          {form.watch("modalityId") === undefined
+                          {form.watch("registration.modalityId") === undefined
                             ? "Escolha uma modalidade para liberar as categorias"
                             : "As categorias exibidas são apenas as disponíveis para você."}
                         </Description>
@@ -207,7 +212,10 @@ export default function IndividualTournamentRegistration({
                 form: (
                   <Fieldset>
                     <FieldGroup className="col-span-2 lg:col-span-1 lg:ps-4">
-                      <Field enableAsterisk={false} name="addon.id">
+                      <Field
+                        enableAsterisk={false}
+                        name="registration.addon.id"
+                      >
                         <Label>Escolha seu Kit</Label>
                         <Description>
                           Clique no kit desejado para escolher o tamanho.
@@ -254,7 +262,7 @@ export default function IndividualTournamentRegistration({
                                             Camiseta, sacochila e viseira.
                                           </Text>
                                           {checked && (
-                                            <Field name="addon.option">
+                                            <Field name="registration.addon.option">
                                               <Select
                                                 data={options}
                                                 displayValueKey="name"
@@ -296,14 +304,16 @@ export default function IndividualTournamentRegistration({
                           {
                             categories.find(
                               (category) =>
-                                category.id === form.watch("categoryId")
+                                category.id ===
+                                form.watch("registration.categoryId")
                             )?.name
                           }{" "}
                           -{" "}
                           {toProperCase(
                             categories.find(
                               (category) =>
-                                category.id === form.watch("categoryId")
+                                category.id ===
+                                form.watch("registration.categoryId")
                             )?.gender || ""
                           )}
                         </dd>
@@ -313,21 +323,24 @@ export default function IndividualTournamentRegistration({
                             <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                               <dt className=" font-medium leading-6 text-gray-900">
                                 {eventGroup.EventAddon?.find(
-                                  (addon) => addon.id === form.watch("addon.id")
+                                  (addon) =>
+                                    addon.id ===
+                                    form.watch("registration.addon.id")
                                 )?.name
                                   ? eventGroup.EventAddon?.find(
                                       (addon) =>
-                                        addon.id === form.watch("addon.id")
+                                        addon.id ===
+                                        form.watch("registration.addon.id")
                                     )?.name
                                   : "Nenhum"}
                               </dt>
-                              {(form.watch("addon")?.option ||
+                              {(form.watch("registration.addon")?.option ||
                                 eventGroup.EventAddon?.find(
                                   (addon) => !addon.price
                                 )) && (
                                 <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {form.watch("addon")?.option ? (
-                                    form.watch("addon")?.option
+                                  {form.watch("registration.addon")?.option ? (
+                                    form.watch("registration.addon")?.option
                                   ) : eventGroup.EventAddon?.find(
                                       (addon) => !addon.price
                                     ) ? (
@@ -359,12 +372,15 @@ export default function IndividualTournamentRegistration({
                           {calculatePrice({
                             addonPrice:
                               eventGroup.EventAddon?.find(
-                                (addon) => addon.id === form.watch("addon.id")
+                                (addon) =>
+                                  addon.id ===
+                                  form.watch("registration.addon.id")
                               )?.price || 0,
                             categoryPrice: batch.categoryControl
                               ? batch.CategoryBatch.find(
                                   (cat) =>
-                                    cat.categoryId === form.watch("categoryId")
+                                    cat.categoryId ===
+                                    form.watch("registration.categoryId")
                                 )?.price || 0
                               : batch.price,
                           })}
