@@ -123,7 +123,7 @@ export default function IndividualTournamentRegistration({
       </Dialog>
 
       <div className="mx-4 mt-3 rounded-md border border-slate-200 px-2 lg:mx-96  lg:mt-10">
-        <div className="mb-6 flex items-center justify-between gap-3 ">
+        <div className="mb-6 flex items-center justify-between gap-3 p-2 ">
           <div>
             <div className="mt-4 text-xl font-medium lg:mt-0">
               {" "}

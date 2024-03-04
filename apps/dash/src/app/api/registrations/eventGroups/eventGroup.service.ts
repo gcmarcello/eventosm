@@ -50,6 +50,12 @@ export async function createEventGroupRegistration(
     batch,
   });
 
+  await verifyEventGroupAvailableSlots({
+    registrations: [registrationInfo],
+    batchId: request.batchId && batch.id,
+    eventGroupId: request.eventGroupId!,
+  });
+
   const eventRegistrations = await prisma.eventRegistration.count({
     where: { eventGroupId: request.eventGroupId },
   });
@@ -328,7 +334,7 @@ async function verifyEventGroupAvailableSlots({
   });
 
   if (registrationsCount + registrations.length > batch.maxRegistrations)
-    throw "Limite de inscrições excedido";
+    throw "Inscrições esgotadas.";
 
   if (batch.categoryControl) {
     const categoryBatchArray = batch.CategoryBatch;
@@ -355,7 +361,7 @@ async function verifyEventGroupAvailableSlots({
 
       if (maxRegistrations) {
         if (count > maxRegistrations)
-          throw `Limite de inscrições na categoria ${categoryName} excedido. ${maxRegistrations - categoryExistingRegistrations} restantes.`;
+          throw `Limite de inscrições na categoria ${categoryName} excedido. ${Math.max(0, maxRegistrations - categoryExistingRegistrations)} restantes.`;
       }
     }
   }
