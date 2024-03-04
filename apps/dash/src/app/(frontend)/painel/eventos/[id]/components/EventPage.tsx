@@ -38,7 +38,9 @@ export default function UpdateEventPage({
   batches,
   organization,
 }: {
-  organization: Organization;
+  organization: Organization & {
+    OrgCustomDomain: { id: string; domain: string; organizationId: string }[];
+  };
   modalities: EventModalityWithCategories[];
   event: EventWithRegistrationCount;
   batches: EventRegistrationBatchesWithCategoriesAndRegistrations[];
