@@ -11,6 +11,7 @@ export const userSeed = async () => {
       role: "admin",
       password: await hashInfo("123456"),
       phone: "21999999999",
+      confirmed: true,
       info: {
         create: {
           address: "Rua do Catete",

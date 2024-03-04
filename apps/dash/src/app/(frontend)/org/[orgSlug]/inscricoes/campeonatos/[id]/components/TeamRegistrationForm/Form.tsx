@@ -69,7 +69,7 @@ export default function TeamTournamentRegistration({
       eventGroupId: eventGroup.id,
       teamMembers: [],
       teamId: "",
-      batchId: searchParams.get("batchId") || undefined,
+      batchId: searchParams.get("batch") || undefined,
     },
   });
 
@@ -265,7 +265,7 @@ export default function TeamTournamentRegistration({
                         <PlusIcon className="h-6 w-6" /> Participante
                       </Button>
                     )}
-                    {!hasNextStep && (
+                    {!hasNextStep && form.formState.isValid && (
                       <SubmitButton
                         color={
                           organization.options.colors.primaryColor.tw.color

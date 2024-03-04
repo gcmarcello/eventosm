@@ -46,6 +46,7 @@ import { calculatePrice } from "../../../utils/price";
 import { filterCategories } from "../../../utils/categories";
 import { eventGroupCreateRegistrationDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
 import { createEventGroupIndividualRegistration } from "@/app/api/registrations/action";
+import { useSearchParams } from "next/navigation";
 
 export default function IndividualTournamentRegistration({
   eventGroup,
@@ -61,11 +62,13 @@ export default function IndividualTournamentRegistration({
   organization: Organization;
 }) {
   const [showRules, setShowRules] = useState(false);
+  const searchParams = useSearchParams();
   const form = useForm({
     id: "TournamentIndividualRegistrationForm",
     schema: eventGroupCreateRegistrationDto,
     defaultValues: {
       eventGroupId: eventGroup.id,
+      batchId: searchParams.get("batch") || undefined,
     },
   });
 
@@ -133,6 +136,7 @@ export default function IndividualTournamentRegistration({
               Inscrição para todas as etapas ({eventGroup.Event.length}
               ).
             </Text>
+            {batch.name && <Text>Lote {batch.name}</Text>}
           </div>
           <div className="relative h-20 w-32 ">
             <Image

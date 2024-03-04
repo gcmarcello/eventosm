@@ -12,10 +12,10 @@ import {
   Text,
   TabItem,
   Table,
-  date,
   For,
   Heading,
   List,
+  date,
 } from "odinkit";
 import {
   Dropdown,
@@ -27,6 +27,7 @@ import {
   DropdownDescription,
   Button,
   DisclosureAccordion,
+  Date,
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useOrg } from "../../../../components/OrgStore";
@@ -313,9 +314,13 @@ export default function EventGroupContainer({
                   Inscrito!
                 </Button>
               ) : nextBatch ? (
-                <Button disabled color="red" className={"w-full"}>
+                <Button disabled color="red" className={"flex w-full gap-1"}>
                   Inscrições à partir de{" "}
-                  {dayjs(nextBatch.dateStart).format("DD/MM/YYYY")}
+                  <Date
+                    date={nextBatch.dateStart}
+                    localTime
+                    format="DD/MM/YYYY HH:mm"
+                  />
                 </Button>
               ) : (
                 <Button disabled color="red" className={"w-full"}>
@@ -346,7 +351,10 @@ export default function EventGroupContainer({
                     <dt className="text-sm font-medium leading-6 text-gray-900">
                       Fim
                     </dt>
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <dd
+                      suppressHydrationWarning
+                      className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+                    >
                       {date(
                         eventGroup.Event[eventGroup.Event.length - 1]
                           ?.dateEnd as any,
@@ -451,7 +459,11 @@ export default function EventGroupContainer({
           ) : nextBatch ? (
             <Button disabled color="red" className={"w-full"}>
               Inscrições à partir de{" "}
-              {dayjs(nextBatch.dateStart).format("DD/MM/YYYY")}
+              <Date
+                date={nextBatch.dateStart}
+                format="DD/MM/YYYY HH:mm"
+                localTime
+              />
             </Button>
           ) : (
             <Button disabled color="red" className={"w-full"}>

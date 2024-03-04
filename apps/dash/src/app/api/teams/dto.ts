@@ -38,10 +38,14 @@ export const readTeamsDto = readDto(
 export type ReadTeamsDto = z.infer<typeof readTeamsDto>;
 
 export const createTeamDto = z.object({
-  name: z.string(),
+  name: z
+    .string()
+    .min(3, { message: "Nome do time deve ter no mínimo 3 caracteres" })
+    .max(255, { message: "Nome do time deve ter no máximo 30 caracteres" }),
   addMembers: z.boolean().optional(),
   membersFile: z.array(z.any()).optional(),
   members: z.array(upsertTeamMemberDto).optional(),
+  originOrganizationId: z.string().optional(),
 });
 
 export type CreateTeamDto = z.infer<typeof createTeamDto>;

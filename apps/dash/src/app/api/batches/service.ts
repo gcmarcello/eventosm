@@ -185,7 +185,9 @@ export async function verifyConflictingBatches({
 }) {
   const potentialConflictingBatches =
     await prisma.eventRegistrationBatch.findMany({
-      where: eventGroupId ? { eventGroupId } : { eventId },
+      where: eventGroupId
+        ? { eventGroupId, protectedBatch: false }
+        : { eventId, protectedBatch: false },
     });
 
   if (!potentialConflictingBatches.length) return false;

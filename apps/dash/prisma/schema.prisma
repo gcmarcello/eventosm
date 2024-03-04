@@ -63,6 +63,7 @@ model UserOrgLink {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime?    @updatedAt
 
+  @@unique([userId, organizationId])
   @@schema("public")
 }
 
@@ -107,6 +108,7 @@ model Organization {
   UserOrgLink           UserOrgLink[]
   PasswordRecoveryToken PasswordRecoveryToken[]
   News                  News[]
+  Team                  Team[]
 
   @@schema("public")
 }
@@ -404,14 +406,16 @@ model EventRegistration {
 }
 
 model Team {
-  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  name              String
-  owner             User                @relation(name: "teamOwner", fields: [ownerId], references: [id])
-  ownerId           String              @db.Uuid
-  User              User[]
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime?           @updatedAt
-  EventRegistration EventRegistration[]
+  id                     String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                   String
+  owner                  User                @relation(name: "teamOwner", fields: [ownerId], references: [id])
+  ownerId                String              @db.Uuid
+  User                   User[]
+  originalOrganization   Organization?       @relation(fields: [originalOrganizationId], references: [id])
+  originalOrganizationId String?             @db.Uuid
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime?           @updatedAt
+  EventRegistration      EventRegistration[]
 
   @@schema("public")
 }

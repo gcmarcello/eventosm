@@ -42,7 +42,7 @@ export default async function TorneioPage({
     })
   )[0];
 
-  if (!eventGroup) return notFound();
+  if (!eventGroup || eventGroup.status === "draft") return notFound();
 
   const isUserRegistered = userSession?.id
     ? (

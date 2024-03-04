@@ -428,18 +428,20 @@ export function ParticipantsForm({
           </TableMock>
         </>
       ) : null}
-      <Text className="mt-3">
-        <Link
-          href="/perfil/equipes"
-          style={{
-            color: organization.options.colors.primaryColor.hex,
-          }}
-          className="font-medium"
-        >
-          Clique aqui
-        </Link>{" "}
-        para editar ou criar uma nova equipe.
-      </Text>
+      {form.watch("teamMembers").length ? (
+        <Text className="mt-3">
+          <Link
+            href="/perfil/equipes"
+            style={{
+              color: organization.options.colors.primaryColor.hex,
+            }}
+            className="font-medium"
+          >
+            Clique aqui
+          </Link>{" "}
+          para editar ou criar uma nova equipe.
+        </Text>
+      ) : null}
     </>
   );
 }
