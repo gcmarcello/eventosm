@@ -1,11 +1,16 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { CreateTeamDto, ReadTeamsDto, UpsertTeamMemberDto } from "./dto";
-import { normalize } from "odinkit";
+import { formatPhone, normalize } from "odinkit";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import parseCustomFormat from "dayjs/plugin/customParseFormat";
+import { Email } from "email-templates";
+import { getServerEnv } from "../env";
+import { chooseTextColor } from "@/utils/colors";
+import { sendEmail } from "../emails/service";
+import { request } from "http";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);
@@ -62,7 +67,7 @@ export async function readTeamSize({ teamId }: { teamId: string }) {
 export async function createTeam(
   data: CreateTeamDto & { userSession: UserSession }
 ) {
-  let existingUsersIds: { id: string; document: string }[] = [];
+  let existingUsersIds: { id: string; document: string; email: string }[] = [];
   let newUsers: UpsertTeamMemberDto[] = [];
 
   if (data.addMembers && data.members?.length) {
@@ -78,11 +83,16 @@ export async function createTeam(
           },
         },
       })
-    ).map((user) => ({ id: user.id, document: user.document }));
+    ).map((user) => ({
+      id: user.id,
+      document: user.document,
+      email: user.email,
+    }));
 
     existingUsersIds.push({
       id: data.userSession.id,
       document: data.userSession.document,
+      email: data.userSession.email,
     });
 
     newUsers = data.members.filter(
@@ -97,6 +107,7 @@ export async function createTeam(
     data: {
       name: data.name,
       ownerId: data.userSession.id,
+      originalOrganizationId: data.originOrganizationId,
       User: {
         connect: existingUsersIds.map((user) => ({ id: user.id })),
         create: newUsers.map((user) => ({
@@ -113,7 +124,85 @@ export async function createTeam(
         })),
       },
     },
+    include: {
+      originalOrganization: { include: { OrgCustomDomain: true } },
+      User: true,
+    },
   });
+
+  if (data.originOrganizationId) {
+    await prisma.$transaction(
+      team.User.map((user) =>
+        prisma.userOrgLink.upsert({
+          where: {
+            userId_organizationId: {
+              userId: user.id,
+              organizationId: data.originOrganizationId!,
+            },
+          },
+          update: {},
+          create: {
+            userId: user.id,
+            organizationId: data.originOrganizationId!,
+          },
+        })
+      )
+    );
+  }
+
+  const existingUsersEmailArray: Email<"added_to_team">[] =
+    existingUsersIds.map((user) => ({
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: user.email,
+      },
+      template: "added_to_team",
+      templateParameters: {
+        mainColor: "#000",
+        headerTextColor: "#fff",
+        name: user.email,
+        siteLink:
+          (team.originalOrganization?.OrgCustomDomain[0]?.domain ||
+            process.env.NEXT_PUBLIC_SITE_URL) + "/perfil/times",
+        teamName: team.name,
+        orgName: team.originalOrganization?.name || "Time",
+        ownerName: data.userSession.fullName,
+        ownerPhone: formatPhone(data.userSession.phone),
+      },
+    }));
+
+  const newUsersEmailArray: Email<"added_to_team_signup">[] = newUsers.map(
+    (user) => ({
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: user.email,
+      },
+      template: "added_to_team_signup",
+      templateParameters: {
+        mainColor:
+          team.originalOrganization?.options.colors.primaryColor.hex ||
+          "#4F46E5",
+        headerTextColor: chooseTextColor(
+          team.originalOrganization?.options.colors.primaryColor.hex ||
+            "#4F46E5"
+        ),
+        name: user.email,
+        siteLink:
+          (team.originalOrganization?.OrgCustomDomain[0]?.domain ||
+            process.env.NEXT_PUBLIC_SITE_URL) + "/perfil/times",
+        teamName: team.name,
+        orgName: team.originalOrganization?.name || "Time",
+        ownerName: data.userSession.fullName,
+        ownerPhone: formatPhone(data.userSession.phone),
+      },
+    })
+  );
+
+  console.log(existingUsersEmailArray.length, newUsersEmailArray.length);
+
+  await sendEmail([...existingUsersEmailArray, ...newUsersEmailArray]);
 
   return team;
 }

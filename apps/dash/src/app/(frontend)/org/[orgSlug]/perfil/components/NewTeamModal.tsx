@@ -37,6 +37,7 @@ import {
   DialogBody,
   DialogDescription,
   DialogTitle,
+  ErrorMessage,
   FieldGroup,
   Fieldset,
   FileDropArea,
@@ -64,7 +65,8 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
     defaultValues: {
       name: "",
       members: [],
-      addMembers: false,
+      addMembers: true,
+      originOrganizationId: organization.id,
     },
     mode: "onChange",
   });
@@ -188,6 +190,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                   <Field name="name">
                     <Label>Nome da Equipe</Label>
                     <Input />
+                    <ErrorMessage />
                   </Field>
                   <Field variant="switch" name="addMembers">
                     <Label>Deseja cadastrar membros agora?</Label>
@@ -490,7 +493,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                   </For>
                 </DialogBody>
                 <DialogActions>
-                  {hasNextStep && (
+                  {hasNextStep && form.watch("addMembers") && (
                     <>
                       <Button
                         type="button"
@@ -547,8 +550,10 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                         Voltar
                       </Button>
                     )}
-                    {!hasNextStep && inputMode && (
+                    {((!hasNextStep && inputMode) ||
+                      !form.watch("addMembers")) && (
                       <SubmitButton
+                        disabled={!form.formState.isValid}
                         color={
                           organization.options.colors.primaryColor.tw.color
                         }
