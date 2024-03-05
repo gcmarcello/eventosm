@@ -1,5 +1,6 @@
 "use client";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { Color } from "chart.js";
 import {
   Button,
   Dialog,
@@ -12,12 +13,12 @@ import {
 } from "odinkit/client";
 import { useState } from "react";
 
-export default function NewMemberModal({ color }: { color: string }) {
+export default function NewMemberModal() {
   let [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Button color={color} type="button" onClick={() => setIsOpen(true)}>
+      <Button type="button" onClick={() => setIsOpen(true)}>
         <div className="flex items-center gap-2">
           <UserCircleIcon className="h-5 w-5" />
           Novo Membro
