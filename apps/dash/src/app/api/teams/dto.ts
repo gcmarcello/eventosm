@@ -49,3 +49,11 @@ export const createTeamDto = z.object({
 });
 
 export type CreateTeamDto = z.infer<typeof createTeamDto>;
+
+export const addTeamMembersDto = z.object({
+  teamId: z.string(),
+  membersFile: z.array(z.any()).optional(),
+  members: z.array(upsertTeamMemberDto),
+});
+
+export type AddTeamMembersDto = z.infer<typeof addTeamMembersDto>;

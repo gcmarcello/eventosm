@@ -60,11 +60,10 @@ export default async function ProfilePage({
                     >
                       Editar
                     </Button>
-                    {/* <NewMemberModal
-                      color={
-                        organization.options.colors.secondaryColor.tw.color
-                      }
-                    /> */}
+                    <NewMemberModal
+                      organization={organization}
+                      teamId={team.id}
+                    />
                   </div>
                 )}
               </div>
