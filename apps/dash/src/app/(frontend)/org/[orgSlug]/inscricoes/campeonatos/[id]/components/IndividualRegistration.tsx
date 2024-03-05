@@ -37,6 +37,7 @@ import {
   RadioField,
   Radio,
   showToast,
+  ErrorMessage,
 } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
@@ -395,6 +396,7 @@ export default function IndividualTournamentRegistration({
                       <FieldGroup>
                         <Field enableAsterisk={false} name="acceptedTerms">
                           <Checkbox
+                            className={"lg:size-8"}
                             color={
                               organization.options.colors.primaryColor.tw.color
                             }
@@ -406,6 +408,7 @@ export default function IndividualTournamentRegistration({
                           >
                             regulamento.
                           </span>
+                          <ErrorMessage />
                           <Description>
                             Aceitar o regulamento é obrigatório.
                           </Description>
