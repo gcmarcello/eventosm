@@ -319,206 +319,204 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                     </div>
                   </div>
                 </div>
-                <Field name="membersFile">
-                  <FileInput
-                    fileTypes={["xlsx"]}
-                    maxFiles={1}
-                    maxSize={1}
-                    validate={async (file) => {
-                      const sheetArrayBuffer = await file.arrayBuffer();
+                {inputMode === "file" && (
+                  <Field name="membersFile">
+                    <FileInput
+                      fileTypes={["xlsx"]}
+                      maxFiles={1}
+                      maxSize={1}
+                      validate={async (file) => {
+                        const sheetArrayBuffer = await file.arrayBuffer();
 
-                      const sheetJson = sheetToJson(sheetArrayBuffer);
+                        const sheetJson = sheetToJson(sheetArrayBuffer);
 
-                      if (!sheetJson?.length)
-                        throw "Sua planilha não possui dados";
+                        if (!sheetJson?.length)
+                          throw "Sua planilha não possui dados";
 
-                      /* if (
+                        /* if (
                     batch.multipleRegistrationLimit &&
                     sheetJson.length > batch.multipleRegistrationLimit
                   ) {
                     throw "O número de inscrições excede o limite de inscrições permitido.";
                   } */
 
-                      const sheetJsonValidation =
-                        excelDataSchema.safeParse(sheetJson);
+                        const sheetJsonValidation =
+                          excelDataSchema.safeParse(sheetJson);
 
-                      if (sheetJsonValidation.success) {
-                        const data = sheetJsonValidation.data;
+                        if (sheetJsonValidation.success) {
+                          const data = sheetJsonValidation.data;
 
-                        fieldArray.insert(0, formatSheetData(data));
-                        form.trigger();
+                          fieldArray.insert(0, formatSheetData(data));
+                          form.trigger();
 
-                        return true;
-                      }
-
-                      const error = sheetJsonValidation.error.issues.map(
-                        (i) => {
-                          const errorLocation = i.path;
-                          const errorRow = Number(errorLocation[0]) + 1;
-                          const errorColumn = errorLocation[1];
-                          console.log(sheetJsonValidation.error.issues);
-                          throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
+                          return true;
                         }
-                      );
 
-                      throw error;
-                    }}
-                    onError={(error) => {
-                      console.log(error);
-                      if (typeof error === "string") {
-                        showToast({
-                          message: error,
-                          title: "Erro",
-                          variant: "error",
-                        });
-                      }
-                    }}
-                  >
-                    <FileDropArea
-                      color={organization.options.colors.primaryColor.hex}
-                      render={
-                        form.watch("membersFile")?.length ? (
-                          <Text>
-                            <span
-                              style={{
-                                color:
-                                  organization.options.colors.primaryColor.hex,
-                              }}
-                              className="font-semibold"
-                            >
-                              Arquivo:
-                            </span>{" "}
-                            {form.watch("membersFile")?.[0].name}{" "}
-                            <span
-                              onClick={() => {
-                                form.resetField("members");
-                                form.resetField("membersFile");
-                              }}
-                              className="cursor-pointer font-semibold "
-                            >
-                              Trocar
-                            </span>
-                          </Text>
-                        ) : null
-                      }
-                    />
-                  </FileInput>
-                </Field>
-                {inputMode === "manual" ||
-                  (form.watch("membersFile") && (
-                    <div className="col-span-4 lg:divide-y">
-                      <TableMock className={"my-2"}>
-                        <TableHead>
-                          <TableRow>
-                            <TableHeader>Atleta</TableHeader>
-                            <TableHeader>Nome Completo</TableHeader>
-                            <TableHeader>Email</TableHeader>
-                            <TableHeader>Celular</TableHeader>
-                            <TableHeader>CPF</TableHeader>
-                            <TableHeader>Sexo</TableHeader>
-                            <TableHeader>Data de Nascimento</TableHeader>
-                            <TableHeader>CEP</TableHeader>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          <For each={fieldArray.fields}>
-                            {(field, index) => (
-                              <>
-                                <TableRow
-                                  key={field.id}
-                                  className="overflow-x-scroll"
-                                >
-                                  <TableCell>
-                                    <Button
-                                      className={"flex items-center gap-1"}
-                                      plain
-                                      disabled={fieldArray.fields.length === 1}
-                                      onClick={() => removeTeamMember(index)}
-                                    >
-                                      {index + 1}{" "}
-                                      <TrashIcon className="h-4 w-4 text-red-500" />{" "}
-                                    </Button>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field name={`members.${index}.fullName`}>
-                                      <div className="min-w-[150px]">
-                                        <Input />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field name={`members.${index}.email`}>
-                                      <div className="min-w-[200px]">
-                                        <Input />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell className="min-w-[200px]">
-                                    <Field name={`members.${index}.phone`}>
-                                      <div className="min-w-[150px]">
-                                        <Input
-                                          mask={(fieldValue: string) => {
-                                            if (fieldValue.length > 14) {
-                                              return "(99) 99999-9999";
-                                            } else {
-                                              return "(99) 9999-9999";
-                                            }
-                                          }}
-                                        />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell className="min-w-[200px]">
-                                    <Field name={`members.${index}.document`}>
-                                      <div className="min-w-[100px]">
-                                        <Input mask={"999.999.999-99"} />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`members.${index}.info.gender`}
-                                    >
-                                      <div className="min-w-[110px]">
-                                        <Select
-                                          data={[
-                                            {
-                                              id: "female",
-                                              name: "Feminino",
-                                            },
-                                            { id: "male", name: "Masculino" },
-                                          ]}
-                                          displayValueKey="name"
-                                        />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`members.${index}.info.birthDate`}
-                                    >
-                                      <div className="min-w-[100px]">
-                                        <Input mask={"99/99/9999"} />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                  <TableCell className="min-w-[200px]">
-                                    <Field
-                                      name={`members.${index}.info.zipCode`}
-                                    >
-                                      <div className="min-w-[100px]">
-                                        <Input mask={"99999-999"} />
-                                      </div>
-                                    </Field>
-                                  </TableCell>
-                                </TableRow>
-                              </>
-                            )}
-                          </For>
-                        </TableBody>
-                      </TableMock>
-                    </div>
-                  ))}{" "}
+                        const error = sheetJsonValidation.error.issues.map(
+                          (i) => {
+                            const errorLocation = i.path;
+                            const errorRow = Number(errorLocation[0]) + 1;
+                            const errorColumn = errorLocation[1];
+                            console.log(sheetJsonValidation.error.issues);
+                            throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
+                          }
+                        );
+
+                        throw error;
+                      }}
+                      onError={(error) => {
+                        console.log(error);
+                        if (typeof error === "string") {
+                          showToast({
+                            message: error,
+                            title: "Erro",
+                            variant: "error",
+                          });
+                        }
+                      }}
+                    >
+                      <FileDropArea
+                        color={organization.options.colors.primaryColor.hex}
+                        render={
+                          form.watch("membersFile")?.length ? (
+                            <Text>
+                              <span
+                                style={{
+                                  color:
+                                    organization.options.colors.primaryColor
+                                      .hex,
+                                }}
+                                className="font-semibold"
+                              >
+                                Arquivo:
+                              </span>{" "}
+                              {form.watch("membersFile")?.[0].name}{" "}
+                              <span
+                                onClick={() => {
+                                  form.resetField("members");
+                                  form.resetField("membersFile");
+                                }}
+                                className="cursor-pointer font-semibold "
+                              >
+                                Trocar
+                              </span>
+                            </Text>
+                          ) : null
+                        }
+                      />
+                    </FileInput>
+                  </Field>
+                )}
+                {(inputMode === "manual" || form.watch("membersFile")) && (
+                  <div className="col-span-4 lg:divide-y">
+                    <TableMock className={"my-2"}>
+                      <TableHead>
+                        <TableRow>
+                          <TableHeader>Atleta</TableHeader>
+                          <TableHeader>Nome Completo</TableHeader>
+                          <TableHeader>Email</TableHeader>
+                          <TableHeader>Celular</TableHeader>
+                          <TableHeader>CPF</TableHeader>
+                          <TableHeader>Sexo</TableHeader>
+                          <TableHeader>Data de Nascimento</TableHeader>
+                          <TableHeader>CEP</TableHeader>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <For each={fieldArray.fields}>
+                          {(field, index) => (
+                            <>
+                              <TableRow
+                                key={field.id}
+                                className="overflow-x-scroll"
+                              >
+                                <TableCell>
+                                  <Button
+                                    className={"flex items-center gap-1"}
+                                    plain
+                                    disabled={fieldArray.fields.length === 1}
+                                    onClick={() => removeTeamMember(index)}
+                                  >
+                                    {index + 1}{" "}
+                                    <TrashIcon className="h-4 w-4 text-red-500" />{" "}
+                                  </Button>
+                                </TableCell>
+                                <TableCell>
+                                  <Field name={`members.${index}.fullName`}>
+                                    <div className="min-w-[150px]">
+                                      <Input />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell>
+                                  <Field name={`members.${index}.email`}>
+                                    <div className="min-w-[200px]">
+                                      <Input />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell className="min-w-[200px]">
+                                  <Field name={`members.${index}.phone`}>
+                                    <div className="min-w-[150px]">
+                                      <Input
+                                        mask={(fieldValue: string) => {
+                                          if (fieldValue.length > 14) {
+                                            return "(99) 99999-9999";
+                                          } else {
+                                            return "(99) 9999-9999";
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell className="min-w-[200px]">
+                                  <Field name={`members.${index}.document`}>
+                                    <div className="min-w-[100px]">
+                                      <Input mask={"999.999.999-99"} />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell>
+                                  <Field name={`members.${index}.info.gender`}>
+                                    <div className="min-w-[110px]">
+                                      <Select
+                                        data={[
+                                          {
+                                            id: "female",
+                                            name: "Feminino",
+                                          },
+                                          { id: "male", name: "Masculino" },
+                                        ]}
+                                        displayValueKey="name"
+                                      />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`members.${index}.info.birthDate`}
+                                  >
+                                    <div className="min-w-[100px]">
+                                      <Input mask={"99/99/9999"} />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                                <TableCell className="min-w-[200px]">
+                                  <Field name={`members.${index}.info.zipCode`}>
+                                    <div className="min-w-[100px]">
+                                      <Input mask={"99999-999"} />
+                                    </div>
+                                  </Field>
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          )}
+                        </For>
+                      </TableBody>
+                    </TableMock>
+                  </div>
+                )}{" "}
               </>
             ),
           },
