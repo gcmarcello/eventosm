@@ -161,13 +161,18 @@ export async function createTeam(
     existingUsersIds.map((user) => ({
       setup: {
         from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: "Inscrição confirmada",
+        subject: "Bem vindo à Equipe!",
         to: user.email,
       },
       template: "added_to_team",
       templateParameters: {
-        mainColor: "#000",
-        headerTextColor: "#fff",
+        mainColor:
+          team.originalOrganization?.options.colors.primaryColor.hex ||
+          "#4F46E5",
+        headerTextColor: chooseTextColor(
+          team.originalOrganization?.options.colors.primaryColor.hex ||
+            "#4F46E5"
+        ),
         name: user.email,
         siteLink:
           (team.originalOrganization?.OrgCustomDomain[0]?.domain ||
@@ -183,7 +188,7 @@ export async function createTeam(
     (user) => ({
       setup: {
         from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: "Inscrição confirmada",
+        subject: "Bem vindo à Equipe!",
         to: user.email,
       },
       template: "added_to_team_signup",
