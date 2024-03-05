@@ -217,64 +217,67 @@ export default function NewMemberModal({
             ) : (
               <>
                 <div className="col-span-4 space-y-4 lg:ps-4">
-                  <div className="my-3 flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                      <div
-                        style={{
-                          backgroundColor:
-                            organization.options.colors.primaryColor.hex,
-                          color: chooseTextColor(
-                            organization.options.colors.primaryColor.hex
-                          ),
-                        }}
-                        className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
-                      >
-                        1
+                  {inputMode === "file" && (
+                    <div className="my-3 flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <div
+                          style={{
+                            backgroundColor:
+                              organization.options.colors.primaryColor.hex,
+                            color: chooseTextColor(
+                              organization.options.colors.primaryColor.hex
+                            ),
+                          }}
+                          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
+                        >
+                          1
+                        </div>
+                        <div className="flex flex-col">
+                          <Text className="font-semibold">Formato Correto</Text>
+                          <Text>
+                            O arquivo deve ser um arquivo .xlsx e seguir o
+                            formato correto.{" "}
+                            <Link
+                              style={{
+                                color:
+                                  organization.options.colors.primaryColor.hex,
+                              }}
+                              href={
+                                "https://f005.backblazeb2.com/file/eventosmb/ModeloInscricoes.xlsx"
+                              }
+                              className="underline"
+                            >
+                              Clique aqui
+                            </Link>{" "}
+                            para baixar o modelo.
+                          </Text>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <Text className="font-semibold">Formato Correto</Text>
-                        <Text>
-                          O arquivo deve ser um arquivo .xlsx e seguir o formato
-                          correto.{" "}
-                          <Link
-                            style={{
-                              color:
-                                organization.options.colors.primaryColor.hex,
-                            }}
-                            href={
-                              "https://f005.backblazeb2.com/file/eventosmb/ModeloInscricoes.xlsx"
-                            }
-                            className="underline"
-                          >
-                            Clique aqui
-                          </Link>{" "}
-                          para baixar o modelo.
-                        </Text>
+                      <div className="flex items-center gap-2">
+                        <div
+                          style={{
+                            backgroundColor:
+                              organization.options.colors.primaryColor.hex,
+                            color: chooseTextColor(
+                              organization.options.colors.primaryColor.hex
+                            ),
+                          }}
+                          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
+                        >
+                          2
+                        </div>
+                        <div className="flex flex-col">
+                          <Text className="font-semibold">
+                            Verifique os Dados
+                          </Text>
+                          <Text>
+                            Após importar o arquivo, faça os ajustes
+                            necessários.
+                          </Text>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        style={{
-                          backgroundColor:
-                            organization.options.colors.primaryColor.hex,
-                          color: chooseTextColor(
-                            organization.options.colors.primaryColor.hex
-                          ),
-                        }}
-                        className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
-                      >
-                        2
-                      </div>
-                      <div className="flex flex-col">
-                        <Text className="font-semibold">
-                          Verifique os Dados
-                        </Text>
-                        <Text>
-                          Após importar o arquivo, faça os ajustes necessários.
-                        </Text>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
                 {inputMode === "file" && (
                   <Field name="membersFile">
@@ -364,7 +367,9 @@ export default function NewMemberModal({
                     </FileInput>
                   </Field>
                 )}
-                {(inputMode === "manual" || form.watch("membersFile")) && (
+                {(inputMode === "manual" ||
+                  (form.watch("membersFile") &&
+                    form.watch("members").length > 0)) && (
                   <div className="col-span-4 lg:divide-y">
                     <TableMock className={"my-2"}>
                       <TableHead>
@@ -486,7 +491,18 @@ export default function NewMemberModal({
                 {getFaultyMembers().join(", ")}
               </Alertbox>
             ) : null}
-            <Button plain onClick={() => setIsOpen(false)}>
+            <Button
+              plain
+              onClick={() => {
+                if (inputMode) {
+                  form.resetField("members");
+                  form.resetField("membersFile");
+                  setInputMode(null);
+                } else {
+                  setIsOpen(false);
+                }
+              }}
+            >
               Voltar
             </Button>
             {inputMode && fieldArray.fields.length ? (
