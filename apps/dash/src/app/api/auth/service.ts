@@ -100,15 +100,11 @@ export function createToken(request: { id: string }) {
 
 export async function login(request: LoginDto) {
   const isIdentifierEmail = isEmail(request.identifier);
-  const isIdentifierCPF = cpfValidator(request.identifier);
 
   const potentialUser = await prisma.user.findUnique({
     where: isIdentifierEmail
       ? { email: normalizeEmail(request.identifier) }
-      : isIdentifierCPF
-        ? { document: normalize(request.identifier) }
-        : { phone: normalizePhone(request.identifier) },
-    include: { info: true },
+      : { document: normalize(request.identifier) },
   });
 
   if (!potentialUser) throw `Informações de login incorretas!`;
