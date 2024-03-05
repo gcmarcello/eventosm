@@ -53,7 +53,7 @@ export default async function ProfilePage({
                   {team.name}
                 </h3>
                 {team.ownerId === userSession.id && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-row-reverse justify-end gap-2">
                     <Button
                       disabled={true}
                       color={organization.options.colors.primaryColor.tw.color}
