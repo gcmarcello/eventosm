@@ -276,7 +276,7 @@ export default function BatchModal({
           </Fieldset>
         )}
       </DialogBody>
-      <DialogActions className="justify-between">
+      <DialogActions>
         {batchForm.getValues("id") && (
           <Button
             onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
@@ -287,11 +287,9 @@ export default function BatchModal({
               : "Definir por Categoria"}
           </Button>
         )}
-        <div className="flex gap-2">
-          <SubmitButton color={primaryColor?.tw.color}>
-            {batchForm.getValues("id") ? "Salvar" : "Criar"}
-          </SubmitButton>
-        </div>
+        <SubmitButton className={"mx-auto"} color={primaryColor?.tw.color}>
+          {batchForm.getValues("id") ? "Salvar" : "Criar"}
+        </SubmitButton>
       </DialogActions>
     </Dialog>
   );
