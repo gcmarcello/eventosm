@@ -1,6 +1,6 @@
 "use server";
 import { ActionResponse } from "odinkit";
-import { CreateTeamDto } from "./dto";
+import { AddTeamMembersDto, CreateTeamDto } from "./dto";
 import * as service from "./service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
@@ -52,6 +52,21 @@ export async function removeTeamMember(request: {
     const removed = await service.removeTeamMember(parsedRequest);
     revalidatePath("/perfil/equipes");
     return ActionResponse.success({ data: removed });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function addTeamMembers(request: AddTeamMembersDto) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(TeamOwnerMiddleware);
+
+    const addedMembers = await service.addTeamMembers(parsedRequest);
+    revalidatePath("/perfil/equipes");
+    return ActionResponse.success({ data: addedMembers });
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
