@@ -173,7 +173,7 @@ export default function LoginForm({
             >
               <FieldGroup className="space-y-6">
                 <Field name="identifier">
-                  <Label>Email, Documento ou Celular</Label>
+                  <Label>Email ou Documento</Label>
                   <Input />
                   <ErrorMessage />
                 </Field>
