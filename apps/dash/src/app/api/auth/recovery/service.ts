@@ -25,10 +25,10 @@ export async function generateRecoveryToken(
     switch (data.type) {
       case "email":
         return { email: data.identifier };
-      case "phone":
-        return { phone: normalize(data.identifier) };
       case "document":
         return { document: normalize(data.identifier) };
+      default:
+        throw "Tipo de identificador inválido.";
     }
   }
 
