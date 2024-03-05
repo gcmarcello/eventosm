@@ -102,12 +102,13 @@ export async function createTeam(
           .includes(normalize(member.document))
     );
   }
-
-  existingUsersIds.push({
-    id: data.userSession.id,
-    document: data.userSession.document,
-    email: data.userSession.email,
-  });
+  if (!existingUsersIds.find((user) => user.email === data.userSession.email)) {
+    existingUsersIds.push({
+      id: data.userSession.id,
+      document: data.userSession.document,
+      email: data.userSession.email,
+    });
+  }
 
   const team = await prisma.team.create({
     data: {
