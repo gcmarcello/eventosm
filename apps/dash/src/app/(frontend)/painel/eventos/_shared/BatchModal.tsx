@@ -193,8 +193,8 @@ export default function BatchModal({
             </For>
           </Fieldset>
         ) : (
-          <Fieldset>
-            <FieldGroup className={"grid grid-cols-2 gap-2"}>
+          <Fieldset className={"my-3 space-y-3"}>
+            <div className={"grid grid-cols-2 gap-2"}>
               <BatchField name="dateStart">
                 <Label>Data de Início</Label>
                 <Input
@@ -207,8 +207,8 @@ export default function BatchModal({
                 <Label>Hora de Início</Label>
                 <Input mask={"99:99"} inputMode="numeric" placeholder="09:40" />
               </BatchField>
-            </FieldGroup>
-            <FieldGroup className={"grid grid-cols-2 gap-2"}>
+            </div>
+            <div className={"grid grid-cols-2 gap-2"}>
               <BatchField name="dateEnd">
                 <Label>Data de Término</Label>
                 <Input
@@ -222,9 +222,9 @@ export default function BatchModal({
                 <Label>Hora de Término</Label>
                 <Input mask={"99:99"} inputMode="numeric" placeholder="09:40" />
               </BatchField>
-            </FieldGroup>
+            </div>
 
-            <FieldGroup className={"grid grid-cols-2 gap-2 lg:grid-cols-2"}>
+            <div className={"grid grid-cols-2 gap-2 lg:grid-cols-2"}>
               <BatchField name="maxRegistrations">
                 <Label>Inscrições</Label>
                 <Input type="number" inputMode="numeric" placeholder="1000" />
@@ -239,8 +239,8 @@ export default function BatchModal({
                   lote.
                 </Description>
               )}
-            </FieldGroup>
-            <FieldGroup className={"grid grid-cols-2 gap-4 lg:grid-cols-2"}>
+            </div>
+            <div className={"grid grid-cols-2 gap-4 lg:grid-cols-2"}>
               <BatchField enableAsterisk={false} name="registrationType">
                 <Label>Tipo de Inscrição</Label>
                 <Select
@@ -256,6 +256,8 @@ export default function BatchModal({
                 <Label>Nome do Lote</Label>
                 <Input />
               </BatchField>
+            </div>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               {batchForm.watch("registrationType") !== "individual" && (
                 <BatchField name="multipleRegistrationLimit">
                   <Label>Limite de Inscrições em lote (por equipe)</Label>
@@ -272,7 +274,7 @@ export default function BatchModal({
                   color={organization.options.colors.primaryColor.tw.color}
                 />
               </BatchField>
-            </FieldGroup>
+            </div>
           </Fieldset>
         )}
       </DialogBody>

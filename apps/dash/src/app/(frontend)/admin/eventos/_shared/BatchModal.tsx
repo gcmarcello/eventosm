@@ -194,7 +194,7 @@ export default function BatchModal({
           </Fieldset>
         ) : (
           <Fieldset>
-            <FieldGroup className={"grid grid-cols-2 gap-2"}>
+            <FieldGroup className={"grid grid-cols-2"}>
               <BatchField name="dateStart">
                 <Label>Data de Início</Label>
                 <Input

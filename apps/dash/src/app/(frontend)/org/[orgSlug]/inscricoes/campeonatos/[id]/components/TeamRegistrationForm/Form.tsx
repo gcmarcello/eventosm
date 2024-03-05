@@ -154,6 +154,7 @@ export default function TeamTournamentRegistration({
                 {eventGroup.Event.length}
                 ).
               </Text>
+              {batch.name && <Text>Lote {batch.name}</Text>}
             </div>
             <div className="relative h-20 w-32 ">
               {eventGroup.imageUrl && (
