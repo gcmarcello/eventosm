@@ -211,3 +211,33 @@ export async function createTeam(
 
   return team;
 }
+
+export async function removeTeamMember({
+  teamId,
+  userId,
+}: {
+  teamId: string;
+  userId: string;
+}) {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: { User: true },
+  });
+
+  if (!team) throw "Time não encontrado!";
+
+  if (team.ownerId === userId) throw "Não é possível remover o dono do time";
+
+  const updatedTeam = await prisma.team.update({
+    where: { id: teamId },
+    data: {
+      User: {
+        disconnect: {
+          id: userId,
+        },
+      },
+    },
+  });
+
+  return updatedTeam;
+}

@@ -405,6 +405,14 @@ model EventRegistration {
   @@schema("public")
 }
 
+enum TeamStatus {
+  active
+  inactive
+  deleted
+
+  @@schema("public")
+}
+
 model Team {
   id                     String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   name                   String
@@ -413,6 +421,7 @@ model Team {
   User                   User[]
   originalOrganization   Organization?       @relation(fields: [originalOrganizationId], references: [id])
   originalOrganizationId String?             @db.Uuid
+  status                 TeamStatus          @default(active)
   createdAt              DateTime            @default(now())
   updatedAt              DateTime?           @updatedAt
   EventRegistration      EventRegistration[]
