@@ -5,6 +5,7 @@ import * as service from "./service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { revalidatePath } from "next/cache";
+import { TeamOwnerMiddleware } from "@/middleware/functions/teamOwner.middleware";
 
 export async function createTeam(request: CreateTeamDto) {
   try {
@@ -34,6 +35,23 @@ export async function readTeams() {
     });
 
     return ActionResponse.success({ data: teams });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function removeTeamMember(request: {
+  teamId: string;
+  userId: string;
+}) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(TeamOwnerMiddleware);
+    const removed = await service.removeTeamMember(parsedRequest);
+    revalidatePath("/perfil/equipes");
+    return ActionResponse.success({ data: removed });
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);

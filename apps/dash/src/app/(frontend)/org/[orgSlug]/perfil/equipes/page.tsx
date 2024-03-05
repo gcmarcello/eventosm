@@ -7,6 +7,8 @@ import { For } from "odinkit";
 import { Button } from "odinkit/client";
 import { useMemo } from "react";
 import { NewTeamModal } from "../components/NewTeamModal";
+import MembersDisclosure from "./components/MembersDisclosure";
+import NewMemberModal from "./components/NewMemberModal";
 
 export default async function ProfilePage({
   params,
@@ -23,7 +25,7 @@ export default async function ProfilePage({
   } = await UseMiddlewares().then(UserSessionMiddleware);
 
   const teams = await prisma.team.findMany({
-    where: { ownerId: userSession.id },
+    where: { ownerId: userSession.id, status: { not: "deleted" } },
     include: { owner: true, User: true },
   });
 
@@ -51,12 +53,19 @@ export default async function ProfilePage({
                   {team.name}
                 </h3>
                 {team.ownerId === userSession.id && (
-                  <Button
-                    disabled={true}
-                    color={organization.options.colors.primaryColor.tw.color}
-                  >
-                    Editar
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      disabled={true}
+                      color={organization.options.colors.primaryColor.tw.color}
+                    >
+                      Editar
+                    </Button>
+                    {/* <NewMemberModal
+                      color={
+                        organization.options.colors.secondaryColor.tw.color
+                      }
+                    /> */}
+                  </div>
                 )}
               </div>
               <li
@@ -74,14 +83,17 @@ export default async function ProfilePage({
                   </p>
                 </div>
               </li>
-              <li className="flex gap-x-4 px-4 py-5">
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold leading-6 text-gray-900">
-                    Outros {team.User.length - 1} membros
-                  </p>
-                  <p className="mt-1 cursor-pointer truncate text-xs leading-5 text-gray-500 hover:underline">
-                    Ver Todos
-                  </p>
+              <li className="flex  gap-x-4 px-4 py-5">
+                <div className="w-full min-w-0">
+                  {team.User.length > 1 && (
+                    <p className="text-sm font-semibold leading-6 text-gray-900">
+                      Outros {team.User.length - 1} membros
+                    </p>
+                  )}
+                  <MembersDisclosure
+                    teamId={team.id}
+                    members={team.User}
+                  ></MembersDisclosure>
                 </div>
               </li>
             </div>

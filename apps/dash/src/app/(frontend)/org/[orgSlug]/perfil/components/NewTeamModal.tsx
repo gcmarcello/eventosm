@@ -2,6 +2,7 @@
 import { ExcelDataSchema, excelDataSchema } from "@/app/api/registrations/dto";
 import { createTeam } from "@/app/api/teams/action";
 import { createTeamDto } from "@/app/api/teams/dto";
+import { chooseTextColor } from "@/utils/colors";
 import { Transition } from "@headlessui/react";
 import {
   ComputerDesktopIcon,
@@ -13,8 +14,11 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Gender, Organization } from "@prisma/client";
+import clsx from "clsx";
 import {
+  Alertbox,
   For,
+  Link,
   SubmitButton,
   TableBody,
   TableCell,
@@ -77,20 +81,23 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
   });
 
   const addEmptyTeamMember = () => {
-    fieldArray.append({
-      fullName: "",
-      email: "",
-      phone: "",
-      document: "",
-      info: {
-        birthDate: "",
-        zipCode: "",
-        address: "",
-        gender: "" as Gender,
-        number: "",
-        complement: "",
+    fieldArray.append(
+      {
+        fullName: "",
+        email: "",
+        phone: "",
+        document: "",
+        info: {
+          birthDate: "",
+          zipCode: "",
+          address: "",
+          gender: "" as Gender,
+          number: "",
+          complement: "",
+        },
       },
-    });
+      { shouldFocus: true }
+    );
   };
 
   function removeTeamMember(index: number) {
@@ -165,6 +172,16 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
   });
 
   const Field = useMemo(() => form.createField(), []);
+
+  function getFaultyMembers() {
+    return fieldArray.fields.reduce((acc: number[], field, index) => {
+      const errors = form.formState.errors.members?.[index];
+      if (errors) {
+        acc.push(index + 1);
+      }
+      return acc;
+    }, []);
+  }
 
   return (
     <>
@@ -241,6 +258,66 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
               </div>
             ) : (
               <>
+                <div className="col-span-4 space-y-4 lg:ps-4">
+                  <div className="my-3 flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                      <div
+                        style={{
+                          backgroundColor:
+                            organization.options.colors.primaryColor.hex,
+                          color: chooseTextColor(
+                            organization.options.colors.primaryColor.hex
+                          ),
+                        }}
+                        className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
+                      >
+                        1
+                      </div>
+                      <div className="flex flex-col">
+                        <Text className="font-semibold">Formato Correto</Text>
+                        <Text>
+                          O arquivo deve ser um arquivo .xlsx e seguir o formato
+                          correto.{" "}
+                          <Link
+                            style={{
+                              color:
+                                organization.options.colors.primaryColor.hex,
+                            }}
+                            href={
+                              "https://f005.backblazeb2.com/file/eventosmb/ModeloInscricoes.xlsx"
+                            }
+                            className="underline"
+                          >
+                            Clique aqui
+                          </Link>{" "}
+                          para baixar o modelo.
+                        </Text>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        style={{
+                          backgroundColor:
+                            organization.options.colors.primaryColor.hex,
+                          color: chooseTextColor(
+                            organization.options.colors.primaryColor.hex
+                          ),
+                        }}
+                        className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
+                      >
+                        2
+                      </div>
+                      <div className="flex flex-col">
+                        <Text className="font-semibold">
+                          Verifique os Dados
+                        </Text>
+                        <Text>
+                          Após importar o arquivo, faça os ajustes necessários.
+                        </Text>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <Field name="membersFile">
                   <FileInput
                     fileTypes={["xlsx"]}
@@ -475,7 +552,13 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                     </span>
                   )}
                 </DialogDescription>
-                <DialogBody>
+                <DialogBody
+                  className={clsx(
+                    inputMode && form.watch("addMembers") && currentStep === 1
+                      ? "pb-10 lg:pb-4"
+                      : ""
+                  )}
+                >
                   <For each={order}>
                     {(step) => (
                       <Transition
@@ -492,75 +575,99 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                     )}
                   </For>
                 </DialogBody>
-                <DialogActions>
-                  {hasNextStep && form.watch("addMembers") && (
-                    <>
-                      <Button
-                        type="button"
-                        color={
-                          organization.options.colors.primaryColor.tw.color
-                        }
-                        onClick={() => {
-                          walk(1);
-                          scrollTo({ top: 0, behavior: "smooth" });
-                        }}
-                        disabled={!isCurrentStepValid}
-                      >
-                        Próximo
-                      </Button>
-                    </>
+                <DialogActions
+                  className={clsx(
+                    inputMode && form.watch("addMembers") && currentStep === 1
+                      ? "fixed bottom-0 left-0 w-full border-t border-slate-100 bg-white shadow-md"
+                      : ""
                   )}
-                  {hasPrevStep && (
-                    <Button
-                      type="button"
-                      className={"hidden lg:block"}
-                      plain={true}
-                      onClick={() => {
-                        walk(-1);
-                        if (currentStep === 1) {
-                          setInputMode(null);
-                          form.resetField("membersFile");
-                        }
-                      }}
-                    >
-                      Voltar
-                    </Button>
-                  )}
-                  {currentStep === 1 &&
-                  inputMode &&
-                  fieldArray.fields.length ? (
-                    <>
-                      <Button onClick={() => addEmptyTeamMember()}>
-                        <PlusIcon className="h-6 w-6" /> Membro
-                      </Button>
-                    </>
-                  ) : null}
+                >
+                  <div
+                    className={clsx(
+                      "flex w-auto gap-2 p-2",
+                      getFaultyMembers().length
+                        ? "flex-col justify-between"
+                        : "justify-between"
+                    )}
+                  >
+                    {getFaultyMembers().length ? (
+                      <Alertbox type="error" title="Erros">
+                        <For each={getFaultyMembers()}>
+                          {(index) => <>{index}</>}
+                        </For>
+                      </Alertbox>
+                    ) : null}
+                    <div className="my-auto flex w-full justify-between gap-2">
+                      {hasNextStep && form.watch("addMembers") && (
+                        <>
+                          <Button
+                            type="button"
+                            color={
+                              organization.options.colors.primaryColor.tw.color
+                            }
+                            onClick={() => {
+                              walk(1);
+                              scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            disabled={!isCurrentStepValid}
+                          >
+                            Próximo
+                          </Button>
+                        </>
+                      )}
+                      {hasPrevStep && (
+                        <Button
+                          type="button"
+                          className={"hidden lg:block"}
+                          plain={true}
+                          onClick={() => {
+                            walk(-1);
+                            if (currentStep === 1) {
+                              setInputMode(null);
+                              form.resetField("membersFile");
+                            }
+                          }}
+                        >
+                          Voltar
+                        </Button>
+                      )}
+                      {currentStep === 1 &&
+                      inputMode &&
+                      fieldArray.fields.length ? (
+                        <>
+                          <Button onClick={() => addEmptyTeamMember()}>
+                            <PlusIcon className="h-6 w-6" /> Membro
+                          </Button>
+                        </>
+                      ) : null}
 
-                  <div className="flex justify-between">
-                    {hasPrevStep && (
-                      <Button
-                        type="button"
-                        className={"lg:hidden"}
-                        plain={true}
-                        onClick={() => {
-                          walk(-1);
-                          currentStep === 1 && setInputMode(null);
-                        }}
-                      >
-                        Voltar
-                      </Button>
-                    )}
-                    {((!hasNextStep && inputMode) ||
-                      !form.watch("addMembers")) && (
-                      <SubmitButton
-                        disabled={!form.formState.isValid}
-                        color={
-                          organization.options.colors.primaryColor.tw.color
-                        }
-                      >
-                        Inscrever
-                      </SubmitButton>
-                    )}
+                      <div className="flex justify-between">
+                        {hasPrevStep && (
+                          <Button
+                            type="button"
+                            className={"lg:hidden"}
+                            plain={true}
+                            onClick={() => {
+                              walk(-1);
+                              currentStep === 1 && setInputMode(null);
+                            }}
+                          >
+                            Voltar
+                          </Button>
+                        )}
+                        {((!hasNextStep && inputMode) ||
+                          !form.watch("addMembers")) && (
+                          <SubmitButton
+                            disabled={!form.formState.isValid}
+                            color={
+                              organization.options.colors.primaryColor.tw.color
+                            }
+                          >
+                            Inscrever
+                          </SubmitButton>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </DialogActions>
               </Dialog>
