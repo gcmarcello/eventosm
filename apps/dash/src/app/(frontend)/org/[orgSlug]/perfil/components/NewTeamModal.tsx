@@ -174,6 +174,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
   const Field = useMemo(() => form.createField(), []);
 
   function getFaultyMembers() {
+    if (!inputMode) return [];
     return fieldArray.fields.reduce((acc: number[], field, index) => {
       const errors = form.formState.errors.members?.[index];
       if (errors) {
@@ -591,13 +592,19 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                     )}
                   >
                     {getFaultyMembers().length ? (
-                      <Alertbox type="error" title="Erros">
-                        <For each={getFaultyMembers()}>
-                          {(index) => <>{index}</>}
-                        </For>
+                      <Alertbox type="error" title="Erro!">
+                        {getFaultyMembers().length < 2
+                          ? "Erros na linha"
+                          : "Erros nas linhas"}{" "}
+                        {getFaultyMembers().join(", ")}
                       </Alertbox>
                     ) : null}
-                    <div className="my-auto flex w-full justify-between gap-2">
+                    <div
+                      className={clsx(
+                        "my-auto flex w-full gap-2",
+                        inputMode ? "justify-between" : "justify-end"
+                      )}
+                    >
                       {hasNextStep && form.watch("addMembers") && (
                         <>
                           <Button
