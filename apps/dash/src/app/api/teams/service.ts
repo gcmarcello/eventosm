@@ -110,6 +110,21 @@ export async function createTeam(
     });
   }
 
+  const existingUsersEmails = newUsers.map((user) => user.email);
+
+  const existingEmails = await prisma.user.findMany({
+    where: {
+      email: {
+        in: existingUsersEmails,
+      },
+    },
+    select: { email: true },
+  });
+
+  if (existingEmails.length) {
+    throw `Email ${existingEmails[0]?.email} já está sendo utilizado.`;
+  }
+
   const team = await prisma.team.create({
     data: {
       name: data.name,
