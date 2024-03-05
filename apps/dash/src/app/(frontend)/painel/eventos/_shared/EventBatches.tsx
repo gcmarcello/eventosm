@@ -180,7 +180,7 @@ export default function EventBatches({
         data={batches}
         columns={(columnHelper) => [
           columnHelper.accessor("dateStart", {
-            id: "name",
+            id: "date",
             header: "Período de Inscrição",
             enableSorting: true,
             enableGlobalFilter: true,
@@ -193,6 +193,13 @@ export default function EventBatches({
                 {date(info.row.original.dateEnd, "DD/MM HH:mm", true)}
               </span>
             ),
+          }),
+          columnHelper.accessor("name", {
+            id: "name",
+            header: "Nome do Lote",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue() || "Sem nome",
           }),
           columnHelper.accessor("_count.EventRegistration", {
             id: "registrations",
