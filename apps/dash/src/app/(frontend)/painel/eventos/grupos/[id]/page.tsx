@@ -41,11 +41,10 @@ export default async function EditEventGroupLayout({
 
   if (!organizationId) return redirect("/painel");
 
-  const organization = (
-    await readOrganizations({
-      where: { id: organizationId },
-    })
-  )[0];
+  const organization = await prisma.organization.findUnique({
+    where: { id: organizationId },
+    include: { OrgCustomDomain: true },
+  });
 
   if (!organization) return redirect("/painel");
 

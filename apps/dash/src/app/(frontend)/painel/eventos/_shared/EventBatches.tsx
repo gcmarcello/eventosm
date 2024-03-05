@@ -23,7 +23,7 @@ import {
   EllipsisVerticalIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { date } from "odinkit";
+import { Badge, date } from "odinkit";
 import { Span } from "next/dist/trace";
 import { set } from "lodash";
 import { Table } from "odinkit";
@@ -55,7 +55,9 @@ export default function EventBatches({
   event?: EventWithRegistrationCount;
   eventGroup?: EventGroupWithEvents;
   modalities: EventModalityWithCategories[];
-  organization: Organization;
+  organization: Organization & {
+    OrgCustomDomain: { id: string; domain: string; organizationId: string }[];
+  };
 }) {
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [showCategoryBatches, setShowCategoryBatches] = useState(false);
@@ -222,6 +224,18 @@ export default function EventBatches({
                 <XMarkIcon className="h-5 w-5 text-red-400" />
               ),
           }),
+          columnHelper.accessor("protectedBatch", {
+            id: "protectedBatch",
+            header: "Lote Privado",
+            enableSorting: false,
+            enableGlobalFilter: false,
+            cell: (info) =>
+              info.getValue() ? (
+                <Badge color="fuchsia">Protegido</Badge>
+              ) : (
+                <Badge color="green">Livre</Badge>
+              ),
+          }),
 
           columnHelper.accessor("id", {
             id: "batch_id",
@@ -242,13 +256,22 @@ export default function EventBatches({
                   </DropdownItem>
                   <DropdownSeparator />
                   <DropdownItem
-                    onClick={() =>
-                      showToast({
-                        message: "Em desenvolvimento",
-                        title: "Em desenvolvimento",
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(
+                        organization.OrgCustomDomain[0]?.domain +
+                          "/inscricoes/campeonatos/" +
+                          info.row.original.eventGroupId +
+                          `?batch=${info.row.original.id}` +
+                          (info.row.original.registrationType === "team"
+                            ? "&team=true"
+                            : "")
+                      );
+                      return showToast({
+                        message: "Link copiado.",
+                        title: "Sucesso!",
                         variant: "success",
-                      })
-                    }
+                      });
+                    }}
                   >
                     Copiar link do lote
                   </DropdownItem>

@@ -9,7 +9,7 @@ export default async function confirmUserPage({
 }) {
   const user = await prisma.user.findUnique({ where: { id: params.id } });
 
-  if (!user || user.confirmed) {
+  if (!user) {
     return redirect("/login?alert=errorConfirm");
   }
 

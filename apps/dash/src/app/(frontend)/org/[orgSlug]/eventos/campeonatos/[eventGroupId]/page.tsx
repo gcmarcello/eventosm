@@ -42,11 +42,11 @@ export default async function TorneioPage({
     })
   )[0];
 
-  if (!eventGroup) return notFound();
+  if (!eventGroup || eventGroup.status === "draft") return notFound();
 
   const isUserRegistered = userSession?.id
     ? (
-        await readRegistrations({
+        await prisma.eventRegistration.findMany({
           where: {
             eventGroupId: eventGroup.id,
             userId: userSession?.id,
@@ -64,12 +64,21 @@ export default async function TorneioPage({
     where: { eventGroupId: eventGroup?.id },
   });
 
+  const registrationCount = await prisma.eventRegistration.count({
+    where: {
+      eventGroupId: eventGroup.id,
+      batchId: batch?.id,
+      status: { not: "cancelled" },
+    },
+  });
+
   return (
     <EventGroupContainer
       eventGroup={eventGroup}
       isUserRegistered={isUserRegistered}
       batch={batch}
       nextBatch={nextBatch}
+      registrationCount={registrationCount}
       organization={organization}
     />
   );

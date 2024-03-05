@@ -73,7 +73,6 @@ export default function RecoverPage() {
                       data={[
                         { id: "document", name: "CPF" },
                         { id: "email", name: "E-mail" },
-                        { id: "phone", name: "Telefone" },
                       ]}
                       defaultValue={""}
                     ></Select>
@@ -97,10 +96,6 @@ export default function RecoverPage() {
                             switch (type) {
                               case "document":
                                 return "999.999.999-99";
-                              case "phone":
-                                return value.length > 14
-                                  ? "(99) 99999-9999"
-                                  : "(99) 9999-99999";
                               default:
                                 return "";
                             }

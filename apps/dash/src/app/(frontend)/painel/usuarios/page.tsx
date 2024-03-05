@@ -28,6 +28,7 @@ export default async function UsersPanelPage() {
       updatedAt: true,
       createdAt: true,
       infoId: true,
+      info: true,
     },
   });
   return (

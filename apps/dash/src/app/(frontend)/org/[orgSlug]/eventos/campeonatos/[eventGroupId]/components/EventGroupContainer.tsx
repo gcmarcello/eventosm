@@ -12,10 +12,10 @@ import {
   Text,
   TabItem,
   Table,
-  date,
   For,
   Heading,
   List,
+  date,
 } from "odinkit";
 import {
   Dropdown,
@@ -27,6 +27,7 @@ import {
   DropdownDescription,
   Button,
   DisclosureAccordion,
+  Date,
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useOrg } from "../../../../components/OrgStore";
@@ -47,12 +48,14 @@ export default function EventGroupContainer({
   batch,
   organization,
   nextBatch,
+  registrationCount,
 }: {
   isUserRegistered: boolean;
   eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
   nextBatch: EventRegistrationBatch | null;
+  registrationCount: number;
 }) {
   const generalTabs: TabItem[] = [
     {
@@ -176,7 +179,7 @@ export default function EventGroupContainer({
         <div
           ref={contentRef}
           className={clsx(
-            "xxl:mx-96 xs:mx-16 mb-4 rounded-b bg-white shadow-md lg:mx-40"
+            "xxl:mx-96  mb-4 rounded-b bg-white shadow-md lg:mx-40 xl:mx-48"
           )}
         >
           <div className="grid grid-cols-4 gap-4 ">
@@ -240,74 +243,84 @@ export default function EventGroupContainer({
               )}
             >
               {batch ? (
-                <>
-                  <Dropdown>
-                    <DropdownButton
-                      className={"w-full"}
-                      color={
-                        isUserRegistered
-                          ? "amber"
-                          : organization.options.colors.primaryColor.tw.color
-                      }
-                    >
-                      {isUserRegistered ? "Inscrito!" : "Inscrição"}
+                registrationCount >= batch.maxRegistrations ? (
+                  <Button disabled color="red" className={"w-full"}>
+                    Inscrições Esgotadas
+                  </Button>
+                ) : (
+                  <>
+                    <Dropdown>
+                      <DropdownButton
+                        className={"w-full"}
+                        color={
+                          isUserRegistered
+                            ? "amber"
+                            : organization.options.colors.primaryColor.tw.color
+                        }
+                      >
+                        {isUserRegistered ? "Inscrito!" : "Inscrição"}
 
-                      <ChevronUpIcon className="size-5 lg:hidden" />
-                      <ChevronDownIcon className=" size-5 lg:block" />
-                    </DropdownButton>
-                    <DropdownMenu>
-                      {
-                        <DropdownItem
-                          disabled={
-                            isUserRegistered ||
-                            !(
-                              batch.registrationType === "individual" ||
-                              batch.registrationType === "mixed"
-                            )
-                          }
-                          href={`/inscricoes/campeonatos/${eventGroup.id}`}
-                        >
-                          <DropdownLabel>
-                            <span className="inline-flex gap-2">
-                              <UserIcon className="h-5 w-5" />
-                              Individual
-                            </span>
-                          </DropdownLabel>
-                        </DropdownItem>
-                      }
-                      <DropdownSeparator />
-                      {
-                        <DropdownItem
-                          href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
-                          disabled={
-                            !(
-                              batch.registrationType === "team" ||
-                              batch.registrationType === "mixed"
-                            )
-                          }
-                        >
-                          <DropdownLabel>
-                            <span className="inline-flex gap-2">
-                              <UserGroupIcon className="h-5 w-5" />
-                              Por Equipes
-                            </span>
-                          </DropdownLabel>
-                          <DropdownDescription>
-                            Inscreva toda a equipe de uma só vez.
-                          </DropdownDescription>
-                        </DropdownItem>
-                      }
-                    </DropdownMenu>
-                  </Dropdown>
-                </>
+                        <ChevronUpIcon className="block size-5 lg:hidden" />
+                        <ChevronDownIcon className=" hidden size-5 lg:block" />
+                      </DropdownButton>
+                      <DropdownMenu>
+                        {
+                          <DropdownItem
+                            disabled={
+                              isUserRegistered ||
+                              !(
+                                batch.registrationType === "individual" ||
+                                batch.registrationType === "mixed"
+                              )
+                            }
+                            href={`/inscricoes/campeonatos/${eventGroup.id}`}
+                          >
+                            <DropdownLabel>
+                              <span className="inline-flex gap-2">
+                                <UserIcon className="h-5 w-5" />
+                                Individual
+                              </span>
+                            </DropdownLabel>
+                          </DropdownItem>
+                        }
+                        <DropdownSeparator />
+                        {
+                          <DropdownItem
+                            href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                            disabled={
+                              !(
+                                batch.registrationType === "team" ||
+                                batch.registrationType === "mixed"
+                              )
+                            }
+                          >
+                            <DropdownLabel>
+                              <span className="inline-flex gap-2">
+                                <UserGroupIcon className="h-5 w-5" />
+                                Por Equipes
+                              </span>
+                            </DropdownLabel>
+                            <DropdownDescription>
+                              Inscreva toda a equipe de uma só vez.
+                            </DropdownDescription>
+                          </DropdownItem>
+                        }
+                      </DropdownMenu>
+                    </Dropdown>
+                  </>
+                )
               ) : isUserRegistered ? (
                 <Button disabled color="amber" className={"w-full"}>
                   Inscrito!
                 </Button>
               ) : nextBatch ? (
-                <Button disabled color="red" className={"w-full"}>
+                <Button disabled color="red" className={"flex w-full gap-1"}>
                   Inscrições à partir de{" "}
-                  {dayjs(nextBatch.dateStart).format("DD/MM/YYYY")}
+                  <Date
+                    date={nextBatch.dateStart}
+                    localTime
+                    format="DD/MM/YYYY HH:mm"
+                  />
                 </Button>
               ) : (
                 <Button disabled color="red" className={"w-full"}>
@@ -338,7 +351,10 @@ export default function EventGroupContainer({
                     <dt className="text-sm font-medium leading-6 text-gray-900">
                       Fim
                     </dt>
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <dd
+                      suppressHydrationWarning
+                      className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
+                    >
                       {date(
                         eventGroup.Event[eventGroup.Event.length - 1]
                           ?.dateEnd as any,
@@ -370,66 +386,72 @@ export default function EventGroupContainer({
       <BottomNavigation className="lg:hidden">
         <div className="flex flex-row-reverse items-center justify-between p-2">
           {batch ? (
-            <>
-              <Dropdown>
-                <DropdownButton
-                  className={"w-full"}
-                  color={
-                    isUserRegistered
-                      ? "amber"
-                      : organization.options.colors.primaryColor.tw.color
-                  }
-                >
-                  {isUserRegistered ? "Inscrito!" : "Inscrição"}
+            registrationCount >= batch.maxRegistrations ? (
+              <Button disabled color="red" className={"w-full"}>
+                Inscrições Esgotadas
+              </Button>
+            ) : (
+              <>
+                <Dropdown>
+                  <DropdownButton
+                    className={"w-full"}
+                    color={
+                      isUserRegistered
+                        ? "amber"
+                        : organization.options.colors.primaryColor.tw.color
+                    }
+                  >
+                    {isUserRegistered ? "Inscrito!" : "Inscrição"}
 
-                  <ChevronUpIcon className="size-5 lg:hidden" />
-                  <ChevronDownIcon className=" size-5 lg:block" />
-                </DropdownButton>
-                <DropdownMenu>
-                  {
-                    <DropdownItem
-                      disabled={
-                        isUserRegistered ||
-                        !(
-                          batch.registrationType === "individual" ||
-                          batch.registrationType === "mixed"
-                        )
-                      }
-                      href={`/inscricoes/campeonatos/${eventGroup.id}`}
-                    >
-                      <DropdownLabel>
-                        <span className="inline-flex gap-2">
-                          <UserIcon className="h-5 w-5" />
-                          Individual
-                        </span>
-                      </DropdownLabel>
-                    </DropdownItem>
-                  }
-                  <DropdownSeparator />
-                  {
-                    <DropdownItem
-                      href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
-                      disabled={
-                        !(
-                          batch.registrationType === "team" ||
-                          batch.registrationType === "mixed"
-                        )
-                      }
-                    >
-                      <DropdownLabel>
-                        <span className="inline-flex gap-2">
-                          <UserGroupIcon className="h-5 w-5" />
-                          Por Equipes
-                        </span>
-                      </DropdownLabel>
-                      <DropdownDescription>
-                        Inscreva toda a equipe de uma só vez.
-                      </DropdownDescription>
-                    </DropdownItem>
-                  }
-                </DropdownMenu>
-              </Dropdown>
-            </>
+                    <ChevronUpIcon className="block size-5 lg:hidden" />
+                    <ChevronDownIcon className=" hidden size-5 lg:block" />
+                  </DropdownButton>
+                  <DropdownMenu>
+                    {
+                      <DropdownItem
+                        disabled={
+                          isUserRegistered ||
+                          !(
+                            batch.registrationType === "individual" ||
+                            batch.registrationType === "mixed"
+                          )
+                        }
+                        href={`/inscricoes/campeonatos/${eventGroup.id}`}
+                      >
+                        <DropdownLabel>
+                          <span className="inline-flex gap-2">
+                            <UserIcon className="h-5 w-5" />
+                            Individual
+                          </span>
+                        </DropdownLabel>
+                      </DropdownItem>
+                    }
+                    <DropdownSeparator />
+                    {
+                      <DropdownItem
+                        href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                        disabled={
+                          !(
+                            batch.registrationType === "team" ||
+                            batch.registrationType === "mixed"
+                          )
+                        }
+                      >
+                        <DropdownLabel>
+                          <span className="inline-flex gap-2">
+                            <UserGroupIcon className="h-5 w-5" />
+                            Por Equipes
+                          </span>
+                        </DropdownLabel>
+                        <DropdownDescription>
+                          Inscreva toda a equipe de uma só vez.
+                        </DropdownDescription>
+                      </DropdownItem>
+                    }
+                  </DropdownMenu>
+                </Dropdown>
+              </>
+            )
           ) : isUserRegistered ? (
             <Button disabled color="amber" className={"w-full"}>
               Inscrito!
@@ -437,7 +459,11 @@ export default function EventGroupContainer({
           ) : nextBatch ? (
             <Button disabled color="red" className={"w-full"}>
               Inscrições à partir de{" "}
-              {dayjs(nextBatch.dateStart).format("DD/MM/YYYY")}
+              <Date
+                date={nextBatch.dateStart}
+                format="DD/MM/YYYY HH:mm"
+                localTime
+              />
             </Button>
           ) : (
             <Button disabled color="red" className={"w-full"}>

@@ -22,7 +22,7 @@ export class EmailProcessor {
             sandboxMode: { enable: this.settingsService.isDevelopment },
           },
         })
-        .then((res) => console.log(res));
+        .then(() => console.log("Mail Sent"));
 
       return email;
     } catch (err) {

@@ -3,8 +3,10 @@ import {
   ExcelDataSchema,
   excelDataSchema,
 } from "@/app/api/registrations/dto";
+import { readTeams } from "@/app/api/teams/action";
 import { chooseTextColor } from "@/utils/colors";
 import {
+  ChevronDownIcon,
   DocumentArrowUpIcon,
   PencilSquareIcon,
 } from "@heroicons/react/20/solid";
@@ -15,6 +17,8 @@ import {
   For,
   Link,
   List,
+  LoadingSpinner,
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -40,26 +44,44 @@ import {
   Switch,
   ErrorMessage,
   Button,
+  useAction,
+  Dropdown,
+  DropdownButton,
+  DropdownHeading,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  Checkbox,
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
+import { filterCategories } from "../../../../utils/categories";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import parseCustomFormat from "dayjs/plugin/customParseFormat";
+import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { forEach } from "lodash";
+import clsx from "clsx";
+import { TeamWithUsers } from "prisma/types/Teams";
+import { fetchUserInfo } from "../../../../utils/userInfo";
+import { EventGroupCreateMultipleRegistrationsDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(parseCustomFormat);
 
 export function ParticipantsForm({
-  setInputMode,
-  inputMode,
+  teams,
   fieldArray,
   eventGroup,
-  addEmptyTeamMember,
   organization,
-  batch,
 }: {
-  addEmptyTeamMember: () => void;
+  teams: TeamWithUsers[];
   organization: Organization;
-  batch: EventRegistrationBatch;
   eventGroup: EventGroupWithInfo;
   fieldArray: UseFieldArrayReturn<
-    CreateMultipleRegistrationsDto,
+    EventGroupCreateMultipleRegistrationsDto,
     "teamMembers",
     "id"
   >;
@@ -67,30 +89,17 @@ export function ParticipantsForm({
   inputMode: null | "file" | "manual";
 }) {
   const { fields, insert } = fieldArray;
+  const [parsedTeamData, setParsedTeamData] = useState(null);
 
   const form = useFormContext<CreateMultipleRegistrationsDto>();
 
   const Field = useMemo(() => form.createField(), []);
 
-  function formatSheetData(sheetData: ExcelDataSchema) {
-    return sheetData.map((row) => ({
-      user: {
-        fullName: row["Nome Completo"],
-        email: row["E-mail"],
-        phone: formatPhone(normalize(row.Celular)),
-        document: formatCPF(normalize(row.CPF)),
-        address: row.Endereço,
-        birthDate: row["Data de Nascimento (DD/MM/AAAA)"],
-        zipCode: formatCEP(row.CEP),
-        number: row["Número"],
-        complemento: row["Complemento (Opcional)"],
-        gender: ["masc", "masculino", "m", "homem", "h", "homen"].includes(
-          normalize(row.Sexo)
-        )
-          ? "male"
-          : "female",
-      },
-      registration: {
+  function parseTeamData(teamId: string) {
+    const parsedTeamData = teams
+      ?.find((team) => team.id === teamId)
+      ?.User.map((u) => ({
+        userId: u.id,
         modalityId:
           eventGroup.EventModality.length > 1
             ? ""
@@ -100,339 +109,338 @@ export function ParticipantsForm({
           id:
             eventGroup.EventAddon?.find((addon) => !addon.price)?.id ||
             undefined,
-          option: "",
+          option: undefined,
         },
-      },
-    }));
+        selected: true,
+      }));
+
+    if (parsedTeamData) form.setValue("teamMembers", parsedTeamData);
+  }
+
+  function autoAssignModalities() {
+    fields.forEach((field, index) => {
+      form.setValue(
+        `teamMembers.${index}.modalityId`,
+        eventGroup.EventModality[0]!.id
+      );
+      form.resetField(`teamMembers.${index}.categoryId`);
+    });
+  }
+
+  function autoAssignCategories() {
+    fields.forEach((field, index) => {
+      if (form.getValues(`teamMembers.${index}.selected`)) {
+        const userInfo = fetchUserInfo(field.userId!, teams, form);
+        const birthDate = userInfo?.info.birthDate;
+        const gender = userInfo?.info.gender!;
+        const modalityId = form.getValues(`teamMembers.${index}.modalityId`);
+        form.setValue(
+          `teamMembers.${index}.categoryId`,
+          filterCategories(
+            eventGroup.EventModality.find((mod) => mod.id === modalityId)
+              ?.modalityCategory || [],
+            {
+              birthDate: dayjs(birthDate).toDate(),
+              gender,
+            }
+          )[0]?.id || ""
+        );
+      }
+    });
   }
 
   return (
     <>
-      <div className="grid grid-cols-4">
-        {!inputMode && (
-          <>
-            <div className="col-span-4 mb-3 space-y-4 bg-white lg:col-span-2 lg:col-start-2 lg:mb-6">
-              <Field name="createTeam" variant="switch">
-                <Label>Salvar atletas em um time</Label>
-                <Description>
-                  Selecione se deseja salvar os atletas em um time, agilizando
-                  futuras inscrições.
-                </Description>
-                <Switch
-                  color={organization.options.colors.primaryColor.tw.color}
-                />
-              </Field>
-
-              {form.watch("createTeam") && (
-                <div className="col-span-4 mb-3 lg:col-span-2 lg:mb-4">
-                  <Field name="teamName">
-                    <Label>Nome do Time</Label>
-                    <Input placeholder="Academia X" />
-                    <ErrorMessage />
-                  </Field>
-                </div>
-              )}
-            </div>
-            <div className="col-span-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
-              <Button
-                outline
-                onClick={() => setInputMode("file")}
-                disabled={form.watch("createTeam") && !form.watch("teamName")}
-                className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  "
-              >
-                <DocumentArrowUpIcon
-                  style={{
-                    color: organization.options.colors.primaryColor.hex,
-                  }}
-                  className="size-16 "
-                />{" "}
-                <p className="px-2 text-center">Importar de Arquivo</p>
-              </Button>
-              <Button
-                outline
-                disabled={form.watch("createTeam") && !form.watch("teamName")}
-                onClick={() => {
-                  setInputMode("manual");
-                  addEmptyTeamMember();
+      {form.watch("teamMembers").length ? (
+        <div className="mx-4 mb-4 flex flex-col items-center justify-end gap-3 lg:flex-row lg:justify-center lg:gap-10">
+          <div className="max-w-[500px]">
+            <div className="flex items-center gap-2">
+              <div
+                style={{
+                  backgroundColor: organization.options.colors.primaryColor.hex,
                 }}
-                className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  "
+                className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full  font-bold text-white"
               >
-                <PencilSquareIcon
-                  style={{
-                    color: organization.options.colors.primaryColor.hex,
-                  }}
-                  className="size-16 "
-                />{" "}
-                <p className="px-2 text-center">Inscrever Manualmente</p>
-              </Button>
+                1
+              </div>
+              <div className="flex flex-col">
+                <Text className="font-semibold">Modalidades</Text>
+                <Text>
+                  Atribua modalidades a cada um dos atletas. Todos os inscritos
+                  precisam ter uma modalidade cadastrada.
+                </Text>
+              </div>
             </div>
+
+            <Button
+              disabled={eventGroup.EventModality.length < 2}
+              className={"mt-4"}
+              onClick={() => {
+                autoAssignModalities();
+              }}
+            >
+              Atribuir Modalidades Automaticamente
+            </Button>
+          </div>
+
+          <ArrowRightIcon className="hidden size-16 text-zinc-500 lg:block" />
+
+          <div className="max-w-[500px]">
+            <div className="flex items-center gap-2">
+              <div
+                style={{
+                  backgroundColor: organization.options.colors.primaryColor.hex,
+                }}
+                className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full  font-bold text-white"
+              >
+                2
+              </div>
+              <div className="flex flex-col">
+                <Text className="font-semibold">Categorias</Text>
+                <Text>
+                  Algumas modalidades podem não possuir uma categoria para a
+                  idade e sexo do atleta.
+                </Text>
+              </div>
+            </div>
+            <Button
+              className={"mt-4"}
+              disabled={form
+                .watch("teamMembers")
+                .some((member) => !member.modalityId)}
+              onClick={() => {
+                autoAssignCategories();
+              }}
+            >
+              Atribuir Categorias Automaticamente
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-4">
+          <>
             <div className="col-span-4 mt-4 lg:col-span-2 lg:col-start-2 ">
               <Text className="flex items-center gap-2">
                 <ComputerDesktopIcon className="size-32 lg:size-8" />
                 Devido ao alto número de informações na tela, recomendamos que
                 inscrições em lote sejam feitas através de um computador.
               </Text>
-            </div>
-          </>
-        )}
-
-        {inputMode === "file" && (
-          <div className="col-span-4 space-y-4 lg:ps-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <div
-                  style={{
-                    backgroundColor:
-                      organization.options.colors.primaryColor.hex,
-                    color: chooseTextColor(
-                      organization.options.colors.primaryColor.hex
-                    ),
-                  }}
-                  className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full font-bold "
-                >
-                  1
+              {teams?.length ? (
+                <div className="my-4">
+                  <Field name="teamId">
+                    <Label>Escolher Equipe</Label>
+                    <Select
+                      data={teams?.map((team) => ({
+                        id: team.id,
+                        name: team.name,
+                      }))}
+                      onChange={(e) => parseTeamData((e as any)?.target?.value)}
+                      displayValueKey="name"
+                    />
+                  </Field>
                 </div>
-                <div className="flex flex-col">
-                  <Text className="font-semibold">Formato Correto</Text>
+              ) : (
+                <div className="my-2">
                   <Text>
-                    O arquivo deve ser um arquivo .xlsx e seguir o formato
-                    correto.{" "}
+                    Você ainda não cadastrou nenhuma equipe.{" "}
                     <Link
+                      href="/perfil/equipes"
                       style={{
                         color: organization.options.colors.primaryColor.hex,
                       }}
-                      href={
-                        "https://f005.backblazeb2.com/file/eventosmb/ModeloInscricoes.xlsx"
-                      }
-                      className="underline"
+                      className="font-medium"
                     >
                       Clique aqui
                     </Link>{" "}
-                    para baixar o modelo.
+                    para criar uma.
                   </Text>
                 </div>
-              </div>
+              )}
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <div
-                  style={{
-                    backgroundColor:
-                      organization.options.colors.primaryColor.hex,
-                    color: chooseTextColor(
-                      organization.options.colors.primaryColor.hex
-                    ),
-                  }}
-                  className="flex h-10 w-10 min-w-10 items-center justify-center rounded-full bg-emerald-600 font-bold text-white"
-                >
-                  2
-                </div>
-                <div className="flex flex-col">
-                  <Text className="font-semibold">Verificar e Corrigir</Text>
-                  <Text>
-                    Ao importar o arquivo, verifique se os dados foram lidos
-                    corretamente, faça as alterações necessárias.
-                  </Text>
-                </div>
-              </div>
-            </div>
-            <div>
-              {form.formState.errors.files?.message &&
-                typeof JSON.parse(form.formState.errors.files?.message) ===
-                  "object" && (
-                  <Alertbox type="error">
-                    <List data={form.formState.errors.files?.message ?? ""} />
-                  </Alertbox>
-                )}
-              {form.formState.errors.teamMembers ? (
-                <Alertbox className="hidden lg:block" type="error">
-                  <List
-                    data={JSON.stringify(
-                      Object.entries(
-                        form.formState.errors.teamMembers || {}
-                      ).map((value) => `Erro na linha ${Number(value[0]) + 1}`)
-                    )}
-                  />
-                </Alertbox>
-              ) : null}
-            </div>
-            <Field name="files">
-              <FileInput
-                fileTypes={["xlsx"]}
-                maxFiles={1}
-                maxSize={1}
-                validate={async (file) => {
-                  const sheetArrayBuffer = await file.arrayBuffer();
+          </>
+        </div>
+      )}
 
-                  const sheetJson = sheetToJson(sheetArrayBuffer);
-
-                  if (!sheetJson?.length) throw "Sua planilha não possui dados";
-
-                  if (
-                    batch.multipleRegistrationLimit &&
-                    sheetJson.length > batch.multipleRegistrationLimit
-                  ) {
-                    throw "O número de inscrições excede o limite de inscrições permitido.";
-                  }
-
-                  const sheetJsonValidation =
-                    excelDataSchema.safeParse(sheetJson);
-
-                  if (sheetJsonValidation.success) {
-                    const data = sheetJsonValidation.data;
-
-                    insert(0, formatSheetData(data));
-                    form.trigger();
-
-                    return true;
-                  }
-
-                  const error = sheetJsonValidation.error.issues.map((i) => {
-                    const errorLocation = i.path;
-                    const errorRow = Number(errorLocation[0]) + 1;
-                    const errorColumn = errorLocation[1];
-                    throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
-                  });
-
-                  throw error;
-                }}
-                onError={(error) => {
-                  console.log(error);
-                  if (typeof error === "string") {
-                    showToast({
-                      message: error,
-                      title: "Erro",
-                      variant: "error",
-                    });
-                  }
-                }}
-              >
-                <FileDropArea
-                  color={organization.options.colors.primaryColor.hex}
-                  render={
-                    form.watch("files")?.length ? (
-                      <Text>
-                        <span
-                          style={{
-                            color: organization.options.colors.primaryColor.hex,
-                          }}
-                          className="font-semibold"
-                        >
-                          Arquivo:
-                        </span>{" "}
-                        {form.watch("files")[0].name}{" "}
-                        <span
-                          onClick={() => {
-                            form.resetField("files");
-                            form.resetField("teamMembers");
-                          }}
-                          className="cursor-pointer font-semibold "
-                        >
-                          Trocar
-                        </span>
-                      </Text>
-                    ) : null
-                  }
-                />
-              </FileInput>
-            </Field>
-          </div>
-        )}
-      </div>
-      {form.watch("teamMembers").length ? (
-        <div className="col-span-4 lg:divide-y">
+      {form.watch("teamId") ? (
+        <>
           <TableMock>
             <TableHead>
               <TableRow>
-                <TableHeader>Atleta</TableHeader>
                 <TableHeader>Nome Completo</TableHeader>
-                <TableHeader>Email</TableHeader>
-                <TableHeader>Celular</TableHeader>
-                <TableHeader>CPF</TableHeader>
-                <TableHeader>Sexo</TableHeader>
-                <TableHeader>Data de Nascimento</TableHeader>
-                <TableHeader>CEP</TableHeader>
+                <TableHeader>Modalidade</TableHeader>
+                <TableHeader>Categoria</TableHeader>
               </TableRow>
             </TableHead>
             <TableBody>
               <For each={fields}>
-                {(field, index) => (
-                  <>
-                    <TableRow className="overflow-x-scroll">
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>
-                        <Field name={`teamMembers.${index}.user.fullName`}>
-                          <div className="min-w-[150px]">
-                            <Input />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell>
-                        <Field name={`teamMembers.${index}.user.email`}>
-                          <div className="min-w-[150px]">
-                            <Input />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <Field name={`teamMembers.${index}.user.phone`}>
-                          <div className="min-w-[150px]">
-                            <Input
-                              mask={(fieldValue: string) => {
-                                if (fieldValue.length > 14) {
-                                  return "(99) 99999-9999";
-                                } else {
-                                  return "(99) 9999-9999";
+                {(field, index) => {
+                  const userInfo = fetchUserInfo(field.userId!, teams, form);
+                  return (
+                    <>
+                      <TableRow
+                        className={clsx(
+                          !form.watch(`teamMembers.${index}.selected`) &&
+                            "bg-slate-100"
+                        )}
+                      >
+                        <TableCell>
+                          <Field
+                            className={"flex items-center gap-2"}
+                            enableAsterisk={false}
+                            name={`teamMembers.${index}.selected`}
+                          >
+                            <Checkbox
+                              onChange={(e) => {
+                                if (!e) {
+                                  if (eventGroup.EventModality.length > 1)
+                                    form.resetField(
+                                      `teamMembers.${index}.modalityId`
+                                    );
+                                  form.resetField(
+                                    `teamMembers.${index}.categoryId`
+                                  );
                                 }
                               }}
+                              className={"lg:size-8"}
+                              color={
+                                organization.options.colors.primaryColor.tw
+                                  .color
+                              }
                             />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <Field name={`teamMembers.${index}.user.document`}>
-                          <div className="min-w-[100px]">
-                            <Input mask={"999.999.999-99"} />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell>
-                        <Field name={`teamMembers.${index}.user.gender`}>
-                          <div className="min-w-[110px]">
+                            <Label className={"ms-2"}>
+                              {userInfo?.fullName}
+                            </Label>
+                          </Field>
+                        </TableCell>
+
+                        <TableCell>
+                          {eventGroup.EventModality.length > 1 ? (
+                            <Field name={`teamMembers.${index}.modalityId`}>
+                              <Select
+                                disabled={
+                                  !form.watch(`teamMembers.${index}.selected`)
+                                }
+                                data={eventGroup.EventModality}
+                                valueKey="id"
+                                displayValueKey="name"
+                              />
+                            </Field>
+                          ) : (
+                            <Text>
+                              Modalidade Única -{" "}
+                              {eventGroup.EventModality[0]?.name}
+                            </Text>
+                          )}
+                        </TableCell>
+                        <TableCell className="min-w-[250px]">
+                          <Field name={`teamMembers.${index}.categoryId`}>
                             <Select
-                              data={[
+                              disabled={
+                                !form.watch(`teamMembers.${index}.selected`)
+                              }
+                              data={filterCategories(
+                                eventGroup.EventModality.find(
+                                  (mod) =>
+                                    mod.id ===
+                                    form.watch(
+                                      `teamMembers.${index}.modalityId`
+                                    )
+                                )?.modalityCategory || [],
                                 {
-                                  id: "female",
-                                  name: "Feminino",
-                                },
-                                { id: "male", name: "Masculino" },
-                              ]}
+                                  birthDate: dayjs(
+                                    userInfo?.info.birthDate
+                                  ).toDate(),
+                                  gender: userInfo?.info.gender!,
+                                }
+                              )}
+                              valueKey="id"
                               displayValueKey="name"
                             />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell>
-                        <Field name={`teamMembers.${index}.user.birthDate`}>
-                          <div className="min-w-[100px]">
-                            <Input mask={"99/99/9999"} />
-                          </div>
-                        </Field>
-                      </TableCell>
-                      <TableCell className="min-w-[200px]">
-                        <Field name={`teamMembers.${index}.user.zipCode`}>
-                          <div className="min-w-[100px]">
-                            <Input mask={"99999-999"} />
-                          </div>
-                        </Field>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                )}
+                          </Field>
+                        </TableCell>
+                        {/* {eventGroup.EventAddon?.length ? (
+                        <TableCell className="min-w-[180px]">
+                          <Field
+                            name={`teamMembers.${index}.registration.addon.id`}
+                          >
+                            <Select
+                              disabled={
+                                !(
+                                  !!form.watch(
+                                    `teamMembers.${index}.registration.modalityId`
+                                  ) &&
+                                  !!form.watch(
+                                    `teamMembers.${index}.registration.categoryId`
+                                  )
+                                )
+                              }
+                              data={eventGroup.EventAddon || []}
+                              valueKey="id"
+                              displayValueKey="name"
+                            />
+                          </Field>
+                          {form.watch(
+                            `teamMembers.${index}.registration.addon.id`
+                          ) &&
+                          eventGroup.EventAddon?.find(
+                            (addon) =>
+                              addon.id ===
+                              form.watch(
+                                `teamMembers.${index}.registration.addon.id`
+                              )
+                          )?.options ? (
+                            <Field
+                              name={`teamMembers.${index}.registration.addon.option`}
+                            >
+                              <Select
+                                disabled={
+                                  !form.watch(
+                                    `teamMembers.${index}.registration.addon.id`
+                                  )
+                                }
+                                data={
+                                  (
+                                    eventGroup.EventAddon?.find(
+                                      (addon) =>
+                                        addon.id ===
+                                        form.watch(
+                                          `teamMembers.${index}.registration.addon.id`
+                                        )
+                                    )?.options as string[]
+                                  )?.map((o) => ({
+                                    id: o,
+                                    name: o,
+                                  })) || []
+                                }
+                                valueKey="id"
+                                displayValueKey="name"
+                              />
+                            </Field>
+                          ) : null}
+                        </TableCell>
+                      ) : null} */}
+                      </TableRow>
+                    </>
+                  );
+                }}
               </For>
             </TableBody>
           </TableMock>
-        </div>
+        </>
+      ) : null}
+      {form.watch("teamMembers").length ? (
+        <Text className="mt-3">
+          <Link
+            href="/perfil/equipes"
+            style={{
+              color: organization.options.colors.primaryColor.hex,
+            }}
+            className="font-medium"
+          >
+            Clique aqui
+          </Link>{" "}
+          para editar ou criar uma nova equipe.
+        </Text>
       ) : null}
     </>
   );
