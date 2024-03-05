@@ -175,7 +175,7 @@ export async function createEventGroupMultipleRegistrations(
     throw "Limite de inscrições por equipe excedido";
 
   await verifyEventGroupAvailableSlots({
-    registrations: request.teamMembers,
+    registrations: request.teamMembers.filter((tm) => tm.selected),
     batchId: request.batchId && batch.id,
     eventGroupId: request.eventGroupId!,
   });
@@ -333,6 +333,7 @@ async function verifyEventGroupAvailableSlots({
     where: { eventGroupId, batchId: batch.id, status: { not: "cancelled" } },
   });
 
+  console.log(registrationsCount + registrations.length);
   if (registrationsCount + registrations.length > batch.maxRegistrations)
     throw "Inscrições esgotadas.";
 
