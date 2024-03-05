@@ -1,6 +1,6 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { CreateTeamDto, ReadTeamsDto, UpsertTeamMemberDto } from "./dto";
-import { formatPhone, normalize } from "odinkit";
+import { formatPhone, hasDuplicates, normalize } from "odinkit";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -11,6 +11,7 @@ import { getServerEnv } from "../env";
 import { chooseTextColor } from "@/utils/colors";
 import { sendEmail } from "../emails/service";
 import { request } from "http";
+import _ from "lodash";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);
@@ -74,6 +75,11 @@ export async function createTeam(
     const allDocuments = data.members.map((member) =>
       normalize(member.document)
     );
+
+    const allEmails = data.members.map((member) => member.email);
+
+    if (hasDuplicates(allDocuments)) throw "Documentos duplicados";
+    if (hasDuplicates(allEmails)) throw "Emails duplicados";
 
     existingUsersIds = (
       await prisma.user.findMany({

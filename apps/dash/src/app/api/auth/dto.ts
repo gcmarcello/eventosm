@@ -54,7 +54,7 @@ export type SignupDto = z.infer<typeof signupDto>;
 export const loginDto = z.object({
   identifier: z
     .string({ required_error: "Obrigatório." })
-    .min(1, { message: "Use seu email, documento ou telefone." }),
+    .min(1, { message: "Use seu email ou documento." }),
   password: z
     .string({ required_error: "Obrigatório." })
     .min(1, { message: "Digite sua senha." }),
