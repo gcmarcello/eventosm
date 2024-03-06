@@ -39,12 +39,12 @@ export default function EventCard({
   return (
     <Link
       href={
-        isEventGroup ? `eventos/campeonatos/${event.id}` : `eventos/${event.id}`
+        isEventGroup ? `campeonatos/${event.slug}` : `eventos/${event.slug}`
       }
     >
       <div className="flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-start shadow-md duration-500 md:col-span-1 ">
         <div className="grid grid-cols-4">
-          <div className="col-span-2">
+          <div className="col-span-1">
             <div className="relative h-full w-full">
               <Image
                 className="rounded-t"
@@ -54,7 +54,7 @@ export default function EventCard({
               />
             </div>
           </div>
-          <div className="col-span-2 flex  flex-col px-4">
+          <div className="col-span-3 flex  flex-col px-4">
             <h3 className="mt-2 text-sm font-medium text-gray-900">
               {event.name}
             </h3>
@@ -76,7 +76,7 @@ export default function EventCard({
                 <Badge color={isEventGroup ? "orange" : "purple"}>
                   {isEventGroup
                     ? event.eventGroupType === "championship"
-                      ? "Torneio"
+                      ? "Campeonato"
                       : "Série de Eventos"
                     : "Evento"}
                 </Badge>

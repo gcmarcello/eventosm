@@ -42,7 +42,7 @@ export default function EventGroupRegistrationCard({
             <dd className="mt-3">
               <Badge color={"orange"}>
                 {registration.eventGroup?.eventGroupType === "championship"
-                  ? "Torneio"
+                  ? "Campeonato"
                   : "Série de Eventos"}
               </Badge>
             </dd>

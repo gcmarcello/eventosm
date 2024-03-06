@@ -136,7 +136,7 @@ export async function createEventGroupRegistration(
         orgName: organization!.name,
         qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${registrationId}.png`,
         siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
-        eventLink: `/eventos/campeonatos/${eventGroup?.id}`,
+        eventLink: `/campeonatos/${eventGroup?.slug}`,
       },
     },
   ];
@@ -258,7 +258,7 @@ export async function createEventGroupMultipleRegistrations(
         orgName: organization!.name,
         qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${id}.png`,
         siteLink: `${organization?.OrgCustomDomain[0]?.domain!}`,
-        eventLink: `/eventos/campeonatos/${eventGroup?.id}`,
+        eventLink: `/campeonatos/${eventGroup?.id}`,
       },
     });
   }
