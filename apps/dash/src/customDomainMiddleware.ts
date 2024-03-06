@@ -27,7 +27,7 @@ export async function customDomainMiddleware({
     }
   };
 
-  function authRedirect({ url }: { url: string }) {
+  function authRedirect({ url, redirect }: { url: string; redirect?: string }) {
     return NextResponse.redirect(
       new URL(redirect ?? url, request.nextUrl).href
     );
@@ -45,10 +45,11 @@ export async function customDomainMiddleware({
   if (
     startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/]) &&
     !isAuthenticated
-  )
+  ) {
     return authRedirect({
       url: `/login?&redirect=${request.nextUrl.pathname}`,
     });
+  }
 
   if (startsWith(["/login", "/painel"]) && isAuthenticated) {
     return authRedirect({

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "leaflet/dist/leaflet.css";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
