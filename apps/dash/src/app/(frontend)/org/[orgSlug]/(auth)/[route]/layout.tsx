@@ -16,7 +16,7 @@ export default function Layout({
 }) {
   return (
     <>
-      <div className="grid grid-cols-8 lg:h-[calc(100dvh-80px)]">
+      <div className="grid grid-cols-8 lg:h-[calc(100dvh-96px)]">
         <div className="col-span-8 lg:col-span-3">
           {params.route === "cadastro"
             ? cadastro
