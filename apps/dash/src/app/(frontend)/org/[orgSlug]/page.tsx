@@ -63,7 +63,7 @@ export default async function CompanyHome({
     <>
       <div
         className={clsx(
-          organization.options?.images?.bg && "bg-slate-200",
+          organization.options?.images?.bg && "lg:bg-slate-200",
           "h-dvh bg-cover lg:h-[calc(100dvh-85px)]"
         )}
       >
