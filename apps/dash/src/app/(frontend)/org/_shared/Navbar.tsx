@@ -75,7 +75,7 @@ export function CompanyNavbar({
         >
           {({ open }) => (
             <>
-              <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:p-0 lg:px-8">
+              <div className="mx-auto h-[85px] max-w-7xl px-4 py-3 sm:px-6 lg:p-0 lg:px-8">
                 <div className="flex h-20 justify-between">
                   <div className="flex">
                     <Link href={"/"} className="flex items-center">

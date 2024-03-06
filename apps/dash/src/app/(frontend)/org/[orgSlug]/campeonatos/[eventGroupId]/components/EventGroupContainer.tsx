@@ -29,7 +29,6 @@ import {
   Date,
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
-import { useOrg } from "../../../../components/OrgStore";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
 import { useRef } from "react";
@@ -46,13 +45,13 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import RegistrationMobileButton from "./RegistrationMobileButton";
-import { formatPrice } from "../../../../inscricoes/utils/price";
 
 import { NoSsrMap } from "./NoSSRLocationMap";
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
+import { useOrg } from "../../../components/OrgStore";
 
 export default function EventGroupContainer({
   eventGroup,
@@ -203,17 +202,20 @@ export default function EventGroupContainer({
                   <div className="flex gap-2">
                     <Text className="hidden lg:block">Compartilhe!</Text>
                     <Link
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                      target="_blank"
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
                     >
                       <FacebookIcon size={22} />
                     </Link>
                     <Link
-                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                      target="_blank"
+                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
                     >
                       <XIcon size={22} />
                     </Link>
                     <Link
-                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                      target="_blank"
+                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
                     >
                       <WhatsappIcon size={23} />
                     </Link>

@@ -5,13 +5,13 @@ import { Organization, EventRegistrationBatch } from "@prisma/client";
 import { Button } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithInfo } from "prisma/types/Events";
-import { formatPrice } from "../../../../inscricoes/utils/price";
 import { date } from "odinkit";
 import {
   QrCodeIcon,
   UserCircleIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
+import { formatPrice } from "../../../inscricoes/utils/price";
 
 export default function RegistrationMobileButton({
   eventGroup,

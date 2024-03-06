@@ -10,6 +10,8 @@ module.exports = {
       screens: {
         xs: "450px",
         xxl: "1440px",
+        "2xl": "1536px",
+        "3xl": "1920px",
       },
       transitionDuration: {
         "2000": "2000ms",
