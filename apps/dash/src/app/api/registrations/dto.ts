@@ -51,9 +51,13 @@ export type MultipleRegistrationDto = z.infer<typeof multipleRegistrationDto>;
 
 export const createRegistrationDto = z.object({
   teamId: z.string().optional(),
-  acceptedTerms: z.boolean({
-    required_error: "Você deve aceitar o regulamento do evento.",
-  }),
+  acceptedTerms: z
+    .boolean({
+      required_error: "Você deve aceitar o regulamento do evento.",
+    })
+    .refine((value) => value, {
+      message: "Você deve aceitar o regulamento do evento.",
+    }),
   batchId: z
     .string()
     .uuid({ message: "Formato de ID de lote inválido" })
