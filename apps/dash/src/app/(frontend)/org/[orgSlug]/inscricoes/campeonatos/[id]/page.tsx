@@ -41,7 +41,7 @@ export default async function InscricaoPage({
   );
 
   if (isUserRegistered && !searchParams.team) {
-    return redirect(`/eventos/campeonatos/${params.id}`);
+    return redirect(`/campeonatos/${params.id}`);
   }
 
   let batch;
@@ -64,9 +64,9 @@ export default async function InscricaoPage({
 
   // Redirect if registrationType is "individual" and team parameter exists
   if (batch?.registrationType === "individual" && searchParams.team) {
-    redirect(`/eventos/campeonatos/${params.id}`);
+    redirect(`/campeonatos/${params.id}`);
   } else if (batch?.registrationType === "team" && !searchParams.team) {
-    redirect(`/eventos/campeonatos/${params.id}`);
+    redirect(`/campeonatos/${params.id}`);
   }
 
   if (

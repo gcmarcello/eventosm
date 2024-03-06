@@ -39,7 +39,7 @@ export default function EventCard({
   return (
     <Link
       href={
-        isEventGroup ? `eventos/campeonatos/${event.id}` : `eventos/${event.id}`
+        isEventGroup ? `campeonatos/${event.slug}` : `eventos/${event.slug}`
       }
     >
       <div className="flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-start shadow-md duration-500 md:col-span-1 ">
