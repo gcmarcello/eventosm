@@ -126,8 +126,8 @@ export default function IndividualTournamentRegistration({
         </DialogActions>
       </Dialog>
 
-      <div className="mx-4 mt-3 rounded-md border border-slate-200 px-2 lg:mx-96  lg:mt-10">
-        <div className="mb-6 flex items-center justify-between gap-3 p-2 ">
+      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96  lg:mb-0 lg:mt-10">
+        <div className="flex items-center justify-between gap-3 p-2 ">
           <div>
             <div className="mt-4 text-xl font-medium lg:mt-0">
               {" "}
@@ -148,7 +148,7 @@ export default function IndividualTournamentRegistration({
             />
           </div>
         </div>
-        <div className="p-2">
+        <div className="px-2">
           <MultistepForm
             hform={form}
             onSubmit={(data) => trigger(data)}
@@ -292,7 +292,30 @@ export default function IndividualTournamentRegistration({
                 fields: ["acceptedTerms"],
                 form: (
                   <>
-                    <dl className="mb-4 divide-y divide-gray-100">
+                    <Fieldset className={"my-2 border-b border-slate-100 pb-2"}>
+                      <FieldGroup>
+                        <Field enableAsterisk={false} name="acceptedTerms">
+                          <Checkbox
+                            className={"lg:size-8"}
+                            color={
+                              organization.options.colors.primaryColor.tw.color
+                            }
+                          />
+                          <Label className={"ms-3"}>Eu aceito o </Label>
+                          <span
+                            className="cursor-pointer select-none text-base/6 font-medium text-zinc-950 underline data-[disabled]:opacity-50 sm:text-sm/6"
+                            onClick={() => setShowRules((prev) => !prev)}
+                          >
+                            regulamento.
+                          </span>
+                          <ErrorMessage />
+                          <Description>
+                            Aceitar o regulamento é obrigatório.
+                          </Description>
+                        </Field>
+                      </FieldGroup>
+                    </Fieldset>
+                    <dl className="divide-y divide-gray-100">
                       {/* <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                       <dt className=" font-medium leading-6 text-gray-900">
                         Nome
@@ -392,29 +415,6 @@ export default function IndividualTournamentRegistration({
                         </dd>
                       </div>
                     </dl>
-                    <Fieldset>
-                      <FieldGroup>
-                        <Field enableAsterisk={false} name="acceptedTerms">
-                          <Checkbox
-                            className={"lg:size-8"}
-                            color={
-                              organization.options.colors.primaryColor.tw.color
-                            }
-                          />
-                          <Label className={"ms-3"}>Eu aceito o </Label>
-                          <span
-                            className="cursor-pointer select-none text-base/6 font-medium text-zinc-950 underline data-[disabled]:opacity-50 sm:text-sm/6"
-                            onClick={() => setShowRules((prev) => !prev)}
-                          >
-                            regulamento.
-                          </span>
-                          <ErrorMessage />
-                          <Description>
-                            Aceitar o regulamento é obrigatório.
-                          </Description>
-                        </Field>
-                      </FieldGroup>
-                    </Fieldset>
                   </>
                 ),
               },
@@ -431,7 +431,7 @@ export default function IndividualTournamentRegistration({
             }) => {
               return (
                 <>
-                  <div className={clsx("space-y-2 pb-2 lg:mb-4")}>
+                  <div className={clsx("space-y-2 lg:mb-4")}>
                     <For each={order}>
                       {(step) => (
                         <Transition

@@ -55,22 +55,14 @@ export async function upsertRegistrationBatch(
     update: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
-        .add(3, "hours")
-        .toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
-        .add(3, "hours")
-        .toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
     },
     create: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
-        .add(3, "hours")
-        .toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
-        .add(3, "hours")
-        .toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
     },
   });
 
