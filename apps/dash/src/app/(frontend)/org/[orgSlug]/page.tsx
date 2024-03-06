@@ -64,20 +64,16 @@ export default async function CompanyHome({
       <div
         className={clsx(
           organization.options?.images?.bg && "bg-slate-200",
-          "h-dvh bg-cover"
+          "h-dvh bg-cover lg:h-[calc(100dvh-85px)]"
         )}
       >
         <div
           className={clsx(
-            "min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-72"
+            "min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-16 2xl:mx-72"
           )}
         >
-          <div className="grid grid-cols-3 gap-6 ">
-            <div
-              className={clsx(
-                "xxl:col-span-2 col-span-3 flex flex-col gap-4 lg:col-span-2"
-              )}
-            >
+          <div className="grid grid-cols-6 gap-6 ">
+            <div className={clsx("col-span-6 flex flex-col gap-4 ")}>
               {organization.options?.images?.hero && (
                 <div className="relative h-[155px] w-auto lg:h-[375px]">
                   <Image
@@ -89,28 +85,32 @@ export default async function CompanyHome({
                 </div>
               )}
             </div>
-            <div className="col-span-3 flex flex-col px-5 lg:col-span-1">
-              <div className="mb-2">
-                <Heading>Próximos Eventos</Heading>
-              </div>
-              <div className="flex flex-col gap-4">
-                <For
-                  each={[...eventGroups, ...events]}
-                  fallback={
-                    <>
-                      <div className="mt-1 flex gap-2 text-sm text-gray-500">
-                        Mais em breve!{" "}
-                      </div>
-                    </>
-                  }
-                >
-                  {(event) => {
-                    return <EventCard event={event} orgSlug={params.orgSlug} />;
-                  }}
-                </For>
-              </div>
+            <div className="col-span-6 mb-2">
+              <Heading>Próximos Eventos</Heading>
             </div>
-            <div className="col-span-3">
+
+            <For
+              each={[...eventGroups, ...events]}
+              fallback={
+                <>
+                  <div className="mt-1 flex gap-2 text-sm text-gray-500">
+                    Mais em breve!{" "}
+                  </div>
+                </>
+              }
+            >
+              {(event) => {
+                return (
+                  <div className="col-span-6 flex flex-col md:col-span-2 ">
+                    <div className="flex flex-col gap-4 lg:grid">
+                      <EventCard event={event} orgSlug={params.orgSlug} />
+                    </div>
+                  </div>
+                );
+              }}
+            </For>
+
+            <div className="col-span-6 flex-col md:col-span-4 md:flex">
               <NewsCard news={news} />
             </div>
           </div>
