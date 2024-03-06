@@ -140,7 +140,7 @@ export default function EventGroupContainer({
           )}
         >
           <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
-            <div className="relative h-[40dvh] w-full">
+            <div className="relative h-[50vh] w-full">
               <Image
                 alt="Capa do Evento"
                 src={eventGroup?.imageUrl || ""}
