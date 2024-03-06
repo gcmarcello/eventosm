@@ -29,7 +29,8 @@ export default function EventCard({
   const availableBatch = event.EventRegistrationBatch?.find(
     (batch) =>
       dayjs().utc().isBetween(batch.dateStart, batch.dateEnd, "day") &&
-      batch.maxRegistrations > batch._count?.EventRegistration
+      batch.maxRegistrations > batch._count?.EventRegistration &&
+      !batch.protectedBatch
   );
   const futureBatches = event.EventRegistrationBatch?.find((batch) =>
     dayjs().utc().isBefore(batch.dateStart)
