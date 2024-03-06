@@ -49,6 +49,10 @@ import RegistrationMobileButton from "./RegistrationMobileButton";
 import { formatPrice } from "../../../../inscricoes/utils/price";
 
 import { NoSsrMap } from "./NoSSRLocationMap";
+import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
+import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
+import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
+import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 
 export default function EventGroupContainer({
   eventGroup,
@@ -132,7 +136,7 @@ export default function EventGroupContainer({
 
   return (
     <>
-      <div className={clsx(!image && "bg-slate-200", "bg-cover, h-[100dvh]")}>
+      <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
         <div
           ref={contentRef}
           className={clsx(
@@ -185,15 +189,36 @@ export default function EventGroupContainer({
                     ? `${eventGroup.EventModality.length} Modalidades`
                     : `Modalidade ${eventGroup.EventModality[0]?.name}`}
                 </Text>
-                <Text className="flex items-center gap-2 text-sm lg:text-start">
-                  <MapPinIcon
-                    style={{
-                      color: organization.options.colors.primaryColor.hex,
-                    }}
-                    className="size-4 lg:size-5"
-                  />
-                  {`${eventGroup.location}`}
-                </Text>
+
+                <div className="col-span-2 flex grid-cols-2 justify-between lg:grid ">
+                  <Text className="flex items-center gap-2 text-sm lg:text-start">
+                    <MapPinIcon
+                      style={{
+                        color: organization.options.colors.primaryColor.hex,
+                      }}
+                      className="size-4 lg:size-5"
+                    />
+                    {`${eventGroup.location}`}
+                  </Text>
+                  <div className="flex gap-2">
+                    <Text className="hidden lg:block">Compartilhe!</Text>
+                    <Link
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                    >
+                      <FacebookIcon size={22} />
+                    </Link>
+                    <Link
+                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                    >
+                      <XIcon size={22} />
+                    </Link>
+                    <Link
+                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/eventos/campeonatos/${eventGroup.id}`)}`}
+                    >
+                      <WhatsappIcon size={23} />
+                    </Link>
+                  </div>
+                </div>
               </div>
               <div className="mt-3 hidden w-full rounded-md border border-zinc-100 p-3 lg:block">
                 <div className="text-sm font-medium">Inscrições</div>
