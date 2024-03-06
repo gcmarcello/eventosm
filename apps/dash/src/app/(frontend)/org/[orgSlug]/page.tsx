@@ -69,10 +69,10 @@ export default async function CompanyHome({
       >
         <div
           className={clsx(
-            "xxl:mx-32 min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-8"
+            "min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-72"
           )}
         >
-          <div className="grid grid-cols-3 gap-4 ">
+          <div className="grid grid-cols-3 gap-6 ">
             <div
               className={clsx(
                 "xxl:col-span-2 col-span-3 flex flex-col gap-4 lg:col-span-2"
@@ -89,7 +89,7 @@ export default async function CompanyHome({
                 </div>
               )}
             </div>
-            <div className="col-span-3 flex flex-col lg:col-span-1">
+            <div className="col-span-3 flex flex-col px-5 lg:col-span-1">
               <div className="mb-2">
                 <Heading>Próximos Eventos</Heading>
               </div>
