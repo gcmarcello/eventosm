@@ -6,7 +6,7 @@ import { Button } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { formatPrice } from "../../../../inscricoes/utils/price";
-import { BoldText, Text, date } from "odinkit";
+import { date } from "odinkit";
 import {
   QrCodeIcon,
   UserCircleIcon,
