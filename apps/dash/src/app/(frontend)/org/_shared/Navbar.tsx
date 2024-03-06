@@ -37,7 +37,8 @@ export function CompanyNavbar({
 
   const userNavigation = [
     { name: "Meu Perfil", href: "/perfil" },
-    { name: "Configurações", href: "#" },
+    { name: "Minhas Inscrições", href: "/perfil" },
+    { name: "Configurações", href: "/perfil/configurações" },
     { name: "Sair", onClick: () => logout(pathName) },
   ];
   let [isOpen, setIsOpen] = useState(false);
@@ -85,7 +86,6 @@ export function CompanyNavbar({
                     <div className="hidden sm:-my-px sm:ml-6 sm:space-x-4 md:flex">
                       <For each={navigation} key="navigation">
                         {(item) => {
-                          const colors = organization?.options?.colors;
                           return (
                             <a
                               key={item.name}
@@ -96,7 +96,7 @@ export function CompanyNavbar({
                                 ),
                               }}
                               className={clsx(
-                                "my-4 text-lg font-semibold",
+                                "my-4 text-lg font-semibold ",
                                 "inline-flex items-center px-2 font-medium ",
                                 "hover:rounded-md hover:bg-zinc-600 hover:bg-opacity-10"
                               )}
@@ -182,20 +182,29 @@ export function CompanyNavbar({
                             className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                           >
                             {userNavigation.map((item) => (
-                              <Menu.Item key={item.name}>
-                                {({ active }) => (
-                                  <a
-                                    onClick={item.onClick}
-                                    href={item.href}
-                                    className={clsx(
-                                      active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
-                                    )}
-                                  >
-                                    {item.name}
-                                  </a>
+                              <div key={item.name}>
+                                {item.name === "Sair" && (
+                                  <Menu.Separator className="my-2 border-t border-gray-200" />
                                 )}
-                              </Menu.Item>
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <>
+                                      <a
+                                        onClick={item.onClick}
+                                        href={item.href}
+                                        className={clsx(
+                                          active ? "bg-gray-100" : "",
+                                          "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100",
+                                          item.name === "Sair" &&
+                                            "cursor-pointer font-medium text-red-500"
+                                        )}
+                                      >
+                                        {item.name}
+                                      </a>
+                                    </>
+                                  )}
+                                </Menu.Item>
+                              </div>
                             ))}
                           </Menu.Items>
                         </Transition>
@@ -246,7 +255,7 @@ export function CompanyNavbar({
               </div>
 
               {/* Mobile menu */}
-              <Disclosure.Panel className="md:hidden">
+              <Disclosure.Panel className="bg-white text-gray-800 md:hidden">
                 {({ close }) => (
                   <>
                     <div className="space-y-1 pb-3 pt-2">
@@ -256,8 +265,9 @@ export function CompanyNavbar({
                             key={item.name}
                             as="a"
                             href={item.href}
+                            style={{ borderColor: colors?.primaryColor.hex }}
                             className={clsx(
-                              "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
+                              "block border-l-4 py-2 pl-3  pr-4 text-base font-medium hover:bg-gray-100 hover:text-gray-800"
                             )}
                             aria-current={item.current ? "page" : undefined}
                           >
@@ -268,7 +278,10 @@ export function CompanyNavbar({
                     </div>
                     {user ? (
                       <div className="border-t border-gray-200 pb-3 pt-4">
-                        <div className="flex items-center border-l-8 px-4">
+                        <div
+                          style={{ borderColor: colors?.primaryColor.hex }}
+                          className="flex items-center border-l-8 px-4"
+                        >
                           <div className="flex-shrink-0">
                             {/* <img
                         className="h-10 w-10 rounded-full"
@@ -276,6 +289,7 @@ export function CompanyNavbar({
                         alt=""
                       /> */}
                           </div>
+                          <UserCircleIcon className="size-8" />
                           <div className="ml-3">
                             <div
                               className={clsx(
@@ -307,6 +321,7 @@ export function CompanyNavbar({
                               key={item.name}
                               as="a"
                               href={item.href || undefined}
+                              style={{ borderColor: colors?.primaryColor.hex }}
                               onClick={item.onClick}
                               className={clsx(
                                 "block px-4 py-2 text-base font-medium  hover:bg-gray-100 hover:text-gray-800"

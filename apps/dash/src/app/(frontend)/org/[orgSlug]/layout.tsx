@@ -67,6 +67,11 @@ export default async function CompanyLayout({
 
   return (
     <>
+      <style>{`
+          ::-webkit-scrollbar {
+            display: none;
+        }
+        `}</style>
       {organization.options && (
         <OrgStore
           value={{
