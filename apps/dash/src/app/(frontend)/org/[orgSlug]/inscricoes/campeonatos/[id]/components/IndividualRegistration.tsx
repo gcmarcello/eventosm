@@ -1,6 +1,11 @@
 "use client";
 import { Transition } from "@headlessui/react";
-import { EventRegistrationBatch, Organization, UserInfo } from "@prisma/client";
+import {
+  EventRegistrationBatch,
+  Organization,
+  Team,
+  UserInfo,
+} from "@prisma/client";
 import clsx from "clsx";
 import { Radio as HeadlessRadio } from "@headlessui/react";
 import Image from "next/image";
@@ -51,11 +56,13 @@ import { useSearchParams } from "next/navigation";
 
 export default function IndividualTournamentRegistration({
   eventGroup,
+  teams,
   batch,
   userSession,
   userInfo,
   organization,
 }: {
+  teams?: Team[];
   userSession: UserSession;
   eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
@@ -205,6 +212,20 @@ export default function IndividualTournamentRegistration({
                             : "As categorias exibidas são apenas as disponíveis para você."}
                         </Description>
                       </Field>
+                      {teams?.length ? (
+                        <Field name="teamId">
+                          <Label>Se inscrever com equipe</Label>
+                          <Select
+                            data={teams}
+                            valueKey="id"
+                            displayValueKey="name"
+                          />
+                          <Description>
+                            Você pode escolher sua equipe depois, mas não poderá
+                            alterar uma vez escolhida.
+                          </Description>
+                        </Field>
+                      ) : null}
                     </FieldGroup>
                   </Fieldset>
                 ),

@@ -49,6 +49,13 @@ export default function MembersDisclosure({
       });
     },
   });
+
+  function confirmRemoval() {
+    if (!selectedMember) return;
+    trigger({ teamId, userId: selectedMember.id });
+    setIsOpen(false);
+  }
+
   return (
     <DisclosureAccordion title="Ver Todos">
       <Alert open={isOpen} onClose={setIsOpen} size="lg">
@@ -65,10 +72,7 @@ export default function MembersDisclosure({
             Cancelar
           </Button>
           {selectedMember?.id && (
-            <Button
-              color="red"
-              onClick={() => trigger({ teamId, userId: selectedMember.id })}
-            >
+            <Button color="red" onClick={() => confirmRemoval()}>
               Remover
             </Button>
           )}

@@ -17,14 +17,15 @@ export async function customDomainMiddleware({
 }) {
   const startsWith = (arg: (string | RegExp)[]) => {
     const testArray = [];
+
     for (const a of arg) {
       if (typeof a === "string") {
         testArray.push(request.nextUrl.pathname.startsWith(a));
       } else {
         testArray.push(a.test(request.nextUrl.pathname));
       }
-      return testArray.some((a) => a);
     }
+    return testArray.some((a) => a);
   };
 
   function authRedirect({ url, redirect }: { url: string; redirect?: string }) {
@@ -43,7 +44,14 @@ export async function customDomainMiddleware({
   requestHeaders.set("x-url", request.url);
 
   if (
-    startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/]) &&
+    startsWith([
+      /^\/org\/[^\/]+\/inscricoes/,
+      /^\/org\/[^\/]+\/equipes/,
+      /^\/org\/[^\/]+\/perfil/,
+      "/inscricoes",
+      "/equipes",
+      "/perfil",
+    ]) &&
     !isAuthenticated
   ) {
     return authRedirect({

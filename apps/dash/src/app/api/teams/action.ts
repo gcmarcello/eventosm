@@ -72,3 +72,18 @@ export async function addTeamMembers(request: AddTeamMembersDto) {
     return ActionResponse.error(error);
   }
 }
+
+export async function joinTeam(request: { teamId: string }) {
+  let joinedTeam;
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request).then(
+      UserSessionMiddleware
+    );
+    joinedTeam = await service.joinTeam(parsedRequest);
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+
+  return ActionResponse.success({ redirect: `/perfil/equipes/` });
+}

@@ -119,6 +119,7 @@ export async function updateOrganization(
 export async function readOrganizations(request: ReadOrganizationDto) {
   return await prisma.organization.findMany({
     where: request.where,
+    include: { OrgCustomDomain: true },
   });
 }
 

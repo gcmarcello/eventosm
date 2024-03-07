@@ -123,3 +123,12 @@ export const readRegistrations = readDto(
 );
 
 export type ReadRegistrationsDto = z.infer<typeof readRegistrations>;
+
+export const connectRegistrationToTeamDto = z.object({
+  registrationId: z.string().uuid(),
+  teamId: z.string().uuid(),
+});
+
+export type ConnectRegistrationToTeamDto = z.infer<
+  typeof connectRegistrationToTeamDto
+>;
