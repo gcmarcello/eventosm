@@ -13,11 +13,15 @@ export default async function InvitePage({
   } = await UseMiddlewares().then(UserSessionMiddleware);
   const inviteId = params.inviteId;
 
-  const updatedTeam = await joinTeam({
-    teamId: inviteId,
-    userSession,
-  });
-  redirect(
-    `/perfil/equipes?alert=success&message=Você entrou na equipe com sucesso!`
-  );
+  try {
+    const updatedTeam = await joinTeam({
+      teamId: inviteId,
+      userSession,
+    });
+    redirect(
+      `/perfil/equipes?alert=success&message=Você entrou na equipe com sucesso!`
+    );
+  } catch (error) {
+    redirect(`/perfil/equipes?alert=error&message=${error}`);
+  }
 }

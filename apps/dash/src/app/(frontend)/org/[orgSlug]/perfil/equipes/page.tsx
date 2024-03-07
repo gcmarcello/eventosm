@@ -11,6 +11,7 @@ import MembersDisclosure from "./components/MembersDisclosure";
 import NewMemberModal from "./components/NewMemberModal";
 import CopyInviteLinkButton from "./components/CopyInviteLinkButton";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import ServerAlertBox from "@/app/(frontend)/_shared/components/ServerAlertBox";
 
 export default async function ProfilePage({
   params,
@@ -53,7 +54,12 @@ export default async function ProfilePage({
       </div>
       {searchParams.message && searchParams.alert && (
         <div className="my-3">
-          <Alertbox type="success">{searchParams.message}</Alertbox>
+          {searchParams?.alert && searchParams?.message && (
+            <ServerAlertBox
+              alert={searchParams.alert}
+              message={searchParams.message}
+            />
+          )}
         </div>
       )}
       <For each={teams}>
