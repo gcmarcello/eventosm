@@ -56,3 +56,23 @@ input[type="color"]::-moz-color-swatch {
 body {
   margin: 0 !important;
 }
+
+.customHtml {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.customHtml ol,
+.customHtml ul {
+  list-style: initial; /* Usa o estilo de lista padrão */
+  margin-left: 40px; /* Adiciona uma margem à esquerda para indentação */
+}
+
+.customHtml li {
+  margin-bottom: 10px; /* Adiciona um espaço abaixo de cada item da lista */
+}

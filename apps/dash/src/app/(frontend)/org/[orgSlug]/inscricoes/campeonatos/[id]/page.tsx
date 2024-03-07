@@ -85,8 +85,12 @@ export default async function InscricaoPage({
       />
     );
   } else {
+    const teams = await prisma.team.findMany({
+      where: { User: { some: { id: userSession.id } } },
+    });
     return (
       <IndividualTournamentRegistration
+        teams={teams}
         eventGroup={eventGroup}
         organization={organization}
         batch={batch}

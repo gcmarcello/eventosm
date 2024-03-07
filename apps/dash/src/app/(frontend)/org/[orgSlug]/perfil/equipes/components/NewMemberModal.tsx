@@ -49,13 +49,15 @@ import {
 } from "odinkit/client";
 import { useMemo, useState } from "react";
 import { useFieldArray } from "react-hook-form";
+import CopyInviteLinkButton from "./CopyInviteLinkButton";
+import { OrganizationWithDomain } from "prisma/types/Organization";
 
 export default function NewMemberModal({
   organization,
   teamId,
 }: {
   teamId: string;
-  organization: Organization;
+  organization: OrganizationWithDomain;
 }) {
   let [isOpen, setIsOpen] = useState(false);
   const [inputMode, setInputMode] = useState<"manual" | "file" | null>(null);
@@ -168,10 +170,14 @@ export default function NewMemberModal({
 
   return (
     <>
-      <Button type="button" onClick={() => setIsOpen(true)}>
+      <Button
+        color={organization.options.colors.primaryColor.tw.color}
+        type="button"
+        onClick={() => setIsOpen(true)}
+      >
         <div className="flex items-center gap-2">
           <UserCircleIcon className="h-5 w-5" />
-          Novo Membro
+          Adicionar Atleta
         </div>
       </Button>
       <Form hform={form} onSubmit={(data) => trigger(data)}>
@@ -184,36 +190,42 @@ export default function NewMemberModal({
           <DialogDescription></DialogDescription>
           <DialogBody>
             {!inputMode ? (
-              <div className="col-span-4 my-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
-                <Button
-                  outline
-                  onClick={() => handleInputMode("file")}
-                  className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  "
-                >
-                  <DocumentArrowUpIcon
-                    style={{
-                      color: organization.options.colors.primaryColor.hex,
+              <>
+                <div className="col-span-4 my-4 flex flex-col justify-between gap-2 lg:col-span-2 lg:col-start-2 lg:flex-row lg:gap-4">
+                  <Button
+                    outline
+                    onClick={() => handleInputMode("file")}
+                    className="flex grow cursor-pointer items-center justify-center rounded-md border border-slate-200 p-3 shadow  "
+                  >
+                    <DocumentArrowUpIcon
+                      style={{
+                        color: organization.options.colors.primaryColor.hex,
+                      }}
+                      className="size-8 lg:size-16"
+                    />{" "}
+                    <p className="px-2 text-center">Importar de Arquivo</p>
+                  </Button>
+                  <Button
+                    outline
+                    onClick={() => {
+                      handleInputMode("manual");
                     }}
-                    className="size-16 "
-                  />{" "}
-                  <p className="px-2 text-center">Importar de Arquivo</p>
-                </Button>
-                <Button
-                  outline
-                  onClick={() => {
-                    handleInputMode("manual");
-                  }}
-                  className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  "
-                >
-                  <PencilSquareIcon
-                    style={{
-                      color: organization.options.colors.primaryColor.hex,
-                    }}
-                    className="size-16 "
-                  />{" "}
-                  <p className="px-2 text-center">Inscrever Manualmente</p>
-                </Button>
-              </div>
+                    className="flex grow cursor-pointer items-center  justify-center rounded-md border border-slate-200 p-3 shadow  "
+                  >
+                    <PencilSquareIcon
+                      style={{
+                        color: organization.options.colors.primaryColor.hex,
+                      }}
+                      className="size-8 lg:size-16"
+                    />{" "}
+                    <p className="px-2 text-center">Inscrever Manualmente</p>
+                  </Button>
+                </div>
+                <CopyInviteLinkButton
+                  organization={organization}
+                  teamId={teamId}
+                />
+              </>
             ) : (
               <>
                 <div className="col-span-4 space-y-4 lg:ps-4">

@@ -495,12 +495,24 @@ model OrgCustomDomain {
 model News {
   id             String        @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   title          String
+  subtitle       String?
   content        String
   imageUrl       String?
+  slug           String        @unique
   Organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @db.Uuid
+  status         String        @default("draft")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime?     @updatedAt
+
+  @@unique([slug, organizationId])
+  @@schema("public")
+}
+
+enum NewsStatus {
+  draft
+  published
+  archived
 
   @@schema("public")
 }

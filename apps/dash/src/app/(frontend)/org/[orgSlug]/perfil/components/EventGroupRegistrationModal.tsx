@@ -127,7 +127,7 @@ export function EventGroupRegistrationModal({
             triggerCancellation={cancelTrigger}
             registration={registration}
           />
-          <aside className="mb-3 flex overflow-x-scroll pt-2 lg:block  lg:flex-none lg:overflow-x-hidden lg:border-0 lg:py-4">
+          <aside className="mb-3 flex overflow-x-scroll pt-2 lg:mb-0 lg:block lg:flex-none  lg:overflow-x-hidden lg:border-0 lg:py-4 lg:pb-0">
             <nav className="flex-none px-4 sm:px-6 lg:px-0">
               <ul
                 role="list"
@@ -192,6 +192,14 @@ export function EventGroupRegistrationModal({
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {registration.category?.name}
+                  </dd>
+                </div>
+                <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium leading-6 text-gray-900">
+                    Equipe
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {registration.team?.name || "Nenhuma"}
                   </dd>
                 </div>
                 <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">

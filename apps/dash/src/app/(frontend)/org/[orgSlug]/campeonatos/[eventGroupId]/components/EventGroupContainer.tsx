@@ -229,8 +229,7 @@ export default function EventGroupContainer({
                     <div className="flex justify-between gap-5 pt-2">
                       {isUserRegistered ? (
                         <Button
-                          href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
-                          className={"grow"}
+                          href={`/perfil`}
                           color={
                             organization.options.colors.primaryColor.tw.color
                           }
@@ -260,7 +259,7 @@ export default function EventGroupContainer({
                           </Button>
                         )
                       )}
-                      {batch.registrationType !== "team" && (
+                      {batch.registrationType !== "individual" && (
                         <Button
                           href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
                           className={"grow"}

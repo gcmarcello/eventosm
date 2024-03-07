@@ -414,3 +414,91 @@ export async function addTeamMembers(
 
   return updatedTeam;
 }
+
+export async function joinTeam({
+  teamId,
+  userSession,
+}: {
+  teamId: string;
+  userSession: UserSession;
+}) {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: { User: true },
+  });
+
+  if (!team) throw "Time não encontrado!";
+
+  if (team.User.find((user) => user.id === userSession.id)) {
+    throw "Você já é membro deste time!";
+  }
+
+  const updatedTeam = await prisma.team.update({
+    where: { id: teamId },
+    data: {
+      User: {
+        connect: { id: userSession.id },
+      },
+    },
+    include: {
+      owner: true,
+      originalOrganization: { include: { OrgCustomDomain: true } },
+    },
+  });
+
+  const welcomeEmail: Email<"welcome_to_team">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Bem vindo à Equipe!",
+        to: userSession.email,
+      },
+      template: "welcome_to_team",
+      templateParameters: {
+        mainColor:
+          updatedTeam.originalOrganization?.options.colors.primaryColor.hex ||
+          "#4F46E5",
+        headerTextColor: chooseTextColor(
+          updatedTeam.originalOrganization?.options.colors.primaryColor.hex ||
+            "#4F46E5"
+        ),
+        name: userSession.email,
+        siteLink:
+          (updatedTeam.originalOrganization?.OrgCustomDomain[0]?.domain ||
+            process.env.NEXT_PUBLIC_SITE_URL) + "/perfil/times",
+        teamName: team.name,
+        orgName: updatedTeam.originalOrganization?.name || "Time",
+      },
+    },
+  ];
+
+  const ownerEmail: Email<"joined_team_with_link">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Bem vindo à Equipe!",
+        to: userSession.email,
+      },
+      template: "joined_team_with_link",
+      templateParameters: {
+        mainColor:
+          updatedTeam.originalOrganization?.options.colors.primaryColor.hex ||
+          "#4F46E5",
+        headerTextColor: chooseTextColor(
+          updatedTeam.originalOrganization?.options.colors.primaryColor.hex ||
+            "#4F46E5"
+        ),
+        name: userSession.email,
+        siteLink:
+          (updatedTeam.originalOrganization?.OrgCustomDomain[0]?.domain ||
+            process.env.NEXT_PUBLIC_SITE_URL) + "/perfil/times",
+        teamName: team.name,
+        orgName: updatedTeam.originalOrganization?.name || "Time",
+      },
+    },
+  ];
+
+  await sendEmail([...welcomeEmail, ...ownerEmail]);
+
+  return updatedTeam;
+}
