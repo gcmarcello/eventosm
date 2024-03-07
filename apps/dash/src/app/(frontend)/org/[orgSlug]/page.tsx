@@ -34,7 +34,7 @@ export default async function CompanyHome({
   });
 
   const news = await prisma.news.findMany({
-    where: { organizationId: organization.id },
+    where: { organizationId: organization.id, status: "published" },
     take: 3,
     orderBy: { createdAt: "desc" },
   });
