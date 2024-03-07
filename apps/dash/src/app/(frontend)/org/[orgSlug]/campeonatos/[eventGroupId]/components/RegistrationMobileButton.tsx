@@ -5,7 +5,7 @@ import { Organization, EventRegistrationBatch } from "@prisma/client";
 import { Button } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithInfo } from "prisma/types/Events";
-import { date } from "odinkit";
+import { Link, date } from "odinkit";
 import {
   QrCodeIcon,
   UserCircleIcon,
@@ -102,8 +102,9 @@ export default function RegistrationMobileButton({
                     <div className="flex justify-between gap-2 border-t border-zinc-200 pt-2">
                       {isUserRegistered ? (
                         <Button
-                          href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                          href={`/perfil`}
                           plain
+                          className="flex grow gap-2 underline"
                         >
                           <QrCodeIcon
                             color={organization.options.colors.primaryColor.hex}
@@ -116,6 +117,7 @@ export default function RegistrationMobileButton({
                           <Button
                             href={`/inscricoes/campeonatos/${eventGroup.id}`}
                             plain
+                            className="flex grow gap-2 underline"
                           >
                             <UserCircleIcon
                               color={
@@ -127,8 +129,9 @@ export default function RegistrationMobileButton({
                           </Button>
                         )
                       )}
-                      {batch.registrationType !== "team" && (
+                      {batch.registrationType !== "individual" && (
                         <Button
+                          className="flex grow gap-2 underline"
                           href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
                           plain
                         >

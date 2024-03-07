@@ -583,7 +583,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                 >
                   <div
                     className={clsx(
-                      "flex w-auto gap-2 p-2",
+                      "flex w-auto gap-2",
                       getFaultyMembers().length
                         ? "flex-col justify-between"
                         : "justify-between"

@@ -1,7 +1,11 @@
 "use server";
 
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { CreateMultipleRegistrationsDto, ReadRegistrationsDto } from "./dto";
+import {
+  ConnectRegistrationToTeamDto,
+  CreateMultipleRegistrationsDto,
+  ReadRegistrationsDto,
+} from "./dto";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
 import * as eventGroupService from "./eventGroups/eventGroup.service";
@@ -79,6 +83,26 @@ export async function cancelRegistration(request: { registrationId: string }) {
     return ActionResponse.success({
       message: "Inscrição cancelada com sucesso.",
       data: cancelledRegistration,
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function connectRegistrationToTeam(
+  request: ConnectRegistrationToTeamDto
+) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request).then(
+      UserSessionMiddleware
+    );
+
+    const registration = await service.connectRegistrationToTeam(parsedRequest);
+    revalidatePath("/perfil");
+    return ActionResponse.success({
+      message: "Inscrição conectada à equipe com sucesso.",
+      data: registration,
     });
   } catch (error) {
     console.log(error);

@@ -76,6 +76,7 @@ export async function createEventGroupRegistration(
   const createRegistration = await prisma.eventRegistration.create({
     data: {
       ...registrationInfo,
+      teamId: request?.teamId,
       modalityId: registrationInfo.modalityId,
       categoryId: registrationInfo.categoryId,
       userId: userSession.id,
@@ -333,7 +334,6 @@ async function verifyEventGroupAvailableSlots({
     where: { eventGroupId, batchId: batch.id, status: { not: "cancelled" } },
   });
 
-  console.log(registrationsCount + registrations.length);
   if (registrationsCount + registrations.length > batch.maxRegistrations)
     throw "Inscrições esgotadas.";
 

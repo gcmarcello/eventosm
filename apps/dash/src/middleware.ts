@@ -12,8 +12,8 @@ export async function middleware(request: NextRequest) {
       } else {
         testArray.push(a.test(request.nextUrl.pathname));
       }
-      return testArray.some((a) => a);
     }
+    return testArray.some((a) => a);
   };
 
   function authRedirect({ url, redirect }: { url: string; redirect?: string }) {
@@ -48,7 +48,12 @@ export async function middleware(request: NextRequest) {
     return authRedirect({ url: "/login?redirect=/painel" });
 
   if (
-    startsWith(["/inscricoes", /^\/org\/[^\/]+\/inscricoes/]) &&
+    startsWith([
+      "/inscricoes",
+      /^\/org\/[^\/]+\/inscricoes/,
+      "/equipes",
+      "/perfil",
+    ]) &&
     !(await userId())
   )
     return authRedirect({

@@ -1,25 +1,6 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { ReadRegistrationsDto, RegistrationDto } from "./dto";
-
-import { BatchCoupon, Gender, Team } from "@prisma/client";
-
+import { ConnectRegistrationToTeamDto, ReadRegistrationsDto } from "./dto";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
-import { createOrder } from "../payments/service";
-
-import { readActiveBatch, readProtectedBatch } from "../batches/service";
-
-import { readEventGroups, readEvents } from "../events/service";
-
-import dayjs from "dayjs";
-import { formatCPF } from "odinkit";
-
-import { sendEmail } from "../emails/service";
-import { chooseTextColor } from "@/utils/colors";
-import { getServerEnv } from "@/app/api/env";
-import { Email } from "email-templates";
-import { generateQrCodes } from "../qrcode/service";
-import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventGroupCreateMultipleRegistrationsDto } from "./eventGroups/eventGroup.dto";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -27,6 +8,7 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
     const registrations = await prisma.eventRegistration.findMany({
       where: where,
       include: {
+        team: true,
         event: { where: { organizationId } },
         eventGroup: { where: { organizationId }, include: { Event: true } },
         modality: true,
@@ -72,4 +54,20 @@ export async function readRegistrationPrice({
 
   if (category && category.price) return category.price;
   return batch.price || 0;
+}
+
+export async function connectRegistrationToTeam(
+  data: ConnectRegistrationToTeamDto & { userSession: UserSession }
+) {
+  const registration = await prisma.eventRegistration.findFirst({
+    where: { id: data.registrationId, userId: data.userSession.id },
+  });
+
+  if (!registration) throw "Inscrição não encontrada.";
+  if (registration.teamId) throw "Inscrição já está conectada a um time.";
+
+  return await prisma.eventRegistration.update({
+    where: { id: data.registrationId },
+    data: { teamId: data.teamId },
+  });
 }

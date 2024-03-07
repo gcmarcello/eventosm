@@ -3,17 +3,21 @@ import { readTeams } from "@/app/api/teams/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { notFound } from "next/navigation";
-import { For } from "odinkit";
+import { Alertbox, For } from "odinkit";
 import { Button } from "odinkit/client";
 import { useMemo } from "react";
-import { NewTeamModal } from "../components/NewTeamModal";
+import { NewTeamModal } from "./components/NewTeamModal";
 import MembersDisclosure from "./components/MembersDisclosure";
 import NewMemberModal from "./components/NewMemberModal";
+import CopyInviteLinkButton from "./components/CopyInviteLinkButton";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 export default async function ProfilePage({
   params,
+  searchParams,
 }: {
   params: { orgSlug: string };
+  searchParams: { alert: string; message: string };
 }) {
   const organization = (
     await readOrganizations({ where: { slug: params.orgSlug } })
@@ -25,7 +29,10 @@ export default async function ProfilePage({
   } = await UseMiddlewares().then(UserSessionMiddleware);
 
   const teams = await prisma.team.findMany({
-    where: { ownerId: userSession.id, status: { not: "deleted" } },
+    where: {
+      status: { not: "deleted" },
+      User: { some: { id: userSession.id } },
+    },
     include: { owner: true, User: true },
   });
 
@@ -44,6 +51,11 @@ export default async function ProfilePage({
           <NewTeamModal organization={organization} />
         </div>
       </div>
+      {searchParams.message && searchParams.alert && (
+        <div className="my-3">
+          <Alertbox type="success">{searchParams.message}</Alertbox>
+        </div>
+      )}
       <For each={teams}>
         {(team) => {
           return (
@@ -54,12 +66,9 @@ export default async function ProfilePage({
                 </h3>
                 {team.ownerId === userSession.id && (
                   <div className="flex flex-row-reverse justify-end gap-2">
-                    <Button
-                      disabled={true}
-                      color={organization.options.colors.primaryColor.tw.color}
-                    >
-                      Editar
-                    </Button>
+                    {/* <Button plain disabled={true} placeholder="plain">
+                      <EllipsisVerticalIcon className="h-5 w-5" />
+                    </Button> */}
                     <NewMemberModal
                       organization={organization}
                       teamId={team.id}
@@ -89,10 +98,12 @@ export default async function ProfilePage({
                       Outros {team.User.length - 1} membros
                     </p>
                   )}
-                  <MembersDisclosure
-                    teamId={team.id}
-                    members={team.User}
-                  ></MembersDisclosure>
+                  {team.ownerId === userSession.id && (
+                    <MembersDisclosure
+                      teamId={team.id}
+                      members={team.User}
+                    ></MembersDisclosure>
+                  )}
                 </div>
               </li>
             </div>
