@@ -151,7 +151,7 @@ export default function RegistrationMobileButton({
                         Início do Lote:
                       </span>
                       <span className="text-xs">
-                        {date(nextBatch.dateStart, "DD/MM/YYYY HH:mm")}
+                        {date(nextBatch.dateStart, "DD/MM/YYYY HH:mm", true)}
                       </span>
                     </div>
                   </div>
