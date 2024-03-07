@@ -45,7 +45,7 @@ export const orgSeed = async (userId: string) => {
       },
 
       phone: "21999999999",
-      email: "",
+      email: "cubatao@cubatao.com",
     },
   });
 
@@ -57,6 +57,7 @@ export const orgSeed = async (userId: string) => {
     data: {
       id: eventGroupUUID,
       organizationId: org.id,
+      status: "published",
       name: "Circuito Cubatense de Rua 2024",
       slug: "cubatense",
       registrationType: "mixed",
