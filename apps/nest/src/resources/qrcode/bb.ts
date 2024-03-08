@@ -27,7 +27,7 @@ export class BackblazeService extends S3Client {
       Bucket: this.bucketName,
       Key: key,
       Body: fileBuffer,
-      ContentType: "image/jpeg",
+      ContentType: "image/png",
     });
 
     try {

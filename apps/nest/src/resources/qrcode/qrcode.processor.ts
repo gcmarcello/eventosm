@@ -1,10 +1,4 @@
-import {
-  Processor,
-  Process,
-  OnQueueActive,
-  OnQueueDrained,
-  InjectQueue,
-} from "@nestjs/bull";
+import { Processor, Process, OnQueueActive, InjectQueue } from "@nestjs/bull";
 import { Job, Queue } from "bull";
 import { BackblazeService } from "./bb";
 import { QrCodeService } from "./qrcode.service";
@@ -23,12 +17,8 @@ export class QrCodeProcessor {
       .generateQrCode(job.data)
       .then((file) =>
         this.backBlaze.uploadFile(file, `qr-codes/${job.data}.png`)
-      );
-  }
-
-  @OnQueueDrained()
-  async onDrained() {
-    await this.qrCodeQueue.pause();
+      )
+      .catch(console.log);
   }
 
   @OnQueueActive()
