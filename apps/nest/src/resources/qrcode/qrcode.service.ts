@@ -8,8 +8,6 @@ export class QrCodeService {
   constructor(@InjectQueue("qrCode") private qrCodeQueue: Queue) {}
 
   async queueQrCodes(generateQrCodeDto: string[]) {
-    await this.qrCodeQueue.resume();
-
     return await this.qrCodeQueue.addBulk(
       generateQrCodeDto.map((data) => ({
         data,
@@ -48,6 +46,8 @@ export class QrCodeService {
 
       const blob = dataUrlToBlob(qrCodeData);
       return new File([blob], fileName, { type: "image/png" });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
