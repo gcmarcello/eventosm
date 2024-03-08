@@ -74,7 +74,19 @@ export default async function InscricaoPage({
     (eventGroup.registrationType === "team" ||
       eventGroup.registrationType === "mixed")
   ) {
-    const teams = await readTeams({ where: { ownerId: userSession.id } });
+    const teams = await prisma.team.findMany({
+      where: { ownerId: userSession.id },
+      include: {
+        User: {
+          include: {
+            EventRegistration: {
+              where: { eventGroupId: eventGroup.id, status: "active" },
+            },
+            info: true,
+          },
+        },
+      },
+    });
     return (
       <TeamTournamentRegistration
         eventGroup={eventGroup}

@@ -111,7 +111,9 @@ export function ParticipantsForm({
             undefined,
           option: undefined,
         },
-        selected: true,
+        selected: !Boolean(
+          u.EventRegistration?.find((r) => r.eventGroupId === eventGroup.id)
+        ),
       }));
 
     if (parsedTeamData) form.setValue("teamMembers", parsedTeamData);
@@ -275,6 +277,9 @@ export function ParticipantsForm({
               <For each={fields}>
                 {(field, index) => {
                   const userInfo = fetchUserInfo(field.userId!, teams, form);
+                  const isUserRegistered = userInfo?.EventRegistration?.find(
+                    (r) => r.eventGroupId === eventGroup.id
+                  );
                   return (
                     <>
                       <TableRow
@@ -290,6 +295,7 @@ export function ParticipantsForm({
                             name={`teamMembers.${index}.selected`}
                           >
                             <Checkbox
+                              disabled={!!isUserRegistered}
                               onChange={(e) => {
                                 if (!e) {
                                   if (eventGroup.EventModality.length > 1)
@@ -308,7 +314,8 @@ export function ParticipantsForm({
                               }
                             />
                             <Label className={"ms-2"}>
-                              {userInfo?.fullName}
+                              {userInfo?.fullName}{" "}
+                              {isUserRegistered ? "(Inscrito)" : ""}
                             </Label>
                           </Field>
                         </TableCell>
