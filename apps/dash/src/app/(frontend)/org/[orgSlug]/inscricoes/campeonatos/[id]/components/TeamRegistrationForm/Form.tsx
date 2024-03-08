@@ -50,7 +50,6 @@ export default function TeamTournamentRegistration({
       eventGroup.EventModality.length > 1
         ? ""
         : eventGroup.EventModality[0]!.id,
-    categoryId: "",
     addon: {
       id: eventGroup.EventAddon?.find((addon) => !addon.price)?.id || undefined,
       option: undefined,
@@ -266,7 +265,7 @@ export default function TeamTournamentRegistration({
                         <PlusIcon className="h-6 w-6" /> Participante
                       </Button>
                     )}
-                    {!hasNextStep && form.formState.isValid && (
+                    {!hasNextStep && (
                       <SubmitButton
                         color={
                           organization.options.colors.primaryColor.tw.color

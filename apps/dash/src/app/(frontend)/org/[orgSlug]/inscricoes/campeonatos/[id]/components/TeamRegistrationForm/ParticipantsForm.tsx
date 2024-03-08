@@ -102,9 +102,9 @@ export function ParticipantsForm({
         userId: u.id,
         modalityId:
           eventGroup.EventModality.length > 1
-            ? ""
+            ? undefined
             : eventGroup.EventModality[0]!.id,
-        categoryId: "",
+        categoryId: undefined,
         addon: {
           id:
             eventGroup.EventAddon?.find((addon) => !addon.price)?.id ||
@@ -145,7 +145,7 @@ export function ParticipantsForm({
               birthDate: dayjs(birthDate).toDate(),
               gender,
             }
-          )[0]?.id || ""
+          )[0]?.id || undefined
         );
       }
     });
