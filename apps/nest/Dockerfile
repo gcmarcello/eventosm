@@ -1,7 +1,18 @@
 
 # flyctl deploy --dockerfile ./apps/nest/Dockerfile --config ./apps/nest/fly.toml --ignorefile .dockerignore
 
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
+RUN apk add --update \
+    bash \
+    lcms2-dev \
+    libpng-dev \
+    gcc \
+    g++ \
+    make \
+    autoconf \
+    automake \
+  && rm -rf /var/cache/apk/*
+
 
 FROM base AS builder
     WORKDIR /app
@@ -25,14 +36,12 @@ FROM base as installer
     RUN npm install -g pnpm
     RUN npm install -g turbo
 
-    # First install dependencies (as they change less often)
     COPY .gitignore .gitignore
     COPY --from=builder /app/out/json/ .
     COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
     COPY --from=builder /app/out/full/ .
     RUN pnpm install
     
-    # Build the project and its dependencies
     COPY turbo.json turbo.json
 
     RUN turbo run build --filter=nest...

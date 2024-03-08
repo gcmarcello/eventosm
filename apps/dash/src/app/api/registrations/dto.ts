@@ -36,6 +36,14 @@ export const excelDataSchema = z.array(
       "Feminino",
       "F",
       "Mulher",
+      "MASCULINO",
+      "FEMININO",
+      "MASC",
+      "FEM",
+      "MULHER",
+      "HOMEM",
+      "HOMEN",
+      "MULHER",
     ]),
   })
 );
