@@ -74,8 +74,8 @@ export default function UsersPanelPageTable({
           columnHelper.accessor("id", {
             id: "options",
             header: "Opções",
-            enableSorting: true,
-            enableGlobalFilter: true,
+            enableSorting: false,
+            enableGlobalFilter: false,
             cell: (info) => (
               <Button plain onClick={() => handleUser(info.getValue())}>
                 Editar
