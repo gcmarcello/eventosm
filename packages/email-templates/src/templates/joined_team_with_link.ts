@@ -64,7 +64,7 @@ export function joined_team_with_link({
           <body>
             <div class="email-container">
               <div class="email-header">
-                <h1>Bem-vindo(a) à ${teamName}!</h1>
+                <h1>Novo Membro na equipe ${teamName}!</h1>
               </div>
               <div class="email-content">
                 <p>Olá,</p>

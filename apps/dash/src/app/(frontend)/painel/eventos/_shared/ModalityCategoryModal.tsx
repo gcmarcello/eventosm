@@ -99,7 +99,7 @@ export default function ModalityCategoryModal({
               </span>
             )}
         </DialogDescription>
-        <DialogBody className="max-h-[350px] overflow-y-auto overflow-x-hidden lg:max-h-none">
+        <DialogBody className="overflow-y-auto lg:max-h-none">
           {showForm || fields.every((f) => !f.name) ? (
             <>
               <For each={fields} identifier="category">

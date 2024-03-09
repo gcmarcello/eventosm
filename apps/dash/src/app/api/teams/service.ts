@@ -476,8 +476,8 @@ export async function joinTeam({
     {
       setup: {
         from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: "Bem vindo à Equipe!",
-        to: userSession.email,
+        subject: "Novo membro da equipe!",
+        to: updatedTeam.owner.email,
       },
       template: "joined_team_with_link",
       templateParameters: {
@@ -488,7 +488,7 @@ export async function joinTeam({
           updatedTeam.originalOrganization?.options.colors.primaryColor.hex ||
             "#4F46E5"
         ),
-        name: userSession.email,
+        name: userSession.fullName,
         siteLink:
           (updatedTeam.originalOrganization?.OrgCustomDomain[0]?.domain ||
             process.env.NEXT_PUBLIC_SITE_URL) + "/perfil/times",

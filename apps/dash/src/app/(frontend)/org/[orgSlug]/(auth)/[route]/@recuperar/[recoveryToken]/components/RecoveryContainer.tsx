@@ -3,6 +3,7 @@
 import { useOrg } from "@/app/(frontend)/org/[orgSlug]/components/OrgStore";
 import { createNewPassword } from "@/app/api/auth/recovery/action";
 import { createNewPasswordDto } from "@/app/api/auth/recovery/dto";
+import { Organization } from "@prisma/client";
 import { SubmitButton } from "odinkit";
 import {
   Button,
@@ -18,15 +19,19 @@ import {
 } from "odinkit/client";
 import { useMemo } from "react";
 
-export function CreateNewPasswordForm({ token }: { token: string }) {
+export function CreateNewPasswordForm({
+  token,
+  organization,
+}: {
+  token: string;
+  organization: Organization;
+}) {
   const form = useForm({
     schema: createNewPasswordDto,
     defaultValues: {
       token,
     },
   });
-
-  const { colors } = useOrg();
 
   const { data, trigger, isMutating } = useAction({
     action: createNewPassword,
@@ -76,14 +81,12 @@ export function CreateNewPasswordForm({ token }: { token: string }) {
               <ErrorMessage />
             </Field>
 
-            <div className="mt-10 flex">
-              <SubmitButton
-                className={"w-full"}
-                color={colors.primaryColor.tw.color}
-              >
-                Enviar
-              </SubmitButton>
-            </div>
+            <SubmitButton
+              className={"w-full"}
+              color={organization.options.colors.primaryColor.tw.color}
+            >
+              Enviar
+            </SubmitButton>
           </FieldGroup>
         </Fieldset>
       </Form>

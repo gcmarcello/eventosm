@@ -222,7 +222,7 @@ export default function PanelSideBar() {
         <div className="hidden lg:flex lg:h-screen lg:w-64 lg:flex-col">
           <div
             className={clsx(
-              `fixed flex h-full w-64  grow flex-col gap-y-1 overflow-y-hidden px-6 py-4 pb-4`
+              `fixed z-20 flex h-full  w-64 grow flex-col gap-y-1 overflow-y-hidden px-6 py-4 pb-4`
             )}
             style={{
               backgroundColor:

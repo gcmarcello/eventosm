@@ -17,9 +17,10 @@ import {
   Button,
 } from "odinkit/client";
 import { useState } from "react";
-import SubeventModal from "./components/NewSubeventModal";
+import SubeventModal from "./NewSubeventModal";
 import { readEventGroups, upsertEvent } from "@/app/api/events/action";
 import Image from "next/image";
+import { Event, EventGroup } from "@prisma/client";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
@@ -31,7 +32,7 @@ export function EtapasForm({
   eventGroup,
   eventId,
 }: {
-  eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
+  eventGroup: EventGroup & { Event: Event[] };
   eventId?: string;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
