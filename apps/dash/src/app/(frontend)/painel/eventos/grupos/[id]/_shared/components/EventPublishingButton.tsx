@@ -12,11 +12,12 @@ import {
   showToast,
   useAction,
 } from "odinkit/client";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 
-export function EventPublishing({
+export function EventPublishingButton({
   eventGroup,
 }: {
-  eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
+  eventGroup: EventGroupWithEvents;
 }) {
   const { data: eventStatus, trigger: triggerEventStatus } = useAction({
     action: updateEventStatus,

@@ -41,8 +41,10 @@ export async function middleware(request: NextRequest) {
     return authRedirect({ url: redirect });
   }
 
-  if (startsWith(["/admin"]) && !(await userId(["admin"])))
-    return authRedirect({ url: "/" });
+  if (startsWith(["/admin"])) {
+    if (!(await userId(["admin"])))
+      return authRedirect({ url: "/login?redirect=/admin" });
+  }
 
   if (startsWith(["/painel"]) && !(await userId(["admin"])))
     return authRedirect({ url: "/login?redirect=/painel" });

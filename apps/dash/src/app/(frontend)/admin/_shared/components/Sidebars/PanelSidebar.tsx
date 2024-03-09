@@ -131,7 +131,7 @@ export default function PanelSideBar() {
                     )}
                   >
                     <div className="relative my-2 flex min-h-20 w-full shrink-0 items-center">
-                      <Logo className="rounded-lg" url={""} />
+                      {/* <Logo className="rounded-lg" url={""} /> */}
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -201,10 +201,10 @@ export default function PanelSideBar() {
             )}
           >
             <div className="relative my-2 min-h-20 w-auto shrink-0 items-center">
-              <Logo
+              {/* <Logo
                 className="rounded-lg"
                 url={process.env.NEXT_PUBLIC_SITE_URL}
-              />
+              /> */}
             </div>
 
             <nav className="mt-2 flex flex-1 flex-col">
