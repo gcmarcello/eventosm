@@ -208,7 +208,7 @@ export default function LoginForm({
                       `text-${organization.options.colors.primaryColor}-600 hover:text-${organization.options.colors.primaryColor}-500`
                     )}
                   >
-                    Esqueceu a senha?
+                    Esqueceu a senha ou não configurou?
                   </Link>
                 </div>
               </div>
