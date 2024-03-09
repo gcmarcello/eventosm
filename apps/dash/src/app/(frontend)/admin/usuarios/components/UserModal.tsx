@@ -38,7 +38,7 @@ import {
 } from "odinkit/client";
 import { normalize } from "path";
 import { UserWithInfo } from "prisma/types/User";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 
 export default function UserModal({
   user,
@@ -83,6 +83,7 @@ export default function UserModal({
   } = useAction({
     action: adminUpdateUser,
     requestParser: (data) => {
+      console.log(data);
       return {
         ...data,
         phone: normalizePhone(data.phone),
@@ -111,11 +112,35 @@ export default function UserModal({
     },
   });
 
+  useEffect(
+    () =>
+      form.reset({
+        userId: user.id,
+        role: user.role,
+        confirmed: user.confirmed,
+        document: cpfValidator(user.document)
+          ? formatCPF(user.document)
+          : user.document,
+        email: user.email,
+        fullName: user.fullName,
+        phone: formatPhone(user.phone),
+        info: {
+          zipCode: formatCEP(user.info?.zipCode) || undefined,
+          address: user.info?.address || undefined,
+          cityId: user.info?.cityId || undefined,
+          stateId: user.info?.stateId || undefined,
+          number: user.info?.number || undefined,
+          complement: user.info?.complement || undefined,
+        },
+      }),
+    [user]
+  );
+
   const Field = useMemo(() => form.createField(), []);
 
   return (
     <Form hform={form} onSubmit={(data) => updateUserTrigger(data)}>
-      <Dialog size="2xl" open={isOpen} onClose={setIsOpen}>
+      <Dialog size="7xl" open={isOpen} onClose={setIsOpen}>
         <DialogTitle>Editar Usuário</DialogTitle>
         {/* <DialogDescription>{user.fullName}</DialogDescription> */}
         <DialogBody>
@@ -127,7 +152,7 @@ export default function UserModal({
               </Alertbox>
             )}
             <div>
-              <Fieldset>
+              <Fieldset className={"mb-5"}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 lg:divide-x">
                   <FieldGroup className="lg:pe-3">
                     <Field name="fullName">
@@ -157,12 +182,7 @@ export default function UserModal({
                     </Field>
                     <Field name="document" className="my-2 space-y-3">
                       <Label>CPF</Label>
-                      <Input
-                        inputMode="tel"
-                        mask={() => {
-                          return "999.999.999-99";
-                        }}
-                      />
+                      <Input inputMode="tel" />
                       <ErrorMessage />
                     </Field>
                   </FieldGroup>
@@ -175,7 +195,6 @@ export default function UserModal({
                           { id: "female", name: "Feminino" },
                           { id: "male", name: "Masculino" },
                         ]}
-                        defaultValue={""}
                       ></Select>
                       <ErrorMessage />
                     </Field>
@@ -186,6 +205,13 @@ export default function UserModal({
                     <Field name="info.support">
                       <Label>Apoio/Patrocínio</Label>
                       <Input />
+                    </Field>
+                    <Field variant="switch" name="confirmed">
+                      <Label>Confirmado</Label>
+                      <Description>
+                        Selecione se deseja que a conta esteja confirmada.
+                      </Description>
+                      <Switch color="indigo" />
                     </Field>
                   </FieldGroup>
                 </div>
@@ -217,14 +243,6 @@ export default function UserModal({
                     <Label>Complemento</Label>
                     <Input />
                   </Field>
-                  <Field name="info.cityId">
-                    <Label>Cidade</Label>
-                    <Input />
-                  </Field>
-                  <Field name="info.stateId">
-                    <Label>Estado</Label>
-                    <Input />
-                  </Field>
                 </div>
               </Fieldset>
               <Fieldset>
@@ -238,13 +256,6 @@ export default function UserModal({
                         { id: "user", name: "Usuário" },
                       ]}
                     ></Select>
-                  </Field>
-                  <Field variant="switch" name="confirmed">
-                    <Label>Confirmado</Label>
-                    <Description>
-                      Selecione se deseja que a conta esteja confirmada.
-                    </Description>
-                    <Switch color="indigo" />
                   </Field>
                 </div>
               </Fieldset>

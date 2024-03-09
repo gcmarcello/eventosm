@@ -2,7 +2,7 @@
 import { readEventGroups, upsertEventGroup } from "@/app/api/events/action";
 import { upsertEventGroupDto } from "@/app/api/events/dto";
 import { uploadFiles } from "@/app/api/uploads/action";
-import { Color } from "@prisma/client";
+import { Color, EventGroup } from "@prisma/client";
 import {
   Container,
   ExtractSuccessResponse,
@@ -33,12 +33,12 @@ import {
 import { useMemo } from "react";
 import { z } from "odinkit";
 
-export function GeralForm({
+export default function GeralForm({
   eventGroup,
   color,
 }: {
   color: Color;
-  eventGroup: ExtractSuccessResponse<typeof readEventGroups>[0];
+  eventGroup: EventGroup;
 }) {
   const form = useForm({
     id: "generalEventGroupForm",

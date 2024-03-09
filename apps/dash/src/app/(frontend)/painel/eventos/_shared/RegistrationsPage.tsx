@@ -5,17 +5,18 @@ import { Badge, Table, formatPhone } from "odinkit";
 import { useAction } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
+import { RegistrationWithInfo } from "../grupos/[id]/[step]/@inscritos/page";
 
-export default function RegistrationsPage({
-  eventGroup,
+export default function RegistrationsTable({
+  registrations,
 }: {
-  eventGroup: EventGroupWithInfo;
+  registrations: RegistrationWithInfo[];
 }) {
   return (
     <Table
       xlsx={{
         data:
-          eventGroup.EventRegistration?.map((registration) => ({
+          registrations?.map((registration) => ({
             Número: registration.code,
             Nome: registration.user.fullName,
             Status: registration.status,
@@ -29,7 +30,7 @@ export default function RegistrationsPage({
             "Opção do Kit": registration.addonOption,
           })) || [],
       }}
-      data={eventGroup.EventRegistration || []}
+      data={registrations || []}
       columns={(columnHelper) => [
         columnHelper.accessor("code", {
           id: "code",

@@ -18,6 +18,10 @@ export class EmailProcessor {
       const email = await this.sgMail
         .send({
           ...job.data,
+          from: {
+            email: job.data.from as string, //@TODO - fix typing all the way back to NextJS backend.
+            name: "EventoSM",
+          },
           mailSettings: {
             sandboxMode: { enable: this.settingsService.isDevelopment },
           },
