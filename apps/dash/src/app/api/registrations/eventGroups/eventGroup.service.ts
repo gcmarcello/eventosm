@@ -171,7 +171,7 @@ export async function createEventGroupMultipleRegistrations(
 
   if (
     batch.multipleRegistrationLimit &&
-    request.teamMembers.length > batch?.multipleRegistrationLimit
+    selectedUsers.length > batch?.multipleRegistrationLimit
   )
     throw "Limite de inscrições por equipe excedido";
 
