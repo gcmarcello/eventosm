@@ -58,8 +58,12 @@ export async function upsertEvent(
   let newImage;
 
   const id = data.id ?? crypto.randomUUID();
-  const dateStart = dayjs(data.dateStart, "DD/MM/YYYY").toISOString();
-  const dateEnd = dayjs(data.dateEnd, "DD/MM/YYYY").toISOString();
+  const dateStart = dayjs(data.dateStart, "DD/MM/YYYY")
+    .tz("America/Sao_Paulo", true)
+    .toISOString();
+  const dateEnd = dayjs(data.dateEnd, "DD/MM/YYYY")
+    .tz("America/Sao_Paulo", true)
+    .toISOString();
 
   data.slug && (await verifySlugUniqueness({ slug: data.slug, eventId: id }));
 

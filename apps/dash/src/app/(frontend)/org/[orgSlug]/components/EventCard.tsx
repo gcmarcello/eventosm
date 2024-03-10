@@ -1,10 +1,14 @@
-"use client";
+"use server";
 import {
   ClipboardDocumentListIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import { EventGroup } from "@prisma/client";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import Image from "next/image";
 import { Badge, For, Link, date } from "odinkit";
 import {
@@ -14,7 +18,7 @@ import {
 } from "prisma/types/Events";
 import { useEffect } from "react";
 
-export default function EventCard({
+export default async function EventCard({
   event,
   orgSlug,
 }: {
@@ -28,12 +32,12 @@ export default function EventCard({
 
   const availableBatch = event.EventRegistrationBatch?.find(
     (batch) =>
-      dayjs().utc().isBetween(batch.dateStart, batch.dateEnd, "day") &&
+      dayjs().utc().isBetween(dayjs(batch.dateStart), dayjs(batch.dateEnd)) &&
       batch.maxRegistrations > batch._count?.EventRegistration &&
       !batch.protectedBatch
   );
   const futureBatches = event.EventRegistrationBatch?.find((batch) =>
-    dayjs().utc().isBefore(batch.dateStart)
+    dayjs().utc().isBefore(dayjs(batch.dateStart))
   );
 
   return (
