@@ -28,10 +28,9 @@ export async function customDomainMiddleware({
     return testArray.some((a) => a);
   };
 
-  function authRedirect({ url, redirect }: { url: string; redirect?: string }) {
-    return NextResponse.redirect(
-      new URL(redirect ?? url, request.nextUrl).href
-    );
+  function authRedirect({ url }: { url: string }) {
+    const newUrl = new URL(url, request.nextUrl);
+    return NextResponse.redirect(newUrl.href);
   }
   const customDomain = await CustomDomainMiddleware({ host });
   const isAuthenticated = await AuthMiddleware({
@@ -55,7 +54,7 @@ export async function customDomainMiddleware({
     !isAuthenticated
   ) {
     return authRedirect({
-      url: `/login?&redirect=${request.nextUrl.pathname}`,
+      url: `/login?&redirect=${request.nextUrl.pathname + request.nextUrl.search}`,
     });
   }
 
