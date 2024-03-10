@@ -38,6 +38,7 @@ import {
   useAction,
   Form,
   DropdownSeparator,
+  Date,
 } from "odinkit/client";
 import { Organization } from "@prisma/client";
 dayjs.extend(utc);
@@ -105,11 +106,14 @@ export default function EventBatches({
     batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
   }) {
     eventBatchForm.setValue("id", batch.id);
-    eventBatchForm.setValue("dateStart", date(batch.dateStart, "DD/MM/YYYY"));
-    eventBatchForm.setValue("timeStart", date(batch.dateStart, "HH:mm"));
+    eventBatchForm.setValue(
+      "dateStart",
+      date(batch.dateStart, "DD/MM/YYYY", true)
+    );
+    eventBatchForm.setValue("timeStart", date(batch.dateStart, "HH:mm", true));
     eventBatchForm.setValue("price", batch.price.toFixed(2).replace(".", ","));
-    eventBatchForm.setValue("dateEnd", date(batch.dateEnd, "DD/MM/YYYY"));
-    eventBatchForm.setValue("timeEnd", date(batch.dateEnd, "HH:mm"));
+    eventBatchForm.setValue("dateEnd", date(batch.dateEnd, "DD/MM/YYYY", true));
+    eventBatchForm.setValue("timeEnd", date(batch.dateEnd, "HH:mm", true));
     eventBatchForm.setValue("maxRegistrations", batch.maxRegistrations || 0);
     eventBatchForm.setValue("eventId", batch?.eventId || undefined);
     eventBatchForm.setValue("eventGroupId", batch?.eventGroupId || undefined);
@@ -186,8 +190,8 @@ export default function EventBatches({
                 className="cursor-pointer underline"
                 onClick={() => handleEditBatch({ batch: info.row.original })}
               >
-                {date(info.getValue(), "DD/MM HH:mm")} -{" "}
-                {date(info.row.original.dateEnd, "DD/MM HH:mm")}
+                {<Date date={info.getValue()} format="DD/MM HH:mm" />} -{" "}
+                {<Date date={info.row.original.dateEnd} format="DD/MM HH:mm" />}
               </span>
             ),
           }),

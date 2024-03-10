@@ -20,6 +20,7 @@ export async function uploadFiles<T extends string>(
   })
     .then((res) => res.json())
     .catch((error) => {
+      console.log(error);
       throw error;
     });
 

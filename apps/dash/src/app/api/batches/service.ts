@@ -4,6 +4,8 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import utc from "dayjs/plugin/utc";
+
+import timezone from "dayjs/plugin/timezone";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import {
@@ -16,6 +18,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export async function upsertRegistrationBatch(
   request: UpsertRegistrationBatchDto & {
@@ -55,14 +58,22 @@ export async function upsertRegistrationBatch(
     update: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
+        .tz("America/Sao_Paulo", true)
+        .toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
+        .tz("America/Sao_Paulo", true)
+        .toISOString(),
     },
     create: {
       ...parsedData,
       price: Number(rest.price.replace(",", ".")),
-      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").toISOString(),
-      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").toISOString(),
+      dateStart: dayjs(rest.dateStart, "DD/MM/YYYY HH:mm")
+        .tz("America/Sao_Paulo", true)
+        .toISOString(),
+      dateEnd: dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm")
+        .tz("America/Sao_Paulo", true)
+        .toISOString(),
     },
   });
 
@@ -199,11 +210,11 @@ export async function verifyConflictingBatches({
 }
 
 export async function readActiveBatch(request: ReadRegistrationBatchDto) {
-  const today = dayjs();
+  const today = dayjs().toISOString();
   const batch = await prisma.eventRegistrationBatch.findFirst({
     where: {
-      dateStart: { lte: today.toISOString() },
-      dateEnd: { gte: today.toISOString() },
+      dateStart: { lte: today },
+      dateEnd: { gte: today },
       protectedBatch: false,
       AND: {
         OR: [
@@ -221,6 +232,7 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
       },
     },
   });
+
   return batch;
 }
 
