@@ -53,9 +53,9 @@ export async function signup(request: SignupDto) {
     });
   }
 
-  const url =
-    organization?.OrgCustomDomain[0]?.domain ||
-    process.env.NEXT_PUBLIC_SITE_URL;
+  const url = organization?.OrgCustomDomain[0]?.domain
+    ? "https://" + organization?.OrgCustomDomain[0]?.domain
+    : process.env.NEXT_PUBLIC_SITE_URL;
 
   await sendEmail([
     {
