@@ -95,14 +95,8 @@ export function EtapasForm({
     if (!subEvent) {
       return;
     }
-    form.setValue(
-      "dateEnd",
-      dayjs(subEvent.dateEnd).utc().format("DD/MM/YYYY")
-    );
-    form.setValue(
-      "dateStart",
-      dayjs(subEvent.dateStart).utc().format("DD/MM/YYYY")
-    );
+    form.setValue("dateEnd", date(subEvent.dateEnd, "DD/MM/YYYY", true));
+    form.setValue("dateStart", date(subEvent.dateStart, "DD/MM/YYYY", true));
     form.setValue("location", subEvent.location || "");
     form.setValue("name", subEvent.name || "");
     form.setValue("id", subEvent.id);
@@ -160,7 +154,7 @@ export function EtapasForm({
             header: "Início",
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: (info) => date(info.getValue(), "DD/MM/YYYY"),
+            cell: (info) => date(info.getValue(), "DD/MM/YYYY", true),
           }),
           columnHelper.accessor("location", {
             id: "location",

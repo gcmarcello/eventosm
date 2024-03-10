@@ -113,7 +113,9 @@ export default function EventGroupContainer({
                 header: "Data",
                 enableSorting: true,
                 enableGlobalFilter: true,
-                cell: (info) => date(info.getValue(), "DD/MM/YYYY"),
+                cell: (info) => (
+                  <Date date={info.getValue()} format="DD/MM/YYYY" />
+                ),
               }),
               columnHelper.accessor("location", {
                 id: "location",
@@ -278,7 +280,10 @@ export default function EventGroupContainer({
                   ) : nextBatch ? (
                     <Button className={"w-full"} disabled color="rose">
                       Inscrições em breve{" - "}
-                      {date(nextBatch.dateStart, "DD/MM/YYYY HH:mm")}
+                      <Date
+                        date={nextBatch.dateStart}
+                        format="DD/MM/YYYY HH:mm"
+                      />
                     </Button>
                   ) : (
                     <Button className={"w-full"} disabled color="rose">
