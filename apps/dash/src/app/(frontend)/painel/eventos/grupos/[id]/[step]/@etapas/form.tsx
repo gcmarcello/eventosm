@@ -168,14 +168,11 @@ export function EtapasForm({
             header: "Status",
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: (info) => {
-              switch (info.getValue()) {
-                case "draft":
-                  return <Badge color="amber">Pendente</Badge>;
-                case "published":
-                  return <Badge color="green">Publicado</Badge>;
-              }
-            },
+            cell: (info) =>
+              ({
+                draft: <Badge color="amber">Pendente</Badge>,
+                published: <Badge color="green">Publicado</Badge>,
+              })[info.getValue() as "draft" | "published"],
           }),
           columnHelper.accessor("id", {
             id: "id",
