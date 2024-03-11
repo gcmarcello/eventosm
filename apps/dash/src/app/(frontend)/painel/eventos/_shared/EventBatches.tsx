@@ -1,7 +1,7 @@
 "use client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import BatchModal from "./BatchModal";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { upsertRegistrationBatch } from "@/app/api/batches/action";
 
@@ -145,6 +145,24 @@ export default function EventBatches({
     setIsBatchModalOpen(true);
   }
 
+  const stats = useMemo(
+    () => [
+      {
+        name: "Total de Inscrições",
+        stat: batches.reduce(
+          (acc, batch) => acc + batch._count.EventRegistration,
+          0
+        ),
+      },
+      {
+        name: "Inscrições Disponibilizadas",
+        stat: batches.reduce((acc, batch) => acc + batch.maxRegistrations, 0),
+      },
+      { name: "Inscrições com Equipe", stat: "" },
+    ],
+    [batches]
+  );
+
   return (
     <>
       <Form
@@ -165,7 +183,7 @@ export default function EventBatches({
         />
       </Form>
 
-      <div className="flex flex-row-reverse">
+      <div className="mb-3 flex flex-col items-end justify-between gap-3 lg:flex-row-reverse">
         <Button
           type="button"
           color={primaryColor?.tw.color}
@@ -174,8 +192,28 @@ export default function EventBatches({
             setIsBatchModalOpen(true);
           }}
         >
-          Novo Lote de Inscrição
+          Novo Lote
         </Button>
+        <div className="w-full grow">
+          {/*           <h3 className="text-base font-semibold leading-6 text-gray-900">
+            Last 30 days
+          </h3> */}
+          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {stats.map((item) => (
+              <div
+                key={item.name}
+                className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
+              >
+                <dt className="truncate text-sm font-medium text-gray-500">
+                  {item.name}
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                  {item.stat}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
       <Table
         data={batches}

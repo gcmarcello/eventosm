@@ -61,7 +61,7 @@ export default async function NewsPage({
       </div>
       <div className="mt-3 grid grid-cols-5 pb-3">
         {news.imageUrl && (
-          <div className="relative col-span-5 h-72 w-full lg:col-span-3 lg:col-start-2">
+          <div className="relative col-span-5 mb-4 h-72 w-full lg:col-span-3 lg:col-start-2">
             <Image alt="imagem da noticia" fill src={news.imageUrl} />
           </div>
         )}
