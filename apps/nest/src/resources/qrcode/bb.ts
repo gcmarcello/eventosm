@@ -9,15 +9,15 @@ export class BackblazeService extends S3Client {
 
   constructor(private settingsService: SettingsService) {
     super({
-      endpoint: `https://s3.${settingsService.get("AWS_REGION")}.backblazeb2.com`,
+      endpoint: `https://s3.${settingsService.awsRegion}.backblazeb2.com`,
       credentials: {
-        accessKeyId: settingsService.get("AWS_ACCESS_KEY_ID") || "",
-        secretAccessKey: settingsService.get("AWS_SECRET_ACCESS_KEY") || "",
+        accessKeyId: settingsService.awsAccessKeyId,
+        secretAccessKey: settingsService.awsSecretAccessKey,
       },
     });
 
-    this.bucketRegion = settingsService.get("AWS_REGION");
-    this.bucketName = settingsService.get("AWS_BUCKET_NAME");
+    this.bucketRegion = settingsService.awsRegion;
+    this.bucketName = settingsService.awsBucketName;
   }
 
   async uploadFile(file: File, key: string) {
