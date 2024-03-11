@@ -7,9 +7,9 @@ import { SettingsService } from "../settings/settings.service";
     _BullModule.forRootAsync({
       useFactory: (settings: SettingsService) => ({
         redis: {
-          host: settings.get("REDIS_HOST"),
-          port: settings.getNumber("REDIS_PORT"),
-          password: settings.get("REDIS_PASSWORD"),
+          host: settings.redisHost,
+          port: settings.redisPort,
+          password: settings.redisPassword,
         },
       }),
       inject: [SettingsService],
