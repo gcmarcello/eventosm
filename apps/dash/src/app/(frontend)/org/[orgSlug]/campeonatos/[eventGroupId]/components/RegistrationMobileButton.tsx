@@ -63,9 +63,11 @@ export default function RegistrationMobileButton({
             <Button
               disabled={
                 (!batch && !nextBatch) ||
-                (batch &&
-                  batch.maxRegistrations <= batch._count.EventRegistration &&
-                  !nextBatch)
+                Boolean(
+                  batch &&
+                    batch.maxRegistrations <= batch._count.EventRegistration &&
+                    !nextBatch
+                )
               }
               className="w-full"
               color={handleButtonColor()}
