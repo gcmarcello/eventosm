@@ -41,18 +41,19 @@ export default function PanelSideBar() {
       current: pathname.includes("/eventos"),
     },
     {
-      name: "Usuários",
-      href: `/painel/usuarios`,
-      icon: UserGroupIcon,
-      current: pathname.includes("/usuarios"),
-    },
-    /* {
       name: "Notícias",
       href: `/painel/noticias`,
       icon: NewspaperIcon,
       current: pathname.includes("/noticias"),
     },
     {
+      name: "Usuários",
+      href: `/painel/usuarios`,
+      icon: UserGroupIcon,
+      current: pathname.includes("/usuarios"),
+    },
+
+    /*{
       name: "Documentos",
       href: `/painel/documentos`,
       icon: DocumentIcon,
