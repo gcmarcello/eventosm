@@ -198,10 +198,14 @@ export async function verifyConflictingBatches({
   for (const potentialConflictingBatch of potentialConflictingBatches) {
     if (
       dayjs(potentialConflictingBatch.dateStart).isSameOrBefore(
-        dayjs(batch.dateEnd, "DD/MM/YYYY HH:mm").toISOString()
+        dayjs(batch.dateEnd, "DD/MM/YYYY HH:mm")
+          .tz("America/Sao_Paulo", true)
+          .toISOString()
       ) &&
       dayjs(potentialConflictingBatch.dateEnd).isSameOrAfter(
-        dayjs(batch.dateStart, "DD/MM/YYYY HH:mm").toISOString()
+        dayjs(batch.dateStart, "DD/MM/YYYY HH:mm")
+          .tz("America/Sao_Paulo", true)
+          .toISOString()
       ) &&
       potentialConflictingBatch.id !== batch.id
     )

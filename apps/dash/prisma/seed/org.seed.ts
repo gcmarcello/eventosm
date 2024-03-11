@@ -62,6 +62,7 @@ export const orgSeed = async (userId: string) => {
       slug: "cubatense",
       registrationType: "mixed",
       location: "Cubatão",
+      imageUrl: "https://i.imgur.com/fMAlJVi.png",
       eventGroupType: "championship",
       EventGroupRules: {
         create: {
