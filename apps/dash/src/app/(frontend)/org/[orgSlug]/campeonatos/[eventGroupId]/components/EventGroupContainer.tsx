@@ -228,55 +228,68 @@ export default function EventGroupContainer({
                 <div className="text-sm font-medium">Inscrições</div>
                 <div className="my-2 space-y-2">
                   {batch ? (
-                    <div className="flex justify-between gap-5 pt-2">
-                      {isUserRegistered ? (
-                        <Button
-                          href={`/perfil`}
-                          color={
-                            organization.options.colors.primaryColor.tw.color
-                          }
-                        >
-                          <QrCodeIcon
-                            color={organization.options.colors.primaryColor.hex}
-                            className="size-6"
-                          />
-                          Ver QR Code
-                        </Button>
-                      ) : (
-                        batch.registrationType !== "team" && (
+                    batch.maxRegistrations <= batch._count.EventRegistration &&
+                    !nextBatch ? (
+                      <Button disabled color="red" className={"w-full"}>
+                        Inscrições Esgotadas
+                      </Button>
+                    ) : (
+                      <div className="flex justify-between gap-5 pt-2">
+                        {isUserRegistered ? (
                           <Button
-                            href={`/inscricoes/campeonatos/${eventGroup.id}`}
-                            className={"grow"}
+                            href={`/perfil`}
                             color={
                               organization.options.colors.primaryColor.tw.color
                             }
                           >
-                            <UserCircleIcon
+                            <QrCodeIcon
                               color={
                                 organization.options.colors.primaryColor.hex
                               }
                               className="size-6"
                             />
-                            Inscrição Individual
+                            Ver QR Code
                           </Button>
-                        )
-                      )}
-                      {batch.registrationType !== "individual" && (
-                        <Button
-                          href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
-                          className={"grow"}
-                          color={
-                            organization.options.colors.secondaryColor.tw.color
-                          }
-                        >
-                          <UserGroupIcon
-                            color={organization.options.colors.primaryColor.hex}
-                            className="size-6"
-                          />
-                          Inscrição de Equipe
-                        </Button>
-                      )}
-                    </div>
+                        ) : (
+                          batch.registrationType !== "team" && (
+                            <Button
+                              href={`/inscricoes/campeonatos/${eventGroup.id}`}
+                              className={"grow"}
+                              color={
+                                organization.options.colors.primaryColor.tw
+                                  .color
+                              }
+                            >
+                              <UserCircleIcon
+                                color={
+                                  organization.options.colors.primaryColor.hex
+                                }
+                                className="size-6"
+                              />
+                              Inscrição Individual
+                            </Button>
+                          )
+                        )}
+                        {batch.registrationType !== "individual" && (
+                          <Button
+                            href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                            className={"grow"}
+                            color={
+                              organization.options.colors.secondaryColor.tw
+                                .color
+                            }
+                          >
+                            <UserGroupIcon
+                              color={
+                                organization.options.colors.primaryColor.hex
+                              }
+                              className="size-6"
+                            />
+                            Inscrição de Equipe
+                          </Button>
+                        )}
+                      </div>
+                    )
                   ) : nextBatch ? (
                     <Button className={"w-full"} disabled color="rose">
                       Inscrições em breve{" - "}
