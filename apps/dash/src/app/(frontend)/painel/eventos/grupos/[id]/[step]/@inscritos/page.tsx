@@ -41,5 +41,9 @@ export default async function RegistrationsPage({
     },
   });
 
-  return <RegistrationsTable registrations={registrations} />;
+  return (
+    <div className="pb-20 lg:pb-10">
+      <RegistrationsTable registrations={registrations} />
+    </div>
+  );
 }

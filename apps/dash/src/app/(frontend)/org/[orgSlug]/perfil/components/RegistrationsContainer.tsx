@@ -45,7 +45,10 @@ export default function RegistrationsContainer({
         <Heading>Inscrições Pendentes</Heading>
         {registrations.filter((reg) => reg.status === "active").length > 0 ? (
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-            <For each={registrations.filter((reg) => reg.status === "pending")}>
+            <For
+              each={registrations.filter((reg) => reg.status === "pending")}
+              fallback={<Text>Nenhuma inscrição pendente.</Text>}
+            >
               {(registration) => {
                 return (
                   <EventGroupRegistrationCard
