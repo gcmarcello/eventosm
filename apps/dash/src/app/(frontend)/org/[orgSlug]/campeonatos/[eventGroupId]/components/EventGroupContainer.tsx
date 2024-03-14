@@ -80,6 +80,78 @@ export default function EventGroupContainer({
     {
       content: (
         <div className="my-2 text-sm">
+          <Table
+            data={eventGroup.Event}
+            pagination={false}
+            search={false}
+            columns={(columnHelper) => [
+              columnHelper.accessor("name", {
+                id: "name",
+                header: "Nome",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => (
+                  <span
+                    className={
+                      info.row.original.description
+                        ? "cursor-pointer underline"
+                        : ""
+                    }
+                    onClick={() =>
+                      info.row.original.description &&
+                      handleEventModal(info.row.original.id)
+                    }
+                  >
+                    {info.getValue()}
+                  </span>
+                ),
+              }),
+              columnHelper.accessor("dateStart", {
+                id: "dateStart",
+                header: "Data",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => (
+                  <Date date={info.getValue()} format="DD/MM/YYYY" />
+                ),
+              }),
+              columnHelper.accessor("location", {
+                meta: { className: "hidden lg:table-cell" },
+                id: "location",
+                header: "Local",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => info.getValue(),
+              }),
+              /* columnHelper.accessor("id", {
+                id: "id",
+                header: "",
+
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) =>
+                  eventGroup.Event.find((e) => e.id === info.getValue())
+                    ?.description ? (
+                    <Button
+                      plain
+                      type="button"
+                      onClick={() => handleEventModal(info.getValue())}
+                    >
+                      Detalhes
+                    </Button>
+                  ) : (
+                    "Informações em breve."
+                  ),
+              }), */
+            ]}
+          />
+        </div>
+      ),
+      title: "Etapas",
+    },
+    {
+      content: (
+        <div className="my-2 text-sm">
           <div
             dangerouslySetInnerHTML={{
               __html: eventGroup.description || "Nenhuma descrição cadastrada.",
@@ -100,61 +172,6 @@ export default function EventGroupContainer({
         </div>
       ),
       title: "Regulamento",
-    },
-    {
-      content: (
-        <div className="my-2 text-sm">
-          <Table
-            data={eventGroup.Event}
-            pagination={false}
-            search={false}
-            columns={(columnHelper) => [
-              columnHelper.accessor("name", {
-                id: "name",
-                header: "Nome",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => info.getValue(),
-              }),
-              columnHelper.accessor("dateStart", {
-                id: "dateStart",
-                header: "Data",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => (
-                  <Date date={info.getValue()} format="DD/MM/YYYY" />
-                ),
-              }),
-              columnHelper.accessor("location", {
-                id: "location",
-                header: "Local",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => info.getValue(),
-              }),
-              columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) =>
-                  eventGroup.Event.find((e) => e.id === info.getValue())
-                    ?.description ? (
-                    <Button
-                      type="button"
-                      onClick={() => handleEventModal(info.getValue())}
-                    >
-                      Detalhes
-                    </Button>
-                  ) : (
-                    "Informações em breve."
-                  ),
-              }),
-            ]}
-          />
-        </div>
-      ),
-      title: "Etapas",
     },
   ];
 
