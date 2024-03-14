@@ -90,11 +90,17 @@ export function EtapasForm({
     },
   });
 
-  function handleEditModalOpening({ subeventId }: { subeventId: string }) {
-    const subEvent = eventGroup.Event.find((event) => event.id === subeventId);
-    if (!subEvent) {
-      return;
+  function handleEditModalOpening({ subeventId }: { subeventId?: string }) {
+    if (!subeventId) {
+      form.resetField("dateEnd");
+    form.resetField("dateStart");
+    form.resetField("location");
+    form.setValue("name", `#${eventGroup.Event.length + 1} Etapa`);
+    form.resetField("id");
+    setIsModalOpen(true);
     }
+    const subEvent = eventGroup.Event.find((event) => event.id === subeventId);
+    if (!subEvent) return;
     form.setValue("dateEnd", date(subEvent.dateEnd, "DD/MM/YYYY", true));
     form.setValue("dateStart", date(subEvent.dateStart, "DD/MM/YYYY", true));
     form.setValue("location", subEvent.location || "");
@@ -118,7 +124,7 @@ export function EtapasForm({
         <Button
           type="button"
           color={primaryColor?.tw.color}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => handleEditModalOpening({})}
         >
           Nova Etapa
         </Button>
@@ -168,14 +174,11 @@ export function EtapasForm({
             header: "Status",
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: (info) => {
-              switch (info.getValue()) {
-                case "draft":
-                  return <Badge color="amber">Pendente</Badge>;
-                case "published":
-                  return <Badge color="green">Publicado</Badge>;
-              }
-            },
+            cell: (info) =>
+              ({
+                draft: <Badge color="amber">Pendente</Badge>,
+                published: <Badge color="green">Publicado</Badge>,
+              })[info.getValue() as "draft" | "published"],
           }),
           columnHelper.accessor("id", {
             id: "id",

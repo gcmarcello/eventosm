@@ -3,8 +3,8 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { redirect } from "next/navigation";
-import GeralForm from "../@geral/form";
-import EventModalities from "../../../../_shared/EventModalities";
+import GeralForm from "../geral/form";
+import EventModalities from "../../../_shared/EventModalities";
 
 export default async function ModalitiesPage({
   params,

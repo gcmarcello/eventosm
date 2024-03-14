@@ -27,11 +27,18 @@ import {
   Button,
   DisclosureAccordion,
   Date,
+  Dialog,
+  DialogActions,
+  DialogBody,
+  DialogDescription,
+  DialogTitle,
+  Input,
+  Label,
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventRegistrationBatch, Organization } from "@prisma/client";
-import { useRef } from "react";
+import { Event, EventRegistrationBatch, Organization } from "@prisma/client";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import {
   CalendarDaysIcon,
@@ -52,6 +59,7 @@ import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../components/OrgStore";
+import { Field } from "@headlessui/react";
 
 export default function EventGroupContainer({
   eventGroup,
@@ -124,6 +132,24 @@ export default function EventGroupContainer({
                 enableGlobalFilter: true,
                 cell: (info) => info.getValue(),
               }),
+              columnHelper.accessor("id", {
+                id: "id",
+                header: "",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) =>
+                  eventGroup.Event.find((e) => e.id === info.getValue())
+                    ?.description ? (
+                    <Button
+                      type="button"
+                      onClick={() => handleEventModal(info.getValue())}
+                    >
+                      Detalhes
+                    </Button>
+                  ) : (
+                    "Informações em breve."
+                  ),
+              }),
             ]}
           />
         </div>
@@ -134,9 +160,37 @@ export default function EventGroupContainer({
 
   const { image } = useOrg();
   const contentRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  function handleEventModal(id: string) {
+    const event = eventGroup.Event.find((e) => e.id === id);
+    if (!event) return;
+    setSelectedEvent(event);
+    setIsOpen(true);
+  }
 
   return (
     <>
+      <Dialog size="6xl" open={isOpen} onClose={setIsOpen}>
+        <DialogTitle>{selectedEvent?.name}</DialogTitle>
+        {/* <DialogDescription>
+          The refund will be reflected in the customer’s bank account 2 to 3
+          business days after processing.
+        </DialogDescription> */}
+        <DialogBody className="mt-4">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: selectedEvent?.description || "Informações em breve.",
+            }}
+          ></div>
+        </DialogBody>
+        <DialogActions className="justify-between">
+          <Button plain onClick={() => setIsOpen(false)}>
+            Voltar
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
         <div
           ref={contentRef}

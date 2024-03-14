@@ -178,7 +178,7 @@ export async function readEventGroups(request: ReadEventGroupDto) {
   const events = await prisma.eventGroup.findMany({
     where: request.where,
     include: {
-      Event: true,
+      Event: { orderBy: { dateStart: "asc" } },
       EventGroupRules: true,
       EventRegistration: { include: { user: true } },
       EventModality: { include: { modalityCategory: true } },
