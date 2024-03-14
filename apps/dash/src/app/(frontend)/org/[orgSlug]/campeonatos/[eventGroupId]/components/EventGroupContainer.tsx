@@ -172,7 +172,7 @@ export default function EventGroupContainer({
 
   return (
     <>
-      <Dialog size="6xl" open={isOpen} onClose={setIsOpen}>
+      <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
         <DialogTitle>{selectedEvent?.name}</DialogTitle>
         {/* <DialogDescription>
           The refund will be reflected in the customer’s bank account 2 to 3

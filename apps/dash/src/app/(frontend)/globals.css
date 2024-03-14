@@ -73,5 +73,6 @@ body {
 }
 
 .customHtml li {
+  list-style: initial; /* Usa o estilo de lista padrão */
   margin-bottom: 10px; /* Adiciona um espaço abaixo de cada item da lista */
 }
