@@ -8,7 +8,7 @@ export default async function EtapasPage({
 }) {
   const eventGroup = await prisma.eventGroup.findUnique({
     where: { id: params.id },
-    include: { Event: true },
+    include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
   if (!eventGroup) return redirect("/painel/eventos");
