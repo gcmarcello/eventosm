@@ -18,7 +18,7 @@ export default function ReaderContainer({ id }: { id: string }) {
               console.info(error);
             }
           }}
-          constraints={{ facingMode: "environment" }}
+          constraints={{ facingMode: "environment", aspectRatio: { ideal: 1 } }}
           containerStyle={{ height: "300px", width: "300px" }}
           videoContainerStyle={{ height: "300px", width: "300px" }}
         />
