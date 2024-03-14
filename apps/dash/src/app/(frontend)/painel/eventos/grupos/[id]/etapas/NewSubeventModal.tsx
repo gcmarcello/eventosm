@@ -52,7 +52,7 @@ export default function SubeventModal({
   };
 
   const form = useFormContext<ClientUpsertEventDto>();
-  const SubeventField = useMemo(() => form.createField(), []);
+  const Field = useMemo(() => form.createField(), []);
   const {
     colors: { primaryColor, secondaryColor },
   } = usePanel();
@@ -98,30 +98,31 @@ export default function SubeventModal({
       <DialogBody>
         <Fieldset>
           <FieldGroup className="grid grid-cols-2 gap-3">
-            <SubeventField className="col-span-2 lg:col-span-1" name="name">
+            <Field className="col-span-2 lg:col-span-1" name="name">
               <Label>Nome do Evento</Label>
               <Input placeholder="10 KM da Rua 3" />
               <ErrorMessage />
-            </SubeventField>
-            <SubeventField className="col-span-2 lg:col-span-1" name="location">
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="location">
               <Label>Local</Label>
               <Input placeholder="Rua 3" />
               <ErrorMessage />
-            </SubeventField>
-            <SubeventField
-              className="col-span-2 lg:col-span-1"
-              name="dateStart"
-            >
+            </Field>
+          </FieldGroup>
+          <FieldGroup className="grid grid-cols-2 gap-3">
+            <Field className="col-span-2 lg:col-span-1" name="dateStart">
               <Label>Início do Evento</Label>
               <Input mask={"99/99/9999"} placeholder="01/01/2024" />
               <ErrorMessage />
-            </SubeventField>
-            <SubeventField className="col-span-2 lg:col-span-1" name="dateEnd">
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="dateEnd">
               <Label>Término do Evento</Label>
               <Input mask={"99/99/9999"} placeholder="02/01/2024" />
               <ErrorMessage />
-            </SubeventField>
-            <SubeventField name="image" className="col-span-2">
+            </Field>
+          </FieldGroup>
+          <FieldGroup>
+            <Field name="image" className="col-span-2">
               <Label>Capa do Evento</Label>
               <FileInput
                 fileTypes={["png", "jpg", "jpeg"]}
@@ -162,15 +163,12 @@ export default function SubeventModal({
                 <FileImagePreview defaultValue={subevent?.imageUrl || ""} />
               </div>
               <ErrorMessage />
-            </SubeventField>
-            <SubeventField
-              className="col-span-2 lg:col-span-2"
-              name="description"
-            >
+            </Field>
+            <Field className="col-span-2 lg:col-span-2" name="description">
               <Label>Descrição da Etapa</Label>
               <RichTextEditor />
               <ErrorMessage />
-            </SubeventField>
+            </Field>
           </FieldGroup>
         </Fieldset>
         <Description>ID: {form.getValues("id")}</Description>

@@ -2,10 +2,18 @@
 import { readRegistrations } from "@/app/api/registrations/action";
 import { date } from "odinkit";
 import { Badge, Table, formatPhone } from "odinkit";
-import { useAction } from "odinkit/client";
+import {
+  Date,
+  Dropdown,
+  DropdownButton,
+  DropdownItem,
+  DropdownMenu,
+  useAction,
+} from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
-import { RegistrationWithInfo } from "../grupos/[id]/[step]/@inscritos/page";
+import { RegistrationWithInfo } from "../grupos/[id]/inscritos/page";
+import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 
 export default function RegistrationsTable({
   registrations,
@@ -55,8 +63,10 @@ export default function RegistrationsTable({
             switch (info.getValue()) {
               case "pending":
                 return <Badge color="amber">Pendente</Badge>;
-              case "completed":
-                return <Badge color="green">Confirmado</Badge>;
+              case "active":
+                return <Badge color="green">Ativa</Badge>;
+              case "cancelled":
+                return <Badge color="red">Cancelada</Badge>;
             }
           },
         }),
@@ -72,9 +82,11 @@ export default function RegistrationsTable({
           header: "Data da Inscrição",
           enableSorting: true,
           enableGlobalFilter: false,
-          cell: (info) => date(info.getValue(), "DD/MM/YYYY HH:mm", true),
+          cell: (info) => (
+            <Date date={info.getValue()} format="DD/MM/YYYY HH:mm" />
+          ),
         }),
-        columnHelper.accessor("addonId", {
+        columnHelper.accessor("addon.name", {
           id: "addon",
           header: "Kit",
           enableSorting: true,
@@ -93,7 +105,16 @@ export default function RegistrationsTable({
           header: "Opções",
           enableSorting: true,
           enableGlobalFilter: true,
-          cell: (info) => info.getValue(),
+          cell: (info) => (
+            <Dropdown>
+              <DropdownButton plain>
+                <EllipsisVerticalIcon className="size-5 text-zinc-500" />
+              </DropdownButton>
+              <DropdownMenu>
+                <DropdownItem onClick={() => {}}>Editar</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          ),
         }),
       ]}
     />

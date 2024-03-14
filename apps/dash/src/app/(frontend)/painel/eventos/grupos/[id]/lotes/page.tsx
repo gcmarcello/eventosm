@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import EventBatches from "../../../../_shared/EventBatches";
+import EventBatches from "../../../_shared/EventBatches";
 
 export default async function BatchesPage({
   params,

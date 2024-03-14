@@ -1,5 +1,5 @@
 import { ExtractSuccessResponse } from "odinkit";
-import RegistrationsTable from "../../../../_shared/RegistrationsPage";
+import RegistrationsTable from "../../../_shared/RegistrationsPage";
 import {
   BatchCoupon,
   EventAddon,
@@ -28,7 +28,7 @@ export default async function RegistrationsPage({
   params: { id: string };
 }) {
   const registrations = await prisma.eventRegistration.findMany({
-    where: { eventGroupId: params.id },
+    where: { eventGroupId: params.id, NOT: {status: 'cancelled'} },
     include: {
       user: true,
       batch: true,
@@ -41,5 +41,9 @@ export default async function RegistrationsPage({
     },
   });
 
-  return <RegistrationsTable registrations={registrations} />;
+  return (
+    <div className="pb-20 lg:pb-10">
+      <RegistrationsTable registrations={registrations} />
+    </div>
+  );
 }
