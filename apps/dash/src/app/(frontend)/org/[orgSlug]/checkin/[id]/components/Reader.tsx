@@ -17,7 +17,7 @@ export default function QRReader({
       >
         <QRScanner
           onScan={(d) => d && trigger(d)}
-          facingMode={"environment"}
+          facingMode={"user"}
           switchLabel={() => null}
           delay={2000}
         />
