@@ -9,9 +9,6 @@ export default function QRReader({
 }: {
   trigger: (data: any) => void;
 }) {
-  const [facingMode, setFacingMode] = useState<"environment" | "user">(
-    "environment"
-  );
   return (
     <>
       <div
@@ -20,22 +17,10 @@ export default function QRReader({
       >
         <QRScanner
           onScan={(d) => d && trigger(d)}
-          facingMode={facingMode || "environment"}
+          facingMode={"environment"}
           switchLabel={() => null}
           delay={2000}
         />
-        <div className="">
-          <Button
-            plain
-            onClick={() =>
-              setFacingMode((prev) =>
-                prev === "environment" ? "user" : "environment"
-              )
-            }
-          >
-            <ArrowPathIcon className="size-8 text-white" /> Virar Câmera
-          </Button>
-        </div>
       </div>
     </>
   );
