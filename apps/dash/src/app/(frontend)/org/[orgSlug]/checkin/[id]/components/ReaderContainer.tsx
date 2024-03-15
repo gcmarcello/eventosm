@@ -202,7 +202,10 @@ export default function ReaderContainer({
             <Form
               className="flex w-full grow flex-col gap-3 bg-slate-100 px-3 py-4"
               hform={form}
-              onSubmit={(data) => trigger(data)}
+              onSubmit={(data) => {
+                trigger(data);
+                form.reset();
+              }}
             >
               <Field name="document">
                 <Description className={"flex gap-2"}>
