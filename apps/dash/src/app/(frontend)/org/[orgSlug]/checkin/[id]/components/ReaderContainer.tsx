@@ -213,6 +213,7 @@ export default function ReaderContainer({
                   <br /> Digite o CPF do atleta abaixo.
                 </Description>
                 <Input mask={"999.999.999-99"} inputMode="numeric" />
+                <ErrorMessage />
               </Field>
               <SubmitButton
                 color={organization.options.colors.primaryColor.tw.color}
