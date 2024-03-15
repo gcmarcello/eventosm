@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
 import { customDomainMiddleware } from "./customDomainMiddleware";
 import { getServerEnv } from "./app/api/env";

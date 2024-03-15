@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 import { CustomDomainMiddleware } from "./middleware/functions/customDomain.middleware";
 import { AuthMiddleware } from "./middleware/functions/auth.middleware";
 import authRedirect from "./middleware/utils/authRedirect";
@@ -38,9 +38,12 @@ export async function customDomainMiddleware({
     additionalArguments: { roles: ["user"] },
   });
 
+  const { device } = userAgent(request);
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("userId", isAuthenticated);
   requestHeaders.set("x-url", request.url);
+  requestHeaders.set("deviceType", device.type || "");
 
   if (
     startsWith([
