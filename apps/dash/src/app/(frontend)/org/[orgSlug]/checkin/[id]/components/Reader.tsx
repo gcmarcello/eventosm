@@ -15,8 +15,8 @@ export default function QRReader({
   return (
     <>
       <div
-        style={{ maxWidth: "300px" }}
-        className="flex items-center justify-center"
+        style={{ maxWidth: "250px" }}
+        className="flex flex-col items-center justify-center gap-2"
       >
         <QRScanner
           onScan={(d) => d && trigger(d)}
@@ -24,7 +24,7 @@ export default function QRReader({
           switchLabel={() => null}
           delay={2000}
         />
-        <div className="absolute bottom-[204px] left-9 lg:bottom-52 lg:left-10">
+        <div className="">
           <Button
             plain
             onClick={() =>
@@ -33,7 +33,7 @@ export default function QRReader({
               )
             }
           >
-            <ArrowPathIcon className="size-8 text-white" />
+            <ArrowPathIcon className="size-8 text-white" /> Virar Câmera
           </Button>
         </div>
       </div>
