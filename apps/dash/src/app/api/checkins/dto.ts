@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const subeventEventGroupCheckinDto = z.object({
-  registrationId: z.string(),
+  document: z.string().optional(),
+  registrationId: z.string().optional(),
   subeventId: z.string(),
-  confirm: z.boolean(),
 });
 
 export type SubeventEventGroupCheckinDto = z.infer<

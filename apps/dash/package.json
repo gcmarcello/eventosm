@@ -50,6 +50,7 @@
     "d3-timer": "^3.0.1",
     "@tinymce/tinymce-react": "^3.10.0",
     "react-qr-reader": "^3.0.0-beta-1",
+    "@alzera/react-qr-scanner": "^1.0.4",
     "tinymce": "^6.8.3",
     "copy-webpack-plugin": "^12.0.2",
     "dayjs": "^1.11.10",
