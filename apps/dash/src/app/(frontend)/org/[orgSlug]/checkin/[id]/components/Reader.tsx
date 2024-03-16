@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { QrReader } from "react-qr-reader";
-import QRScanner from "@alzera/react-qr-scanner";
 import { Button } from "odinkit/client";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import QrScanner from "@/app/(frontend)/_shared/qrCodeReader";
 
 export default function QRReader({
   trigger,
@@ -15,9 +15,9 @@ export default function QRReader({
         style={{ maxWidth: "250px" }}
         className="flex flex-col items-center justify-center gap-2"
       >
-        <QRScanner
+        <QrScanner
           onScan={(d) => d && trigger(d)}
-          facingMode={"user"}
+          facingMode={"environment"}
           switchLabel={() => null}
           delay={2000}
         />
