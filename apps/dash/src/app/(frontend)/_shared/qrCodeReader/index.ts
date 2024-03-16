@@ -1,5 +1,4 @@
-import QrScanner from './qr-scanner';
-import Scanner from './scanner';
-import DropZone from './drop-zone';
+import QrScanner from "./qr-scanner";
+import Scanner from "./scanner";
 
-export { QrScanner as default, Scanner, DropZone }
+export { QrScanner as default, Scanner };

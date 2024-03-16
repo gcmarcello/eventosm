@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { QrReader } from "react-qr-reader";
 import ReaderContainer from "./components/ReaderContainer";
 import clsx from "clsx";
 import { redirect } from "next/dist/server/api-utils";
