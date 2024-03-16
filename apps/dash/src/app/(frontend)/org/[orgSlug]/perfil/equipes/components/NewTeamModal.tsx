@@ -577,7 +577,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                 <DialogActions
                   className={clsx(
                     inputMode && form.watch("addMembers") && currentStep === 1
-                      ? "fixed bottom-0 left-0 w-full border-t border-slate-100 bg-white shadow-md"
+                      ? "fixed bottom-0 left-0 w-full border-t border-slate-100 bg-white p-2 shadow-md"
                       : ""
                   )}
                 >
