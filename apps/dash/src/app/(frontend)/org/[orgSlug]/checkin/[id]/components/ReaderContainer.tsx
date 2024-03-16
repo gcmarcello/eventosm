@@ -1,10 +1,7 @@
 "use client";
 import { subeventEventGroupCheckinDto } from "@/app/api/checkins/dto";
-import { chooseTextColor } from "@/utils/colors";
 import {
   CheckCircleIcon,
-  DevicePhoneMobileIcon,
-  MagnifyingGlassCircleIcon,
   MagnifyingGlassIcon,
   QrCodeIcon,
 } from "@heroicons/react/24/outline";

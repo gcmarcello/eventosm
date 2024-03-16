@@ -67,11 +67,11 @@ export default async function CompanyLayout({
 
   return (
     <>
-      <style>{`
+      {/* <style>{`
           ::-webkit-scrollbar {
             display: none;
         }
-        `}</style>
+        `}</style> */}
       {organization.options && (
         <OrgStore
           value={{
