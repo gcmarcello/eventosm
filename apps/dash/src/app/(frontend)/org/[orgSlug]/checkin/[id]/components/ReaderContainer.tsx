@@ -22,8 +22,6 @@ import {
   useForm,
 } from "odinkit/client";
 import { Suspense, useMemo, useState } from "react";
-
-import { QrReader } from "react-qr-reader";
 import { NoSsrReader } from "./NoSSRReader";
 import {
   eventGroupSubeventCheckin,
