@@ -10,7 +10,10 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
       include: {
         team: true,
         event: { where: { organizationId } },
-        eventGroup: { where: { organizationId }, include: { Event: true } },
+        eventGroup: {
+          where: { organizationId },
+          include: { Event: { orderBy: { dateStart: "asc" } } },
+        },
         modality: true,
         category: true,
       },
@@ -19,7 +22,10 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
   }
   return await prisma.eventRegistration.findMany({
     where: request.where,
-    include: { event: true, eventGroup: { include: { Event: true } } },
+    include: {
+      event: true,
+      eventGroup: { include: { Event: { orderBy: { dateStart: "asc" } } } },
+    },
   });
 }
 

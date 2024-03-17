@@ -183,7 +183,7 @@ export default function ReaderContainer({
           <>
             {deviceType === "mobile" ? (
               <div
-                className="flex w-dvw justify-center"
+                className="flex w-dvw justify-center pb-6"
                 style={{
                   backgroundColor:
                     organization.options.colors.secondaryColor.hex,

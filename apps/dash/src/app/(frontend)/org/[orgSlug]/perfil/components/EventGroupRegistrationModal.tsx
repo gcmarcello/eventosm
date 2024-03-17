@@ -231,16 +231,15 @@ export function EventGroupRegistrationModal({
                 {eventGroup && (
                   <For each={eventGroup?.eventGroup.Event}>
                     {(event) => {
-                      function handleCheckinOrAbsence() {
-                        const eventCheckin = eventGroup?.EventCheckIn.find(
-                          (checkin) => checkin.eventId === event.id
+                      const eventCheckin = eventGroup?.EventCheckIn.find(
+                        (checkin) => checkin.eventId === event.id
+                      );
+                      const absenceJustification =
+                        eventGroup?.EventAbsences.find(
+                          (absence) => absence.eventId === event.id
                         );
 
-                        const absenceJustification =
-                          eventGroup?.EventAbsences.find(
-                            (absence) => absence.eventId === event.id
-                          );
-
+                      function handleCheckinOrAbsence() {
                         if (eventCheckin) {
                           return (
                             <Badge className="my-auto" color="green">
@@ -293,7 +292,7 @@ export function EventGroupRegistrationModal({
                             {event.name}
                           </dt>
                           <dd className="col-span-2 mt-1 flex  justify-end text-sm leading-6 text-gray-700 sm:mt-0  lg:col-span-1">
-                            {event.status === "published" ? (
+                            {event.status === "published" && !eventCheckin ? (
                               <Badge className="my-auto">Aberto</Badge>
                             ) : (
                               handleCheckinOrAbsence()

@@ -66,6 +66,7 @@ export function NewsForm({
   });
 
   useEffect(() => {
+    if (news?.slug) return;
     form.setValue("slug", slugify(form.watch("title") || ""));
   }, [form.watch("title")]);
 
