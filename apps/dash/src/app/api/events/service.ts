@@ -207,7 +207,7 @@ export async function readEventGroupCheckinsAndAbsences(
       userId: request.userSession.id,
     },
     include: {
-      eventGroup: { include: { Event: true } },
+      eventGroup: { include: { Event: { orderBy: { dateStart: "asc" } } } },
       EventAbsences: true,
       EventCheckIn: true,
     },
