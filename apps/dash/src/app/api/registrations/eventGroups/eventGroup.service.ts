@@ -76,7 +76,7 @@ export async function createEventGroupRegistration(
   const createRegistration = await prisma.eventRegistration.create({
     data: {
       ...registrationInfo,
-      teamId: request?.teamId,
+      teamId: request?.teamId || null,
       modalityId: registrationInfo.modalityId,
       categoryId: registrationInfo.categoryId,
       userId: userSession.id,
@@ -224,7 +224,7 @@ export async function createEventGroupMultipleRegistrations(
       batchId: batch.id,
       addonId: addon?.id,
       addonOption: addon?.option,
-      teamId: request?.teamId,
+      teamId: request?.teamId || null,
       eventGroupId: request.eventGroupId,
       code: (eventRegistrations + (index + 1)).toString(),
       status: "active",
