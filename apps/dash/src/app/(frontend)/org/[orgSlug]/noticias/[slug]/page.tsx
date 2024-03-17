@@ -10,6 +10,7 @@ import {
   WhatsappShareButton,
 } from "../../../_shared/ShareButtons";
 import Image from "next/image";
+import { Date } from "odinkit/client";
 
 export default async function NewsPage({
   params,
@@ -56,7 +57,7 @@ export default async function NewsPage({
         <WhatsappShareButton link={newsShareLink} text={newsShareTitle} />
         <Text>
           Atualizado em{" "}
-          {date(news?.updatedAt ?? news.createdAt, "DD/MM/YYYY HH:mm")}
+          <Date date={news?.updatedAt ?? news.createdAt} format="DD/MM/YYYY" />
         </Text>
       </div>
       <div className="mt-3 grid grid-cols-5 pb-3">
