@@ -49,6 +49,7 @@ export function NewsForm({
 
   const { data, trigger, isMutating } = useAction({
     action: upsertNews,
+    redirect: true,
     onSuccess: (res) => {
       showToast({
         message: res.message || "Sucesso",

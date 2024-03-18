@@ -84,7 +84,7 @@ export default async function CompanyLayout({
         />
       )}
       <CompanyNavbar organization={organization} user={request.userSession} />
-      {children}
+      <div className="bg-slate-200 pb-2 lg:h-fit">{children}</div>
     </>
   );
 }
