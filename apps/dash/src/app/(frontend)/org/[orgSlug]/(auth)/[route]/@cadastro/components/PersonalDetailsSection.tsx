@@ -88,7 +88,6 @@ export default function PersonalDetailSections({
                   { id: "female", name: "Feminino" },
                   { id: "male", name: "Masculino" },
                 ]}
-                defaultValue={""}
               ></Select>
               <ErrorMessage />
             </Field>
