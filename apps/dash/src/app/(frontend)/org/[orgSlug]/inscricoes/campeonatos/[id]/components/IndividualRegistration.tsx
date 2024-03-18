@@ -115,6 +115,11 @@ export default function IndividualTournamentRegistration({
     [eventGroup]
   );
 
+  useEffect(() => {
+    if (categories.length === 1)
+      form.setValue("registration.categoryId", categories[0]?.id);
+  }, [categories]);
+
   return (
     <>
       <Dialog open={showRules} onClose={setShowRules}>

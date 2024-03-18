@@ -237,6 +237,12 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
     },
   });
 
+  if (
+    batch?.maxRegistrations &&
+    batch._count.EventRegistration >= batch.maxRegistrations
+  )
+    return null;
+
   return batch;
 }
 
@@ -260,6 +266,12 @@ export async function readProtectedBatch(request: ReadRegistrationBatchDto) {
     .catch(() => {
       return null;
     });
+
+  if (
+    batch?.maxRegistrations &&
+    batch._count.EventRegistration >= batch.maxRegistrations
+  )
+    return null;
   return batch;
 }
 

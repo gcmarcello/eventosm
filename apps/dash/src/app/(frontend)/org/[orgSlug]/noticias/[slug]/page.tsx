@@ -55,10 +55,10 @@ export default async function NewsPage({
         <FacebookShareButton link={newsShareLink} />
         <TwitterShareButton link={newsShareLink} text={newsShareTitle} />
         <WhatsappShareButton link={newsShareLink} text={newsShareTitle} />
-        <Text>
+        <span className="flex items-center gap-1 text-base/6 text-zinc-500 sm:text-sm/6">
           Atualizado em{" "}
           <Date date={news?.updatedAt ?? news.createdAt} format="DD/MM/YYYY" />
-        </Text>
+        </span>
       </div>
       <div className="mt-3 grid grid-cols-5 pb-3">
         {news.imageUrl && (
