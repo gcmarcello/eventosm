@@ -70,12 +70,12 @@ export default function RegistrationsTable({
             }
           },
         }),
-        columnHelper.accessor("user.phone", {
-          id: "phone",
-          header: "Telefone",
+        columnHelper.accessor("category.name", {
+          id: "category",
+          header: "Categoria",
           enableSorting: true,
           enableGlobalFilter: true,
-          cell: (info) => formatPhone(info.getValue()),
+          cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("createdAt", {
           id: "createdAt",
