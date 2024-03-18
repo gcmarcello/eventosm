@@ -363,13 +363,19 @@ export default function IndividualTournamentRegistration({
                             )?.name
                           }{" "}
                           -{" "}
-                          {toProperCase(
-                            categories.find(
-                              (category) =>
-                                category.id ===
-                                form.watch("registration.categoryId")
-                            )?.gender || ""
-                          )}
+                          {categories.find(
+                            (category) =>
+                              category.id ===
+                              form.watch("registration.categoryId")
+                          )?.gender === "male"
+                            ? "Masculino"
+                            : categories.find(
+                                  (category) =>
+                                    category.id ===
+                                    form.watch("registration.categoryId")
+                                )?.gender === "female"
+                              ? "Feminino"
+                              : "Unissex"}
                         </dd>
                       </div>
                       {eventGroup.EventAddon?.length
