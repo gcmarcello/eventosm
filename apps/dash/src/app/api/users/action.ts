@@ -21,6 +21,6 @@ export async function updateUser(request: UpdateUserDto) {
     });
   } catch (error) {
     console.log(error);
-    return ActionResponse.error("Erro ao atualizar usuário.");
+    return ActionResponse.error(error);
   }
 }
