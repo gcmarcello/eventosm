@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { EtapasForm } from "./form";
+import { Title } from "odinkit";
 
 export default async function EtapasPage({
   params,
@@ -13,5 +14,18 @@ export default async function EtapasPage({
 
   if (!eventGroup) return redirect("/painel/eventos");
 
-  return <EtapasForm eventGroup={eventGroup} />;
+  const eventToReview = eventGroup.Event.find((e) => e.status === "review");
+
+  return (
+    <>
+      {eventGroup.Event.length ? (
+        <>
+          <Title>Etapa Atual</Title>
+          {eventGroup.Event.find((e) => e.status === "published")?.name}
+        </>
+      ) : null}
+
+      <EtapasForm eventGroup={eventGroup} />
+    </>
+  );
 }

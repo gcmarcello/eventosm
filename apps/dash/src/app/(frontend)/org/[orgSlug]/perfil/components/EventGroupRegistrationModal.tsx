@@ -1,7 +1,10 @@
 import { ReadEventGroupDto } from "@/app/api/events/dto";
 import { readEventGroupCheckinsAndAbsences } from "@/app/api/events/action";
 import { ReadEventAddonDto } from "@/app/api/products/dto";
-import { cancelRegistration } from "@/app/api/registrations/action";
+import {
+  cancelRegistration,
+  connectRegistrationToTeam,
+} from "@/app/api/registrations/action";
 import {
   CheckIcon,
   ClipboardDocumentCheckIcon,
@@ -9,48 +12,58 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { Organization } from "@prisma/client";
+import { Organization, Team } from "@prisma/client";
 import clsx from "clsx";
 import { set } from "lodash";
 import Image from "next/image";
-import { Badge, For } from "odinkit";
+import { Badge, For, SubmitButton } from "odinkit";
 import {
   Alert,
   AlertActions,
   AlertDescription,
   AlertTitle,
   Button,
+  Description,
   Dialog,
   DialogActions,
   DialogBody,
   DialogDescription,
   DialogTitle,
+  Form,
+  Select,
   showToast,
   useAction,
+  useForm,
 } from "odinkit/client";
 import {
   EventGroupEventCheckinsAndAbsences,
   EventGroupWithEvents,
 } from "prisma/types/Events";
 import { EventGroupRegistration } from "prisma/types/Registrations";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { connectRegistrationToTeamDto } from "@/app/api/registrations/dto";
+import { format } from "path";
 
 export function EventGroupRegistrationModal({
   registration,
   isOpen,
   setIsOpen,
   organization,
+  teams,
 }: {
   organization: Organization;
-  registration: EventGroupRegistration | null;
+  registration: EventGroupRegistration;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  teams: Team[];
 }) {
   const [showCancelAlert, setShowCancelAlert] = useState(false);
+  const [isTeamChangeOpen, setTeamChangeIsOpen] = useState(false);
   const [screen, setScreen] = useState("general");
   const [eventGroup, setEventGroup] = useState<
     EventGroupEventCheckinsAndAbsences | undefined
   >(undefined);
+
   const {
     data: cancelData,
     trigger: cancelTrigger,
@@ -70,6 +83,7 @@ export function EventGroupRegistrationModal({
       showToast({ message: error, variant: "error", title: "Erro!" });
     },
   });
+
   const {
     data: eventGroupData,
     trigger: eventGroupTrigger,
@@ -81,6 +95,35 @@ export function EventGroupRegistrationModal({
         setEventGroup(data.data as EventGroupEventCheckinsAndAbsences);
     },
   });
+
+  const {
+    data: connectRegistrationToTeamData,
+    trigger: connectRegistrationToTeamTrigger,
+  } = useAction({
+    action: connectRegistrationToTeam,
+    onSuccess: (data) => {
+      setTeamChangeIsOpen(false);
+      setIsOpen(false);
+      showToast({
+        message: data.message || "Inscrição conectada à equipe com sucesso.",
+        variant: "success",
+        title: "Sucesso!",
+      });
+    },
+    onError: (error) => {
+      showToast({ message: error, variant: "error", title: "Erro!" });
+    },
+  });
+
+  const connectTeamForm = useForm({
+    schema: connectRegistrationToTeamDto,
+    defaultValues: {
+      registrationId: registration.id,
+      teamId: "",
+    },
+  });
+
+  const Field = useMemo(() => connectTeamForm.createField(), []);
 
   useEffect(() => {
     if (registration?.id && isOpen) {
@@ -199,7 +242,71 @@ export function EventGroupRegistrationModal({
                     Equipe
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {registration.team?.name || "Nenhuma"}
+                    {registration.team ? (
+                      registration.team.name
+                    ) : teams ? (
+                      <>
+                        <span
+                          className="cursor-pointer underline hover:no-underline"
+                          onClick={() => setTeamChangeIsOpen(true)}
+                        >
+                          Atribuir equipe
+                        </span>
+                        <Form
+                          hform={connectTeamForm}
+                          onSubmit={(data) =>
+                            connectRegistrationToTeamTrigger(data)
+                          }
+                        >
+                          <Dialog
+                            open={isTeamChangeOpen}
+                            onClose={setTeamChangeIsOpen}
+                          >
+                            <DialogTitle>Atribuir Equipe</DialogTitle>
+                            <DialogDescription>
+                              A sua inscrição será conectada à equipe escolhida,
+                              e será exibida nos seus resultados. <br />
+                            </DialogDescription>
+                            <DialogBody>
+                              <Field name="teamId">
+                                <Select
+                                  displayValueKey="name"
+                                  data={teams.map((team) => ({
+                                    name: team.name,
+                                    id: team.id,
+                                  }))}
+                                />
+                                <Description>
+                                  Não será possível alterar a equipe após a
+                                  atribuição.
+                                </Description>
+                              </Field>
+                            </DialogBody>
+                            <DialogActions>
+                              <Button
+                                plain
+                                onClick={() => {
+                                  setTeamChangeIsOpen(false);
+                                  connectTeamForm.reset();
+                                }}
+                              >
+                                Cancelar
+                              </Button>
+                              <SubmitButton
+                                color={
+                                  organization.options.colors.primaryColor.tw
+                                    .color
+                                }
+                              >
+                                Atribuir
+                              </SubmitButton>
+                            </DialogActions>
+                          </Dialog>
+                        </Form>
+                      </>
+                    ) : (
+                      "Nenhuma"
+                    )}
                   </dd>
                 </div>
                 <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">

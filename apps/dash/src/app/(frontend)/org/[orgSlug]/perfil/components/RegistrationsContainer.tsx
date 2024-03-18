@@ -1,6 +1,6 @@
 "use client";
 import { For, Heading, Text } from "odinkit";
-import { EventRegistration, Organization } from "@prisma/client";
+import { EventRegistration, Organization, Team } from "@prisma/client";
 import EventGroupRegistrationCard from "./EventGroupRegistrationCard";
 import { useEffect, useState } from "react";
 import { EventGroupRegistrationModal } from "./EventGroupRegistrationModal";
@@ -8,9 +8,11 @@ import { EventGroupRegistrationModal } from "./EventGroupRegistrationModal";
 export default function RegistrationsContainer({
   registrations,
   organization,
+  teams,
 }: {
   registrations: EventRegistration[];
   organization: Organization;
+  teams: Team[];
 }) {
   const [modalInfo, setModalInfo] = useState<EventRegistration | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -63,12 +65,15 @@ export default function RegistrationsContainer({
           <Text>Nenhuma inscrição pendente.</Text>
         )}
       </div>
-      <EventGroupRegistrationModal
-        organization={organization}
-        registration={modalInfo}
-        isOpen={modalOpen}
-        setIsOpen={setModalOpen}
-      />
+      {modalInfo && (
+        <EventGroupRegistrationModal
+          organization={organization}
+          teams={teams}
+          registration={modalInfo}
+          isOpen={modalOpen}
+          setIsOpen={setModalOpen}
+        />
+      )}
     </div>
   );
 }

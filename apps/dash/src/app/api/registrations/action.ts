@@ -101,7 +101,7 @@ export async function connectRegistrationToTeam(
     const registration = await service.connectRegistrationToTeam(parsedRequest);
     revalidatePath("/perfil");
     return ActionResponse.success({
-      message: "Inscrição conectada à equipe com sucesso.",
+      message: `Inscrição conectada à equipe ${registration.team?.name} com sucesso.`,
       data: registration,
     });
   } catch (error) {
