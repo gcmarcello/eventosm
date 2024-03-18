@@ -62,7 +62,6 @@ export default function FormContainer({
         cityId: "",
         stateId: "",
         complement: "",
-        gender: undefined,
         number: "",
         zipCode: "",
       },
