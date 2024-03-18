@@ -3,6 +3,7 @@ import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
+  ObjectCannedACL,
 } from "@aws-sdk/client-s3";
 
 const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
@@ -16,7 +17,11 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadFile(file: File, key: string) {
+export async function uploadFile(
+  file: File,
+  key: string,
+  ACL: ObjectCannedACL = "public-read"
+) {
   const bytes = await file.arrayBuffer();
   const fileBuffer = Buffer.from(bytes);
   const command = new PutObjectCommand({
@@ -24,6 +29,7 @@ export async function uploadFile(file: File, key: string) {
     Key: key,
     Body: fileBuffer,
     ContentType: "image/jpeg",
+    ACL,
   });
 
   try {

@@ -47,6 +47,14 @@ export async function updateUser({
   request: UpdateUserDto & { userSession: UserSession };
 }) {
   const { userSession, info, ...data } = request;
+  const existingEmail = await prisma.user.findFirst({
+    where: { email: data.email, id: { not: userSession.id } },
+  });
+  if (existingEmail) throw "Email já cadastrado.";
+  const existingDocument = await prisma.user.findFirst({
+    where: { document: data.document, id: { not: userSession.id } },
+  });
+  if (existingDocument) throw "Documento já cadastrado.";
   const user = await prisma.user.update({
     where: { id: userSession.id },
     data: {
