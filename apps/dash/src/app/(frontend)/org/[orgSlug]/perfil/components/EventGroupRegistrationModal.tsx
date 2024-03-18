@@ -244,7 +244,7 @@ export function EventGroupRegistrationModal({
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {registration.team ? (
                       registration.team.name
-                    ) : teams ? (
+                    ) : teams.length ? (
                       <>
                         <span
                           className="cursor-pointer underline hover:no-underline"
@@ -305,7 +305,12 @@ export function EventGroupRegistrationModal({
                         </Form>
                       </>
                     ) : (
-                      "Nenhuma"
+                      <>
+                        <span>Nenhuma </span>
+                        <div className="text-xs text-zinc-500">
+                          (junte-se à uma equipe antes de atribuir.)
+                        </div>
+                      </>
                     )}
                   </dd>
                 </div>
