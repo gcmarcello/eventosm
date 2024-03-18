@@ -19,9 +19,9 @@ export default async function NewsPage({
 
   return (
     <div className="bg-slate-200">
-      <div className="mx-64 rounded-b-md bg-white px-16 pt-4">
+      <div className="rounded-b-md bg-white px-4 pt-8 lg:mx-64 lg:px-16">
         <Title>Notícias</Title>
-        <ul role="list" className="divide-y divide-gray-100 py-4">
+        <ul role="list" className="divide-y divide-gray-100 lg:py-4">
           {news.map((n) => (
             <li
               key={n.id}
@@ -44,11 +44,11 @@ export default async function NewsPage({
                   </a>
                 </div>
                 <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-                  <p className="whitespace-nowrap">{n.subtitle}</p>
+                  <p className="lg:whitespace-nowrap">{n.subtitle}</p>
                   <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
                     <circle cx={1} cy={1} r={1} />
                   </svg>
-                  <div className="truncate">
+                  <div className="">
                     {<Date date={n.createdAt} format="DD/MM/YYYY" />}
                   </div>
                 </div>
