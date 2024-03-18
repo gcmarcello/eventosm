@@ -26,7 +26,7 @@ export default function RootLayout({
   const theme = cookieStore.get("theme");
 
   return (
-    <html data-theme={theme?.value} className=" bg-white" lang="pt-BR">
+    <html data-theme={theme?.value} lang="pt-BR">
       <body className={clsx(inter.className)}>
         {isDev && <Mocker />}
 

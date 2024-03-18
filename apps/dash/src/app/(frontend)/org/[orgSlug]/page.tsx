@@ -63,56 +63,49 @@ export default async function CompanyHome({
     <>
       <div
         className={clsx(
-          organization.options?.images?.bg && "lg:bg-slate-200",
-          "h-dvh bg-cover lg:h-[calc(100dvh-85px)]"
+          "min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-16 2xl:mx-72"
         )}
       >
-        <div
-          className={clsx(
-            "min-h-[600px] rounded-b-md bg-white px-4 pb-4 pt-4 xl:mx-16 2xl:mx-72"
-          )}
-        >
-          <div className="grid grid-cols-6 gap-6 ">
-            <div className={clsx("col-span-6 flex flex-col gap-4 ")}>
-              {organization.options?.images?.hero && (
-                <div className="relative h-[155px] w-auto lg:h-[375px]">
-                  <Image
-                    fill={true}
-                    className="rounded-md"
-                    src={organization.options?.images?.hero || ""}
-                    alt=""
-                  />
+        <div className="grid grid-cols-6 gap-6 ">
+          <div className={clsx("col-span-6 flex flex-col gap-4 ")}>
+            {organization.options?.images?.hero && (
+              <div className="relative h-[155px] w-auto lg:h-[375px]">
+                <Image
+                  fill={true}
+                  className="rounded-md"
+                  src={organization.options?.images?.hero || ""}
+                  alt=""
+                />
+              </div>
+            )}
+          </div>
+          <div className="col-span-6 mb-2">
+            <Heading>Próximos Eventos</Heading>
+          </div>
+
+          <For
+            each={[...eventGroups, ...events]}
+            fallback={
+              <>
+                <div className="mt-1 flex gap-2 text-sm text-gray-500">
+                  Mais em breve!{" "}
                 </div>
-              )}
-            </div>
-            <div className="col-span-6 mb-2">
-              <Heading>Próximos Eventos</Heading>
-            </div>
-
-            <For
-              each={[...eventGroups, ...events]}
-              fallback={
-                <>
-                  <div className="mt-1 flex gap-2 text-sm text-gray-500">
-                    Mais em breve!{" "}
+              </>
+            }
+          >
+            {(event) => {
+              return (
+                <div className="col-span-6 flex flex-col md:col-span-2 ">
+                  <div className="flex flex-col gap-4 lg:grid">
+                    <EventCard event={event} orgSlug={params.orgSlug} />
                   </div>
-                </>
-              }
-            >
-              {(event) => {
-                return (
-                  <div className="col-span-6 flex flex-col md:col-span-2 ">
-                    <div className="flex flex-col gap-4 lg:grid">
-                      <EventCard event={event} orgSlug={params.orgSlug} />
-                    </div>
-                  </div>
-                );
-              }}
-            </For>
+                </div>
+              );
+            }}
+          </For>
 
-            <div className="col-span-6 flex-col md:col-span-4 md:flex">
-              <NewsCard news={news} />
-            </div>
+          <div className="col-span-6 flex-col md:col-span-4 md:flex">
+            <NewsCard news={news} />
           </div>
         </div>
       </div>
