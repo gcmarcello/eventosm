@@ -75,5 +75,6 @@ export async function connectRegistrationToTeam(
   return await prisma.eventRegistration.update({
     where: { id: data.registrationId },
     data: { teamId: data.teamId },
+    include: { team: true },
   });
 }
