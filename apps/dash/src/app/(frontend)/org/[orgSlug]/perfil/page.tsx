@@ -32,9 +32,20 @@ export default async function RegistrationsPage({
     },
   });
 
+  const teams = await prisma.team.findMany({
+    where: {
+      User: {
+        some: {
+          id: userSession.id,
+        },
+      },
+    },
+  });
+
   return (
     <RegistrationsContainer
       registrations={registrations}
+      teams={teams}
       organization={organization}
     />
   );
