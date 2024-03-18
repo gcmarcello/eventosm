@@ -28,13 +28,15 @@ export default function RegistrationsTable({
             Número: registration.code,
             Nome: registration.user.fullName,
             Status: registration.status,
+            Categoria: registration.category?.name,
             Telefone: registration.user.phone,
+            Equipe: registration.team?.name,
             "Data de Inscrição": date(
               registration.createdAt,
               "DD/MM/YYYY HH:mm",
               true
             ),
-            Kit: registration.addonId,
+            Kit: registration.addon?.name,
             "Opção do Kit": registration.addonOption,
           })) || [],
       }}
