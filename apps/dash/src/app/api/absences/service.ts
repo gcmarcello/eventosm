@@ -1,14 +1,27 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { CreateAbsenceJustificationDto, UpdateAbsenceStatusDto } from "./dto";
 import { getPreSignedURL } from "../uploads/service";
+import { sendEmail } from "../emails/service";
+import { getServerEnv } from "../env";
+import { chooseTextColor } from "@/utils/colors";
+import { Organization } from "@prisma/client";
 
-export async function changeAbsenceStatus({
-  absenceId,
-  status,
-}: UpdateAbsenceStatusDto) {
+export async function changeAbsenceStatus(
+  data: UpdateAbsenceStatusDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
+) {
   const currentStatus = await prisma.eventAbsences.findUnique({
-    where: { id: absenceId },
-    select: { status: true, justificationUrl: true },
+    where: { id: data.absenceId },
+    select: {
+      status: true,
+      justificationUrl: true,
+      event: {
+        include: { Organization: { include: { OrgCustomDomain: true } } },
+      },
+      registration: { select: { user: true } },
+    },
   });
 
   if (!currentStatus) {
@@ -19,12 +32,40 @@ export async function changeAbsenceStatus({
     throw "Cannot change status of an approved absence";
   }
 
+  const url = currentStatus.event.Organization?.OrgCustomDomain[0]?.domain
+    ? "https://" + currentStatus.event.Organization?.OrgCustomDomain[0]?.domain
+    : process.env.NEXT_PUBLIC_SITE_URL;
+
+  await sendEmail([
+    {
+      template:
+        currentStatus.status === "denied"
+          ? "justification_denied"
+          : "justification_accepted",
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: `Justificativa Aceita - ${currentStatus.event.name}`,
+        to: currentStatus.registration.user.email,
+      },
+      templateParameters: {
+        headerTextColor: chooseTextColor(
+          data.organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        mainColor:
+          data.organization?.options.colors.primaryColor.hex || "#4F46E5",
+        orgName: data.organization?.name || "EventoSM",
+        name: currentStatus.registration.user.fullName.split(" ")[0] as string,
+        siteLink: `${url}/confirmar/${currentStatus.registration.user.id}`,
+      },
+    },
+  ]);
+
   await prisma.eventAbsences.update({
-    where: { id: absenceId },
+    where: { id: data.absenceId },
     data: {
-      status,
+      status: data.status,
       justificationUrl:
-        status === "denied" ? null : currentStatus.justificationUrl,
+        data.status === "denied" ? null : currentStatus.justificationUrl,
       registration: {
         update: {
           unjustifiedAbsences: {
@@ -39,8 +80,8 @@ export async function changeAbsenceStatus({
   });
 
   return await prisma.eventAbsences.update({
-    where: { id: absenceId },
-    data: { status },
+    where: { id: data.absenceId },
+    data: { status: data.status },
     include: { event: true },
   });
 }
