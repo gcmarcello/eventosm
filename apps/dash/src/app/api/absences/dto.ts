@@ -2,7 +2,7 @@ import { EventAbsenceStatus } from "@prisma/client";
 import { ZodDto, ZodDtoEnv } from "odinkit";
 import { z } from "odinkit";
 
-const createAbsenceJustificationDto = <E extends "client" | "server">(
+export const createAbsenceJustificationDto = <E extends "client" | "server">(
   env: E
 ) => {
   const dto = z.object({
@@ -11,7 +11,7 @@ const createAbsenceJustificationDto = <E extends "client" | "server">(
 
   const envs = {
     client: z.object({
-      justification: z.array(z.instanceof(File)),
+      justification: z.array(z.any()),
     }),
     server: z.object({
       justificationUrl: z.string(),

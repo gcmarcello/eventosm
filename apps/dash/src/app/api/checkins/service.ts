@@ -1,5 +1,6 @@
 import { normalize } from "odinkit";
 import { SubeventEventGroupCheckinDto } from "./dto";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
 
 export async function readEventGroupRegistrationCheckin(
   data: SubeventEventGroupCheckinDto
@@ -54,7 +55,7 @@ export async function readEventGroupRegistrationCheckin(
 }
 
 export async function eventGroupSubeventCheckin(
-  data: SubeventEventGroupCheckinDto
+  data: SubeventEventGroupCheckinDto & { userSession: UserSession }
 ) {
   const existingCheckin = await prisma.eventCheckIn.findFirst({
     where: {
@@ -70,6 +71,7 @@ export async function eventGroupSubeventCheckin(
       data: {
         eventId: data.subeventId,
         registrationId: data.registrationId,
+        createdById: data.userSession.id,
       },
       include: { registration: { include: { user: true } } },
     });

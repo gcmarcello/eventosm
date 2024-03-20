@@ -15,6 +15,9 @@ export async function GET(request: Request, response: NextResponse) {
 
     return NextResponse.json(user);
   } catch (error) {
-    return NextResponse.json({ message: error, status: 403 }, { status: 403 });
+    return NextResponse.json(
+      { message: error.message, status: 403 },
+      { status: 403 }
+    );
   }
 }

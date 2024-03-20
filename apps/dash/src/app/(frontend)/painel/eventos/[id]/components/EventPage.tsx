@@ -99,7 +99,7 @@ export default function UpdateEventPage({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });

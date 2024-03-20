@@ -75,7 +75,7 @@ export default function EventModalities({
     },
     onError: (error) =>
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       }),

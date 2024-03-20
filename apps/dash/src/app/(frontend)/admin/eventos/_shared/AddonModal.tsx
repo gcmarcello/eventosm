@@ -104,7 +104,7 @@ export default function AddonModal({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         variant: "error",
         title: "Erro!",
       });
@@ -155,7 +155,7 @@ export default function AddonModal({
                         onError={(error) => {
                           if (typeof error === "string") {
                             showToast({
-                              message: error,
+                              message: error.message,
                               title: "Erro",
                               variant: "error",
                             });

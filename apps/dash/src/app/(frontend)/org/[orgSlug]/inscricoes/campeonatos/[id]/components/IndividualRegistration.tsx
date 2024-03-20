@@ -91,7 +91,7 @@ export default function IndividualTournamentRegistration({
       }),
     onError: (error) => {
       console.log(error);
-      showToast({ message: error, title: "Erro", variant: "error" });
+      showToast({ message: error.message, title: "Erro", variant: "error" });
     },
   });
 

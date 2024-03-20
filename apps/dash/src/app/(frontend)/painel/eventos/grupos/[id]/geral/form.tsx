@@ -76,7 +76,7 @@ export default function GeralForm({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });
@@ -172,7 +172,7 @@ export default function GeralForm({
                 onError={(error) => {
                   if (typeof error === "string") {
                     showToast({
-                      message: error,
+                      message: error.message,
                       title: "Erro",
                       variant: "error",
                     });

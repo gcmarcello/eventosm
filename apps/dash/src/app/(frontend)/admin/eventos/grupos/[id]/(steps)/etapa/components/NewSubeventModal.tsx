@@ -21,6 +21,7 @@ import {
   RichTextEditor,
   UseFormReturn,
   showToast,
+  useAction,
   useFormContext,
   useMocker,
 } from "odinkit/client";
@@ -34,12 +35,15 @@ import { FileImagePreview, SubmitButton, Text, fileFromUrl } from "odinkit";
 import { Event } from "@prisma/client";
 import { fakerPT_BR } from "@faker-js/faker";
 import dayjs from "dayjs";
+import { updateEventStatus } from "@/app/api/events/status/action";
 
 export default function SubeventModal({
   modalState,
   subevent,
   isLoading,
+  eventGroupId,
 }: {
+  eventGroupId: string;
   modalState: {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     isModalOpen: boolean;
@@ -82,6 +86,26 @@ export default function SubeventModal({
     }),
   });
 
+  const {
+    data: eventStatusData,
+    trigger: eventStatusTrigger,
+    isMutating,
+  } = useAction({
+    action: updateEventStatus,
+    onSuccess: () =>
+      showToast({
+        message: "Status do evento atualizado com sucesso!",
+        variant: "success",
+        title: "Sucesso!",
+      }),
+    onError: (message) =>
+      showToast({
+        message,
+        variant: "error",
+        title: "Erro!",
+      }),
+  });
+
   return (
     <Dialog
       size="5xl"
@@ -97,6 +121,22 @@ export default function SubeventModal({
         </DialogDescription> */}
       <DialogBody>
         <Fieldset>
+          {form.getValues("id") && (
+            <Button
+              loading={isMutating}
+              onClick={() =>
+                eventStatusTrigger({
+                  status: "finished",
+                  eventId: form.getValues("id"),
+                  eventGroupId: eventGroupId,
+                })
+              }
+              className="my-auto"
+              color="teal"
+            >
+              Analisar Evento
+            </Button>
+          )}
           <FieldGroup className="grid grid-cols-2 gap-3">
             <SubeventField className="col-span-2 lg:col-span-1" name="name">
               <Label>Nome do Evento</Label>
@@ -130,7 +170,7 @@ export default function SubeventModal({
                 onError={(error) => {
                   if (typeof error === "string") {
                     showToast({
-                      message: error,
+                      message: error.message,
                       title: "Erro",
                       variant: "error",
                     });

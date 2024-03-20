@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { Organization } from "@prisma/client";
 import { UpdateEventStatusDto } from "../dto";
+import dayjs from "dayjs";
 
 async function updateEventStatusToReview(data: {
   eventId: string;
@@ -18,6 +19,12 @@ async function updateEventStatusToReview(data: {
     }
   }
 
+  const rules = await prisma.eventGroupRules.findUniqueOrThrow({
+    where: {
+      eventGroupId: data.eventGroupId,
+    },
+  }); // @todo
+
   const eventRegistrations = await prisma.eventRegistration.findMany({
     where: {
       status: {
@@ -25,11 +32,14 @@ async function updateEventStatusToReview(data: {
           equals: "cancelled",
         },
       },
-      ...(data.eventId
-        ? { eventId: data.eventId }
-        : { eventGroupId: data.eventGroupId }),
+      ...(data.eventGroupId
+        ? { eventGroupId: data.eventGroupId }
+        : { eventId: data.eventId }),
     },
   });
+
+  if (eventRegistrations.length === 0)
+    throw "Não é possível analisar um evento sem inscrições.";
 
   const eventCheckins = await prisma.eventCheckIn.findMany({
     where: { eventId: data.eventId },
@@ -56,21 +66,15 @@ async function updateEventStatusToReview(data: {
       };
     });
 
-  const rules = await prisma.eventGroupRules.findUniqueOrThrow({
-    where: {
-      eventGroupId: data.eventGroupId,
-    },
-  }); // @todo
-
   await prisma.$transaction([
-    prisma.eventRegistration.updateMany({
-      where: {
-        id: {
-          in: absentRegistrations.map((r) => r.id),
+    ...absentRegistrations.map((r) =>
+      prisma.eventRegistration.update({
+        where: {
+          id: r.id,
         },
-      },
-      data: absentRegistrations,
-    }),
+        data: r,
+      })
+    ),
 
     prisma.eventAbsences.createMany({
       data: absentRegistrations.map((absence) => ({
@@ -87,6 +91,8 @@ async function updateEventStatusToReview(data: {
       data: { status: "review" },
     }),
   ]);
+
+  return { message: "Evento colocado em análise." };
 }
 
 async function updateEventStatusToFinished(data: {
@@ -119,7 +125,7 @@ async function updateEventStatusToFinished(data: {
   );
 
   if (pendingAbsences.length > 0) {
-    throw "Existem faltas pendentes";
+    throw "Existem faltas pendentes.";
   }
 
   const deniedAbsences = await prisma.eventAbsences.findMany({
@@ -152,14 +158,14 @@ async function updateEventStatusToFinished(data: {
   });
 
   await prisma.$transaction([
-    prisma.eventRegistration.updateMany({
-      where: {
-        id: {
-          in: absentRegistrations.map((r) => r.id),
+    ...absentRegistrations.map((r) =>
+      prisma.eventRegistration.update({
+        where: {
+          id: r.id,
         },
-      },
-      data: absentRegistrations,
-    }),
+        data: r,
+      })
+    ),
 
     prisma.event.update({
       where: {
@@ -168,6 +174,8 @@ async function updateEventStatusToFinished(data: {
       data: { status: "review" },
     }),
   ]);
+
+  return { message: "Evento finalizado." };
 }
 
 export async function updateEventStatus({

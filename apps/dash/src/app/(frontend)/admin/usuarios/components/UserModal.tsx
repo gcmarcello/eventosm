@@ -106,7 +106,7 @@ export default function UserModal({
     onError: (error) => {
       showToast({
         variant: "error",
-        message: error,
+        message: error.message,
         title: "Erro!",
       });
     },

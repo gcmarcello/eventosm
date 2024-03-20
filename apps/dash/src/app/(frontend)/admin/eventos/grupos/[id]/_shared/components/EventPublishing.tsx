@@ -29,7 +29,7 @@ export function EventPublishing({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });

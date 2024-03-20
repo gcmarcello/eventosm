@@ -148,7 +148,7 @@ export default function NewMemberModal({
     onError: (error) => {
       console.log(error);
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro",
         variant: "error",
       });
@@ -340,7 +340,7 @@ export default function NewMemberModal({
                         console.log(error);
                         if (typeof error === "string") {
                           showToast({
-                            message: error,
+                            message: error.message,
                             title: "Erro",
                             variant: "error",
                           });

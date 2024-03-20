@@ -59,7 +59,7 @@ export function NewsForm({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });
@@ -137,7 +137,7 @@ export function NewsForm({
                 onError={(error) => {
                   if (typeof error === "string") {
                     showToast({
-                      message: error,
+                      message: error.message,
                       title: "Erro",
                       variant: "error",
                     });

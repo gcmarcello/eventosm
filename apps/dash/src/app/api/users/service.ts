@@ -1,5 +1,5 @@
 import { UserWithInfo } from "prisma/types/User";
-import { UpdateUserDto } from "./dto";
+import { CreateUserDocumentDto, UpdateUserDto } from "./dto";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { TeamSignUpDto } from "../auth/dto";
 import { readAddressFromZipCode } from "../geo/service";
@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import { normalizeDocument, normalizeZipCode } from "odinkit";
 import { Gender } from "@prisma/client";
 import { info } from "console";
+import { get } from "lodash";
+import { deletePrivateFile, getPreSignedURL } from "../uploads/service";
 
 export async function readUser({
   userId,
@@ -118,4 +120,48 @@ export async function createMultipleUsers(users: TeamSignUpDto[]) {
     },
     select: { id: true, document: true, email: true, fullName: true },
   });
+}
+
+export async function createUserDocument(
+  data: CreateUserDocumentDto & { userSession: UserSession }
+) {
+  const { userSession, ...documentData } = data;
+
+  return await prisma.userDocument.create({
+    data: {
+      ...documentData,
+      userId: userSession.id,
+    },
+  });
+}
+
+export async function getUserDocument(data: {
+  id: string;
+  userSession: UserSession;
+}) {
+  const document = await prisma.userDocument.findUnique({
+    where:
+      data.userSession.role === "admin"
+        ? { id: data.id }
+        : { id: data.id, userId: data.userSession.id },
+  });
+
+  if (!document) throw "Documento não encontrado.";
+
+  return await getPreSignedURL({ key: `documents/${document.key}` });
+}
+
+export async function deleteUserDocument(data: {
+  id: string;
+  userSession: UserSession;
+}) {
+  const document = await prisma.userDocument.findUnique({
+    where: { id: data.id, userId: data.userSession.id },
+  });
+
+  if (!document) throw "Documento não encontrado.";
+
+  await deletePrivateFile(`documents/${document.key}`);
+
+  return await prisma.userDocument.delete({ where: { id: data.id } });
 }
