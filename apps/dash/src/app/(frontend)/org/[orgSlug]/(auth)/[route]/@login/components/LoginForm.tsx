@@ -63,33 +63,30 @@ export default function LoginForm({
 
   const { trigger: loginTrigger, isMutating: isLoading } = useAction({
     action: login,
-    redirect: true,
-    onError: (error) => {
-      let possibleObject = error;
-      try {
-        const parsedObject = JSON.parse(possibleObject);
-        if ("fullName" in parsedObject) {
-          setUser(
-            parsedObject as UserWithoutPassword & {
-              UserOrgLink: (UserOrgLink & { Organization: Organization })[];
-            }
-          );
-          setOpenTermsModal(true);
-        }
-      } catch (error) {
-        showToast({
-          message: possibleObject as string,
-          variant: "error",
-          title: "Erro",
-        });
+    redirect: "unknown",
+    onSuccess: (data) => {
+      if (data.data) {
+        setUser(
+          data.data as UserWithoutPassword & {
+            UserOrgLink: (UserOrgLink & { Organization: Organization })[];
+          }
+        );
       }
-
-      /* form.setError("root.serverError", {
-          type: "400",
-          message: (error as string) || "Erro inesperado",
-        }); */
+    },
+    onError: (error) => {
+      showToast({
+        message: error.message,
+        variant: "error",
+        title: "Erro",
+      });
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      setOpenTermsModal(true);
+    }
+  }, [user]);
 
   return (
     <>
