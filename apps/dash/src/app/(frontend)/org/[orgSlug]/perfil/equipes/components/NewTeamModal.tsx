@@ -368,7 +368,7 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                         console.log(error);
                         if (typeof error === "string") {
                           showToast({
-                            message: error.message,
+                            message: error,
                             title: "Erro",
                             variant: "error",
                           });

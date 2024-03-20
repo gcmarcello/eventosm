@@ -92,7 +92,7 @@ export default function EventBatches({
     },
     onError: (error) => {
       eventBatchForm.setError("root.serverError", {
-        message: error as string,
+        message: error.message,
       });
     },
   });
