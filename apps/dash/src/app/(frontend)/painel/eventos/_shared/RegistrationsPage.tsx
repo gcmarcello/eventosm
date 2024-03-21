@@ -26,6 +26,7 @@ export default function RegistrationsTable({
         data:
           registrations?.map((registration) => ({
             Número: registration.code,
+            Document: registration.user.document,
             Nome: registration.user.fullName,
             Status: registration.status,
             Categoria: registration.category?.name,
