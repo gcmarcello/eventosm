@@ -91,8 +91,6 @@ export default function DocumentModal() {
               title: "Erro!",
             });
 
-          console.log(uploadedFiles);
-
           await trigger({ ...rest, key: uploadedFiles?.file?.key });
         }}
       >
@@ -124,6 +122,10 @@ export default function DocumentModal() {
                     {
                       id: "physicalAptitude",
                       name: "Atestado de Aptidão Física",
+                    },
+                    {
+                      id: "minorAuthorization",
+                      name: "Autorização de Menores",
                     },
                   ]}
                   displayValueKey="name"

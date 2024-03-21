@@ -92,6 +92,7 @@ model UserInfo {
 enum UserDocumentType {
   disability
   physicalAptitude
+  minorAuthorization
 
   @@schema("public")
 }
