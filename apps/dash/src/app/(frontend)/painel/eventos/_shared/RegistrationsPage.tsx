@@ -26,6 +26,7 @@ export default function RegistrationsTable({
         data:
           registrations?.map((registration) => ({
             Número: registration.code,
+            Document: registration.user.document,
             Nome: registration.user.fullName,
             Status: registration.status,
             Categoria: registration.category?.name,
@@ -76,7 +77,7 @@ export default function RegistrationsTable({
           id: "category",
           header: "Categoria",
           enableSorting: true,
-          enableGlobalFilter: true,
+          enableGlobalFilter: false,
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("createdAt", {
@@ -92,21 +93,21 @@ export default function RegistrationsTable({
           id: "addon",
           header: "Kit",
           enableSorting: true,
-          enableGlobalFilter: true,
+          enableGlobalFilter: false,
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("addonOption", {
           id: "addonOption",
           header: "Opção do Kit",
           enableSorting: true,
-          enableGlobalFilter: true,
+          enableGlobalFilter: false,
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("id", {
           id: "id",
           header: "Opções",
           enableSorting: true,
-          enableGlobalFilter: true,
+          enableGlobalFilter: false,
           cell: (info) => (
             <Dropdown>
               <DropdownButton plain>

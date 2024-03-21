@@ -16,7 +16,7 @@ export function DocumentLink({ document }: { document: UserDocument }) {
 
   return (
     <span
-      className="flex cursor-pointer items-center gap-2"
+      className="flex w-full cursor-pointer items-center gap-2"
       onClick={() => trigger({ id: document.id })}
     >
       <EyeIcon className="size-4" /> Ver
