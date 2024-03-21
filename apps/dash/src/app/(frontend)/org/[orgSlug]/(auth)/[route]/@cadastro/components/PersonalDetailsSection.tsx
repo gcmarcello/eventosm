@@ -52,7 +52,7 @@ export default function PersonalDetailSections({
       form.resetField("info.stateId");
       reset();
       showToast({
-        message: error,
+        message: error.message,
         variant: "error",
         title: "Erro",
       });

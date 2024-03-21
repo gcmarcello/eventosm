@@ -107,7 +107,7 @@ export default function UpdateOrgForm({
     },
     redirect: true,
     onError: (error) =>
-      showToast({ message: error, variant: "error", title: "Erro!" }),
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
     onSuccess: (data) =>
       showToast({
         message: "Organização atualizada com sucesso!",

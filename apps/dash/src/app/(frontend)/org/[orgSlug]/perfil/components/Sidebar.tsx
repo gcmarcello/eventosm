@@ -1,6 +1,7 @@
 "use client";
 import {
   ClipboardDocumentCheckIcon,
+  DocumentTextIcon,
   UserCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
@@ -40,6 +41,13 @@ export default function Sidebar({
       href: "/perfil/equipes",
       icon: UsersIcon,
       current: pathName === "/perfil/equipes",
+    },
+    {
+      name: "Documentação",
+      id: "documentos",
+      href: "/perfil/documentos",
+      icon: DocumentTextIcon,
+      current: pathName === "/perfil/documentos",
     },
   ];
 

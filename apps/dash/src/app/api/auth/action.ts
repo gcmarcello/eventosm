@@ -6,6 +6,7 @@ import * as service from "./service";
 import { cookies } from "next/headers";
 import path from "path";
 import { ActionResponse } from "odinkit";
+import { User } from "@prisma/client";
 
 export async function signup(request: SignupDto) {
   let signup;
@@ -33,7 +34,10 @@ export async function login(request: LoginDto) {
     const login = await service.login(loginInfo);
     cookies().set("token", login);
   } catch (error) {
-    console.log(error);
+    if ((error as User).fullName) {
+      console.log("error");
+      return ActionResponse.success({ data: error });
+    }
     return ActionResponse.error(error);
   }
 

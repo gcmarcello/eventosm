@@ -46,7 +46,7 @@ export function CreateNewPasswordForm({
       showToast({
         title: "Erro",
         variant: "error",
-        message: error,
+        message: error.message,
       }),
   });
 

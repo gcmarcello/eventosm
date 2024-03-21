@@ -14,7 +14,8 @@
     "db:push": "prisma db push --force-reset && prisma db seed"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.478.0",
+    "@aws-sdk/client-s3": "^3.536.0",
+    "@aws-sdk/s3-request-presigner": "^3.536.0",
     "email-templates": "workspace:*",
     "xlsx": "0.18.5",
     "@faker-js/faker": "^8.3.1",

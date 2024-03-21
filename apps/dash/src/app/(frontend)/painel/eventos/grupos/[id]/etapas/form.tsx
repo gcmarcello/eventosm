@@ -16,115 +16,54 @@ import {
   Form,
   Button,
 } from "odinkit/client";
-import { useState } from "react";
-import SubeventModal from "./NewSubeventModal";
+import { useEffect, useState } from "react";
+import SubeventModal from "./components/SubeventModal";
 import { readEventGroups, upsertEvent } from "@/app/api/events/action";
 import Image from "next/image";
 import { Event, EventGroup } from "@prisma/client";
-
-const schema = upsertEventDto
-  .omit({ imageUrl: true })
-  .merge(z.object({ image: z.array(z.any()).optional() }));
-
-type Schema = z.infer<typeof schema>;
+import { OrganizationWithDomain } from "prisma/types/Organization";
 
 export function EtapasForm({
   eventGroup,
   eventId,
+  organization,
 }: {
   eventGroup: EventGroup & { Event: Event[] };
   eventId?: string;
+  organization: OrganizationWithDomain;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSubevent, setSelectedSubevent] = useState<Event | undefined>();
   const {
     colors: { primaryColor, secondaryColor },
   } = usePanel();
 
-  const form = useForm({
-    schema,
-    mode: "onChange",
-    defaultValues: {
-      eventGroupId: eventGroup.id,
-      name: `${eventGroup.name} - #${eventGroup.Event.length + 1} Etapa`,
-      id: eventId,
-      dateStart: "",
-      dateEnd: "",
-      location: "",
-      rules: eventGroup?.rules || "",
-      description: eventGroup?.description || "",
-    },
-  });
-
-  const { data, trigger, isMutating } = useAction({
-    action: upsertEvent,
-    prepare: async (data: Schema) => {
-      const { image, ...rest } = data;
-
-      if (!image)
-        return {
-          ...rest,
-          imageUrl: eventGroup.imageUrl ?? undefined,
-        };
-
-      const uploadedFiles = await uploadFiles(
-        [{ name: "image", file: image ? image[0] : [] }],
-        "/events/"
-      );
-
-      return { ...rest, imageUrl: uploadedFiles?.image?.url };
-    },
-    onSuccess: () => {
-      setIsModalOpen(false);
-      showToast({
-        message: "Etapa salva com sucesso!",
-        title: "Sucesso!",
-        variant: "success",
-      });
-    },
-    onError: (error) => {
-      showToast({
-        message: error,
-        title: "Erro!",
-        variant: "error",
-      });
-    },
-  });
-
-  function handleEditModalOpening({ subeventId }: { subeventId?: string }) {
-    if (!subeventId) {
-      form.resetField("dateEnd");
-    form.resetField("dateStart");
-    form.resetField("location");
-    form.setValue("name", `#${eventGroup.Event.length + 1} Etapa`);
-    form.resetField("id");
-    setIsModalOpen(true);
-    }
-    const subEvent = eventGroup.Event.find((event) => event.id === subeventId);
-    if (!subEvent) return;
-    form.setValue("dateEnd", date(subEvent.dateEnd, "DD/MM/YYYY", true));
-    form.setValue("dateStart", date(subEvent.dateStart, "DD/MM/YYYY", true));
-    form.setValue("location", subEvent.location || "");
-    form.setValue("name", subEvent.name || "");
-    form.setValue("id", subEvent.id);
+  function handleEditModalOpening(subevent?: Event) {
+    setSelectedSubevent(subevent);
     setIsModalOpen(true);
   }
 
+  useEffect(() => {
+    if (selectedSubevent) {
+      setIsModalOpen(true);
+    }
+  }, [selectedSubevent]);
+
   return (
     <>
-      <Form hform={form} onSubmit={trigger}>
+      {selectedSubevent && (
         <SubeventModal
           modalState={{ isModalOpen, setIsModalOpen }}
-          subevent={eventGroup.Event.find(
-            (event) => event.id === form.getValues("id")
-          )}
-          isLoading={isMutating}
+          subevent={selectedSubevent}
+          eventGroup={eventGroup}
+          organization={organization}
         />
-      </Form>
+      )}
       <div className="flex justify-end">
         <Button
           type="button"
           color={primaryColor?.tw.color}
-          onClick={() => handleEditModalOpening({})}
+          onClick={() => handleEditModalOpening()}
         >
           Nova Etapa
         </Button>
@@ -178,7 +117,8 @@ export function EtapasForm({
               ({
                 draft: <Badge color="amber">Pendente</Badge>,
                 published: <Badge color="green">Publicado</Badge>,
-              })[info.getValue() as "draft" | "published"],
+                review: <Badge color="blue">Revisão</Badge>,
+              })[info.getValue() as "draft" | "published" | "review"],
           }),
           columnHelper.accessor("id", {
             id: "id",
@@ -192,9 +132,7 @@ export function EtapasForm({
                 </DropdownButton>
                 <DropdownMenu>
                   <DropdownItem
-                    onClick={() =>
-                      handleEditModalOpening({ subeventId: info.getValue() })
-                    }
+                    onClick={() => handleEditModalOpening(info.row.original)}
                   >
                     Editar
                   </DropdownItem>

@@ -53,6 +53,7 @@ export async function customDomainMiddleware({
       "/inscricoes",
       "/equipes",
       "/perfil",
+      "/checkin",
     ]) &&
     !isAuthenticated
   ) {

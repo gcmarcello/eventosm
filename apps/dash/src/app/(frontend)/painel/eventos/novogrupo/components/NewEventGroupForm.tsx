@@ -65,7 +65,7 @@ export default function EventGroupForm({
     action: upsertEventGroup,
     redirect: true,
     onError: (error) =>
-      showToast({ message: error, variant: "error", title: "Erro!" }),
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
 
   return (

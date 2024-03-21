@@ -15,8 +15,6 @@ import { BottomNavigation } from "odinkit";
 import { Alertbox } from "odinkit";
 import EventModalities from "../../_shared/EventModalities";
 
-import { updateEventStatus } from "@/app/api/events/action";
-
 import { Text } from "odinkit";
 import { parseEventStatus } from "../../../_shared/utils/eventStatus";
 import EventBatches from "../../_shared/EventBatches";
@@ -31,6 +29,7 @@ import {
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
 import { updateEventStatusDto } from "@/app/api/events/status/dto";
+import { updateEventStatus } from "@/app/api/events/status/action";
 
 export default function UpdateEventPage({
   event,
@@ -99,7 +98,7 @@ export default function UpdateEventPage({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });

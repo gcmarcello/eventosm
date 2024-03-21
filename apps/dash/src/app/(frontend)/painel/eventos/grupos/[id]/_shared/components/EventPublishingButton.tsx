@@ -1,6 +1,6 @@
 "use client";
 import { parseEventStatus } from "@/app/(frontend)/painel/_shared/utils/eventStatus";
-import { readEventGroups, updateEventStatus } from "@/app/api/events/action";
+import { updateEventStatus } from "@/app/api/events/status/action";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ExtractSuccessResponse } from "odinkit";
 import {
@@ -30,7 +30,7 @@ export function EventPublishingButton({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro!",
         variant: "error",
       });

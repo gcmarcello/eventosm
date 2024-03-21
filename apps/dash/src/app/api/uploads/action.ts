@@ -1,6 +1,7 @@
 export async function uploadFiles<T extends string>(
   files: { name: T; file: File }[],
-  folder?: string
+  folder?: string,
+  privateFile: boolean = false
 ) {
   const formData = new FormData();
   if (!files) return;
@@ -14,10 +15,16 @@ export async function uploadFiles<T extends string>(
           url: string;
         }
       | undefined;
-  } = await fetch(`/api/uploads` + (folder ? `?folder=${folder}` : ""), {
-    method: "POST",
-    body: formData,
-  })
+  } = await fetch(
+    `/api/uploads` +
+      "?" +
+      (folder ? `folder=${folder}` : "") +
+      `&private=${privateFile}`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  )
     .then((res) => res.json())
     .catch((error) => {
       console.log(error);

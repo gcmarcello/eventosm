@@ -37,7 +37,7 @@ export default function MembersDisclosure({
       console.error(error);
       showToast({
         title: "Erro",
-        message: error,
+        message: error.message,
         variant: "error",
       });
     },
