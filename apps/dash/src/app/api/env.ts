@@ -10,6 +10,9 @@ const env = z.object({
   AWS_SECRET_ACCESS_KEY: z.string(),
   AWS_REGION: z.string(),
   AWS_BUCKET_NAME: z.string(),
+  AWS_PRIVATE_ACCESS_KEY_ID: z.string(),
+  AWS_PRIVATE_SECRET_ACCESS_KEY: z.string(),
+  AWS_PRIVATE_BUCKET_NAME: z.string(),
   JWT_KEY: z.string(),
   SENDGRID_EMAIL: z.string(),
 });

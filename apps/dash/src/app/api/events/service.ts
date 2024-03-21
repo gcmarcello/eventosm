@@ -216,6 +216,24 @@ export async function readEventGroupCheckinsAndAbsences(
   return userData;
 }
 
+export async function readSubeventReviewData(request: { eventId: string }) {
+  const absences = await prisma.eventAbsences.findMany({
+    where: { eventId: request.eventId },
+    include: {
+      registration: { select: { user: { select: { fullName: true } } } },
+    },
+  });
+
+  const checkins = await prisma.eventCheckIn.findMany({
+    where: { eventId: request.eventId },
+    include: {
+      registration: { select: { user: { select: { fullName: true } } } },
+    },
+  });
+
+  return { absences, checkins };
+}
+
 export async function readEventModalities(request: ReadEventModalitiesDto) {
   const eventModalities = await prisma.eventModality.findMany({
     where: request.where,

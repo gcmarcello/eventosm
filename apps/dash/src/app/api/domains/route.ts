@@ -23,6 +23,9 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
     return NextResponse.json(orgInfo);
   } catch (error) {
-    return NextResponse.json({ message: error, status: 403 }, { status: 403 });
+    return NextResponse.json(
+      { message: (error as any).message, status: 403 },
+      { status: 403 }
+    );
   }
 }

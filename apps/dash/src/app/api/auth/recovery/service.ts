@@ -1,4 +1,4 @@
-import { isEmail, maskEmail, normalize } from "odinkit";
+import { isEmail, maskEmail, normalize, normalizeEmail } from "odinkit";
 import {
   CreateNewPasswordDto,
   ReadPasswordRecoveryTokenDto,
@@ -24,7 +24,7 @@ export async function generateRecoveryToken(
   function findUserQuery() {
     switch (data.type) {
       case "email":
-        return { email: data.identifier };
+        return { email: normalizeEmail(data.identifier) };
       case "document":
         return { document: normalize(data.identifier) };
       default:

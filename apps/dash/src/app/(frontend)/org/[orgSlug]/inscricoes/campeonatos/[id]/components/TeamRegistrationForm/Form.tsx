@@ -91,7 +91,7 @@ export default function TeamTournamentRegistration({
     },
     onError: (error) => {
       showToast({
-        message: error,
+        message: error.message,
         title: "Erro",
         variant: "error",
       });

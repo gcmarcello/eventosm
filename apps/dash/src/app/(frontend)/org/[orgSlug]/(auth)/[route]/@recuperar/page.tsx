@@ -35,7 +35,7 @@ export default function RecoverPage() {
       showToast({
         title: "Erro",
         variant: "error",
-        message: error,
+        message: error.message,
       }),
   });
 

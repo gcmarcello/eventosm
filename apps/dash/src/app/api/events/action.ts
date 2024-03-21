@@ -144,20 +144,19 @@ export async function upsertEventModalityCategory(
   }
 }
 
-export async function updateEventStatus(request: UpdateEventStatusDto) {
+export async function readSubeventReviewData(request: { eventId: string }) {
   try {
     const { request: parsedRequest } = await UseMiddlewares(request)
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
-    const { referer, pathname } = await useHeaders();
-    const event = await service.updateEventStatus(parsedRequest);
-    revalidatePath(pathname);
+    const data = await service.readSubeventReviewData(parsedRequest);
     return ActionResponse.success({
-      data: event,
-      message: "Status do evento atualizado.",
+      data,
+      message: "Dados de revisão carregados com sucesso.",
     });
   } catch (error) {
-    console.log(error);
-    return ActionResponse.error(error);
+    return ActionResponse.error({
+      message: "Erro ao buscar dados de revisão.",
+    });
   }
 }

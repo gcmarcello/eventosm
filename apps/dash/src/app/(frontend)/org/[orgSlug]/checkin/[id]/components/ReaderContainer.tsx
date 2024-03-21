@@ -44,7 +44,7 @@ export default function ReaderContainer({
     action: readEventGroupRegistrationCheckin,
     onSuccess: (data) => console.log(data),
     onError: (error) =>
-      showToast({ message: error, variant: "error", title: "Erro!" }),
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
 
   const {
@@ -64,7 +64,7 @@ export default function ReaderContainer({
       });
     },
     onError: (error) =>
-      showToast({ message: error, variant: "error", title: "Erro!" }),
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
 
   function handleQrCodeReader(registrationId: string) {

@@ -37,7 +37,7 @@ export default function LoginPage() {
     redirect: true,
     onError: (error) => {
       form.resetField("password");
-      showToast({ message: error, variant: "error", title: "Erro" });
+      showToast({ message: error.message, variant: "error", title: "Erro" });
       /* form.setError("root.serverError", {
         type: "400",
         message: (error as string) || "Erro inesperado",

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { EtapasForm } from "./form";
 import { Title } from "odinkit";
+import { SubeventControl } from "./components/SubeventControl";
 
 export default async function EtapasPage({
   params,
@@ -12,20 +13,17 @@ export default async function EtapasPage({
     include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
-  if (!eventGroup) return redirect("/painel/eventos");
+  const organization = await prisma.organization.findUnique({
+    where: { id: eventGroup?.organizationId },
+    include: { OrgCustomDomain: true },
+  });
 
-  const eventToReview = eventGroup.Event.find((e) => e.status === "review");
+  if (!organization) return redirect("/painel/eventos");
+  if (!eventGroup) return redirect("/painel/eventos");
 
   return (
     <>
-      {eventGroup.Event.length ? (
-        <>
-          <Title>Etapa Atual</Title>
-          {eventGroup.Event.find((e) => e.status === "published")?.name}
-        </>
-      ) : null}
-
-      <EtapasForm eventGroup={eventGroup} />
+      <EtapasForm organization={organization} eventGroup={eventGroup} />
     </>
   );
 }

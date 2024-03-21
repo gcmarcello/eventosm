@@ -1,3 +1,4 @@
+import { UserDocumentType } from "@prisma/client";
 import { cpfValidator } from "odinkit";
 import { z } from "odinkit";
 
@@ -22,3 +23,13 @@ export const updateUserDto = z.object({
 });
 
 export type UpdateUserDto = z.infer<typeof updateUserDto>;
+
+export const createUserDocumentDto = z.object({
+  name: z.string().optional(),
+  key: z.string(),
+  type: z.nativeEnum(UserDocumentType, {
+    required_error: "O tipo do documento é obrigatório.",
+  }),
+});
+
+export type CreateUserDocumentDto = z.infer<typeof createUserDocumentDto>;
