@@ -69,10 +69,10 @@ export async function changeAbsenceStatus(
       registration: {
         update: {
           unjustifiedAbsences: {
-            increment: status === "denied" ? 0 : -1,
+            increment: data.status === "denied" ? 0 : -1,
           },
           justifiedAbsences: {
-            increment: status === "approved" ? 1 : 0,
+            increment: data.status === "approved" ? 1 : 0,
           },
         },
       },
