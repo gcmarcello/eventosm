@@ -96,7 +96,7 @@ export async function getPreSignedURL(data: { key: string }) {
     Key: data.key,
   });
 
-  return await getSignedUrl(s3, command, { expiresIn: 60 });
+  return await getSignedUrl(s3Private, command, { expiresIn: 60 });
 }
 
 function getMimeTypeFromFileName(fileName: string): string | undefined {
