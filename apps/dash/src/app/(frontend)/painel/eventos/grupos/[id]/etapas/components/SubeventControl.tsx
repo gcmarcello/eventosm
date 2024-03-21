@@ -165,7 +165,7 @@ export function SubeventControl({
               enableSorting: true,
               enableGlobalFilter: true,
               cell: (info) =>
-                (
+                info.getValue() ? (
                   <Badge
                     color="blue"
                     className="cursor-pointer underline hover:no-underline"
@@ -173,7 +173,9 @@ export function SubeventControl({
                   >
                     Ver Atestado
                   </Badge>
-                ) || <Badge color="amber">Envio Pendente</Badge>,
+                ) : (
+                  <Badge color="amber">Envio Pendente</Badge>
+                ),
             }),
             columnHelper.accessor("status", {
               id: "status",
