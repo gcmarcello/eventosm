@@ -6,7 +6,7 @@ import {
   Button,
 } from "odinkit/client";
 import { useState } from "react";
-import { usePanel } from "../../_shared/components/PanelStore";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 export function EventStatusAlert({ eventId }: { eventId: string }) {
   let [isOpen, setIsOpen] = useState(false);

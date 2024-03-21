@@ -12,8 +12,8 @@ import {
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
-import { RegistrationWithInfo } from "../grupos/[id]/inscritos/page";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
+import { RegistrationWithInfo } from "../../grupos/[id]/inscritos/page";
 
 export default function RegistrationsTable({
   registrations,

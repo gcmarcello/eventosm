@@ -25,9 +25,9 @@ import {
 } from "odinkit/client";
 import { useEffect, useMemo } from "react";
 import { z } from "odinkit";
-import { usePanel } from "../../_shared/components/PanelStore";
 import { useFieldArray } from "react-hook-form";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 const schema = upsertEventAddonDto.omit({ image: true }).merge(
   z.object({

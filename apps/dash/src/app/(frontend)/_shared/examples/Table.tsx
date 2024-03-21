@@ -2,7 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import { Table } from "odinkit";
 
-export default function DefaultTable({
+function ExampleTable({
   children,
   ...props
 }: React.ComponentPropsWithoutRef<"table">) {

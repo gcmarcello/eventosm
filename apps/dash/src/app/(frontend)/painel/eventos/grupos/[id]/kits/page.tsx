@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import EventAddons from "../../../_shared/EventAddons";
+import EventAddons from "../../../_shared/components/EventAddons";
 
 export default async function AddonsPage({
   params,

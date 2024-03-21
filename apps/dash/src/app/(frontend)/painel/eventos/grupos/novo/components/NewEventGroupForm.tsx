@@ -28,14 +28,12 @@ import {
   useFormContext,
 } from "odinkit/client";
 import { useMemo } from "react";
-import { usePanel } from "../../../_shared/components/PanelStore";
 import { upsertEventGroup } from "@/app/api/events/action";
 import { EventGroup, Organization } from "@prisma/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { Transition } from "@headlessui/react";
 import clsx from "clsx";
-import { fromPairs } from "lodash";
-import OrganizationEventsPage from "@/app/(frontend)/org/[orgSlug]/eventos/page";
+import { usePanel } from "@/app/(frontend)/admin/_shared/components/PanelStore";
 
 export default function EventGroupForm({
   organization,

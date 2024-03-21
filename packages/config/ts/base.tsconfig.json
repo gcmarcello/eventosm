@@ -12,6 +12,7 @@
     "moduleDetection": "force",
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
+    "strictNullChecks": true,
     "strict": true,
     "target": "ES2022"
   }
