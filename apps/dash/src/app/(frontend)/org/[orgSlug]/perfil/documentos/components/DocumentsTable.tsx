@@ -20,6 +20,7 @@ const fileTypes = {
   exam: "Exame",
   certificate: "Certificado",
   physicalAptitude: "Atestado de Aptidão Física",
+  minorAuthorization: "Autorização de Menores",
 };
 
 export function DocumentsTable({
