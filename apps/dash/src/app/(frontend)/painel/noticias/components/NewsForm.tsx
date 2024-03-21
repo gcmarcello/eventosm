@@ -137,7 +137,7 @@ export function NewsForm({
                 onError={(error) => {
                   if (typeof error === "string") {
                     showToast({
-                      message: error.message,
+                      message: error,
                       title: "Erro",
                       variant: "error",
                     });
