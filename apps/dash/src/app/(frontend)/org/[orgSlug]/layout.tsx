@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
-import { OrgStore } from "./components/OrgStore";
+import { OrgStore } from "./_shared/components/OrgStore";
 import type { Metadata, ResolvingMetadata } from "next";
 import { isDev } from "@/app/api/env";
 import dayjs from "dayjs";

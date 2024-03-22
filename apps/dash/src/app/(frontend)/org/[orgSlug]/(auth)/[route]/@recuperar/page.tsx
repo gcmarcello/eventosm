@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrg } from "../../../components/OrgStore";
+import { useOrg } from "../../../_shared/components/OrgStore";
 
 import {
   Button,

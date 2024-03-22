@@ -58,7 +58,7 @@ import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
-import { useOrg } from "../../../components/OrgStore";
+import { useOrg } from "../../../_shared/components/OrgStore";
 import { Field } from "@headlessui/react";
 
 export default function EventGroupContainer({
