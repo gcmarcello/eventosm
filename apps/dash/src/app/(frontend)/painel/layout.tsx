@@ -6,7 +6,6 @@ import { cookies, headers } from "next/headers";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { readOrganizations } from "@/app/api/orgs/service";
-import { Organization } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { PanelStore } from "./_shared/components/PanelStore";
 import CreateOrgContainer from "./_shared/components/Org/CreateOrgContainer";
