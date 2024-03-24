@@ -118,12 +118,33 @@ export async function updateRegistration(request: UpdateRegistrationDto) {
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
 
-    await service.updateEventGroupRegistration(request);
+    const updatedRegistration =
+      await service.updateEventGroupRegistration(request);
+    revalidatePath(
+      `/painel/eventos/grupos/${updatedRegistration.eventGroup?.id}/inscritos`
+    );
     return ActionResponse.success({
-      data: updateRegistration,
+      data: updatedRegistration,
       message: "Inscrição atualizada com sucesso!",
     });
   } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function resendEventGroupRegistrationConfirmation(id: string) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares()
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+    await eventGroupService.resendEventGroupRegistrationConfirmation(id);
+    return ActionResponse.success({
+      data: id,
+      message: "Confirmação de inscrição reenviada com sucesso.",
+    });
+  } catch (error) {
+    console.log(error);
     return ActionResponse.error(error);
   }
 }
