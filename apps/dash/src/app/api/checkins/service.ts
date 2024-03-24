@@ -1,4 +1,4 @@
-import { normalize } from "odinkit";
+import { isUUID, normalize } from "odinkit";
 import { SubeventEventGroupCheckinDto } from "./dto";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 
@@ -12,6 +12,9 @@ export async function readEventGroupRegistrationCheckin(
 
   if (!eventGroup) throw "Evento não encontrado.";
 
+  if (data.registrationId && !isUUID(data.registrationId))
+    throw "QR code inválido.";
+
   const existingRegistration = data.document
     ? await prisma.eventRegistration.findFirst({
         where: {
@@ -19,7 +22,13 @@ export async function readEventGroupRegistrationCheckin(
           eventGroup: { Event: { some: { id: data.subeventId } } },
           status: "active",
         },
-        include: { user: true, modality: true, category: true, addon: true },
+        include: {
+          user: true,
+          modality: true,
+          category: true,
+          addon: true,
+          team: true,
+        },
       })
     : await prisma.eventRegistration.findUnique({
         where: {
@@ -27,7 +36,13 @@ export async function readEventGroupRegistrationCheckin(
           eventGroup: { Event: { some: { id: data.subeventId } } },
           status: "active",
         },
-        include: { user: true, modality: true, category: true, addon: true },
+        include: {
+          user: true,
+          modality: true,
+          category: true,
+          addon: true,
+          team: true,
+        },
       });
 
   if (!existingRegistration) throw "Inscrição não encontrada.";
@@ -35,7 +50,7 @@ export async function readEventGroupRegistrationCheckin(
   const existingCheckin = await prisma.eventCheckIn.findFirst({
     where: {
       AND: [
-        { registrationId: data.registrationId },
+        { registrationId: data.registrationId ?? existingRegistration.id },
         { eventId: data.subeventId },
       ],
     },
@@ -44,7 +59,11 @@ export async function readEventGroupRegistrationCheckin(
   const existingUserEventGroupCheckins = await prisma.event.findMany({
     where: { eventGroupId: eventGroup.id },
     include: {
-      EventCheckIn: { where: { registrationId: data.registrationId } },
+      EventCheckIn: {
+        where: {
+          registrationId: data.registrationId ?? existingRegistration.id,
+        },
+      },
     },
     orderBy: { dateStart: "asc" },
   });
