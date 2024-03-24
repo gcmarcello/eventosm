@@ -140,3 +140,12 @@ export const connectRegistrationToTeamDto = z.object({
 export type ConnectRegistrationToTeamDto = z.infer<
   typeof connectRegistrationToTeamDto
 >;
+
+export const updateRegistrationDto = z.object({
+  registrationId: z.string().uuid(),
+  categoryId: z.string().uuid(),
+  modalityId: z.string().uuid(),
+  code: z.string(),
+});
+
+export type UpdateRegistrationDto = z.infer<typeof updateRegistrationDto>;

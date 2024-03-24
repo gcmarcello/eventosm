@@ -1,5 +1,9 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { ConnectRegistrationToTeamDto, ReadRegistrationsDto } from "./dto";
+import {
+  ConnectRegistrationToTeamDto,
+  ReadRegistrationsDto,
+  UpdateRegistrationDto,
+} from "./dto";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
@@ -76,5 +80,27 @@ export async function connectRegistrationToTeam(
     where: { id: data.registrationId },
     data: { teamId: data.teamId },
     include: { team: true },
+  });
+}
+
+export async function updateEventGroupRegistration(
+  data: UpdateRegistrationDto
+) {
+  const findRegistration = await prisma.eventRegistration.findUnique({
+    where: { id: data.registrationId },
+    include: { eventGroup: { include: { EventRegistration: true } } },
+  });
+
+  if (!findRegistration) throw "Inscrição não encontrada.";
+  if (
+    findRegistration.eventGroup?.EventRegistration.find(
+      (reg) => reg.code === data.code
+    )
+  )
+    throw "Código já utilizado por outro participante.";
+
+  return await prisma.eventRegistration.update({
+    where: { id: data.registrationId },
+    data,
   });
 }

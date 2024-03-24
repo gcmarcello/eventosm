@@ -5,6 +5,7 @@ import {
   ConnectRegistrationToTeamDto,
   CreateMultipleRegistrationsDto,
   ReadRegistrationsDto,
+  UpdateRegistrationDto,
 } from "./dto";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
@@ -15,6 +16,7 @@ import {
   EventGroupCreateMultipleRegistrationsDto,
   EventGroupCreateRegistrationDto,
 } from "./eventGroups/eventGroup.dto";
+import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 
 export async function createEventGroupIndividualRegistration(
   request: EventGroupCreateRegistrationDto
@@ -106,6 +108,22 @@ export async function connectRegistrationToTeam(
     });
   } catch (error) {
     console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function updateRegistration(request: UpdateRegistrationDto) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+
+    await service.updateEventGroupRegistration(request);
+    return ActionResponse.success({
+      data: updateRegistration,
+      message: "Inscrição atualizada com sucesso!",
+    });
+  } catch (error) {
     return ActionResponse.error(error);
   }
 }

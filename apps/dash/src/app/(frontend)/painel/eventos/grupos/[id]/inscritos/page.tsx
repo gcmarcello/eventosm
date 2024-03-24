@@ -40,9 +40,17 @@ export default async function RegistrationsPage({
     },
   });
 
+  const modalitiesWithCategories = await prisma.eventModality.findMany({
+    where: { eventGroupId: params.id },
+    include: { modalityCategory: true },
+  });
+
   return (
     <div className="pb-20 lg:pb-10">
-      <RegistrationsTable registrations={registrations} />
+      <RegistrationsTable
+        modalitiesWithCategories={modalitiesWithCategories}
+        registrations={registrations}
+      />
     </div>
   );
 }

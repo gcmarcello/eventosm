@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { hashInfo } from "../../src/utils/bCrypt";
 import { prisma } from "../prisma";
 import { faker } from "@faker-js/faker/locale/pt_BR";
-import { Gender } from "@prisma/client";
+import { EventGroup, Gender } from "@prisma/client";
 import { normalizeEmail } from "odinkit";
 
 export const userSeed = async () => {
