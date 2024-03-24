@@ -1,17 +1,11 @@
 import { readOrganizations } from "@/app/api/orgs/service";
-import { readTeams } from "@/app/api/teams/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { notFound } from "next/navigation";
-import { Alertbox, For } from "odinkit";
-import { Button } from "odinkit/client";
-import { useMemo } from "react";
+import { AlertType, Alertbox, For } from "odinkit";
 import { NewTeamModal } from "./components/NewTeamModal";
 import MembersDisclosure from "./components/MembersDisclosure";
 import NewMemberModal from "./components/NewMemberModal";
-import CopyInviteLinkButton from "./components/CopyInviteLinkButton";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import ServerAlertBox from "@/app/(frontend)/_shared/components/ServerAlertBox";
 
 export default async function ProfilePage({
   params,
@@ -54,12 +48,15 @@ export default async function ProfilePage({
       </div>
       {searchParams.message && searchParams.alert && (
         <div className="my-3">
-          {searchParams?.alert && searchParams?.message && (
-            <ServerAlertBox
-              alert={searchParams.alert}
-              message={searchParams.message}
-            />
-          )}
+          {searchParams?.alert &&
+            searchParams?.message &&
+            ["success", "error", "warning", "info"].includes(
+              searchParams.alert
+            ) && (
+              <Alertbox type={searchParams.alert as AlertType}>
+                {searchParams?.message}
+              </Alertbox>
+            )}
         </div>
       )}
       <For each={teams}>

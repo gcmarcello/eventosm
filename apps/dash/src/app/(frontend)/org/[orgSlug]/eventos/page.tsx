@@ -2,7 +2,7 @@ import { readEventGroups, readEvents } from "@/app/api/events/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 import clsx from "clsx";
 import { notFound } from "next/navigation";
-import EventCard from "../components/EventCard";
+import EventCard from "../_shared/components/EventCard";
 import { For, Heading } from "odinkit";
 
 export default async function OrganizationEventsPage({

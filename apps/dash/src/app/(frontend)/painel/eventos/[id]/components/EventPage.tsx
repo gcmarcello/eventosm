@@ -9,15 +9,13 @@ import {
 import { useRef } from "react";
 import { usePanel } from "../../../_shared/components/PanelStore";
 
-import { Form, showToast, useAction, useForm, useSteps } from "odinkit/client";
+import { showToast, useAction, useForm, useSteps } from "odinkit/client";
 import EventGeneralInfo from "./EventGeneralInfo";
 import { BottomNavigation } from "odinkit";
 import { Alertbox } from "odinkit";
-import EventModalities from "../../_shared/EventModalities";
 
 import { Text } from "odinkit";
 import { parseEventStatus } from "../../../_shared/utils/eventStatus";
-import EventBatches from "../../_shared/EventBatches";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import {
   Dropdown,
@@ -30,6 +28,8 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
 import { updateEventStatusDto } from "@/app/api/events/status/dto";
 import { updateEventStatus } from "@/app/api/events/status/action";
+import EventModalities from "../../_shared/components/EventModalities";
+import EventBatches from "../../_shared/components/EventBatches";
 
 export default function UpdateEventPage({
   event,

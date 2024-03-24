@@ -1,7 +1,5 @@
 "use client";
 
-import { usePanel } from "../../_shared/components/PanelStore";
-
 import Link from "next/link";
 import { Event, EventGroup, Organization } from "@prisma/client";
 import {
@@ -61,7 +59,7 @@ export default function EventsContainer({
             Escolha o tipo de evento que deseja criar.
           </DialogDescription>
           <DialogBody className="grid grid-cols-2 justify-center gap-3">
-            <Link href={"/painel/eventos/novogrupo"}>
+            <Link href={"/painel/eventos/grupos/novo"}>
               <Button color="white">
                 <div className="flex flex-col items-center">
                   <TrophyIcon

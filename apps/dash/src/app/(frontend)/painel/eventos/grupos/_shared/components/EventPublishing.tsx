@@ -5,7 +5,7 @@ import {
   EventModalityWithCategories,
 } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
-import { EventPublishingButton } from "../[id]/_shared/components/EventPublishingButton";
+import { EventPublishingButton } from "../../[id]/_shared/components/EventPublishingButton";
 
 export default function EventPublishing({
   eventGroup,

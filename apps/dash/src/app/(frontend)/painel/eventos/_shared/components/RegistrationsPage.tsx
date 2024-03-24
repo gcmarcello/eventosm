@@ -12,8 +12,8 @@ import {
 } from "odinkit/client";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
-import { RegistrationWithInfo } from "../grupos/[id]/inscritos/page";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
+import { RegistrationWithInfo } from "../../grupos/[id]/inscritos/page";
 
 export default function RegistrationsTable({
   registrations,
@@ -78,6 +78,13 @@ export default function RegistrationsTable({
           header: "Categoria",
           enableSorting: true,
           enableGlobalFilter: false,
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor("team.name", {
+          id: "team",
+          header: "Equipe",
+          enableSorting: true,
+          enableGlobalFilter: true,
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("createdAt", {
