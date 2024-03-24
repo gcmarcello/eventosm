@@ -80,6 +80,13 @@ export default function RegistrationsTable({
           enableGlobalFilter: false,
           cell: (info) => info.getValue(),
         }),
+        columnHelper.accessor("team.name", {
+          id: "team",
+          header: "Equipe",
+          enableSorting: true,
+          enableGlobalFilter: true,
+          cell: (info) => info.getValue(),
+        }),
         columnHelper.accessor("createdAt", {
           id: "createdAt",
           header: "Data da Inscrição",
