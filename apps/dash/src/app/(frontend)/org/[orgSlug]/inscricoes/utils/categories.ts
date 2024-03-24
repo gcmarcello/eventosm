@@ -6,14 +6,21 @@ export function filterCategories(
   categories: ModalityCategory[],
   user: { gender: string; birthDate: Date }
 ) {
-  const userAge = dayjs().diff(user.birthDate, "year");
-  const filteredCategories = categories.filter((category) => {
-    if (
-      (category?.gender === "unisex" || category.gender === user.gender) &&
-      category.minAge <= userAge &&
-      category.maxAge >= userAge
-    )
-      return category;
-  });
+  const filteredCategories = categories.filter((category) =>
+    determineCategoryAvailability(category, user)
+  );
   return filteredCategories;
+}
+
+export function determineCategoryAvailability(
+  category: ModalityCategory,
+  user: { gender: string; birthDate: Date }
+) {
+  const userAge = dayjs().diff(user.birthDate, "year");
+  if (
+    (category?.gender === "unisex" || category.gender === user.gender) &&
+    category.minAge <= userAge &&
+    category.maxAge >= userAge
+  )
+    return category;
 }

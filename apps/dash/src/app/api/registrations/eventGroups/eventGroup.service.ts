@@ -367,3 +367,62 @@ async function verifyEventGroupAvailableSlots({
     }
   }
 }
+
+export async function resendEventGroupRegistrationConfirmation(id: string) {
+  const findRegistration = await prisma.eventRegistration.findUnique({
+    where: { id },
+    include: {
+      eventGroup: {
+        include: {
+          EventRegistration: true,
+          Organization: { include: { OrgCustomDomain: true } },
+          Event: true,
+        },
+      },
+      user: true,
+      modality: true,
+      category: true,
+    },
+  });
+
+  if (!findRegistration) throw "Inscrição não encontrada.";
+
+  const emailArray: Email<"registration_email">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: findRegistration.user.email,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor:
+          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5"
+        ),
+        category: findRegistration.category?.name || "",
+        modality: findRegistration.modality?.name || "",
+        dateEnd: dayjs(
+          findRegistration.eventGroup?.Event[
+            findRegistration.eventGroup?.Event.length - 1
+          ]!.dateEnd
+        ).format("DD/MM/YYYY"),
+        dateStart: dayjs(
+          findRegistration.eventGroup!.Event[0]!.dateStart
+        ).format("DD/MM/YYYY"),
+        eventName: findRegistration.eventGroup?.name || "",
+        location: findRegistration.eventGroup?.location || "",
+        name: findRegistration.user.fullName || "Amigo",
+        orgName: findRegistration.eventGroup?.Organization.name!,
+        qrCode: `https://${getServerEnv("AWS_BUCKET_NAME")}.s3.${getServerEnv("AWS_REGION")}.backblazeb2.com/qr-codes/${findRegistration.id}.png`,
+        siteLink: `${findRegistration?.eventGroup?.Organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: `/campeonatos/${findRegistration?.eventGroup?.slug}`,
+      },
+    },
+  ];
+
+  return await sendEmail(emailArray);
+}

@@ -5,6 +5,7 @@ import {
   ConnectRegistrationToTeamDto,
   CreateMultipleRegistrationsDto,
   ReadRegistrationsDto,
+  UpdateRegistrationDto,
 } from "./dto";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
@@ -15,6 +16,7 @@ import {
   EventGroupCreateMultipleRegistrationsDto,
   EventGroupCreateRegistrationDto,
 } from "./eventGroups/eventGroup.dto";
+import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 
 export async function createEventGroupIndividualRegistration(
   request: EventGroupCreateRegistrationDto
@@ -103,6 +105,43 @@ export async function connectRegistrationToTeam(
     return ActionResponse.success({
       message: `Inscrição conectada à equipe ${registration.team?.name} com sucesso.`,
       data: registration,
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function updateRegistration(request: UpdateRegistrationDto) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+
+    const updatedRegistration =
+      await service.updateEventGroupRegistration(request);
+    revalidatePath(
+      `/painel/eventos/grupos/${updatedRegistration.eventGroup?.id}/inscritos`
+    );
+    return ActionResponse.success({
+      data: updatedRegistration,
+      message: "Inscrição atualizada com sucesso!",
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function resendEventGroupRegistrationConfirmation(id: string) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares()
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+    await eventGroupService.resendEventGroupRegistrationConfirmation(id);
+    return ActionResponse.success({
+      data: id,
+      message: "Confirmação de inscrição reenviada com sucesso.",
     });
   } catch (error) {
     console.log(error);
