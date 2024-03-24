@@ -39,6 +39,7 @@ model User {
   updatedAt             DateTime?              @updatedAt
   UserDocument          UserDocument[]
   EventCheckIn          EventCheckIn[]
+  OrganizationRole      OrganizationRole[]
 
   @@schema("public")
 }
@@ -132,6 +133,42 @@ model Organization {
   PasswordRecoveryToken PasswordRecoveryToken[]
   News                  News[]
   Team                  Team[]
+  OrganizationRole      OrganizationRole[]
+
+  @@schema("public")
+}
+
+model OrganizationRole {
+  id                         String                       @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                       String
+  Organization               Organization                 @relation(fields: [organizationId], references: [id])
+  organizationId             String                       @db.Uuid
+  User                       User[]
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime?                    @updatedAt
+  OrganizationRolePermission OrganizationRolePermission[]
+
+  @@schema("public")
+}
+
+model OrganizationPermission {
+  id                         String                       @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                       String
+  createdAt                  DateTime                     @default(now())
+  updatedAt                  DateTime?                    @updatedAt
+  OrganizationRolePermission OrganizationRolePermission[]
+
+  @@schema("public")
+}
+
+model OrganizationRolePermission {
+  id           String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  role         OrganizationRole       @relation(fields: [roleId], references: [id])
+  roleId       String                 @db.Uuid
+  permission   OrganizationPermission @relation(fields: [permissionId], references: [id])
+  permissionId String                 @db.Uuid
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime?              @updatedAt
 
   @@schema("public")
 }

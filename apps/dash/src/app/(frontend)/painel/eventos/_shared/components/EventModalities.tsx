@@ -13,7 +13,6 @@ import {
   EventWithRegistrationCount,
 } from "prisma/types/Events";
 import { useEffect, useState } from "react";
-import { usePanel } from "../../_shared/components/PanelStore";
 import { upsertEventModality } from "@/app/api/events/action";
 import { Table } from "odinkit";
 import {
@@ -26,6 +25,7 @@ import { EllipsisVerticalIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { upsertEventModalityCategories } from "@/app/api/categories/action";
 import ModalityModal from "./ModalityModal";
 import ModalityCategoryModal from "./ModalityCategoryModal";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 export default function EventModalities({
   modalities,

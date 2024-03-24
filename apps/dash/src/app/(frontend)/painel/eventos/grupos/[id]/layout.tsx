@@ -2,20 +2,13 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { redirect } from "next/navigation";
-import CreateOrgContainer from "../../../_shared/components/Org/CreateOrgContainer";
-import { cookies, headers } from "next/headers";
-import SelectOrgContainer from "../../../_shared/components/Org/SelectOrgContainer";
-import { EventPublishingButton } from "./_shared/components/EventPublishingButton";
 import { Alertbox, BottomNavigation, For, Link, Text } from "odinkit";
 import { readRegistrationBatches } from "@/app/api/batches/service";
 import { readEventGroups, readEventModalities } from "@/app/api/events/service";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
-import EventPublishing from "../components/EventPublishing";
-import { BottomNavigationScrollButton } from "./_shared/components/BottomNavigationScrollButton";
 import { Button } from "odinkit/client";
-import { Tab, Transition } from "@headlessui/react";
-import clsx from "clsx";
-import { EventGroupNavbar } from "../components/EventGroupNavbar";
+import { EventGroupNavbar } from "../_shared/components/EventGroupNavbar";
+import EventPublishing from "../_shared/components/EventPublishing";
 
 export default async function EventGroupPanelLayout({
   children,
@@ -50,12 +43,14 @@ export default async function EventGroupPanelLayout({
     eventGroup.Event.length === 0
   );
 
-  
   return (
     <>
       <div className="flex max-w-full overflow-x-scroll lg:overflow-x-auto">
         {" "}
-        <EventGroupNavbar eventGroup={eventGroup} organization={request.organization}/>
+        <EventGroupNavbar
+          eventGroup={eventGroup}
+          organization={request.organization}
+        />
       </div>
 
       {children}

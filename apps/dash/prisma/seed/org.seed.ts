@@ -19,6 +19,8 @@ export const orgSeed = async (userId: string) => {
   if (!primaryColor || !secondaryColor || !tertiaryColor)
     throw "Cor não encontrada";
 
+  const users = await prisma.user.findMany();
+
   const org = await prisma.organization.create({
     data: {
       id: orgUUID,
@@ -43,7 +45,13 @@ export const orgSeed = async (userId: string) => {
           domain: getServerEnv("SECOND_HOST") + ":3000",
         },
       },
-
+      UserOrgLink: {
+        createMany: {
+          data: users.map((user) => ({
+            userId: user.id,
+          })),
+        },
+      },
       phone: "21999999999",
       email: "cubatao@cubatao.com",
     },

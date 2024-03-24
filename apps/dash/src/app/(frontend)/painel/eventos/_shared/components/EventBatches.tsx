@@ -5,8 +5,6 @@ import { useMemo, useState } from "react";
 
 import { upsertRegistrationBatch } from "@/app/api/batches/action";
 
-import { usePanel } from "../../_shared/components/PanelStore";
-
 import {
   EventGroupWithEvents,
   EventModalityWithCategories,
@@ -41,6 +39,7 @@ import {
   Date,
 } from "odinkit/client";
 import { Organization } from "@prisma/client";
+import { usePanel } from "../../../_shared/components/PanelStore";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);

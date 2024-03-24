@@ -24,10 +24,9 @@ import {
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventModalityWithCategories } from "prisma/types/Events";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
-import { usePanel } from "../../_shared/components/PanelStore";
-import { format } from "path";
+import { useFieldArray } from "react-hook-form";
 import { Organization } from "@prisma/client";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 export default function BatchModal({
   modalState,

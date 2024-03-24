@@ -5,7 +5,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { For } from "odinkit";
-import EventCard from "./components/EventCard";
+import EventCard from "./_shared/components/EventCard";
 import Link from "next/link";
 import NewsCard from "../_shared/NewsCard";
 import { readOrganizations } from "@/app/api/orgs/service";

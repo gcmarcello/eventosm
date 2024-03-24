@@ -1,6 +1,5 @@
 "use client";
 
-import { useOrg } from "@/app/(frontend)/org/[orgSlug]/components/OrgStore";
 import { createNewPassword } from "@/app/api/auth/recovery/action";
 import { createNewPasswordDto } from "@/app/api/auth/recovery/dto";
 import { Organization } from "@prisma/client";

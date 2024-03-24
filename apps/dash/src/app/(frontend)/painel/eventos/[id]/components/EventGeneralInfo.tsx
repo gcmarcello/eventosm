@@ -19,7 +19,6 @@ import { useMemo } from "react";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 import { upsertEvent } from "@/app/api/events/action";
-import { getClientEnv } from "@/app/(frontend)/env";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

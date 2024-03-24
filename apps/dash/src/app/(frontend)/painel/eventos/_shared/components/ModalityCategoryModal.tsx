@@ -12,7 +12,6 @@ import {
 } from "odinkit/client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { usePanel } from "../../_shared/components/PanelStore";
 
 import { For, SubmitButton } from "odinkit";
 
@@ -23,6 +22,7 @@ import { Button } from "odinkit/client";
 
 import { Table } from "odinkit";
 import { EventModalityWithCategories } from "prisma/types/Events";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 export default function ModalityCategoryModal({
   modalState,

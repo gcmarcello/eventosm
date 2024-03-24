@@ -15,11 +15,11 @@ import {
 } from "odinkit/client";
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { usePanel } from "../../_shared/components/PanelStore";
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { format } from "path";
 import { SubmitButton } from "odinkit";
+import { usePanel } from "../../../_shared/components/PanelStore";
 
 export default function ModalityModal({
   modalState,
