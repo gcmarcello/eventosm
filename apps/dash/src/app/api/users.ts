@@ -1,4 +1,4 @@
-export const users = [
+/* export const users = [
   {
     Número: "1",
     Chip: "5001",
@@ -14265,3 +14265,4 @@ export const users = [
     GENDER: "M",
   },
 ];
+ */
