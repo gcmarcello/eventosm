@@ -2402,7 +2402,7 @@ const results = [
     POS: "",
     NUM: "287",
     ATLETA: "Clediane Mas Matos",
-    EQUIPE: "",
+    EQUIPE: "Mais Saúde Mais Vida",
     CATEGORIA: "F Fem",
     TEMPO: "0:39:40",
     RITMO: "5:40",
