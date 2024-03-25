@@ -2,7 +2,8 @@ import dayjs from "dayjs";
 import { hashInfo } from "../../src/utils/bCrypt";
 import { prisma } from "../prisma";
 import { faker } from "@faker-js/faker/locale/pt_BR";
-import { Gender } from "@prisma/client";
+import { EventGroup, Gender } from "@prisma/client";
+import { normalizeEmail } from "odinkit";
 
 export const userSeed = async () => {
   const cities = await fetch(
@@ -23,7 +24,9 @@ export const userSeed = async () => {
     address: faker.location.streetAddress(),
     number: faker.location.buildingNumber(),
     zipCode: faker.location.zipCode(),
-    birthDate: faker.date.past(),
+    birthDate: faker.date.past({
+      refDate: dayjs().subtract(30, "year").toDate(),
+    }),
     cityId: String(
       cities[Math.floor(Math.random() * cities.length) as number]?.id
     ),
@@ -55,7 +58,7 @@ export const userSeed = async () => {
   const users = uuids.map(({ userUUID, userInfoUUID }, i) => ({
     id: userUUID,
     document: faker.finance.accountNumber(),
-    email: emails[i] as string,
+    email: normalizeEmail(emails[i] as string),
     fullName: faker.person.fullName(),
     role: "user",
     password: hashedPassword,

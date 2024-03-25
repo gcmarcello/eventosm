@@ -77,7 +77,7 @@ export default function Scanner({
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({
+      ?.getUserMedia({
         audio: false,
         video: {
           facingMode,
@@ -90,7 +90,7 @@ export default function Scanner({
       if (stopCamera) stopCamera();
       preview.current?.removeEventListener("canplay", handleCanPlay);
     };
-  });
+  }, [navigator.mediaDevices]);
 
   return (
     <video

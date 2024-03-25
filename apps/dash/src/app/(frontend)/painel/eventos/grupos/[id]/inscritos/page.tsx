@@ -1,3 +1,4 @@
+"use server";
 import {
   BatchCoupon,
   EventAddon,
@@ -8,11 +9,12 @@ import {
   ModalityCategory,
   Team,
   User,
+  UserInfo,
 } from "@prisma/client";
 import RegistrationsTable from "../../../_shared/components/RegistrationsPage";
 
 export type RegistrationWithInfo = EventRegistration & {
-  user: User;
+  user: User & { info?: UserInfo };
   batch: EventRegistrationBatch;
   modality?: EventModality | null;
   category?: ModalityCategory;
@@ -29,7 +31,7 @@ export default async function RegistrationsPage({
   const registrations = await prisma.eventRegistration.findMany({
     where: { eventGroupId: params.id, NOT: { status: "cancelled" } },
     include: {
-      user: true,
+      user: { include: { info: true } },
       batch: true,
       modality: true,
       category: true,
@@ -40,9 +42,17 @@ export default async function RegistrationsPage({
     },
   });
 
+  const modalitiesWithCategories = await prisma.eventModality.findMany({
+    where: { eventGroupId: params.id },
+    include: { modalityCategory: true },
+  });
+
   return (
     <div className="pb-20 lg:pb-10">
-      <RegistrationsTable registrations={registrations} />
+      <RegistrationsTable
+        modalitiesWithCategories={modalitiesWithCategories}
+        registrations={registrations}
+      />
     </div>
   );
 }

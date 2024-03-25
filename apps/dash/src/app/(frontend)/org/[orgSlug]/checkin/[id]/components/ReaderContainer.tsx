@@ -42,7 +42,6 @@ export default function ReaderContainer({
 
   const { data, trigger, isMutating, reset } = useAction({
     action: readEventGroupRegistrationCheckin,
-    onSuccess: (data) => console.log(data),
     onError: (error) =>
       showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
@@ -96,11 +95,8 @@ export default function ReaderContainer({
             <div className="grow">
               <div className="px-4 sm:px-0">
                 <h3 className="text-base font-semibold leading-7 text-gray-900">
-                  Inscrição encontrada!
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
                   Detalhes da Inscrição
-                </p>
+                </h3>
               </div>
               <div className="mt-4 border-t border-gray-200">
                 <dl className="divide-y divide-gray-200">
@@ -119,6 +115,14 @@ export default function ReaderContainer({
                     <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                       {data.existingRegistration.modality?.name} -{" "}
                       {data.existingRegistration.category.name}
+                    </dd>
+                  </div>
+                  <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium leading-6 text-gray-900">
+                      Equipe
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      {data.existingRegistration.team?.name ?? "Nenhuma"}
                     </dd>
                   </div>
                   {data.existingRegistration.addon && (
