@@ -171,7 +171,7 @@ async function updateEventStatusToFinished(data: {
       where: {
         id: data.eventId,
       },
-      data: { status: "review" },
+      data: { status: "finished" },
     }),
   ]);
 

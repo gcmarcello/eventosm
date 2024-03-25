@@ -16,6 +16,10 @@ export async function changeAbsenceStatus(request: UpdateAbsenceStatusDto) {
   try {
     const updateAbsenceStatus =
       await service.changeAbsenceStatus(parsedRequest);
+    revalidatePath(
+      `/painel/eventos/grupos/[id]/etapas/[eventid]/faltas `,
+      "page"
+    );
     return ActionResponse.success({ data: updateAbsenceStatus });
   } catch (error) {
     console.log(error);
