@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+/* import dayjs from "dayjs";
 import _ from "lodash";
 import { prisma } from "/workspaces/eventosm/apps/dash/prisma/prisma";
 import { NextResponse } from "next/server";
@@ -73,3 +73,4 @@ export async function GET() {
 
   return NextResponse.json(xlsxUsers);
 }
+ */
