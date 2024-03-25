@@ -87,17 +87,19 @@ export default async function EventCard({
               </dd>
               <dt className="sr-only">Status</dt>
               <dd className="mt-3">
-                <Badge
-                  color={
-                    availableBatch ? "green" : futureBatches ? "amber" : "red"
-                  }
-                >
-                  {availableBatch
-                    ? "Disponível"
-                    : futureBatches
-                      ? "Em Breve"
-                      : "Indisponível"}
-                </Badge>
+                {(availableBatch || futureBatches) && (
+                  <Badge
+                    color={
+                      availableBatch ? "green" : futureBatches ? "amber" : "red"
+                    }
+                  >
+                    {availableBatch
+                      ? "Disponível"
+                      : futureBatches
+                        ? "Em Breve"
+                        : "Indisponível"}
+                  </Badge>
+                )}
               </dd>
             </dl>
           </div>
