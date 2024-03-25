@@ -9122,8 +9122,8 @@ export default function EventGroupResultsPage() {
               columnHelper.accessor("TEMPO", {
                 id: "time",
                 header: "Tempo",
-                enableSorting: true,
-                enableGlobalFilter: true,
+                enableSorting: false,
+                enableGlobalFilter: false,
                 cell: (info) => info.getValue(),
               }),
             ]}
