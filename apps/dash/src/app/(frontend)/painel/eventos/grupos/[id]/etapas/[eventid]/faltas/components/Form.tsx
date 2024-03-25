@@ -7,7 +7,7 @@ import { readSubeventReviewData } from "@/app/api/events/action";
 import { updateEventStatus } from "@/app/api/events/status/action";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Organization } from "@prisma/client";
-import { Heading, Table, Badge, ExtractSuccessResponse } from "odinkit";
+import { Heading, Table, Badge, ExtractSuccessResponse, Link } from "odinkit";
 import { useAction, showToast, Button } from "odinkit/client";
 import { useEffect } from "react";
 
@@ -76,7 +76,18 @@ export function AbsencesForm({
   return (
     <>
       <div className="">
-        <Heading>Ausências</Heading>
+        <div className="mb-3 items-center gap-3 lg:flex">
+          <Heading>Ausências - {event.name}</Heading>
+          <Link
+            className="text-sm"
+            style={{
+              color: organization.options.colors.primaryColor.hex,
+            }}
+            href={`/painel/eventos/grupos/${eventGroup.id}/etapas`}
+          >
+            Voltar à lista de etapas
+          </Link>
+        </div>
         <Table
           search={false}
           pagination={false}

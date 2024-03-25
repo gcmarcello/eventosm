@@ -643,7 +643,7 @@ const results = [
     TEMPO: "0:32:05",
     RITMO: "4:35",
   },
-  {
+  /* {
     POS: "",
     NUM: "518",
     ATLETA: "Daiane Fontes De Oliveira ",
@@ -651,7 +651,7 @@ const results = [
     CATEGORIA: "E Fem",
     TEMPO: "0:32:06",
     RITMO: "4:35",
-  },
+  }, */
   {
     POS: "",
     NUM: "554",
