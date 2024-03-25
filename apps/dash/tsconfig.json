@@ -4,14 +4,14 @@
     "strictPropertyInitialization": false,
     "plugins": [
       {
-        "name": "next",
-      },
+        "name": "next"
+      }
     ],
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "prisma/*": ["./prisma/*"],
-    },
+      "prisma/*": ["./prisma/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -19,6 +19,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-  ],
-  "exclude": ["node_modules", ".next"],
+    "src/app/(frontend)/painel/eventos/grupos/[id]/etapas/_shared/components/UpsertFormtsx"
+, "prisma/script.js"  ],
+  "exclude": ["node_modules", ".next"]
 }

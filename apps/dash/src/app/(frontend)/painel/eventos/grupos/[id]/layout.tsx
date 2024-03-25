@@ -7,8 +7,8 @@ import { readRegistrationBatches } from "@/app/api/batches/service";
 import { readEventGroups, readEventModalities } from "@/app/api/events/service";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import { Button } from "odinkit/client";
-import { EventGroupNavbar } from "../_shared/components/EventGroupNavbar";
-import EventPublishing from "../_shared/components/EventPublishing";
+import { EventGroupNavbar } from "./_shared/components/EventGroupNavbar";
+import EventPublishing from "./_shared/components/EventPublishing";
 
 export default async function EventGroupPanelLayout({
   children,

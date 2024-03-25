@@ -5,27 +5,54 @@ import {
 } from "@/app/api/absences/action";
 import { readSubeventReviewData } from "@/app/api/events/action";
 import { updateEventStatus } from "@/app/api/events/status/action";
-import { isDev } from "@/utils/settings";
-import {
-  CheckIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { Event, EventGroup } from "@prisma/client";
-import { Badge, Heading, Table, Text, Title } from "odinkit";
-import { Button, showToast, useAction } from "odinkit/client";
-import { OrganizationWithDomain } from "prisma/types/Organization";
-import { useEffect, useMemo } from "react";
+import { XMarkIcon, CheckIcon } from "@heroicons/react/20/solid";
+import { Event, EventGroup, Organization } from "@prisma/client";
+import { Heading, Table, Badge, ExtractSuccessResponse } from "odinkit";
+import { useAction, showToast, Button } from "odinkit/client";
+import { useEffect } from "react";
 
-export function SubeventControl({
+export function AbsencesForm({
+  event,
   eventGroup,
-  eventId,
   organization,
+  eventReview,
 }: {
-  eventId: string;
-  eventGroup: EventGroup & { Event: Event[] };
-  organization: OrganizationWithDomain;
+  event: Event;
+  eventGroup: EventGroup;
+  organization: Organization;
+  eventReview: ExtractSuccessResponse<typeof readSubeventReviewData>;
 }) {
+  const { data: absenceStatus, trigger: triggerAbsenceStatus } = useAction({
+    action: changeAbsenceStatus,
+    onSuccess: () => {
+      showToast({
+        message: "Status da ausência atualizado com sucesso!",
+        variant: "success",
+        title: "Sucesso!",
+      });
+    },
+    onError: (error) => {
+      showToast({
+        message: error.message,
+        title: "Erro!",
+        variant: "error",
+      });
+    },
+  });
+
+  const { data, trigger } = useAction({
+    action: readAbsenceJustification,
+    onSuccess: (data) => window.open(data.data, "_blank"),
+    onError: (error) =>
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
+  });
+
+  useEffect(() => {
+    readSubeventReviewData({
+      eventId: event.id,
+    });
+  }, []);
+
   const {
     data: eventStatusData,
     trigger: eventStatusTrigger,
@@ -46,105 +73,8 @@ export function SubeventControl({
       }),
   });
 
-  const { data: eventReview, trigger: triggerEventReview } = useAction({
-    action: readSubeventReviewData,
-    onError: (error) => {
-      showToast({
-        message: error.message,
-        title: "Erro!",
-        variant: "error",
-      });
-    },
-  });
-
-  const { data: absenceStatus, trigger: triggerAbsenceStatus } = useAction({
-    action: changeAbsenceStatus,
-    onSuccess: () => {
-      triggerEventReview({ eventId });
-      showToast({
-        message: "Status da ausência atualizado com sucesso!",
-        variant: "success",
-        title: "Sucesso!",
-      });
-    },
-    onError: (error) => {
-      showToast({
-        message: error.message,
-        title: "Erro!",
-        variant: "error",
-      });
-    },
-  });
-
-  const event = useMemo(
-    () => eventGroup.Event.find((e) => e.id === eventId),
-    [eventGroup]
-  );
-
-  const { data, trigger } = useAction({
-    action: readAbsenceJustification,
-    onSuccess: (data) => window.open(data.data, "_blank"),
-    onError: (error) =>
-      showToast({ message: error.message, variant: "error", title: "Erro!" }),
-  });
-
-  useEffect(() => {
-    if (event?.status === "review") {
-      triggerEventReview({ eventId });
-    }
-  }, [event?.status]);
-
-  if (!event) return null;
-
-  if (event.status === "published") {
-    return (
-      <>
-        <Title>Etapa Atual</Title>
-        {event?.name}
-        <div className="grid grid-cols-3 lg:gap-6">
-          <div className="flex flex-col">
-            Checkin
-            <Button
-              color="yellow"
-              href={`${isDev ? "http" : "https"}://${organization.OrgCustomDomain[0]?.domain}/checkin/${event?.id}`}
-              target="_blank"
-            >
-              Iniciar Checkin
-            </Button>
-            Aqui para copiar o link de checkin. Apenas os usuários autorizados
-            tem acesso à página.
-          </div>
-          <div className="col-span-2 flex">
-            <div>
-              Enviar evento para análise
-              <Text>
-                O evento mudará seu status para "Em Análise", onde você poderá
-                controlar os resultados e atestados de ausência enviados. Não é
-                possível reativar o evento uma vez que colocado em análise.
-              </Text>
-            </div>
-            <Button
-              loading={isMutating}
-              onClick={() =>
-                eventStatusTrigger({
-                  status: "review",
-                  eventId: event.id,
-                  eventGroupId: eventGroup.id,
-                })
-              }
-              className="my-auto"
-              color="teal"
-            >
-              Analisar Evento
-            </Button>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  if (event.status === "review") {
-    return (
+  return (
+    <>
       <div className="">
         <Heading>Ausências</Heading>
         <Table
@@ -239,13 +169,12 @@ export function SubeventControl({
                 eventGroupId: eventGroup.id,
               })
             }
-            className="my-auto"
-            color="teal"
+            color={organization.options.colors.primaryColor.tw.color}
           >
             Finalizar Evento
           </Button>
         </div>
       </div>
-    );
-  }
+    </>
+  );
 }
