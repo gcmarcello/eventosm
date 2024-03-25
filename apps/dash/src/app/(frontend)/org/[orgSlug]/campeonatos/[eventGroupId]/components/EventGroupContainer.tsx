@@ -386,7 +386,6 @@ export default function EventGroupContainer({
                   <div className="flex gap-1">
                     <ClipboardDocumentListIcon className="size-5" />
                     Resultados{" "}
-                    {eventGroup.status === "published" ? "(Em Breve)" : ""}
                   </div>
                 </Link>
 
