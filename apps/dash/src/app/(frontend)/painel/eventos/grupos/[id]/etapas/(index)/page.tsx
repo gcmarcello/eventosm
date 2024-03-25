@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
-import { EtapasForm } from "./form";
 import { Title } from "odinkit";
-import { SubeventControl } from "./components/SubeventControl";
+import { SubeventsTable } from "./components/Table";
 
 export default async function EtapasPage({
   params,
@@ -19,11 +18,12 @@ export default async function EtapasPage({
   });
 
   if (!organization) return redirect("/painel/eventos");
+
   if (!eventGroup) return redirect("/painel/eventos");
 
   return (
     <>
-      <EtapasForm organization={organization} eventGroup={eventGroup} />
+      <SubeventsTable eventGroup={eventGroup} organization={organization} />
     </>
   );
 }
