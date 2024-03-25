@@ -23,12 +23,11 @@ export function EventGroupNavbar({
   eventGroup: EventGroupWithEvents;
 }) {
   const pathname = usePathname().split("/");
-  const selectedStep = pathname[pathname.length - 1];
   const color = organization.options.colors.primaryColor.hex;
   return (
     <For each={steps}>
       {(step, index) => {
-        const selected = step.name === selectedStep;
+        const selected = pathname.includes(step.name ?? "");
         return (
           <Link
             href={`/painel/eventos/grupos/${eventGroup.id}/${step.name}`}

@@ -643,7 +643,7 @@ const results = [
     TEMPO: "0:32:05",
     RITMO: "4:35",
   },
-  {
+  /* {
     POS: "",
     NUM: "518",
     ATLETA: "Daiane Fontes De Oliveira ",
@@ -651,7 +651,7 @@ const results = [
     CATEGORIA: "E Fem",
     TEMPO: "0:32:06",
     RITMO: "4:35",
-  },
+  }, */
   {
     POS: "",
     NUM: "554",
@@ -9015,6 +9015,14 @@ export default function EventGroupResultsPage() {
 
   function handleFilter(type: "CATEGORIA" | "EQUIPE", value: any) {
     if (!value) return setCalculatedResults(sortPositions(results));
+    if (value === "Geral FEM")
+      return setCalculatedResults(
+        sortPositions(results.filter((obj) => obj.CATEGORIA.includes("Fem")))
+      );
+    if (value === "Geral MASC")
+      return setCalculatedResults(
+        sortPositions(results.filter((obj) => obj.CATEGORIA.includes("Masc")))
+      );
     setCalculatedResults(
       sortPositions(results.filter((obj) => obj[type] === value))
     );
@@ -9038,7 +9046,11 @@ export default function EventGroupResultsPage() {
                     <Label>Filtrar por Categoria</Label>
                     <Select
                       disabled={Boolean(form.watch("EQUIPE"))}
-                      data={uniqueCategories.map((c) => ({ id: c }))}
+                      data={[
+                        { id: "Geral FEM" },
+                        { id: "Geral MASC" },
+                        ...uniqueCategories.map((c) => ({ id: c })),
+                      ]}
                       displayValueKey="id"
                       onChange={(event: any) =>
                         handleFilter("CATEGORIA", event.target.value)
