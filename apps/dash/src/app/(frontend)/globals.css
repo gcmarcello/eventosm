@@ -63,13 +63,22 @@ body {
   color: #333;
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
 }
 
 .customHtml ol,
 .customHtml ul {
   list-style: initial; /* Usa o estilo de lista padrão */
   margin-left: 40px; /* Adiciona uma margem à esquerda para indentação */
+}
+
+.customHtml a {
+  color: #005bbd; /* Default link color */
+  text-decoration: none; /* Remove default underline */
+}
+
+/* Hover effect for links */
+.customHtml a:hover {
+  text-decoration: underline; /* Add underline on hover */
 }
 
 .customHtml li {
