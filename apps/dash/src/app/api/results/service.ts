@@ -17,7 +17,7 @@ export async function createEventResults(data: CreateResultsDto) {
     return {
       eventId: data.eventId,
       registrationId: registration.id,
-      score: data.athletes.find((a) => a.code === code)?.score || "DNF",
+      score: data.athletes.find((a) => a.code === code)?.score || null,
     };
   });
 
