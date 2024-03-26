@@ -9025,7 +9025,7 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
       );
     setCalculatedResults(
       sortPositions(
-        results.filter((obj) => obj.Registration[type]?.id === value)
+        results.filter((obj) => obj.Registration[type]?.name === value)
       )
     );
   }
@@ -9062,7 +9062,7 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
                   data={uniqueTeams.map((t) => ({ id: t }))}
                   displayValueKey="id"
                   onChange={(event: any) =>
-                    handleFilter("category", event.target.value)
+                    handleFilter("team", event.target.value)
                   }
                 />
               </Field>
@@ -9119,7 +9119,6 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
           columnHelper.accessor("score", {
             id: "time",
             header: "Tempo",
-            enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) => info.getValue(),
           }),
