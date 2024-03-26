@@ -268,6 +268,14 @@ model EventModality {
   @@schema("public")
 }
 
+enum EventResultStatus {
+  active
+  suspended
+  cancelled
+
+  @@schema("public")
+}
+
 model EventResult {
   id             String            @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   Registration   EventRegistration @relation(fields: [registrationId], references: [id])
@@ -276,6 +284,9 @@ model EventResult {
   eventId        String            @db.Uuid
   score          String?
   observation    String?
+  status         EventResultStatus @default(active)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime?         @updatedAt
 
   @@schema("public")
 }
