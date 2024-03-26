@@ -9012,17 +9012,15 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
     if (value === "Geral FEM")
       return setCalculatedResults(
         sortPositions(
-          results.filter((obj) =>
-            obj.Registration.category?.gender === "female"
+          results.filter(
+            (obj) => obj.Registration.category?.gender === "female"
           )
         )
       );
     if (value === "Geral MASC")
       return setCalculatedResults(
         sortPositions(
-          results.filter((obj) =>
-            obj.Registration.category?.gender === 'male'
-          )
+          results.filter((obj) => obj.Registration.category?.gender === "male")
         )
       );
     setCalculatedResults(

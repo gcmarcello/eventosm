@@ -25,5 +25,5 @@ export function sortPositions(resultArray: EventResultWithInfo[]) {
       position: index + 1,
     })
   );
-  return positions;
+  return positions.sort((a, b) => a.position - b.position);
 }
