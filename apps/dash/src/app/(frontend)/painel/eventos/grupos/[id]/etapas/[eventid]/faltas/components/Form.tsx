@@ -11,6 +11,7 @@ import clsx from "clsx";
 import { Heading, Table, Badge, ExtractSuccessResponse, Link } from "odinkit";
 import { useAction, showToast, Button } from "odinkit/client";
 import { useEffect } from "react";
+import { sortAbsences } from "../utils/sorting";
 
 export function AbsencesForm({
   event,
@@ -94,7 +95,7 @@ export function AbsencesForm({
           </Link>
         </div>
         <Table
-          data={eventReview?.absences || []}
+          data={sortAbsences(eventReview?.absences) || []}
           columns={(columnHelper) => [
             columnHelper.accessor("registration.user.fullName", {
               id: "name",
@@ -160,7 +161,7 @@ export function AbsencesForm({
                       }}
                       className={clsx(
                         "size-5 cursor-pointer  duration-200 hover:text-gray-800",
-                        isAbsenceStatusMutating
+                        !isAbsenceStatusMutating
                           ? "text-red-600"
                           : "text-gray-600"
                       )}
@@ -175,7 +176,7 @@ export function AbsencesForm({
                       }}
                       className={clsx(
                         "size-5 cursor-pointer  duration-200 hover:text-gray-800",
-                        isAbsenceStatusMutating
+                        !isAbsenceStatusMutating
                           ? "text-green-600"
                           : "text-gray-600"
                       )}
