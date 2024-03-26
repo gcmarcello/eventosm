@@ -89,8 +89,6 @@ export function AbsencesForm({
           </Link>
         </div>
         <Table
-          search={false}
-          pagination={false}
           data={eventReview?.absences || []}
           columns={(columnHelper) => [
             columnHelper.accessor("registration.user.fullName", {
