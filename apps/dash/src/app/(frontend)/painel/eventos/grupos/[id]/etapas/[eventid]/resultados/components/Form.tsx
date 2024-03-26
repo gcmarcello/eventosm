@@ -155,8 +155,8 @@ export function ResultsForm({
               cell: (info) => info.getValue(),
             }),
             columnHelper.accessor("Registration.category.name", {
-              id: "name",
-              header: "Nome",
+              id: "category",
+              header: "Categoria",
               enableSorting: true,
               enableGlobalFilter: true,
               cell: (info) => info.getValue(),
