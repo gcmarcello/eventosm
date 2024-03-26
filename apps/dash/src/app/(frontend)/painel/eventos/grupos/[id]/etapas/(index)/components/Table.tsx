@@ -22,6 +22,12 @@ import {
 import { useState } from "react";
 import { OrganizationWithDomain } from "prisma/types/Organization";
 import { updateEventStatus } from "@/app/api/events/status/action";
+import {
+  CheckIcon,
+  ClipboardDocumentIcon,
+  ClipboardDocumentListIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 export function SubeventsTable({
   eventGroup,
@@ -187,7 +193,7 @@ export function SubeventsTable({
                           target={"_blank"}
                           href={`${isDev ? "http" : "https"}://${organization.OrgCustomDomain[0]?.domain}/checkin/${info.row.original.id}`}
                         >
-                          <LinkIcon />
+                          <CheckIcon />
                           <DropdownLabel>Check-in</DropdownLabel>
                         </DropdownItem>
                         <DropdownItem
@@ -196,7 +202,7 @@ export function SubeventsTable({
                             /painel/eventos/grupos/${eventGroup.id}/etapas/${info.row.original.id}/resultados
                             `}
                         >
-                          <div></div>
+                          <ClipboardDocumentListIcon />
                           Resultados
                           {info.row.original.status != "review" && (
                             <DropdownDescription>
@@ -208,7 +214,7 @@ export function SubeventsTable({
                           disabled={info.row.original.status != "review"}
                           href={`/painel/eventos/grupos/${eventGroup.id}/etapas/${info.row.original.id}/faltas`}
                         >
-                          <div></div>
+                          <ExclamationTriangleIcon />
                           Faltas
                           {info.row.original.status != "review" && (
                             <DropdownDescription>

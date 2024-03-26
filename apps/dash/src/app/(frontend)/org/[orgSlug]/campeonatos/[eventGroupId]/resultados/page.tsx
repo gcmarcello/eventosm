@@ -9,7 +9,7 @@ export default async function EventGroupResultsPage({
   params: { eventid: string };
 }) {
   const results = await prisma.eventResult.findMany({
-    where: { eventId: params.eventid },
+    where: { eventId: params.eventid, status: "active" },
     include: {
       Registration: {
         include: {
