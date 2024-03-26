@@ -1,9 +1,12 @@
 "use client";
 import { createEventResults } from "@/app/api/results/action";
 import { createResultsDto } from "@/app/api/results/dto";
+import { EventGroup, Organization } from "@prisma/client";
 
 import {
   For,
+  Heading,
+  Link,
   SubmitButton,
   Table,
   TableMock,
@@ -19,6 +22,7 @@ import {
   useAction,
   useForm,
 } from "odinkit/client";
+import { EventGroupWithEvents } from "prisma/types/Events";
 import { EventResultWithInfo } from "prisma/types/Results";
 import { useMemo, useState } from "react";
 
@@ -31,16 +35,18 @@ const excelDataSchema = z.array(
 
 export function ResultsForm({
   eventId,
-  eventGroupId,
+  eventGroup,
   results,
+  organization,
 }: {
   eventId: string;
-  eventGroupId?: string;
+  eventGroup: EventGroupWithEvents;
   results: EventResultWithInfo[];
+  organization: Organization;
 }) {
   const form = useForm({
     schema: createResultsDto,
-    defaultValues: { eventId, eventGroupId },
+    defaultValues: { eventId, eventGroupId: eventGroup.id },
   });
 
   const Field = useMemo(() => form.createField(), []);
@@ -70,6 +76,18 @@ export function ResultsForm({
 
   return (
     <>
+      <div className="mb-3 items-center gap-3 lg:flex">
+        <Heading>Resultados - {eventGroup.Event[0]?.name}</Heading>
+        <Link
+          className="text-sm"
+          style={{
+            color: organization.options.colors.primaryColor.hex,
+          }}
+          href={`/painel/eventos/grupos/${eventGroup.id}/etapas`}
+        >
+          Voltar à lista de etapas
+        </Link>
+      </div>
       {!results.length && (
         <Form hform={form} onSubmit={(data) => trigger(data)}>
           <Field name="file">

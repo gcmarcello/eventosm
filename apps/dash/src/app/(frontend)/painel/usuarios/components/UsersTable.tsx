@@ -1,6 +1,6 @@
 "use client";
 import { User } from "@prisma/client";
-import { Table, date, formatPhone } from "odinkit";
+import { Table, date, formatCPF, formatPhone } from "odinkit";
 import UserModal from "./UserModal";
 import { useState } from "react";
 import { UserWithInfo } from "prisma/types/User";
@@ -54,7 +54,7 @@ export default function UsersPanelPageTable({
             header: "Documento",
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: (info) => info.getValue(),
+            cell: (info) => formatCPF(info.getValue()),
           }),
           columnHelper.accessor("confirmed", {
             id: "confirmed",
