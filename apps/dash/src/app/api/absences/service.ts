@@ -51,6 +51,7 @@ export async function changeAbsenceStatus(
         headerTextColor: chooseTextColor(
           data.organization?.options.colors.primaryColor.hex || "#4F46E5"
         ),
+        eventName: currentStatus.event.name,
         mainColor:
           data.organization?.options.colors.primaryColor.hex || "#4F46E5",
         orgName: data.organization?.name || "EventoSM",
