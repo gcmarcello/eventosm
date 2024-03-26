@@ -406,7 +406,7 @@ export function EventGroupRegistrationModal({
                                 if (absenceJustification.justificationUrl) {
                                   return (
                                     <Badge className="my-auto" color="yellow">
-                                      Atestado pendente
+                                      Atestado em Análise
                                     </Badge>
                                   );
                                 } else {
