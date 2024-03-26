@@ -7,6 +7,7 @@ import { readSubeventReviewData } from "@/app/api/events/action";
 import { updateEventStatus } from "@/app/api/events/status/action";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Organization } from "@prisma/client";
+import clsx from "clsx";
 import { Heading, Table, Badge, ExtractSuccessResponse, Link } from "odinkit";
 import { useAction, showToast, Button } from "odinkit/client";
 import { useEffect } from "react";
@@ -22,7 +23,11 @@ export function AbsencesForm({
   organization: Organization;
   eventReview: ExtractSuccessResponse<typeof readSubeventReviewData>;
 }) {
-  const { data: absenceStatus, trigger: triggerAbsenceStatus } = useAction({
+  const {
+    data: absenceStatus,
+    trigger: triggerAbsenceStatus,
+    isMutating: isAbsenceStatusMutating,
+  } = useAction({
     action: changeAbsenceStatus,
     onSuccess: () => {
       showToast({
@@ -146,22 +151,34 @@ export function AbsencesForm({
                 ) : (
                   <div className="flex gap-2">
                     <XMarkIcon
-                      onClick={() =>
+                      onClick={() => {
+                        if (isAbsenceStatusMutating) return;
                         triggerAbsenceStatus({
                           absenceId: info.getValue(),
                           status: "denied",
-                        })
-                      }
-                      className="size-5 cursor-pointer text-red-600  duration-200 hover:text-gray-800"
+                        });
+                      }}
+                      className={clsx(
+                        "size-5 cursor-pointer  duration-200 hover:text-gray-800",
+                        isAbsenceStatusMutating
+                          ? "text-red-600"
+                          : "text-gray-600"
+                      )}
                     />
                     <CheckIcon
-                      onClick={() =>
+                      onClick={() => {
+                        if (isAbsenceStatusMutating) return;
                         triggerAbsenceStatus({
                           absenceId: info.getValue(),
                           status: "approved",
-                        })
-                      }
-                      className="size-5 cursor-pointer text-green-600  duration-200 hover:text-gray-800"
+                        });
+                      }}
+                      className={clsx(
+                        "size-5 cursor-pointer  duration-200 hover:text-gray-800",
+                        isAbsenceStatusMutating
+                          ? "text-green-600"
+                          : "text-gray-600"
+                      )}
                     />
                   </div>
                 ),
