@@ -7,6 +7,8 @@ import { cookies } from "next/headers";
 import path from "path";
 import { ActionResponse } from "odinkit";
 import { User } from "@prisma/client";
+import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
+import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 
 export async function signup(request: SignupDto) {
   let signup;
@@ -56,4 +58,20 @@ export async function logout(pathName?: string) {
   return ActionResponse.success({
     redirect: "/",
   });
+}
+
+export async function resendConfirmationEmail(request: { userId: string }) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+    const resend = await service.resendConfirmationEmail(parsedRequest);
+    return ActionResponse.success({
+      data: resend,
+      message: "Email de confirmação reenviado com sucesso!",
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
 }

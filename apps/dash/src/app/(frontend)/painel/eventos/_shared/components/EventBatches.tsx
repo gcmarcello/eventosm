@@ -147,17 +147,16 @@ export default function EventBatches({
   const stats = useMemo(
     () => [
       {
+        name: "Inscrições Disponibilizadas",
+        stat: batches.reduce((acc, batch) => acc + batch.maxRegistrations, 0),
+      },
+      {
         name: "Total de Inscrições",
         stat: batches.reduce(
           (acc, batch) => acc + batch._count.EventRegistration,
           0
         ),
       },
-      {
-        name: "Inscrições Disponibilizadas",
-        stat: batches.reduce((acc, batch) => acc + batch.maxRegistrations, 0),
-      },
-      { name: "Inscrições com Equipe", stat: "" },
     ],
     [batches]
   );
@@ -193,11 +192,11 @@ export default function EventBatches({
         >
           Novo Lote
         </Button>
-        <div className="w-full grow">
+        <div className="grow">
           {/*           <h3 className="text-base font-semibold leading-6 text-gray-900">
             Last 30 days
           </h3> */}
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {stats.map((item) => (
               <div
                 key={item.name}

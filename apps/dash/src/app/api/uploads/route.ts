@@ -11,16 +11,10 @@ export async function POST(request: NextRequest) {
 
     for (let [formField, value] of formData.entries()) {
       if (value instanceof File) {
-        const url = privateFile
-          ? await uploadPrivateFile(
-              value,
-              folder ? `${folder}${value.name}` : value.name
-            )
-          : await uploadFile(
-              value,
-              folder ? `${folder}${value.name}` : value.name
-            );
-        filesObj[formField] = { key: value.name, url: url };
+        const file = privateFile
+          ? await uploadPrivateFile(value, value.name, folder)
+          : await uploadFile(value, value.name, folder);
+        filesObj[formField] = file;
       }
     }
     return NextResponse.json(filesObj);

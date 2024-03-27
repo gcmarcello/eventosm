@@ -28,7 +28,7 @@ export default async function UsersPanelPage() {
       updatedAt: true,
       createdAt: true,
       infoId: true,
-      info: true,
+      info: { include: { city: true, state: true } },
     },
   });
   return (
