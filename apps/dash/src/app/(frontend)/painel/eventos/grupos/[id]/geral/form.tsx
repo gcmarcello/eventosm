@@ -165,6 +165,9 @@ export default function GeralForm({
           <div className={"col-span-2 flex-col lg:col-span-1 lg:flex lg:ps-6"}>
             <Field name="file">
               <Label>Capa do Evento</Label>
+              <div className="my-3 flex justify-center ">
+                <FileImagePreview defaultValue={eventGroup.imageUrl || ""} />
+              </div>
               <FileInput
                 fileTypes={["png", "jpg", "jpeg"]}
                 maxFiles={1}
@@ -200,9 +203,6 @@ export default function GeralForm({
                   }
                 />
               </FileInput>
-              <div className="my-3">
-                <FileImagePreview defaultValue={eventGroup.imageUrl || ""} />
-              </div>
             </Field>
           </div>
         </FieldGroup>

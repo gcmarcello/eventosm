@@ -27,30 +27,51 @@ const s3Private = new S3Client({
   },
 });
 
-export async function uploadFile(file: File, key: string) {
+export async function uploadFile(
+  file: File,
+  key: string,
+  folder?: string | null
+) {
   const bytes = await file.arrayBuffer();
+  const format = key.split(".").pop();
+  const randomKey = crypto.randomUUID();
+  const constructedKey = folder
+    ? `${folder}${randomKey}.${format}`
+    : `${randomKey}.${format}`;
   const fileBuffer = Buffer.from(bytes);
   const command = new PutObjectCommand({
     Bucket: bucketName,
-    Key: key,
+    Key: constructedKey,
     Body: fileBuffer,
     ContentType: getMimeTypeFromFileName(file.name),
   });
 
   try {
     await s3.send(command);
-    return `https://${bucketName}.s3.${region}.backblazeb2.com/${key}`;
+    return {
+      key: `${randomKey}.${format}`,
+      url: `https://${bucketName}.s3.${region}.backblazeb2.com/${constructedKey}`,
+    };
   } catch (error) {
     throw "Erro ao fazer upload do arquivo. " + error;
   }
 }
 
-export async function uploadPrivateFile(file: File, key: string) {
+export async function uploadPrivateFile(
+  file: File,
+  key: string,
+  folder?: string | null
+) {
   const bytes = await file.arrayBuffer();
   const fileBuffer = Buffer.from(bytes);
+  const format = key.split(".").pop();
+  const randomKey = crypto.randomUUID();
+  const constructedKey = folder
+    ? `${folder}${randomKey}.${format}`
+    : `${randomKey}.${format}`;
   const command = new PutObjectCommand({
     Bucket: privateBucketName,
-    Key: key,
+    Key: constructedKey,
     Body: fileBuffer,
     ContentType: getMimeTypeFromFileName(file.name),
     ACL: "private",
@@ -58,7 +79,10 @@ export async function uploadPrivateFile(file: File, key: string) {
 
   try {
     await s3Private.send(command);
-    return `${key}`;
+    return {
+      key: `${randomKey}.${format}`,
+      url: `https://${privateBucketName}.s3.${region}.backblazeb2.com/${constructedKey}`,
+    };
   } catch (error) {
     throw "Erro ao fazer upload do arquivo. " + error;
   }

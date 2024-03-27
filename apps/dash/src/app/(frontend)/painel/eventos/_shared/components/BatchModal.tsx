@@ -288,7 +288,7 @@ export default function BatchModal({
               : "Definir por Categoria"}
           </Button>
         )}
-        <SubmitButton className={"mx-auto"} color={primaryColor?.tw.color}>
+        <SubmitButton color={primaryColor?.tw.color}>
           {batchForm.getValues("id") ? "Salvar" : "Criar"}
         </SubmitButton>
       </DialogActions>

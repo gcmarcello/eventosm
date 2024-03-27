@@ -18,6 +18,7 @@ import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { sendEmail } from "../emails/service";
 import { chooseTextColor } from "@/utils/colors";
 import { getClientEnv } from "@/app/(frontend)/env";
+import { Organization } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
 export async function signup(request: SignupDto) {
@@ -77,6 +78,47 @@ export async function signup(request: SignupDto) {
     },
   ]);
   return newUser;
+}
+
+export async function resendConfirmationEmail({
+  userId,
+  organization,
+}: {
+  userId: string;
+  organization: Organization;
+}) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const customDomain = await prisma.orgCustomDomain.findFirst({
+    where: { organizationId: organization.id },
+  });
+
+  if (!organization) throw "Organização não encontrada.";
+  if (!user) throw "Usuário não encontrado.";
+
+  const url = customDomain
+    ? "https://" + customDomain
+    : process.env.NEXT_PUBLIC_SITE_URL;
+
+  await sendEmail([
+    {
+      template: "welcome_email",
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+        to: user.email,
+      },
+      templateParameters: {
+        headerTextColor: chooseTextColor(
+          organization?.options.colors.primaryColor.hex || "#4F46E5"
+        ),
+        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+        orgName: organization?.name || "EventoSM",
+        name: user.fullName.split(" ")[0] as string,
+        siteLink: `${url}/confirmar/${user.id}`,
+      },
+    },
+  ]);
+  return user;
 }
 
 export async function linkUserToOrg(request: {

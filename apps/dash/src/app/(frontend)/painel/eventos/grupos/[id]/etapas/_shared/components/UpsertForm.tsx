@@ -36,6 +36,7 @@ import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore"
 import {
   FileImagePreview,
   Heading,
+  Link,
   SubmitButton,
   Tabs,
   Text,
@@ -165,81 +166,92 @@ export function UpsertForm({
   });
 
   return (
-    <Form hform={form} onSubmit={trigger} className="pt-4">
+    <Form hform={form} onSubmit={trigger} className="pb-20 pt-4 lg:pb-4">
       <div className="flex w-full justify-between">
-        <Heading>{subevent ? "Atualizar" : "Criar"} Etapa </Heading>
-        <SubmitButton color={organization.options.colors.primaryColor.tw.color}>
-          Salvar
-        </SubmitButton>
+        <div className="mb-3 items-center gap-3 lg:flex">
+          <Heading>Resultados - {eventGroup.Event[0]?.name}</Heading>
+          <Link
+            className="text-sm"
+            style={{
+              color: organization.options.colors.primaryColor.hex,
+            }}
+            href={`/painel/eventos/grupos/${eventGroup.id}/etapas`}
+          >
+            Voltar à lista de etapas
+          </Link>
+        </div>
       </div>
       <Fieldset>
-        <FieldGroup className="grid grid-cols-2 gap-3">
-          <Field className="col-span-2 lg:col-span-1" name="name">
-            <Label>Nome do Evento</Label>
-            <Input placeholder="10 KM da Rua 3" />
-            <ErrorMessage />
-          </Field>
-          <Field className="col-span-2 lg:col-span-1" name="location">
-            <Label>Local</Label>
-            <Input placeholder="Rua 3" />
-            <ErrorMessage />
-          </Field>
-        </FieldGroup>
-        <FieldGroup className="grid grid-cols-2 gap-3">
-          <Field className="col-span-2 lg:col-span-1" name="dateStart">
-            <Label>Início do Evento</Label>
-            <Input mask={"99/99/9999"} placeholder="01/01/2024" />
-            <ErrorMessage />
-          </Field>
-          <Field className="col-span-2 lg:col-span-1" name="dateEnd">
-            <Label>Término do Evento</Label>
-            <Input mask={"99/99/9999"} placeholder="02/01/2024" />
-            <ErrorMessage />
-          </Field>
-        </FieldGroup>
-        <FieldGroup>
-          <Field name="image" className="col-span-2">
-            <Label>Capa do Evento</Label>
-            <FileInput
-              fileTypes={["png", "jpg", "jpeg"]}
-              maxFiles={1}
-              maxSize={1}
-              onError={(error) => {
-                if (typeof error === "string") {
-                  showToast({
-                    message: error,
-                    title: "Erro",
-                    variant: "error",
-                  });
-                }
-              }}
-            >
-              <FileDropArea
-                render={
-                  form.watch("image")?.length ? (
-                    <>
-                      <Text>
-                        <span className="font-semibold">Arquivo:</span>{" "}
-                        {form.watch("image")?.[0].name}{" "}
-                        <span
-                          onClick={() => {
-                            form.setValue("image", undefined);
-                          }}
-                          className="cursor-pointer font-semibold text-emerald-600"
-                        >
-                          Trocar
-                        </span>
-                      </Text>
-                    </>
-                  ) : null
-                }
-              />
-            </FileInput>
-            <div className="my-3">
-              <FileImagePreview defaultValue={subevent?.imageUrl || ""} />
-            </div>
-            <ErrorMessage />
-          </Field>
+        <div className={"grid grid-cols-2 gap-3 lg:divide-x"}>
+          <FieldGroup className="col-span-2 gap-2 lg:col-span-1">
+            <Field className="col-span-2 lg:col-span-1" name="name">
+              <Label>Nome do Evento</Label>
+              <Input placeholder="10 KM da Rua 3" />
+              <ErrorMessage />
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="location">
+              <Label>Local</Label>
+              <Input placeholder="Rua 3" />
+              <ErrorMessage />
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="dateStart">
+              <Label>Início do Evento</Label>
+              <Input mask={"99/99/9999"} placeholder="01/01/2024" />
+              <ErrorMessage />
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="dateEnd">
+              <Label>Término do Evento</Label>
+              <Input mask={"99/99/9999"} placeholder="02/01/2024" />
+              <ErrorMessage />
+            </Field>
+          </FieldGroup>
+          <FieldGroup className="col-span-2 lg:col-span-1 lg:px-3">
+            <Field name="image" className="col-span-2">
+              <Label>Capa do Evento</Label>
+              <div className="my-3 flex justify-center">
+                <FileImagePreview defaultValue={subevent?.imageUrl || ""} />
+              </div>
+              <FileInput
+                fileTypes={["png", "jpg", "jpeg"]}
+                maxFiles={1}
+                maxSize={1}
+                onError={(error) => {
+                  if (typeof error === "string") {
+                    showToast({
+                      message: error,
+                      title: "Erro",
+                      variant: "error",
+                    });
+                  }
+                }}
+              >
+                <FileDropArea
+                  render={
+                    form.watch("image")?.length ? (
+                      <>
+                        <Text>
+                          <span className="font-semibold">Arquivo:</span>{" "}
+                          {form.watch("image")?.[0].name}{" "}
+                          <span
+                            onClick={() => {
+                              form.setValue("image", undefined);
+                            }}
+                            className="cursor-pointer font-semibold text-emerald-600"
+                          >
+                            Trocar
+                          </span>
+                        </Text>
+                      </>
+                    ) : null
+                  }
+                />
+              </FileInput>
+
+              <ErrorMessage />
+            </Field>
+          </FieldGroup>
+        </div>
+        <FieldGroup className="col-span-2">
           <Field className="col-span-2 lg:col-span-2" name="description">
             <Label>Descrição da Etapa</Label>
             <RichTextEditor />
@@ -247,8 +259,9 @@ export function UpsertForm({
             <Description>ID: {form.getValues("id")}</Description>
           </Field>
         </FieldGroup>
-        <div className="flex w-full justify-end">
+        <div className="col-span-2 flex  justify-end">
           <SubmitButton
+            className={"w-full"}
             color={organization.options.colors.primaryColor.tw.color}
           >
             Salvar
