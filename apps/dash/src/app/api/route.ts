@@ -1,76 +1,32 @@
-/* import dayjs from "dayjs";
+import dayjs from "dayjs";
 import _ from "lodash";
 import { prisma } from "/workspaces/eventosm/apps/dash/prisma/prisma";
 import { NextResponse } from "next/server";
-import { users } from "./users";
-
+import { reverseTimeToSeconds } from "@/utils/results";
+/* 
 export async function GET() {
-  const registrations = await prisma.eventGroup
-    .findFirst({
-      where: {
-        id: "0135c540-502d-4192-af32-3c98d02b73a4",
-      },
-      include: {
-        EventRegistration: {
-          where: {
-            category: {
-              gender: {
-                not: "unisex",
-              },
-            },
-            status: {
-              not: "canceled",
-            },
-          },
-          include: {
-            EventCheckIn: true,
-            category: true,
-            user: {
-              include: {
-                info: true,
-              },
-            },
-          },
-        },
-      },
-    })
-    .then((e) => e?.EventRegistration)
-    .then((rs) =>
-      rs?.map((r) => ({
-        name: r.user.fullName,
-        registrationId: r.id,
-        cpf: r.user.document,
-        code: r.code,
-        userId: r.userId,
-        userGender: r.user.info.gender,
-        checkin: r.EventCheckIn.length > 0,
-        category: r.category,
-        age: dayjs().year() - dayjs(r.user.info.birthDate).year(),
-        birthDate: r.user.info.birthDate,
-      }))
-    );
+  const events = await prisma.event.findMany({
+    where: { id: { not: "7cb9ba8f-8ee8-47a6-a98c-e53753693015" } },
+  });
 
-  if (!registrations) return null;
+  const registrations = await prisma.eventRegistration.findMany({
+    where: { eventGroupId: "0135c540-502d-4192-af32-3c98d02b73a4" },
+  });
 
-  let xlsxUsers = users;
-
-  let notProcessed = [];
-  for (const r of registrations) {
-    const xUser = xlsxUsers.findIndex((u) => u.Document === r.cpf);
-
-    if (xUser === -1) {
-      notProcessed.push({
-        xUser,
-        r,
+  let arr = [];
+  for (const ev of events) {
+    for (const reg of registrations) {
+      arr.push({
+        eventId: ev.id,
+        registrationId: reg.id,
+        score: reverseTimeToSeconds(Math.random() * 2000),
+        createdAt: dayjs().toISOString(),
+        updatedAt: dayjs().toISOString(),
       });
-      continue;
     }
-
-    console.log(xUser, r);
-
-    xlsxUsers[xUser]!.Categoria = r.category.name;
   }
 
-  return NextResponse.json(xlsxUsers);
-}
- */
+  const data = await prisma.eventResult.createMany({ data: arr });
+
+  return NextResponse.json(data);
+} */

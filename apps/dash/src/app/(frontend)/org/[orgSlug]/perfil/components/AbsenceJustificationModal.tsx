@@ -63,6 +63,7 @@ export default function AbsenceJustificationModal({
     onSuccess: () => {
       setShowJustificationModal(false);
       fetchCheckinsAndAbsences();
+      form.reset();
       showToast({
         message: "Atestado enviado com sucesso!",
         variant: "success",

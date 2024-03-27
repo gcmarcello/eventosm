@@ -5,7 +5,7 @@ export interface EventResultsWithPosition extends EventResultWithInfo {
   position: number;
 }
 
-function timeToSeconds(timeStr?: string | null): number | null {
+export function timeToSeconds(timeStr?: string | null): number | null {
   if (!timeStr) return null;
   const [hoursStr, minutesStr, secondsStr] = timeStr
     .split(":")
@@ -18,6 +18,17 @@ function timeToSeconds(timeStr?: string | null): number | null {
   if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return null;
 
   return hours * 3600 + minutes * 60 + seconds;
+}
+
+export function reverseTimeToSeconds(seconds: number | null): string | null {
+  if (seconds === null || seconds === 0) return null;
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
 export function sortPositions(resultArray: EventResultWithInfo[]) {
