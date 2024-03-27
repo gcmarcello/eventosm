@@ -1,8 +1,3 @@
-import dayjs from "dayjs";
-import _ from "lodash";
-import { prisma } from "/workspaces/eventosm/apps/dash/prisma/prisma";
-import { NextResponse } from "next/server";
-import { reverseTimeToSeconds } from "@/utils/results";
 /* 
 export async function GET() {
   const events = await prisma.event.findMany({
