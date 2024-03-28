@@ -14,7 +14,14 @@ export default async function EtapasPage({
 
   const organization = await prisma.organization.findUnique({
     where: { id: eventGroup?.organizationId },
-    include: { OrgCustomDomain: true },
+    include: {
+      OrgCustomDomain: true,
+      Event: {
+        where: {
+          id: eventGroup?.Event[0]?.id,
+        },
+      },
+    },
   });
 
   if (!organization) return redirect("/painel/eventos");
