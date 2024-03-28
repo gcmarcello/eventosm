@@ -190,8 +190,7 @@ export function SubeventsTable({
                       <DropdownSection>
                         <DropdownHeading>Realização</DropdownHeading>
                         <DropdownItem
-                          target={"_blank"}
-                          href={`${isDev ? "http" : "https"}://${organization.OrgCustomDomain[0]?.domain}/checkin/${info.row.original.id}`}
+                          href={`/painel/eventos/grupos/${eventGroup.id}/etapas/${info.row.original.id}/checkins`}
                         >
                           <CheckIcon />
                           <DropdownLabel>Check-in</DropdownLabel>
