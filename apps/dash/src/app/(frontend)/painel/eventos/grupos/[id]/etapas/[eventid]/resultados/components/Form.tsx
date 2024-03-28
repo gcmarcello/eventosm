@@ -25,6 +25,7 @@ import {
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { EventResultWithInfo } from "prisma/types/Results";
 import { useMemo, useState } from "react";
+import SubeventHeading from "../../components/SubeventHeading";
 
 const excelDataSchema = z.array(
   z.object({
@@ -76,18 +77,9 @@ export function ResultsForm({
 
   return (
     <>
-      <div className="mb-3 items-center gap-3 lg:flex">
-        <Heading>Resultados - {eventGroup.Event[0]?.name}</Heading>
-        <Link
-          className="text-sm"
-          style={{
-            color: organization.options.colors.primaryColor.hex,
-          }}
-          href={`/painel/eventos/grupos/${eventGroup.id}/etapas`}
-        >
-          Voltar à lista de etapas
-        </Link>
-      </div>
+      <SubeventHeading organization={organization} eventGroupId={eventGroup.id}>
+        Resultados - {eventGroup.Event[0]?.name}
+      </SubeventHeading>
       {!results.length && (
         <Form hform={form} onSubmit={(data) => trigger(data)}>
           <Field name="file">
