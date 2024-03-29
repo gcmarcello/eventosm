@@ -220,7 +220,9 @@ export async function readSubeventReviewData(request: { eventId: string }) {
   const absences = await prisma.eventAbsences.findMany({
     where: { eventId: request.eventId },
     include: {
-      registration: { select: { user: { select: { fullName: true } } } },
+      registration: {
+        select: { user: { select: { fullName: true, phone: true } } },
+      },
     },
   });
 
