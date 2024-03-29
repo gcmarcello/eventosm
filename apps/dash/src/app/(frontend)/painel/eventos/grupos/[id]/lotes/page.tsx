@@ -1,4 +1,5 @@
 "use server";
+import { prisma } from "prisma/prisma";
 import { redirect } from "next/navigation";
 import EventBatches from "../../../_shared/components/EventBatches";
 

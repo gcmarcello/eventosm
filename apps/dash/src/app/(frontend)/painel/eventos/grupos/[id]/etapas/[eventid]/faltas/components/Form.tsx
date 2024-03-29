@@ -8,7 +8,14 @@ import { updateEventStatus } from "@/app/api/events/status/action";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Organization } from "@prisma/client";
 import clsx from "clsx";
-import { Heading, Table, Badge, ExtractSuccessResponse, Link } from "odinkit";
+import {
+  Heading,
+  Table,
+  Badge,
+  ExtractSuccessResponse,
+  Link,
+  formatPhone,
+} from "odinkit";
 import { useAction, showToast, Button } from "odinkit/client";
 import { useEffect } from "react";
 import { sortAbsences } from "../utils/sorting";
@@ -103,6 +110,13 @@ export function AbsencesForm({
               enableSorting: true,
               enableGlobalFilter: true,
               cell: (info) => info.getValue(),
+            }),
+            columnHelper.accessor("registration.user.phone", {
+              id: "phone",
+              header: "Telefone",
+              enableSorting: true,
+              enableGlobalFilter: true,
+              cell: (info) => formatPhone(info.getValue()),
             }),
             columnHelper.accessor("justificationUrl", {
               id: "justificationUrl",
