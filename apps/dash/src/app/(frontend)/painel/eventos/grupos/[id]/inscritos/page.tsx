@@ -12,6 +12,7 @@ import {
   UserInfo,
 } from "@prisma/client";
 import RegistrationsTable from "../../../_shared/components/RegistrationsPage";
+import { prisma } from "prisma/prisma";
 
 export type RegistrationWithInfo = EventRegistration & {
   user: User & { info?: UserInfo };
