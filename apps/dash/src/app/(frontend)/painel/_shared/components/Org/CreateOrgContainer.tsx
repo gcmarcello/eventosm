@@ -36,9 +36,11 @@ export default function CreateOrgContainer(props: CreateOrgContainerProps) {
                 fotos, vídeos, notícias, calendário de eventos, e muito mais!)
               </Text>
 
-              <Button onClick={() => setScreen("form")} color="indigo">
-                <PlusIcon />
-                Criar Organização
+              <Button onClick={() => setScreen("form")} color="red">
+                <div className="flex gap-2">
+                  <PlusIcon />
+                  Criar Organização
+                </div>
               </Button>
             </div>
           </Container>

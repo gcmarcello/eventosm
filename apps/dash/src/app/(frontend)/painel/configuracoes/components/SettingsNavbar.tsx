@@ -6,20 +6,15 @@ import { For, Link } from "odinkit";
 import { EventGroupWithEvents } from "prisma/types/Events";
 
 const steps = [
-  { name: "geral", title: "Geral", disabled: false },
-  { name: "etapas", title: "Etapas", disabled: false },
-  { name: "modalidades", title: "Modalidades", disabled: false },
-  { name: "kits", title: "Kits", disabled: false },
-  { name: "lotes", title: "Lotes", disabled: false },
-  { name: "inscritos", title: "Inscritos", disabled: false },
+  { name: "geral", title: "Informações Gerais", disabled: false },
+  { name: "personalizacao", title: "Personalização", disabled: false },
+  { name: "permissoes", title: "Permissões", disabled: false },
 ];
 
-export function EventGroupNavbar({
+export function SettingsNavbar({
   organization,
-  eventGroup,
 }: {
   organization: Organization;
-  eventGroup: EventGroupWithEvents;
 }) {
   const pathname = usePathname().split("/");
   const color = organization.options.colors.primaryColor.hex;
@@ -29,7 +24,7 @@ export function EventGroupNavbar({
         const selected = pathname.includes(step.name ?? "");
         return (
           <Link
-            href={`/painel/eventos/grupos/${eventGroup.id}/${step.name}`}
+            href={`/painel/configuracoes/${step.name}`}
             style={{
               borderColor: selected ? color : "gray",
               color: selected ? color : "gray",

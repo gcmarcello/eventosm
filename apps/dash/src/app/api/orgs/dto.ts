@@ -24,17 +24,8 @@ export const upsertOrganizationDto = z.object({
     .min(14, { message: "Telefone Inválido" })
     .max(15, { message: "Telefone inválido" }),
   document: z.string().optional().nullable(),
-  abbreviation: z.string().max(7, { message: "No máximo 7 caracteres" }),
-  primaryColor: z.nativeEnum(ColorId),
-  secondaryColor: z.nativeEnum(ColorId),
-  tertiaryColor: z.nativeEnum(ColorId),
-  images: z
-    .object({
-      bg: z.string().optional(),
-      hero: z.string().optional(),
-      logo: z.string().optional(),
-    })
-    .optional(),
+  abbreviation: z.string().max(10, { message: "No máximo 10 caracteres" }),
+
   /* .refine(
       (data) => {
         if (!data) return true;
@@ -49,6 +40,23 @@ export const upsertOrganizationDto = z.object({
 });
 
 export type UpsertOrganizationDto = z.infer<typeof upsertOrganizationDto>;
+
+export const updateOrganizationStyleDto = z.object({
+  primaryColor: z.nativeEnum(ColorId),
+  secondaryColor: z.nativeEnum(ColorId),
+  tertiaryColor: z.nativeEnum(ColorId),
+  images: z
+    .object({
+      bg: z.string().optional(),
+      hero: z.string().optional(),
+      logo: z.string().optional(),
+    })
+    .optional(),
+});
+
+export type UpdateOrganizationStyleDto = z.infer<
+  typeof updateOrganizationStyleDto
+>;
 
 const readOrganizationDto = readDto(
   z.object({
