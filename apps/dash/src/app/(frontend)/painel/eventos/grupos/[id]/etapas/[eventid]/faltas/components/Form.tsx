@@ -114,8 +114,8 @@ export function AbsencesForm({
             columnHelper.accessor("registration.user.phone", {
               id: "phone",
               header: "Telefone",
-              enableSorting: true,
-              enableGlobalFilter: true,
+              enableSorting: false,
+              enableGlobalFilter: false,
               cell: (info) => formatPhone(info.getValue()),
             }),
             columnHelper.accessor("justificationUrl", {

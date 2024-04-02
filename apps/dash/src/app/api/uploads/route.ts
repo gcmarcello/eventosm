@@ -11,9 +11,10 @@ export async function POST(request: NextRequest) {
 
     for (let [formField, value] of formData.entries()) {
       if (value instanceof File) {
-        const file = privateFile
-          ? await uploadPrivateFile(value, value.name, folder)
-          : await uploadFile(value, value.name, folder);
+        const file =
+          privateFile === "true"
+            ? await uploadPrivateFile(value, value.name, folder)
+            : await uploadFile(value, value.name, folder);
         filesObj[formField] = file;
       }
     }

@@ -1,6 +1,6 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UpsertOrganizationDto } from "./dto";
+import { UpdateOrganizationStyleDto, UpsertOrganizationDto } from "./dto";
 import * as service from "./service";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { cookies } from "next/headers";
@@ -33,6 +33,27 @@ export async function updateOrganization(request: UpsertOrganizationDto) {
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
     organization = await service.updateOrganization(parsedRequest);
+    revalidatePath(`/painel/configuracoes`);
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+
+  return ActionResponse.success({
+    message: "Organização atualizada com sucesso.",
+    data: organization,
+  });
+}
+
+export async function updateOrganizationStyle(
+  request: UpdateOrganizationStyleDto
+) {
+  let organization;
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+    organization = await service.updateOrganizationStyle(parsedRequest);
     revalidatePath(`/painel/configuracoes`);
   } catch (error) {
     console.log(error);

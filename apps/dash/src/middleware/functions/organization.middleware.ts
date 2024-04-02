@@ -26,10 +26,7 @@ export async function OrganizationMiddleware<T>({
   const userRole = await prisma.user.findFirst({
     where: { id: request.userSession.id },
     select: {
-      OrganizationRole: {
-        where: { organizationId: activeOrg },
-        include: { OrganizationRolePermission: true },
-      },
+      UserOrgLink: true,
     },
   });
 

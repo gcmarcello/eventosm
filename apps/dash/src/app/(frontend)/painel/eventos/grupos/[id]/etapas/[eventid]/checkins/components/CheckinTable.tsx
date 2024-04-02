@@ -2,9 +2,6 @@
 import { Table } from "odinkit";
 import { CheckinWithInfo } from "../page";
 import { Date } from "odinkit/client";
-import SubeventHeading from "../../components/SubeventHeading";
-import { EventGroup, Organization } from "@prisma/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
 
 export default function CheckinTable({
   checkins,
