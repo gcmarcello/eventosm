@@ -6,6 +6,7 @@ import { SettingsModule } from "./resources/settings/settings.module";
 import { BullModule } from "./resources/bull/bull.module";
 import { QrCodeModule } from "./resources/qrcode/qrcode.module";
 import { WhatsappModule } from "./resources/whatsapp/whatsapp.module";
+import { AsaasModule } from "./resources/asaas/asaas.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { WhatsappModule } from "./resources/whatsapp/whatsapp.module";
     QrCodeModule,
     EmailModule,
     WhatsappModule,
+    AsaasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
