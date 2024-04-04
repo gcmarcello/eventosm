@@ -37,7 +37,12 @@ import {
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { Event, EventRegistrationBatch, Organization } from "@prisma/client";
+import {
+  Event,
+  EventModality,
+  EventRegistrationBatch,
+  Organization,
+} from "@prisma/client";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -51,18 +56,17 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import RegistrationMobileButton from "./RegistrationMobileButton";
 
-import { NoSsrMap } from "./NoSSRLocationMap";
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../_shared/components/OrgStore";
 import { Field } from "@headlessui/react";
+import RegistrationMobileButton from "./RegistrationMobileButton";
 
-export default function EventGroupContainer({
-  eventGroup,
+export default function EventContainer({
+  event,
   isUserRegistered,
   batch,
   organization,
@@ -70,7 +74,7 @@ export default function EventGroupContainer({
   registrationCount,
 }: {
   isUserRegistered: boolean;
-  eventGroup: EventGroupWithInfo;
+  event: Event & { EventModality: EventModality[] };
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
   nextBatch: EventRegistrationBatch | null;
@@ -80,81 +84,9 @@ export default function EventGroupContainer({
     {
       content: (
         <div className="my-2 text-sm">
-          <Table
-            data={eventGroup.Event}
-            pagination={false}
-            search={false}
-            columns={(columnHelper) => [
-              columnHelper.accessor("name", {
-                id: "name",
-                header: "Nome",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => (
-                  <span
-                    className={
-                      info.row.original.description
-                        ? "cursor-pointer underline"
-                        : ""
-                    }
-                    onClick={() =>
-                      info.row.original.description &&
-                      handleEventModal(info.row.original.id)
-                    }
-                  >
-                    {info.getValue()}
-                  </span>
-                ),
-              }),
-              columnHelper.accessor("dateStart", {
-                id: "dateStart",
-                header: "Data",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => (
-                  <Date date={info.getValue()} format="DD/MM/YYYY" />
-                ),
-              }),
-              columnHelper.accessor("location", {
-                meta: { className: "hidden lg:table-cell" },
-                id: "location",
-                header: "Local",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => info.getValue(),
-              }),
-              /* columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) =>
-                  eventGroup.Event.find((e) => e.id === info.getValue())
-                    ?.description ? (
-                    <Button
-                      plain
-                      type="button"
-                      onClick={() => handleEventModal(info.getValue())}
-                    >
-                      Detalhes
-                    </Button>
-                  ) : (
-                    "Informações em breve."
-                  ),
-              }), */
-            ]}
-          />
-        </div>
-      ),
-      title: "Etapas",
-    },
-    {
-      content: (
-        <div className="my-2 text-sm">
           <div
             dangerouslySetInnerHTML={{
-              __html: eventGroup.description || "Nenhuma descrição cadastrada.",
+              __html: event.description || "Nenhuma descrição cadastrada.",
             }}
           />
         </div>
@@ -166,7 +98,7 @@ export default function EventGroupContainer({
         <div className="my-2 text-sm">
           <div
             dangerouslySetInnerHTML={{
-              __html: eventGroup.rules || "Nenhum regulamento cadastrado.",
+              __html: event.rules || "Nenhum regulamento cadastrado.",
             }}
           />
         </div>
@@ -177,37 +109,9 @@ export default function EventGroupContainer({
 
   const { image } = useOrg();
   const contentRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
-  function handleEventModal(id: string) {
-    const event = eventGroup.Event.find((e) => e.id === id);
-    if (!event) return;
-    setSelectedEvent(event);
-    setIsOpen(true);
-  }
 
   return (
     <>
-      <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
-        <DialogTitle>{selectedEvent?.name}</DialogTitle>
-        {/* <DialogDescription>
-          The refund will be reflected in the customer’s bank account 2 to 3
-          business days after processing.
-        </DialogDescription> */}
-        <DialogBody className="mt-4">
-          <div
-            dangerouslySetInnerHTML={{
-              __html: selectedEvent?.description || "Informações em breve.",
-            }}
-          ></div>
-        </DialogBody>
-        <DialogActions className="justify-between">
-          <Button plain onClick={() => setIsOpen(false)}>
-            Voltar
-          </Button>
-        </DialogActions>
-      </Dialog>
       <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
         <div
           ref={contentRef}
@@ -219,21 +123,20 @@ export default function EventGroupContainer({
             <div className="relative h-[50vh] w-full">
               <Image
                 alt="Capa do Evento"
-                src={eventGroup?.imageUrl || ""}
+                src={event?.imageUrl || ""}
                 fill
                 className=""
               />
             </div>
 
             <div className="flex w-full  flex-col items-start gap-1  px-3 pt-1 lg:mt-5  lg:px-0">
-              <span className="text-base font-semibold text-gray-800 lg:text-2xl">
-                <div className="flex items-center gap-2">
-                  {eventGroup.name}{" "}
-                  <Badge color="orange" className="my-auto">
-                    Campeonato
-                  </Badge>
-                </div>
-              </span>
+              <div className=" flex w-full items-center justify-between gap-2 text-base font-semibold text-gray-800 lg:w-auto lg:text-2xl">
+                <>{event.name} </>
+                <Badge color="purple" className="my-auto">
+                  Evento
+                </Badge>
+              </div>
+
               <div className="mt-1 grid w-full grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3 ">
                 <Text className="flex items-center gap-2 text-sm lg:text-start">
                   <CalendarIcon
@@ -242,11 +145,16 @@ export default function EventGroupContainer({
                     }}
                     className="size-4 lg:size-5"
                   />
-                  {date(eventGroup.Event[0]!.dateStart, "DD/MM/YYYY")} -{" "}
-                  {date(
-                    eventGroup.Event[eventGroup.Event.length - 1]
-                      ?.dateEnd as any,
-                    "DD/MM/YYYY"
+                  {event.dateStart.toISOString() ===
+                  event.dateEnd.toISOString() ? (
+                    <>
+                      <Date date={event.dateStart} format="DD/MM/YYYY" />
+                    </>
+                  ) : (
+                    <>
+                      <Date date={event.dateStart} format="DD/MM/YYYY" /> -{" "}
+                      <Date date={event.dateEnd} format="DD/MM/YYYY" />
+                    </>
                   )}
                 </Text>
 
@@ -257,9 +165,9 @@ export default function EventGroupContainer({
                     }}
                     className="size-4 lg:size-5"
                   />
-                  {eventGroup.EventModality.length > 1
-                    ? `${eventGroup.EventModality.length} Modalidades`
-                    : `Modalidade ${eventGroup.EventModality[0]?.name}`}
+                  {event.EventModality.length > 1
+                    ? `${event.EventModality.length} Modalidades`
+                    : `Modalidade ${event.EventModality[0]?.name}`}
                 </Text>
 
                 <div className="col-span-2 flex grid-cols-2 justify-between lg:grid ">
@@ -270,28 +178,28 @@ export default function EventGroupContainer({
                       }}
                       className="size-4 lg:size-5"
                     />
-                    {`${eventGroup.location}`}
+                    {`${event.location}`}
                   </Text>
                   <div className="flex gap-2">
-                    <Text className="hidden lg:block">Compartilhe!</Text>
                     <Link
                       target="_blank"
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
                     >
                       <FacebookIcon size={22} />
                     </Link>
                     <Link
                       target="_blank"
-                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
+                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(event.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
                     >
                       <XIcon size={22} />
                     </Link>
                     <Link
                       target="_blank"
-                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(eventGroup.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${eventGroup.slug}`)}`}
+                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(event.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
                     >
                       <WhatsappIcon size={23} />
                     </Link>
+                    <Text className="hidden lg:block">Compartilhe!</Text>
                   </div>
                 </div>
               </div>
@@ -321,7 +229,7 @@ export default function EventGroupContainer({
                       <div className="flex justify-between gap-5 pt-2">
                         {batch.registrationType !== "team" && (
                           <Button
-                            href={`/inscricoes/campeonatos/${eventGroup.id}`}
+                            href={`/inscricoes/${event.id}`}
                             className={"grow"}
                             color={
                               organization.options.colors.primaryColor.tw.color
@@ -338,7 +246,7 @@ export default function EventGroupContainer({
                         )}
                         {batch.registrationType !== "individual" && (
                           <Button
-                            href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
+                            href={`/inscricoes/${event.id}?team=true`}
                             className={"grow"}
                             color={
                               organization.options.colors.secondaryColor.tw
@@ -375,11 +283,11 @@ export default function EventGroupContainer({
               <div className="xxl:flex-row xxl:items-center xxl:border-none xxl:pt-0 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
                 <Text className="font-medium">Mais Informações:</Text>
                 <Link
-                  href={`/campeonatos/${eventGroup.slug}/resultados`}
+                  href={`/${event.slug}/resultados`}
                   className="text-sm hover:underline"
                   style={{
                     color:
-                      eventGroup.status === "published"
+                      event.status === "published"
                         ? "gray"
                         : organization.options.colors.primaryColor.hex,
                   }}
@@ -395,7 +303,7 @@ export default function EventGroupContainer({
                   className="text-sm hover:underline"
                   style={{
                     color:
-                      eventGroup.status === "published"
+                      event.status === "published"
                         ? "gray"
                         : organization.options.colors.primaryColor.hex,
                   }}
@@ -403,7 +311,7 @@ export default function EventGroupContainer({
                   <div className="flex gap-1">
                     <CameraIcon className="size-5" />
                     Fotos e Vídeos{" "}
-                    {eventGroup.status === "published" ? "(Em Breve)" : ""}
+                    {event.status === "published" ? "(Em Breve)" : ""}
                   </div>
                 </Link>
               </div>
@@ -516,7 +424,7 @@ export default function EventGroupContainer({
           nextBatch={nextBatch}
           isUserRegistered={isUserRegistered}
           registrationCount={registrationCount}
-          eventGroup={eventGroup}
+          event={event}
         />
       </BottomNavigation>
     </>

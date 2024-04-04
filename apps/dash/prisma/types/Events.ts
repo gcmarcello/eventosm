@@ -42,3 +42,12 @@ export type EventGroupEventCheckinsAndAbsences = EventRegistration & {
   EventCheckIn: EventCheckIn[];
   EventAbsences: EventAbsences[];
 };
+
+export type EventWithInfo = Event & {
+  EventAddon?: EventAddon[];
+  EventRegistration?: EventRegistration[];
+  EventModality: EventModalityWithCategories[];
+  EventRegistrationBatch: (EventRegistrationBatch & {
+    _count: { EventRegistration: number };
+  })[];
+};

@@ -2,7 +2,7 @@
 
 import { Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { EventRegistrationBatch, Organization } from "@prisma/client";
+import { Event, EventRegistrationBatch, Organization } from "@prisma/client";
 import clsx from "clsx";
 import Image from "next/image";
 import { Alertbox, BottomNavigation, For, SubmitButton, Text } from "odinkit";
@@ -13,7 +13,7 @@ import {
   useAction,
   useForm,
 } from "odinkit/client";
-import { EventGroupWithInfo } from "prisma/types/Events";
+import { EventGroupWithInfo, EventWithInfo } from "prisma/types/Events";
 import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import dayjs from "dayjs";
@@ -26,18 +26,20 @@ import { useSearchParams } from "next/navigation";
 import { TeamWithUsers } from "prisma/types/Teams";
 import { AddonsForm } from "./AddonsForm";
 import { eventGroupCreateMultipleRegistrationsDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
+import { eventCreateMultipleRegistrationsDto } from "@/app/api/registrations/events/event.dto";
 import { createEventGroupMultipleRegistrations } from "@/app/api/registrations/eventGroups/eventGroup.action";
+import { createEventMultipleRegistrations } from "@/app/api/registrations/events/event.action";
 
 dayjs.extend(customParseFormat);
 
-export default function TeamTournamentRegistration({
-  eventGroup,
+export default function TeamRegistration({
+  event,
   batch,
   organization,
   teams,
 }: {
   userSession: UserSession;
-  eventGroup: EventGroupWithInfo;
+  event: EventWithInfo;
   batch: EventRegistrationBatch;
   organization: Organization;
   teams: TeamWithUsers[];
@@ -47,11 +49,9 @@ export default function TeamTournamentRegistration({
   const emptyTeamMember = {
     userId: "",
     modalityId:
-      eventGroup.EventModality.length > 1
-        ? ""
-        : eventGroup.EventModality[0]!.id,
+      event.EventModality.length > 1 ? "" : event.EventModality[0]!.id,
     addon: {
-      id: eventGroup.EventAddon?.find((addon) => !addon.price)?.id || undefined,
+      id: event.EventAddon?.find((addon) => !addon.price)?.id || undefined,
       option: undefined,
     },
     selected: true,
@@ -62,10 +62,10 @@ export default function TeamTournamentRegistration({
   };
 
   const form = useForm({
-    schema: eventGroupCreateMultipleRegistrationsDto,
+    schema: eventCreateMultipleRegistrationsDto,
     mode: "onChange",
     defaultValues: {
-      eventGroupId: eventGroup.id,
+      eventId: event.id,
       teamMembers: [],
       teamId: "",
       batchId: searchParams.get("batch") || undefined,
@@ -80,7 +80,7 @@ export default function TeamTournamentRegistration({
   const { fields, append } = fieldArray;
 
   const { data, trigger, isMutating } = useAction({
-    action: createEventGroupMultipleRegistrations,
+    action: createEventMultipleRegistrations,
     redirect: true,
     onSuccess: () => {
       showToast({
@@ -146,21 +146,17 @@ export default function TeamTournamentRegistration({
                 </div>
               )}
               <div className="mt-4 text-xl font-medium lg:mt-0">
-                {eventGroup.name}
+                {event.name}
               </div>
-              <Text>
-                Inscrição em equipe para todas as etapas (
-                {eventGroup.Event.length}
-                ).
-              </Text>
+              <Text>Inscrição em equipe.</Text>
               {batch.name && <Text>Lote {batch.name}</Text>}
             </div>
             <div className="relative h-20 w-32 ">
-              {eventGroup.imageUrl && (
+              {event.imageUrl && (
                 <Image
                   className="rounded-md"
                   fill={true}
-                  src={eventGroup.imageUrl}
+                  src={event.imageUrl}
                   alt="imagem do campeonato"
                 />
               )}
@@ -175,7 +171,7 @@ export default function TeamTournamentRegistration({
                 form: (
                   <ParticipantsForm
                     teams={teams}
-                    eventGroup={eventGroup}
+                    event={event}
                     organization={organization}
                     fieldArray={fieldArray}
                     inputMode={inputMode}
@@ -188,7 +184,7 @@ export default function TeamTournamentRegistration({
                 form: (
                   <AddonsForm
                     organization={organization}
-                    eventGroup={eventGroup}
+                    event={event}
                     fieldArray={fieldArray}
                     teams={teams}
                   />
@@ -199,7 +195,7 @@ export default function TeamTournamentRegistration({
                 form: (
                   <ConfirmationForm
                     teams={teams}
-                    eventGroup={eventGroup}
+                    event={event}
                     organization={organization}
                     fieldArray={fieldArray}
                   />

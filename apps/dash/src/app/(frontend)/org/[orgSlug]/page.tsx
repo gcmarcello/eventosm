@@ -76,26 +76,28 @@ export default async function CompanyHome({
                 <Heading>Próximos Eventos</Heading>
               </div>
 
-              <For
-                each={[...eventGroups, ...events]}
-                fallback={
-                  <>
-                    <div className="mt-1 flex gap-2 text-sm text-gray-500">
-                      Mais em breve!{" "}
-                    </div>
-                  </>
-                }
-              >
-                {(event) => {
-                  return (
-                    <div className="col-span-6 flex flex-col md:col-span-2 ">
-                      <div className="flex flex-col gap-4 lg:grid">
-                        <EventCard event={event} orgSlug={params.orgSlug} />
+              <div className="space-y-3">
+                <For
+                  each={[...eventGroups, ...events]}
+                  fallback={
+                    <>
+                      <div className="mt-1 flex gap-2 text-sm text-gray-500">
+                        Mais em breve!{" "}
                       </div>
-                    </div>
-                  );
-                }}
-              </For>
+                    </>
+                  }
+                >
+                  {(event) => {
+                    return (
+                      <div className="col-span-6 flex flex-col md:col-span-2">
+                        <div className="flex flex-col gap-4 lg:grid">
+                          <EventCard event={event} orgSlug={params.orgSlug} />
+                        </div>
+                      </div>
+                    );
+                  }}
+                </For>
+              </div>
             </div>
 
             <div className="col-span-6 flex-col md:col-span-4 md:flex">
