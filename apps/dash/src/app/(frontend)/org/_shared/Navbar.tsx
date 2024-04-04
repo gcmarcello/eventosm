@@ -71,15 +71,15 @@ export function CompanyNavbar({
         <Disclosure
           as="nav"
           style={{ backgroundColor: colors.primaryColor.hex || "" }}
-          className={clsx(`shadow-md`)}
+          className={clsx(`py-1 shadow-md`)}
         >
           {({ open }) => (
             <>
-              <div className="mx-auto max-h-24 max-w-7xl px-4 py-3 sm:px-6 lg:p-0 lg:px-8">
-                <div className="flex h-20 justify-between">
+              <div className="mx-auto max-h-24 max-w-7xl px-4 sm:px-6 lg:p-0 lg:px-8">
+                <div className="flex h-20 justify-between ">
                   <div className="flex">
                     <Link href={"/"} className="flex items-center">
-                      <div className="relative min-h-20 w-48">
+                      <div className="relative min-h-20 w-48 ">
                         <Logo url={organization.options?.images?.logo} />
                       </div>
                     </Link>
