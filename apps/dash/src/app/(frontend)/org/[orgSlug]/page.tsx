@@ -63,10 +63,14 @@ export default async function CompanyHome({
     <>
       <div className="bg-slate-200 lg:h-[calc(100dvh-80px)]">
         <div className={clsx("rounded-b-md bg-white pb-4 xl:mx-16 2xl:mx-72")}>
-          <div className="col-span-6 flex flex-col gap-4">
+          <div className="col-span-6 flex  flex-col gap-4">
             {organization.options?.images?.hero && (
               <div className="relative w-auto ">
-                <img src={organization.options?.images?.hero || ""} alt="" />
+                <img
+                  className="max-h-96 w-full"
+                  src={organization.options?.images?.hero || ""}
+                  alt=""
+                />
               </div>
             )}
           </div>
