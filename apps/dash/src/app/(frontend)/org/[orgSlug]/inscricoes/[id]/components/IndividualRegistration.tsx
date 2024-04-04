@@ -104,6 +104,10 @@ export default function IndividualRegistration({
     if (event.EventModality.length === 1 && event.EventModality[0]?.id) {
       form.setValue("registration.modalityId", event.EventModality[0].id);
     }
+    const freeAddon = event.EventAddon?.find((addon) => !addon.price);
+    if (freeAddon) {
+      form.setValue("registration.addon.id", freeAddon.id);
+    }
   }, [event]);
 
   const Field = useMemo(() => form.createField(), []);
@@ -235,7 +239,15 @@ export default function IndividualRegistration({
                 ),
               },
               addon: {
-                fields: [],
+                fields:
+                  (
+                    event.EventAddon?.find(
+                      (addon) =>
+                        form.watch("registration.addon")?.id === addon.id
+                    )?.options as string[]
+                  )?.length > 0
+                    ? ["registration.addon.option"]
+                    : [],
                 conditions: [event.EventAddon && event.EventAddon?.length > 0],
                 form: (
                   <Fieldset>
@@ -246,7 +258,7 @@ export default function IndividualRegistration({
                       >
                         <Label>Escolha seu Kit</Label>
                         <Description>
-                          Clique no kit desejado para escolher o tamanho.
+                          Selecione seu kit para o evento.
                         </Description>
                         <RadioGroup
                           className={
@@ -265,11 +277,14 @@ export default function IndividualRegistration({
                                   <HeadlessRadio value={addon.id}>
                                     {({ checked }) => (
                                       <div
+                                        style={{
+                                          backgroundColor: checked
+                                            ? organization.options.colors
+                                                .primaryColor.hex
+                                            : "",
+                                        }}
                                         className={clsx(
-                                          "flex min-h-32 min-w-32 grow  cursor-pointer flex-col rounded-md border border-slate-200 bg-opacity-25 p-4 shadow-md duration-200 hover:bg-slate-400 hover:bg-opacity-25 lg:flex-row lg:divide-x",
-                                          checked
-                                            ? "bg-slate-400"
-                                            : "bg-transparent"
+                                          "flex min-h-32 min-w-32 grow  cursor-pointer flex-col rounded-md border border-slate-200 bg-opacity-25 p-4 shadow-md duration-200 hover:bg-slate-400 hover:bg-opacity-25 lg:flex-row lg:divide-x"
                                         )}
                                       >
                                         {addon.image && (
@@ -286,17 +301,19 @@ export default function IndividualRegistration({
                                           <div className="font-medium">
                                             {addon.name}
                                           </div>
-                                          <Text>
-                                            Camiseta, sacochila e viseira.
-                                          </Text>
-                                          {checked && (
+                                          {addon.description && (
+                                            <Text>{addon.description}</Text>
+                                          )}
+                                          {checked &&
+                                          (addon.options as string[])
+                                            ?.length ? (
                                             <Field name="registration.addon.option">
                                               <Select
                                                 data={options}
                                                 displayValueKey="name"
                                               />
                                             </Field>
-                                          )}
+                                          ) : null}
                                         </div>
                                       </div>
                                     )}
@@ -396,17 +413,8 @@ export default function IndividualRegistration({
                                   (addon) => !addon.price
                                 )) && (
                                 <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {form.watch("registration.addon")?.option ? (
-                                    form.watch("registration.addon")?.option
-                                  ) : event.EventAddon?.find(
-                                      (addon) => !addon.price
-                                    ) ? (
-                                    <div className="font-medium text-red-600">
-                                      Volte para escolher uma opção gratuita!
-                                    </div>
-                                  ) : (
-                                    ""
-                                  )}
+                                  {form.watch("registration.addon")?.option ??
+                                    "Opção única"}
                                 </dd>
                               )}
                             </div>
