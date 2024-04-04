@@ -22,7 +22,9 @@ export async function createEventGroupIndividualRegistration(
   }
 
   return ActionResponse.success({
-    redirect: "/perfil",
+    redirect:
+      "/perfil?alert=success&message=" +
+      encodeURIComponent("Inscrição realizada com sucesso!"),
   });
 }
 
@@ -43,6 +45,8 @@ export async function createEventGroupMultipleRegistrations(
   }
 
   return ActionResponse.success({
-    redirect: "/perfil",
+    redirect:
+      "/perfil?alert=success&message=" +
+      encodeURIComponent("Inscrições realizadas com sucesso!"),
   });
 }

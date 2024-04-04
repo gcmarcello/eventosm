@@ -298,15 +298,7 @@ export default function ProfileContainer({
                           >
                             Cancelar
                           </button>
-                          <SubmitButton
-                            className="rounded-md p-2 font-semibold hover:bg-gray-50"
-                            style={{
-                              color:
-                                organization?.options.colors.primaryColor.hex,
-                            }}
-                          >
-                            Salvar
-                          </SubmitButton>
+                          <SubmitButton>Salvar</SubmitButton>
                         </div>
                       </>
                     ) : (

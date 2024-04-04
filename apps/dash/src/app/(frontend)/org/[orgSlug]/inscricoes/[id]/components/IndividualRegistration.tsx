@@ -58,6 +58,7 @@ import { filterCategories } from "../../utils/categories";
 import { calculatePrice } from "../../utils/price";
 import { eventCreateRegistrationDto } from "@/app/api/registrations/events/event.dto";
 import { createEventIndividualRegistration } from "@/app/api/registrations/events/event.action";
+import { hexToRgb } from "@/utils/colors";
 
 export default function IndividualRegistration({
   event,
@@ -280,7 +281,7 @@ export default function IndividualRegistration({
                                         style={{
                                           backgroundColor: checked
                                             ? organization.options.colors
-                                                .primaryColor.hex
+                                                .primaryColor.hex + "60"
                                             : "",
                                         }}
                                         className={clsx(
