@@ -34,6 +34,7 @@ export default async function InscricaoPage({
       EventRegistrationBatch: {
         include: { _count: { select: { EventRegistration: true } } },
       },
+      EventAddon: true,
     },
   });
   const organization = (
@@ -91,7 +92,7 @@ export default async function InscricaoPage({
         User: {
           include: {
             EventRegistration: {
-              where: { eventGroupId: event.id, status: "active" },
+              where: { eventId: event.id, status: "active" },
             },
             info: true,
           },
