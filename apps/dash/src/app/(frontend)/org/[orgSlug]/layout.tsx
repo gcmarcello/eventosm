@@ -29,12 +29,10 @@ export async function generateViewport(props: { orgSlug: string }) {
   };
 }
 
-export async function generateMetadata(props: { orgSlug: string }) {
-  const organization = (
-    await readOrganizations({
-      where: { slug: props.orgSlug },
-    })
-  )[0];
+export async function generateMetadata(props: { params: { orgSlug: string } }) {
+  const organization = await prisma.organization.findUnique({
+    where: { slug: props.params.orgSlug },
+  });
 
   if (!organization) {
     return notFound();
