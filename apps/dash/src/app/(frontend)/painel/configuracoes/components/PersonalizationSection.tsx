@@ -108,9 +108,9 @@ export default function PersonalizationSection({
           await trigger({
             ...rest,
             images: {
-              hero: hero?.file?.url,
-              bg: bg?.file?.url,
-              logo: logo?.file?.url,
+              hero: hero?.file?.url ?? organization.options?.images?.hero,
+              bg: bg?.file?.url ?? organization.options?.images?.bg,
+              logo: logo?.file?.url ?? organization.options?.images?.logo,
             },
           });
         }}
