@@ -51,7 +51,7 @@ export default async function RegistrationsPage({
     <>
       {searchParams?.alert && (
         <div className="mb-3">
-          <Alertbox type={searchParams?.alert || "info"}>
+          <Alertbox dismissible type={searchParams?.alert || "info"}>
             {searchParams?.message}
           </Alertbox>
         </div>
