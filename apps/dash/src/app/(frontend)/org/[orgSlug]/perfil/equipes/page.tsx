@@ -53,7 +53,7 @@ export default async function ProfilePage({
             ["success", "error", "warning", "info"].includes(
               searchParams.alert
             ) && (
-              <Alertbox type={searchParams.alert as AlertType}>
+              <Alertbox dismissible type={searchParams.alert as AlertType}>
                 {searchParams?.message}
               </Alertbox>
             )}
