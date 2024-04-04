@@ -224,7 +224,7 @@ export default function EventsContainer({
                 cell: (info) => (
                   <Link
                     className="underline"
-                    href={`/painel/eventos/${info.row.original.id}`}
+                    href={`/painel/eventos/${info.row.original.id}/geral`}
                   >
                     {info.getValue()}
                   </Link>

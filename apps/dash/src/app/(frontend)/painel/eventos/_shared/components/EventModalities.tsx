@@ -26,6 +26,7 @@ import { upsertEventModalityCategories } from "@/app/api/categories/action";
 import ModalityModal from "./ModalityModal";
 import ModalityCategoryModal from "./ModalityCategoryModal";
 import { usePanel } from "../../../_shared/components/PanelStore";
+import { Event } from "@prisma/client";
 
 export default function EventModalities({
   modalities,
@@ -33,7 +34,7 @@ export default function EventModalities({
   eventGroup,
 }: {
   modalities: EventModalityWithCategories[];
-  event?: EventWithRegistrationCount;
+  event?: Event;
   eventGroup?: EventGroupWithEvents;
 }) {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);

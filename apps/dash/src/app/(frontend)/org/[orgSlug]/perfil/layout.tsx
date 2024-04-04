@@ -10,6 +10,7 @@ import clsx from "clsx";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Sidebar from "./components/Sidebar";
+import { Alertbox } from "odinkit";
 
 export default async function OrgProfileLayout({
   children,

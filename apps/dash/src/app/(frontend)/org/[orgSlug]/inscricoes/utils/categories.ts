@@ -16,7 +16,12 @@ export function determineCategoryAvailability(
   category: ModalityCategory,
   user: { gender: string; birthDate: Date }
 ) {
-  const userAge = dayjs().diff(user.birthDate, "year");
+  const currentYear = dayjs().year();
+  const userBirthDateThisYear = Number(
+    dayjs(user.birthDate).toISOString().split("-")[0]
+  );
+  const userAge = currentYear - userBirthDateThisYear;
+
   if (
     (category?.gender === "unisex" || category.gender === user.gender) &&
     category.minAge <= userAge &&

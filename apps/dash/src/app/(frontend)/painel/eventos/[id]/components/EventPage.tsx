@@ -50,22 +50,14 @@ export default function UpdateEventPage({
   const steps: Step[] = [
     {
       title: "Geral",
-      content: <EventGeneralInfo event={event} />,
+      href: "/geral",
     },
     {
       title: "Modalidades",
-      content: <EventModalities event={event} modalities={modalities} />,
     },
     {
       title: "Lotes",
-      content: (
-        <EventBatches
-          organization={organization}
-          modalities={modalities}
-          event={event}
-          batches={batches}
-        />
-      ),
+
       disabled: modalities.every(
         (modality) => !modality.modalityCategory?.length
       ),

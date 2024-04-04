@@ -12,7 +12,12 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { EventAbsences, Organization, Team } from "@prisma/client";
+import {
+  EventAbsences,
+  EventRegistration,
+  Organization,
+  Team,
+} from "@prisma/client";
 import clsx from "clsx";
 import { set } from "lodash";
 import Image from "next/image";
@@ -39,7 +44,10 @@ import {
   EventGroupEventCheckinsAndAbsences,
   EventGroupWithEvents,
 } from "prisma/types/Events";
-import { EventGroupRegistration } from "prisma/types/Registrations";
+import {
+  EventGroupRegistration,
+  EventRegistrationWithInfo,
+} from "prisma/types/Registrations";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { connectRegistrationToTeamDto } from "@/app/api/registrations/dto";
 import { format } from "path";
@@ -54,18 +62,13 @@ const secondaryNavigation = [
     screen: "general",
   },
   {
-    name: "Presença",
-    icon: CheckIcon,
-    screen: "attendance",
-  },
-  {
     name: "Resultados",
     icon: ClipboardDocumentCheckIcon,
     screen: "results",
   },
 ];
 
-export function EventGroupRegistrationModal({
+export function EventRegistrationModal({
   registration,
   isOpen,
   setIsOpen,
@@ -73,7 +76,7 @@ export function EventGroupRegistrationModal({
   teams,
 }: {
   organization: Organization;
-  registration: EventGroupRegistration;
+  registration: EventRegistrationWithInfo;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   teams: Team[];
@@ -235,15 +238,7 @@ export function EventGroupRegistrationModal({
                     Evento
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {registration.eventGroup?.name}
-                  </dd>
-                </div>
-                <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium leading-6 text-gray-900">
-                    Etapas
-                  </dt>
-                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {registration.eventGroup?.Event?.length}
+                    {registration.event?.name}
                   </dd>
                 </div>
                 <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -362,98 +357,6 @@ export function EventGroupRegistrationModal({
               </dl>
             </div>
           )}
-          {screen === "attendance" && (
-            <>
-              <dl className="divide-y divide-gray-100">
-                {eventGroup && (
-                  <For each={eventGroup?.eventGroup.Event}>
-                    {(event) => {
-                      const eventCheckin = eventGroup?.EventCheckIn.find(
-                        (checkin) => checkin.eventId === event.id
-                      );
-                      const absenceJustification =
-                        eventGroup?.EventAbsences.find(
-                          (absence) => absence.eventId === event.id
-                        );
-
-                      function handleCheckinOrAbsence() {
-                        if (eventCheckin) {
-                          return (
-                            <Badge className="my-auto" color="green">
-                              Presente
-                            </Badge>
-                          );
-                        } else {
-                          if (event.status === "review") {
-                            switch (absenceJustification?.status) {
-                              case "approved":
-                                return (
-                                  <Badge className="my-auto" color="purple">
-                                    Ausência justificada
-                                  </Badge>
-                                );
-                              case "denied":
-                                return (
-                                  <Badge
-                                    className="my-auto cursor-pointer underline"
-                                    color="red"
-                                    onClick={() =>
-                                      handleAbsenceModal(absenceJustification)
-                                    }
-                                  >
-                                    Atestado reprovado (reenviar)
-                                  </Badge>
-                                );
-                              case "pending":
-                                if (absenceJustification.justificationUrl) {
-                                  return (
-                                    <Badge className="my-auto" color="yellow">
-                                      Atestado em Análise
-                                    </Badge>
-                                  );
-                                } else {
-                                  return (
-                                    <Badge
-                                      className="my-auto cursor-pointer underline"
-                                      color="amber"
-                                      onClick={() =>
-                                        handleAbsenceModal(absenceJustification)
-                                      }
-                                    >
-                                      Enviar Atestado
-                                    </Badge>
-                                  );
-                                }
-
-                              default:
-                                break;
-                            }
-                          }
-                        }
-                      }
-
-                      return (
-                        <>
-                          <div className="flex justify-between px-4 py-3 sm:gap-4 sm:px-0">
-                            <dt className="text-sm font-medium leading-6 text-gray-900">
-                              {event.name}
-                            </dt>
-                            <dd className="mt-1 flex justify-end text-sm leading-6 text-gray-700 sm:mt-0">
-                              {event.status === "published" && !eventCheckin ? (
-                                <Badge className="my-auto">Aberto</Badge>
-                              ) : (
-                                handleCheckinOrAbsence()
-                              )}
-                            </dd>
-                          </div>
-                        </>
-                      );
-                    }}
-                  </For>
-                )}
-              </dl>
-            </>
-          )}
         </DialogBody>
 
         <DialogActions className="flex justify-between">
@@ -478,14 +381,17 @@ function CancelEventGroupRegistrationAlert({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
   triggerCancellation: ({ registrationId }: { registrationId: string }) => void;
-  registration: EventGroupRegistration;
+  registration: EventGroupRegistration | EventRegistrationWithInfo;
 }) {
+  const isEventGroupRegistration = "eventGroup" in registration;
+  const isEventRegistration = "event" in registration;
   return (
     <>
       <Alert open={isOpen} onClose={setIsOpen}>
         <AlertTitle>
           Você tem certeza que deseja cancelar sua inscrição no(a){" "}
-          {registration.eventGroup?.name}?
+          {isEventGroupRegistration && registration.eventGroup?.name}
+          {isEventRegistration && registration.event?.name}?
         </AlertTitle>
         <AlertDescription>
           A inscrição será cancelada automaticamente em todas as etapas, e você
