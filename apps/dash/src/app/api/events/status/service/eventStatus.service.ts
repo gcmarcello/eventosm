@@ -178,6 +178,28 @@ async function updateEventStatusToFinished(data: {
   return { message: "Evento finalizado." };
 }
 
+async function updateEventStatusToDraft(data: { eventId: string }) {
+  await prisma.event.update({
+    where: {
+      id: data.eventId,
+    },
+    data: { status: "draft" },
+  });
+
+  return { message: "Evento voltado para rascunho." };
+}
+
+async function updateEventStatusToPublished(data: { eventId: string }) {
+  await prisma.event.update({
+    where: {
+      id: data.eventId,
+    },
+    data: { status: "published" },
+  });
+
+  return { message: "Evento publicado!" };
+}
+
 export async function updateEventStatus({
   status,
   eventId,
@@ -195,5 +217,10 @@ export async function updateEventStatus({
       return updateEventStatusToReview(args);
     case "finished":
       return updateEventStatusToFinished(args);
+    case "draft":
+      return updateEventStatusToDraft({ eventId });
+    case "published":
+      return updateEventStatusToPublished({ eventId });
   }
+  return { message: "Status do evento atualizado." };
 }

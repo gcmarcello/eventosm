@@ -45,17 +45,22 @@ import {
   ErrorMessage,
 } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
+import {
+  EventGroupWithEvents,
+  EventGroupWithInfo,
+  EventWithInfo,
+} from "prisma/types/Events";
 import { useEffect, useMemo, useState } from "react";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { calculatePrice } from "../../../utils/price";
-import { filterCategories } from "../../../utils/categories";
 import { eventGroupCreateRegistrationDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
 import { useSearchParams } from "next/navigation";
-import { createEventGroupIndividualRegistration } from "@/app/api/registrations/eventGroups/eventGroup.action";
+import { filterCategories } from "../../utils/categories";
+import { calculatePrice } from "../../utils/price";
+import { eventCreateRegistrationDto } from "@/app/api/registrations/events/event.dto";
+import { createEventIndividualRegistration } from "@/app/api/registrations/events/event.action";
 
-export default function IndividualTournamentRegistration({
-  eventGroup,
+export default function IndividualRegistration({
+  event,
   teams,
   batch,
   userSession,
@@ -64,7 +69,7 @@ export default function IndividualTournamentRegistration({
 }: {
   teams?: Team[];
   userSession: UserSession;
-  eventGroup: EventGroupWithInfo;
+  event: EventWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
   userInfo: UserInfo;
   organization: Organization;
@@ -72,16 +77,16 @@ export default function IndividualTournamentRegistration({
   const [showRules, setShowRules] = useState(false);
   const searchParams = useSearchParams();
   const form = useForm({
-    id: "TournamentIndividualRegistrationForm",
-    schema: eventGroupCreateRegistrationDto,
+    id: "IndividualRegistrationForm",
+    schema: eventCreateRegistrationDto,
     defaultValues: {
-      eventGroupId: eventGroup.id,
+      eventId: event.id,
       batchId: searchParams.get("batch") || undefined,
     },
   });
 
   const { data, isMutating, trigger } = useAction({
-    action: createEventGroupIndividualRegistration,
+    action: createEventIndividualRegistration,
     redirect: true,
     onSuccess: (data) =>
       showToast({
@@ -96,23 +101,20 @@ export default function IndividualTournamentRegistration({
   });
 
   useEffect(() => {
-    if (
-      eventGroup.EventModality.length === 1 &&
-      eventGroup.EventModality[0]?.id
-    ) {
-      form.setValue("registration.modalityId", eventGroup.EventModality[0].id);
+    if (event.EventModality.length === 1 && event.EventModality[0]?.id) {
+      form.setValue("registration.modalityId", event.EventModality[0].id);
     }
-  }, [eventGroup]);
+  }, [event]);
 
   const Field = useMemo(() => form.createField(), []);
 
   const categories = useMemo(
     () =>
       filterCategories(
-        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory),
+        event.EventModality.flatMap((mod) => mod.modalityCategory),
         userInfo
       ),
-    [eventGroup]
+    [event]
   );
 
   useEffect(() => {
@@ -124,12 +126,12 @@ export default function IndividualTournamentRegistration({
     <>
       <Dialog open={showRules} onClose={setShowRules}>
         <DialogTitle onClose={() => setShowRules(false)} className="">
-          Regulamento {eventGroup.name}
+          Regulamento {event.name}
         </DialogTitle>
         <DialogBody>
           <div
             dangerouslySetInnerHTML={{
-              __html: eventGroup.rules ?? "Regulamento não disponível.",
+              __html: event.rules ?? "Regulamento não disponível.",
             }}
           />
         </DialogBody>
@@ -143,19 +145,16 @@ export default function IndividualTournamentRegistration({
           <div>
             <div className="mt-4 text-xl font-medium lg:mt-0">
               {" "}
-              {eventGroup.name}
+              {event.name}
             </div>
-            <Text>
-              Inscrição para todas as etapas ({eventGroup.Event.length}
-              ).
-            </Text>
+            <Text>Inscrição para o evento.</Text>
             {batch.name && <Text>Lote {batch.name}</Text>}
           </div>
           <div className="relative h-20 w-32 ">
             <Image
               className="rounded-md"
               fill={true}
-              src={eventGroup.imageUrl || ""}
+              src={event.imageUrl || ""}
               alt="imagem do campeonato"
             />
           </div>
@@ -171,11 +170,11 @@ export default function IndividualTournamentRegistration({
                 form: (
                   <Fieldset className={"grid grid-cols-2 lg:divide-x"}>
                     <FieldGroup className="col-span-2 lg:col-span-2 lg:pe-4">
-                      {eventGroup.EventModality.length > 1 ? (
+                      {event.EventModality.length > 1 ? (
                         <Field name="registration.modalityId">
                           <Label>Selecionar Modalidade</Label>
                           <Select
-                            data={eventGroup.EventModality}
+                            data={event.EventModality}
                             valueKey="id"
                             displayValueKey="name"
                           />
@@ -184,7 +183,7 @@ export default function IndividualTournamentRegistration({
                         <Text className="mb-3">
                           Modalidade Única -{" "}
                           {
-                            eventGroup.EventModality.find(
+                            event.EventModality.find(
                               (mod) =>
                                 mod.id ===
                                 form.getValues("registration.modalityId")
@@ -199,7 +198,7 @@ export default function IndividualTournamentRegistration({
                             form.watch("registration.modalityId") === undefined
                           }
                           data={filterCategories(
-                            eventGroup.EventModality.find(
+                            event.EventModality.find(
                               (mod) =>
                                 mod.id === form.watch("registration.modalityId")
                             )?.modalityCategory || [],
@@ -237,9 +236,7 @@ export default function IndividualTournamentRegistration({
               },
               addon: {
                 fields: [],
-                conditions: [
-                  eventGroup.EventAddon && eventGroup.EventAddon?.length > 0,
-                ],
+                conditions: [event.EventAddon && event.EventAddon?.length > 0],
                 form: (
                   <Fieldset>
                     <FieldGroup className="col-span-2 lg:col-span-1 lg:ps-4">
@@ -256,7 +253,7 @@ export default function IndividualTournamentRegistration({
                             "wrap flex max-w-[100vw] flex-col justify-between space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0"
                           }
                         >
-                          <For each={eventGroup.EventAddon || []}>
+                          <For each={event.EventAddon || []}>
                             {(addon) => {
                               const options =
                                 (addon.options as (string | number)[])?.map(
@@ -378,16 +375,16 @@ export default function IndividualTournamentRegistration({
                               : "Unissex"}
                         </dd>
                       </div>
-                      {eventGroup.EventAddon?.length
-                        ? eventGroup.EventAddon?.length > 0 && (
+                      {event.EventAddon?.length
+                        ? event.EventAddon?.length > 0 && (
                             <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                               <dt className=" font-medium leading-6 text-gray-900">
-                                {eventGroup.EventAddon?.find(
+                                {event.EventAddon?.find(
                                   (addon) =>
                                     addon.id ===
                                     form.watch("registration.addon.id")
                                 )?.name
-                                  ? eventGroup.EventAddon?.find(
+                                  ? event.EventAddon?.find(
                                       (addon) =>
                                         addon.id ===
                                         form.watch("registration.addon.id")
@@ -395,13 +392,13 @@ export default function IndividualTournamentRegistration({
                                   : "Nenhum"}
                               </dt>
                               {(form.watch("registration.addon")?.option ||
-                                eventGroup.EventAddon?.find(
+                                event.EventAddon?.find(
                                   (addon) => !addon.price
                                 )) && (
                                 <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                                   {form.watch("registration.addon")?.option ? (
                                     form.watch("registration.addon")?.option
-                                  ) : eventGroup.EventAddon?.find(
+                                  ) : event.EventAddon?.find(
                                       (addon) => !addon.price
                                     ) ? (
                                     <div className="font-medium text-red-600">
@@ -416,14 +413,6 @@ export default function IndividualTournamentRegistration({
                           )
                         : null}
 
-                      <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                        <dt className=" font-medium leading-6 text-gray-900">
-                          Etapas
-                        </dt>
-                        <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                          {eventGroup.Event.length}
-                        </dd>
-                      </div>
                       <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                         <dt className=" font-medium leading-6 text-gray-900">
                           Preço
@@ -431,7 +420,7 @@ export default function IndividualTournamentRegistration({
                         <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                           {calculatePrice({
                             addonPrice:
-                              eventGroup.EventAddon?.find(
+                              event.EventAddon?.find(
                                 (addon) =>
                                   addon.id ===
                                   form.watch("registration.addon.id")

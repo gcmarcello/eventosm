@@ -3,38 +3,10 @@
 import { updateOrganization } from "@/app/api/orgs/action";
 import { upsertOrganizationDto } from "@/app/api/orgs/dto";
 
-import { usePanel } from "../../_shared/components/PanelStore";
-import { useMemo, useRef } from "react";
-import {
-  Button,
-  Description,
-  ErrorMessage,
-  FieldGroup,
-  Fieldset,
-  FileDropArea,
-  FileInput,
-  Form,
-  Input,
-  Label,
-  Legend,
-  showToast,
-  useAction,
-  useForm,
-} from "odinkit/client";
-import {
-  BottomNavigation,
-  ButtonSpinner,
-  Step,
-  Steps,
-  SubmitButton,
-  Text,
-  formatPhone,
-} from "odinkit";
-import { z } from "odinkit";
-import GeneralInfoSection from "./GeneralInfoSection";
-import PersonalizationSection from "./PersonalizationSection";
+import { Form, showToast, useAction, useForm } from "odinkit/client";
+import { BottomNavigation, SubmitButton, formatPhone } from "odinkit";
+
 import { Organization } from "@prisma/client";
-import ImagesSection from "./ImagesSection";
 
 export default function UpdateOrgForm({
   organization,

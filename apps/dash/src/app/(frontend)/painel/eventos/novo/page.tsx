@@ -11,11 +11,12 @@ import {
 } from "odinkit/client";
 import { useEffect, useMemo, useRef } from "react";
 import { usePanel } from "../../_shared/components/PanelStore";
-import { Steps, BottomNavigation } from "odinkit";
+import { Steps, BottomNavigation, SubmitButton } from "odinkit";
 import EventInfo from "./components/EventInfo";
 import SportInfo from "./components/SportInfo";
 import StepControl from "./components/StepControl";
 import { z } from "odinkit";
+import { uploadFiles } from "@/app/api/uploads/action";
 
 export default function NewEventPage() {
   const form = useForm({
@@ -47,6 +48,13 @@ export default function NewEventPage() {
         variant: "success",
       });
     },
+    onError: (error) => {
+      showToast({
+        message: error.message,
+        title: "Erro",
+        variant: "error",
+      });
+    },
     redirect: true,
   });
 
@@ -60,22 +68,6 @@ export default function NewEventPage() {
   ];
 
   const step = useSteps({ currentStep: 1, stepCount: steps.length - 1 });
-
-  function blockNextStep() {
-    if (step.currentStep === steps.length - 1) {
-      return !form.formState.isValid;
-    }
-
-    const invalidFields =
-      form.getFieldState("name").invalid ||
-      form.getFieldState("location").invalid ||
-      form.getFieldState("dateStart").invalid ||
-      form.getFieldState("dateEnd").invalid ||
-      form.getFieldState("slug").invalid;
-
-    if (invalidFields) return true;
-    return false;
-  }
 
   const mocker = useMocker({
     form,
@@ -93,33 +85,30 @@ export default function NewEventPage() {
   });
 
   return (
-    <Form hform={form} onSubmit={(data) => trigger(data)}>
+    <Form
+      hform={form}
+      onSubmit={async (data) => {
+        const { image, ...rest } = data;
+
+        const uploadedFiles = await uploadFiles(
+          [{ name: "image", file: image ? image[0] : [] }],
+          "events/"
+        );
+
+        await trigger({ ...rest, imageUrl: uploadedFiles?.image?.url });
+      }}
+    >
       <div className="pb-20 lg:pb-4">
-        <Steps
-          color={primaryColor?.hex}
-          steps={steps}
-          stepRefs={stepRefs}
-          topRef={topRef}
-        />
+        <Steps steps={steps} stepRefs={stepRefs} topRef={topRef} />
         <div className="hidden lg:block">
           <hr />
           <div className="mt-3 flex justify-between">
-            <StepControl
-              blockNextStep={blockNextStep()}
-              steps={steps}
-              stepRefs={stepRefs}
-              topRef={topRef}
-            />
+            <SubmitButton>Enviar</SubmitButton>
           </div>
         </div>
       </div>
       <BottomNavigation className="flex justify-between p-3 lg:hidden">
-        <StepControl
-          blockNextStep={blockNextStep()}
-          steps={steps}
-          stepRefs={stepRefs}
-          topRef={topRef}
-        />
+        <SubmitButton>Enviar</SubmitButton>
       </BottomNavigation>
     </Form>
   );

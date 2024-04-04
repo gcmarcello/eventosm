@@ -94,15 +94,14 @@ export async function upsertEvent(request: UpsertEventDto) {
         message: "Evento atualizado com sucesso.",
       });
     }
-
-    revalidatePath(`/painel/eventos/${request.id}`);
-    return ActionResponse.success({
-      redirect: `/painel/eventos/`,
-      message: "Evento criado com sucesso.",
-    });
   } catch (error) {
     return ActionResponse.error(error);
   }
+
+  return ActionResponse.success({
+    redirect: `/painel/eventos/`,
+    message: "Evento criado com sucesso.",
+  });
 }
 
 export async function upsertEventModality(request: UpsertEventModalityDto) {
