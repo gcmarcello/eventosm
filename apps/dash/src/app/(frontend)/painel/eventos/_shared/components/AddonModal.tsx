@@ -148,7 +148,7 @@ export default function AddonModal({
                     <Label>Imagem do Kit</Label>
                     <div className="flex flex-col justify-between lg:flex-row">
                       <FileInput
-                        className={"flex"}
+                        className={"flex w-full"}
                         fileTypes={["png", "jpg", "jpeg"]}
                         maxFiles={1}
                         maxSize={1}
