@@ -1,12 +1,15 @@
 import { readOrganizations } from "@/app/api/orgs/service";
-import UpdateOrgForm from "./components/UpdateOrgForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import UpdateOrgForm from "../components/UpdateOrgForm";
+import GeneralInfoSection from "../components/GeneralInfoSection";
+import PersonalizationSection from "../components/PersonalizationSection";
 
-export default async function OrgSettingsPage() {
+export default async function PersonalizationPage() {
   const activeOrg = cookies().get("activeOrg")?.value;
   if (!activeOrg) redirect("/painel");
   const organization = await readOrganizations({ where: { id: activeOrg } });
   if (!organization[0]) redirect("/painel");
-  return <UpdateOrgForm organization={organization[0]} />;
+
+  return <PersonalizationSection organization={organization[0]} />;
 }

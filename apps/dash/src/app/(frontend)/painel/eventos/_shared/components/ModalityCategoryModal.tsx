@@ -160,19 +160,21 @@ export default function ModalityCategoryModal({
               </For>
             </>
           ) : (
-            <Table
-              data={fields.filter((item) => item.name)}
-              search={false}
-              columns={(columnHelper) => [
-                columnHelper.accessor("name", {
-                  id: "name",
-                  header: "Nome",
-                  enableSorting: true,
-                  enableGlobalFilter: true,
-                  cell: (info) => info.getValue(),
-                }),
-              ]}
-            />
+            <div>
+              <Table
+                data={fields.filter((item) => item.name)}
+                search={false}
+                columns={(columnHelper) => [
+                  columnHelper.accessor("name", {
+                    id: "name",
+                    header: "Nome",
+                    enableSorting: true,
+                    enableGlobalFilter: true,
+                    cell: (info) => info.getValue(),
+                  }),
+                ]}
+              />
+            </div>
           )}
         </DialogBody>
         <DialogActions>

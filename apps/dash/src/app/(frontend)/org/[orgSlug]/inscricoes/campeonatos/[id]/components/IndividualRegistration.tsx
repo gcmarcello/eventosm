@@ -51,8 +51,8 @@ import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { calculatePrice } from "../../../utils/price";
 import { filterCategories } from "../../../utils/categories";
 import { eventGroupCreateRegistrationDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
-import { createEventGroupIndividualRegistration } from "@/app/api/registrations/action";
 import { useSearchParams } from "next/navigation";
+import { createEventGroupIndividualRegistration } from "@/app/api/registrations/eventGroups/eventGroup.action";
 
 export default function IndividualTournamentRegistration({
   eventGroup,

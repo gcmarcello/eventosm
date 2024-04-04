@@ -298,15 +298,7 @@ export default function ProfileContainer({
                           >
                             Cancelar
                           </button>
-                          <SubmitButton
-                            className="rounded-md p-2 font-semibold hover:bg-gray-50"
-                            style={{
-                              color:
-                                organization?.options.colors.primaryColor.hex,
-                            }}
-                          >
-                            Salvar
-                          </SubmitButton>
+                          <SubmitButton>Salvar</SubmitButton>
                         </div>
                       </>
                     ) : (
@@ -366,7 +358,7 @@ export default function ProfileContainer({
         >
           <For each={connectedOrgs}>
             {(org: Organization) => (
-              <li className="flex justify-between gap-x-6 py-6">
+              <li className="flex items-center justify-between gap-x-6 py-6">
                 <Image
                   alt="logo"
                   height={64}

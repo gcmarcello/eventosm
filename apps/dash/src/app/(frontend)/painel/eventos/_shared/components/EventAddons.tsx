@@ -18,9 +18,11 @@ import { usePanel } from "../../../_shared/components/PanelStore";
 export default function EventAddons({
   addons,
   eventGroup,
+  eventId,
 }: {
   addons: EventAddon[];
-  eventGroup: EventGroupWithEvents;
+  eventGroup?: EventGroupWithEvents;
+  eventId?: string;
 }) {
   const [isAddonModalOpen, setIsAddonModalOpen] = useState(false);
   const [selectedAddon, setSelectedAddon] = useState<EventAddon | null>(null);
@@ -38,7 +40,8 @@ export default function EventAddons({
       <AddonModal
         isOpen={isAddonModalOpen}
         setIsOpen={setIsAddonModalOpen}
-        eventGroupId={eventGroup.id}
+        eventGroupId={eventGroup?.id}
+        eventId={eventId}
         addon={selectedAddon}
       />
       <div className="flex justify-end">

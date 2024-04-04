@@ -195,7 +195,7 @@ export default function PanelSideBar() {
                           }}
                         >
                           <Link
-                            href="/painel/configuracoes"
+                            href="/painel/configuracoes/geral"
                             className={clsx(
                               "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
 
@@ -285,7 +285,7 @@ export default function PanelSideBar() {
                         organization.options?.colors.primaryColor.hex || "#FFF"
                       ),
                     }}
-                    href="/painel/configuracoes"
+                    href="/painel/configuracoes/geral"
                     className={clsx(
                       "group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
 

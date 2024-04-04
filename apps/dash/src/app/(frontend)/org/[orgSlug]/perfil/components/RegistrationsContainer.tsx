@@ -4,6 +4,8 @@ import { EventRegistration, Organization, Team } from "@prisma/client";
 import EventGroupRegistrationCard from "./EventGroupRegistrationCard";
 import { useEffect, useState } from "react";
 import { EventGroupRegistrationModal } from "./EventGroupRegistrationModal";
+import { EventRegistrationModal } from "./EventRegistrationModal";
+import EventRegistrationCard from "./EventRegistrationCard";
 
 export default function RegistrationsContainer({
   registrations,
@@ -27,11 +29,27 @@ export default function RegistrationsContainer({
       <div>
         <Heading>Inscrições Ativas</Heading>
         {registrations.filter((reg) => reg.status === "active").length > 0 ? (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <For each={registrations.filter((reg) => reg.status === "active")}>
+          <div className="mt-2 grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <For
+              each={registrations
+                .filter((reg) => reg.status === "active")
+                .sort(
+                  (a, b) =>
+                    a.createdAt.getMilliseconds() -
+                    b.createdAt.getMilliseconds()
+                )}
+            >
               {(registration) => {
+                if (registration.eventGroupId) {
+                  return (
+                    <EventGroupRegistrationCard
+                      handleModalOpen={handleModalOpen}
+                      registration={registration}
+                    />
+                  );
+                }
                 return (
-                  <EventGroupRegistrationCard
+                  <EventRegistrationCard
                     handleModalOpen={handleModalOpen}
                     registration={registration}
                   />
@@ -65,15 +83,25 @@ export default function RegistrationsContainer({
           <Text>Nenhuma inscrição pendente.</Text>
         )}
       </div>
-      {modalInfo && (
-        <EventGroupRegistrationModal
-          organization={organization}
-          teams={teams}
-          registration={modalInfo}
-          isOpen={modalOpen}
-          setIsOpen={setModalOpen}
-        />
-      )}
+      {modalInfo ? (
+        modalInfo.eventGroupId ? (
+          <EventGroupRegistrationModal
+            organization={organization}
+            teams={teams}
+            registration={modalInfo}
+            isOpen={modalOpen}
+            setIsOpen={setModalOpen}
+          />
+        ) : (
+          <EventRegistrationModal
+            organization={organization}
+            teams={teams}
+            registration={modalInfo}
+            isOpen={modalOpen}
+            setIsOpen={setModalOpen}
+          />
+        )
+      ) : null}
     </div>
   );
 }

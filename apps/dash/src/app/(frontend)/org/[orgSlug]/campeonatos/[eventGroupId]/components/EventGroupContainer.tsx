@@ -301,6 +301,7 @@ export default function EventGroupContainer({
                   {isUserRegistered && (
                     <Button
                       href={`/perfil`}
+                      className={"w-full"}
                       color={organization.options.colors.primaryColor.tw.color}
                     >
                       <QrCodeIcon

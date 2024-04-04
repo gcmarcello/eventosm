@@ -17,47 +17,7 @@ import {
   EventGroupCreateRegistrationDto,
 } from "./eventGroups/eventGroup.dto";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
-
-export async function createEventGroupIndividualRegistration(
-  request: EventGroupCreateRegistrationDto
-) {
-  try {
-    const { request: parsedRequest } = await UseMiddlewares(request).then(
-      UserSessionMiddleware
-    );
-    await eventGroupService.createEventGroupRegistration(parsedRequest);
-  } catch (error) {
-    console.log(error);
-    return ActionResponse.error(error);
-  }
-
-  return ActionResponse.success({
-    redirect: "/perfil",
-  });
-}
-
-export async function createEventGroupMultipleRegistrations(
-  request: EventGroupCreateMultipleRegistrationsDto
-) {
-  let newRegistrations;
-  try {
-    const { request: parsedRequest } = await UseMiddlewares(request).then(
-      UserSessionMiddleware
-    );
-
-    newRegistrations =
-      await eventGroupService.createEventGroupMultipleRegistrations(
-        parsedRequest
-      );
-  } catch (error) {
-    console.log(error);
-    return ActionResponse.error(error);
-  }
-
-  return ActionResponse.success({
-    redirect: "/perfil",
-  });
-}
+import { EventCreateRegistrationDto } from "./events/event.dto";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   try {
@@ -77,19 +37,21 @@ export async function cancelRegistration(request: { registrationId: string }) {
       UserSessionMiddleware
     );
 
-    const cancelledRegistration = await service.updateRegistrationStatus({
+    await service.updateRegistrationStatus({
       ...parsedRequest,
       status: "cancelled",
-    });
-    revalidatePath("/perfil");
-    return ActionResponse.success({
-      message: "Inscrição cancelada com sucesso.",
-      data: cancelledRegistration,
     });
   } catch (error) {
     console.log(error);
     return ActionResponse.error(error);
   }
+
+  return ActionResponse.success({
+    message: "Inscrição cancelada com sucesso.",
+    redirect: encodeURI(
+      "/perfil?alert=success&message=Inscrição cancelada com sucesso!"
+    ),
+  });
 }
 
 export async function connectRegistrationToTeam(

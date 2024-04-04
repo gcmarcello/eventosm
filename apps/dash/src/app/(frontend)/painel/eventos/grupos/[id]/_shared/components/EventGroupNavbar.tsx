@@ -12,7 +12,6 @@ const steps = [
   { name: "kits", title: "Kits", disabled: false },
   { name: "lotes", title: "Lotes", disabled: false },
   { name: "inscritos", title: "Inscritos", disabled: false },
-  /*     { name: "realizacao", title: "Realização", disabled: false }, */
 ];
 
 export function EventGroupNavbar({

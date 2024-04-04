@@ -21,6 +21,13 @@ export type EventGroupRegistration = EventRegistration & {
   team?: Team;
 };
 
+export type EventRegistrationWithInfo = EventRegistration & {
+  event?: Event;
+  modality?: EventModality;
+  category?: ModalityCategory;
+  team?: Team;
+};
+
 export type EventRegistrationWithEvent = EventRegistration & {
   event?: Event;
 };

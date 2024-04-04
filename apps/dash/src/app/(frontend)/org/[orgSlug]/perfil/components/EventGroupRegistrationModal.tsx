@@ -45,6 +45,7 @@ import { connectRegistrationToTeamDto } from "@/app/api/registrations/dto";
 import { format } from "path";
 import DocumentModal from "./AbsenceJustificationModal";
 import AbsenceJustificationModal from "./AbsenceJustificationModal";
+import { redirect } from "next/dist/server/api-utils";
 
 const secondaryNavigation = [
   {
@@ -94,6 +95,7 @@ export function EventGroupRegistrationModal({
     isMutating,
   } = useAction({
     action: cancelRegistration,
+    redirect: true,
     onSuccess: () => {
       setIsOpen(false);
       setShowCancelAlert(false);

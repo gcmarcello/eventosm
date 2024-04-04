@@ -1,7 +1,7 @@
 import { readRegistrations } from "@/app/api/registrations/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
-import { For, Heading } from "odinkit";
+import { Alertbox, For, Heading } from "odinkit";
 import EventGroupRegistrationCard from "./components/EventGroupRegistrationCard";
 import RegistrationsContainer from "./components/RegistrationsContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
@@ -9,8 +9,13 @@ import { notFound } from "next/navigation";
 
 export default async function RegistrationsPage({
   params,
+  searchParams,
 }: {
   params: { orgSlug: string };
+  searchParams: {
+    alert: "success" | "warning" | "info" | "error";
+    message?: string;
+  };
 }) {
   const organization = (
     await readOrganizations({
@@ -43,10 +48,19 @@ export default async function RegistrationsPage({
   });
 
   return (
-    <RegistrationsContainer
-      registrations={registrations}
-      teams={teams}
-      organization={organization}
-    />
+    <>
+      {searchParams?.alert && (
+        <div className="mb-3">
+          <Alertbox dismissible type={searchParams?.alert || "info"}>
+            {searchParams?.message}
+          </Alertbox>
+        </div>
+      )}
+      <RegistrationsContainer
+        registrations={registrations}
+        teams={teams}
+        organization={organization}
+      />
+    </>
   );
 }

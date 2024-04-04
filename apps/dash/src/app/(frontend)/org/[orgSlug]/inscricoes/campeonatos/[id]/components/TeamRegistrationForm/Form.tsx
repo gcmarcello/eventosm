@@ -26,7 +26,7 @@ import { useSearchParams } from "next/navigation";
 import { TeamWithUsers } from "prisma/types/Teams";
 import { AddonsForm } from "./AddonsForm";
 import { eventGroupCreateMultipleRegistrationsDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
-import { createEventGroupMultipleRegistrations } from "@/app/api/registrations/action";
+import { createEventGroupMultipleRegistrations } from "@/app/api/registrations/eventGroups/eventGroup.action";
 
 dayjs.extend(customParseFormat);
 

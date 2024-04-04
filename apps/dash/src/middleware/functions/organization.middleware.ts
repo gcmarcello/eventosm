@@ -14,7 +14,7 @@ export async function OrganizationMiddleware<T>({
 
   if (!activeOrg) throw "Você não está em uma organização.";
 
-  const organization = await prisma.organization.findFirst({
+  const organization = await prisma.organization.findUnique({
     where: {
       id: activeOrg,
     },
@@ -26,10 +26,7 @@ export async function OrganizationMiddleware<T>({
   const userRole = await prisma.user.findFirst({
     where: { id: request.userSession.id },
     select: {
-      OrganizationRole: {
-        where: { organizationId: activeOrg },
-        include: { OrganizationRolePermission: true },
-      },
+      UserOrgLink: true,
     },
   });
 
