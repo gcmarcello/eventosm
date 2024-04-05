@@ -14,7 +14,7 @@ import { chooseTextColor } from "@/utils/colors";
 import { sendEmail } from "../../emails/service";
 import { RegistrationDto } from "../dto";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { BatchCoupon } from "@prisma/client";
+import { BatchCoupon, EventRegistrationStatus } from "@prisma/client";
 import { formatCPF } from "odinkit";
 
 export async function createEventIndividualRegistration(
@@ -229,7 +229,7 @@ export async function createEventMultipleRegistrations(
       teamId: request?.teamId || null,
       eventId: request.eventId,
       code: (eventRegistrations + (index + 1)).toString(),
-      status: "active",
+      status: "active" as EventRegistrationStatus,
     });
 
     emailArray.push({
@@ -331,7 +331,11 @@ async function verifyEventAvailableSlots({
 
   if (!batch) throw "Lote de inscrição não encontrado";
   const registrationsCount = await prisma.eventRegistration.count({
-    where: { eventId, batchId: batch.id, status: { not: "cancelled" } },
+    where: {
+      eventId,
+      batchId: batch.id,
+      status: { not: { in: ["cancelled", "suspended"] } },
+    },
   });
 
   if (registrationsCount + registrations.length > batch.maxRegistrations)
@@ -350,7 +354,7 @@ async function verifyEventAvailableSlots({
           where: {
             eventId,
             categoryId: category.categoryId,
-            status: { not: "cancelled" },
+            status: { not: { in: ["cancelled", "suspended"] } },
           },
         });
       const count =
