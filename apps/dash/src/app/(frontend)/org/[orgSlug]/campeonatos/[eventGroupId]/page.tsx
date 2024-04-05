@@ -68,7 +68,7 @@ export default async function TorneioPage({
     where: {
       eventGroupId: eventGroup.id,
       batchId: batch?.id,
-      status: { not: "cancelled" },
+      status: "active",
     },
   });
 

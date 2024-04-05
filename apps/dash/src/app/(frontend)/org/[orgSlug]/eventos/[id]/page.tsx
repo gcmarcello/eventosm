@@ -55,7 +55,7 @@ export default async function EventPage({
     where: {
       eventId: event.id,
       batchId: batch?.id,
-      status: { not: "cancelled" },
+      status: "active",
     },
   });
 
