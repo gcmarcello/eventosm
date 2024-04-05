@@ -28,8 +28,6 @@ export default async function InstitutionalPage({
     where: { organizationId: organization.id, status: "published" },
   });
 
-  console.log(documents);
-
   const years = [
     ...new Set(documents.map((obj) => dayjs(obj.createdAt).year())),
   ];
@@ -45,7 +43,7 @@ export default async function InstitutionalPage({
           fornecemos informações sobre nossa estrutura organizacional, incluindo
           os membros de nosso conselho e equipe administrativa.
         </Text>
-        <Text>
+        <Text className="hidden lg:block">
           Além disso, nossa página de Transparência oferece informações sobre
           nosso orçamento, finanças e investimentos. Publicamos anualmente
           nossos balanços financeiros, demonstrações de resultados e relatórios
@@ -53,7 +51,7 @@ export default async function InstitutionalPage({
           financeiro de nossa entidade. Estamos comprometidos em manter um alto
           nível de integridade e ética em nossas operações.
         </Text>
-        <Text>
+        <Text className="hidden lg:block">
           Como tal, nossa página de Transparência e Institucional é atualizada
           regularmente e estamos sempre disponíveis para responder a quaisquer
           dúvidas ou preocupações que nossos membros possam ter.
