@@ -57,10 +57,11 @@ export async function middleware(request: NextRequest) {
       "/perfil",
     ]) &&
     !(await userId())
-  )
+  ) {
     return authRedirect({
       url: `/login?&redirect=${request.nextUrl.pathname}`,
     });
+  }
 
   if (!userId) return NextResponse.next();
 

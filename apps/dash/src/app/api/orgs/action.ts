@@ -1,6 +1,10 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UpdateOrganizationStyleDto, UpsertOrganizationDto } from "./dto";
+import {
+  UpdateOrganizationStyleDto,
+  UpsertOrganizationDocumentDto,
+  UpsertOrganizationDto,
+} from "./dto";
 import * as service from "./service";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { cookies } from "next/headers";
@@ -64,6 +68,41 @@ export async function updateOrganizationStyle(
     message: "Organização atualizada com sucesso.",
     data: organization,
   });
+}
+
+export async function upsertOrganizationDocument(
+  request: UpsertOrganizationDocumentDto
+) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+
+    const document = await service.upsertOrganizationDocument(parsedRequest);
+    revalidatePath(`/painel/documentos`);
+    return ActionResponse.success({
+      data: document,
+      message: request.id
+        ? "Documento atualizado com sucesso."
+        : "Documento criado com sucesso.",
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function readOrganizationDocument(request: { id: string }) {
+  const { request: parsedRequest } = await UseMiddlewares(request).then(
+    UserSessionMiddleware
+  );
+
+  try {
+    const url = await service.readOrganizationDocument(parsedRequest);
+    return ActionResponse.success({ data: url });
+  } catch (error) {
+    return ActionResponse.error(error);
+  }
 }
 
 export async function changeActiveOrganization(orgId: string) {

@@ -1,6 +1,10 @@
 import { z } from "odinkit";
 import { readDto } from "../_shared/dto/read";
-import { ColorId } from "@prisma/client";
+import {
+  ColorId,
+  OrganizationDocumentStatus,
+  OrganizationDocumentType,
+} from "@prisma/client";
 
 export const upsertOrganizationDto = z.object({
   name: z
@@ -67,3 +71,17 @@ const readOrganizationDto = readDto(
 );
 
 export type ReadOrganizationDto = z.infer<typeof readOrganizationDto>;
+
+export const upsertOrganizationDocumentDto = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional(),
+  key: z.string(),
+  highlight: z.boolean().optional(),
+  status: z.nativeEnum(OrganizationDocumentStatus),
+  type: z.nativeEnum(OrganizationDocumentType),
+});
+
+export type UpsertOrganizationDocumentDto = z.infer<
+  typeof upsertOrganizationDocumentDto
+>;
