@@ -3,11 +3,13 @@ import {
   UpsertOrganizationDto,
   ReadOrganizationDto,
   UpdateOrganizationStyleDto,
+  UpsertOrganizationDocumentDto,
 } from "./dto";
 import { prisma } from "prisma/prisma";
 import { generateColorJson } from "../colors/service";
 import { normalizePhone } from "odinkit";
-import { Organization } from "@prisma/client";
+import { Organization, OrganizationDocumentStatus } from "@prisma/client";
+import { getPreSignedURL } from "../uploads/service";
 
 export async function createOrganization(
   request: UpsertOrganizationDto & { userSession: UserSession }
@@ -190,4 +192,36 @@ export async function readConnectedOrganizations({
       },
     },
   });
+}
+
+export async function upsertOrganizationDocument(
+  data: UpsertOrganizationDocumentDto & {
+    userSession: UserSession;
+    organization: Organization;
+  }
+) {
+  const { userSession, organization, ...documentData } = data;
+  const id = documentData.id || crypto.randomUUID();
+  const document = await prisma.organizationDocument.upsert({
+    where: { id },
+    create: {
+      ...documentData,
+      organizationId: organization.id,
+    },
+    update: {
+      ...documentData,
+    },
+  });
+
+  return document;
+}
+
+export async function readOrganizationDocument(data: { id: string }) {
+  const document = await prisma.organizationDocument.findUnique({
+    where: { id: data.id },
+  });
+
+  if (!document) throw "Documento não encontrado.";
+
+  return await getPreSignedURL({ key: `orgdocuments/${document.key}` });
 }
