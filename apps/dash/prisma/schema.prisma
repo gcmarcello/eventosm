@@ -496,7 +496,7 @@ enum EventRegistrationStatus {
 
 model EventRegistration {
   id                  String                  @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  code                String                  @db.VarChar
+  code                String?                 @db.VarChar
   user                User                    @relation(fields: [userId], references: [id])
   userId              String                  @db.Uuid
   event               Event?                  @relation(fields: [eventId], references: [id])
@@ -516,7 +516,7 @@ model EventRegistration {
   addon               EventAddon?             @relation(fields: [addonId], references: [id])
   addonId             String?                 @db.Uuid
   addonOption         String?
-  status              EventRegistrationStatus
+  status              EventRegistrationStatus @default(pending)
   order               Order?                  @relation(fields: [orderId], references: [id])
   orderId             String?                 @db.Uuid
   qrCode              String
