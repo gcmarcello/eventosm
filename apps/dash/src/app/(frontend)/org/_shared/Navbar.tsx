@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
@@ -21,6 +21,11 @@ const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Eventos", href: "/eventos", current: false },
   { name: "Notícias", href: "/noticias", current: false },
+  {
+    name: "Institucional",
+    href: "/institucional",
+    current: false,
+  },
   /*   { name: "Transparência", href: "/transparencia", current: false },
   { name: "Contato", href: "/contato", current: false }, */
 ];
@@ -33,7 +38,6 @@ export function CompanyNavbar({
   user?: UserSession | null;
 }) {
   const pathName = usePathname();
-  const router = useRouter();
 
   const userNavigation = [
     { name: "Meu Perfil", href: "/perfil" },
@@ -41,7 +45,6 @@ export function CompanyNavbar({
     { name: "Configurações", href: "/perfil/configurações" },
     { name: "Sair", onClick: () => logout(pathName) },
   ];
-  let [isOpen, setIsOpen] = useState(false);
   const colors = organization.options.colors;
   const form = useForm({
     schema: loginDto,
@@ -51,20 +54,19 @@ export function CompanyNavbar({
     },
   });
 
-  const { trigger: loginTrigger, isMutating: isLoading } = useAction({
+  /* const { trigger: loginTrigger, isMutating: isLoading } = useAction({
     action: login,
     redirect: true,
     onError: (error) => {
       form.resetField("password");
       showToast({ message: error.message, variant: "error", title: "Erro" });
-      /* form.setError("root.serverError", {
+      form.setError("root.serverError", {
         type: "400",
         message: (error as string) || "Erro inesperado",
-      }); */
+      });
     },
-  });
+  }); */
 
-  const Field = useMemo(() => form.createField(), []);
   return (
     <>
       <div className="sticky top-0 z-10 min-h-full w-full ring-1 ring-gray-700/25">
@@ -86,6 +88,11 @@ export function CompanyNavbar({
                     <div className="hidden sm:-my-px sm:ml-6 sm:space-x-4 md:flex">
                       <For each={navigation} key="navigation">
                         {(item) => {
+                          if (
+                            item.name === "Institucional" &&
+                            !organization.options.pages?.documents
+                          )
+                            return <></>;
                           return (
                             <a
                               key={item.name}
