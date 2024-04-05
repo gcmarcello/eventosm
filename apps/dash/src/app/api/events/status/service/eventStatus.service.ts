@@ -2,6 +2,7 @@ import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { Organization } from "@prisma/client";
 import { UpdateEventStatusDto } from "../dto";
 import dayjs from "dayjs";
+import { isNumber } from "lodash";
 
 async function updateEventStatusToReview(data: {
   eventId: string;
@@ -28,9 +29,7 @@ async function updateEventStatusToReview(data: {
   const eventRegistrations = await prisma.eventRegistration.findMany({
     where: {
       status: {
-        not: {
-          equals: "cancelled",
-        },
+        not: { in: ["cancelled", "suspended"] },
       },
       ...(data.eventGroupId
         ? { eventGroupId: data.eventGroupId }
@@ -61,7 +60,7 @@ async function updateEventStatusToReview(data: {
 
       return {
         ...r,
-        status: shouldCancel ? "cancelled" : r.status,
+        status: shouldCancel ? "suspended" : r.status,
         unjustifiedAbsences: r.unjustifiedAbsences + 1,
       };
     });
@@ -139,20 +138,21 @@ async function updateEventStatusToFinished(data: {
     where: {
       eventGroupId: data.eventGroupId,
     },
-  }); // @todo ta puxando so do event group botar if ae valeu
+  });
 
   const maxUnjustifiedAbsences = rules.unjustifiedAbsences;
 
   const absentRegistrations = deniedAbsences.map((absence) => {
     const registration = absence.registration;
-    const unjustifiedAbsences = registration.unjustifiedAbsences + 1;
+    const unjustifiedAbsences = registration.unjustifiedAbsences;
 
     const shouldCancel =
-      maxUnjustifiedAbsences && unjustifiedAbsences > maxUnjustifiedAbsences;
+      isNumber(maxUnjustifiedAbsences) &&
+      unjustifiedAbsences > maxUnjustifiedAbsences;
 
     return {
       ...registration,
-      status: shouldCancel ? "cancelled" : registration.status,
+      status: shouldCancel ? "suspended" : registration.status,
       unjustifiedAbsences,
     };
   });

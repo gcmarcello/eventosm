@@ -12,7 +12,7 @@ import {
   EventGroupCreateMultipleRegistrationsDto,
   EventGroupCreateRegistrationDto,
 } from "../eventGroups/eventGroup.dto";
-import { BatchCoupon } from "@prisma/client";
+import { BatchCoupon, EventRegistrationStatus } from "@prisma/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { RegistrationDto } from "../dto";
 import { readRegistrationPrice } from "../service";
@@ -227,7 +227,7 @@ export async function createEventGroupMultipleRegistrations(
       teamId: request?.teamId || null,
       eventGroupId: request.eventGroupId,
       code: (eventRegistrations + (index + 1)).toString(),
-      status: "active",
+      status: "active" as EventRegistrationStatus,
     });
 
     emailArray.push({
@@ -331,7 +331,11 @@ async function verifyEventGroupAvailableSlots({
 
   if (!batch) throw "Lote de inscrição não encontrado";
   const registrationsCount = await prisma.eventRegistration.count({
-    where: { eventGroupId, batchId: batch.id, status: { not: "cancelled" } },
+    where: {
+      eventGroupId,
+      batchId: batch.id,
+      status: { not: { in: ["cancelled", "suspended"] } },
+    },
   });
 
   if (registrationsCount + registrations.length > batch.maxRegistrations)
@@ -350,7 +354,7 @@ async function verifyEventGroupAvailableSlots({
           where: {
             eventGroupId,
             categoryId: category.categoryId,
-            status: { not: "cancelled" },
+            status: { not: { in: ["cancelled", "suspended"] } },
           },
         });
       const count =
