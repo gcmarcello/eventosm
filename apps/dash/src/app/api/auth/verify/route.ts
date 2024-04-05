@@ -8,7 +8,7 @@ export async function GET(request: Request, response: NextResponse) {
 
     if (!token) throw "Token não encontrado.";
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: { id: token },
       select: { id: true, role: true },
     });
