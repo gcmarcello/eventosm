@@ -135,6 +135,7 @@ model Organization {
   News                  News[]
   Team                  Team[]
   OrganizationRole      OrganizationRole[]
+  OrganizationDocument  OrganizationDocument[]
 
   @@schema("public")
 }
@@ -170,6 +171,36 @@ model OrganizationRolePermission {
   permissionId String                 @db.Uuid
   createdAt    DateTime               @default(now())
   updatedAt    DateTime?              @updatedAt
+
+  @@schema("public")
+}
+
+enum OrganizationDocumentType {
+  general
+  bid
+
+  @@schema("public")
+}
+
+enum OrganizationDocumentStatus {
+  published
+  draft
+
+  @@schema("public")
+}
+
+model OrganizationDocument {
+  id             String                     @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  organization   Organization               @relation(fields: [organizationId], references: [id])
+  organizationId String                     @db.Uuid
+  type           OrganizationDocumentType
+  name           String
+  description    String?
+  key            String
+  status         OrganizationDocumentStatus @default(draft)
+  highlight      Boolean                    @default(false) @db.Boolean
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime?                  @updatedAt
 
   @@schema("public")
 }

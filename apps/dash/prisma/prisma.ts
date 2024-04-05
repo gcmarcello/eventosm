@@ -17,6 +17,9 @@ declare global {
       };
       image?: string;
       colors: OrganizationColors;
+      pages?: {
+        documents?: boolean;
+      };
     };
 
     type TailwindColor = {
