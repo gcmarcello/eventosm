@@ -13,10 +13,14 @@ import dayjs from "dayjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export async function generateViewport(props: { orgSlug: string }) {
+export async function generateViewport({
+  params,
+}: {
+  params: { orgSlug: string };
+}) {
   const organization = (
     await readOrganizations({
-      where: { slug: props.orgSlug },
+      where: { slug: params.orgSlug },
     })
   )[0];
 
