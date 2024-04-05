@@ -76,6 +76,7 @@ export default function OrgDocumentModal({
     action: upsertOrganizationDocument,
     onSuccess: (data) => {
       setIsOpen(false);
+      form.reset();
       showToast({
         message: data.message || "Documento enviado com sucesso.",
         variant: "success",
