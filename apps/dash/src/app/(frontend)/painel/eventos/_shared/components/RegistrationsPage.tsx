@@ -256,6 +256,8 @@ export default function RegistrationsTable({
                   return <Badge color="green">Ativa</Badge>;
                 case "cancelled":
                   return <Badge color="red">Cancelada</Badge>;
+                case "suspended":
+                  return <Badge color="rose">Suspensa</Badge>;
               }
             },
           }),

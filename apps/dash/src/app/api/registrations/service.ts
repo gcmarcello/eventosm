@@ -5,11 +5,7 @@ import {
   UpdateRegistrationDto,
 } from "./dto";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
-import { Email } from "email-templates";
-import { getServerEnv } from "../env";
-import { chooseTextColor } from "@/utils/colors";
-import dayjs from "dayjs";
-import { sendEmail } from "../emails/service";
+import { EventRegistrationStatus } from "@prisma/client";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -41,14 +37,14 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
 export async function updateRegistrationStatus(request: {
   registrationId: string;
   userSession: UserSession;
-  status: string;
+  status: EventRegistrationStatus;
 }) {
   const updatedRegistration = await prisma.eventRegistration.update({
     where: { id: request.registrationId, userId: request.userSession.id },
-    data: { status: "cancelled" },
+    data: { status: request.status },
   });
 
-  if (!updatedRegistration) throw "Erro ao cancelar inscrição.";
+  if (!updatedRegistration) throw "Erro ao atualizar inscrição.";
   return updatedRegistration;
 }
 
