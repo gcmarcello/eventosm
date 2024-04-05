@@ -1,6 +1,8 @@
+"use server";
 import { redirect } from "next/navigation";
 import { Title } from "odinkit";
 import { SubeventsTable } from "./components/Table";
+import { prisma } from "prisma/prisma";
 
 export default async function EtapasPage({
   params,
