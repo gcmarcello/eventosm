@@ -21,7 +21,9 @@ export default async function BatchesPage({
       CategoryBatch: { include: { category: true } },
       _count: {
         select: {
-          EventRegistration: { where: { status: { not: "cancelled" } } },
+          EventRegistration: {
+            where: { status: { not: { in: ["cancelled", "suspended"] } } },
+          },
         },
       },
     },
