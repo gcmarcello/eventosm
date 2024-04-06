@@ -5,6 +5,11 @@ export const updateEventStatusDto = z.object({
   eventId: z.string().uuid().optional(),
   eventGroupId: z.string().uuid().optional(),
   status: z.nativeEnum(EventStatus),
+  finishEvent: z
+    .object({
+      unjustifiedAbsences: z.enum(["approved", "denied"]).optional(),
+    })
+    .optional(),
 });
 
 export type UpdateEventStatusDto = z.infer<typeof updateEventStatusDto>;
