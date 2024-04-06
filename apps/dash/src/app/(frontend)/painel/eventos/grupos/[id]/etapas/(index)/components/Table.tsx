@@ -28,6 +28,8 @@ import {
   ClipboardDocumentListIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import ConfirmEventFinishModal from "./ConfirmEventFinishModal";
+import { set } from "lodash";
 
 export function SubeventsTable({
   eventGroup,
@@ -36,6 +38,8 @@ export function SubeventsTable({
   eventGroup: EventGroup & { Event: Event[] };
   organization: OrganizationWithDomain;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const {
     data: eventStatusData,
     trigger: eventStatusTrigger,
@@ -56,8 +60,21 @@ export function SubeventsTable({
       }),
   });
 
+  function handleFinishEvent(event: Event) {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  }
+
   return (
     <>
+      {selectedEvent && (
+        <ConfirmEventFinishModal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          event={selectedEvent}
+        />
+      )}
+
       <div className="flex justify-end">
         <Button
           type="button"
@@ -165,13 +182,7 @@ export function SubeventsTable({
                     {info.row.original.status != "finished" && (
                       <DropdownItem
                         disabled={info.row.original.status != "review"}
-                        onClick={() =>
-                          eventStatusTrigger({
-                            status: "finished",
-                            eventId: info.row.original.id,
-                            eventGroupId: eventGroup.id,
-                          })
-                        }
+                        onClick={() => handleFinishEvent(info.row.original)}
                       >
                         <DropdownLabel>Finalizar</DropdownLabel>
                         {info.row.original.status != "review" && (
