@@ -190,7 +190,7 @@ async function updateEventStatusToFinished(data: {
     where: { organizationId: data.organization?.id },
   });
   const url = customDomain
-    ? "https://" + customDomain
+    ? "https://" + customDomain.domain
     : process.env.NEXT_PUBLIC_SITE_URL;
 
   if (onReviewEvent.EventGroup && suspendedRegistrations.length > 0) {
