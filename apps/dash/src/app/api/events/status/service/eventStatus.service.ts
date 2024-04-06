@@ -3,6 +3,10 @@ import { Organization } from "@prisma/client";
 import { UpdateEventStatusDto } from "../dto";
 import dayjs from "dayjs";
 import { isNumber } from "lodash";
+import { changeMultipleAbsencesStatus } from "@/app/api/absences/service";
+import { sendEmail } from "@/app/api/emails/service";
+import { getServerEnv } from "@/app/api/env";
+import { chooseTextColor } from "@/utils/colors";
 
 async function updateEventStatusToReview(data: {
   eventId: string;
@@ -99,13 +103,32 @@ async function updateEventStatusToFinished(data: {
   eventGroupId?: string;
   userSession: UserSession;
   organization: Organization;
+  finishEvent?: { unjustifiedAbsences?: "approved" | "denied" };
 }) {
   const onReviewEvent = await prisma.event.findUnique({
     where: { id: data.eventId, status: "review" },
+    include: { EventGroup: true },
   });
 
   if (!onReviewEvent) {
     throw "O evento precisa estar em analise para ser finalizado";
+  }
+
+  if (data.finishEvent?.unjustifiedAbsences) {
+    const absences = await prisma.eventAbsences.findMany({
+      where: {
+        eventId: data.eventId,
+        status: "pending",
+      },
+      select: {
+        registration: { select: { id: true, unjustifiedAbsences: true } },
+      },
+    });
+
+    await changeMultipleAbsencesStatus({
+      registrationIds: absences.map((a) => a.registration.id),
+      status: data.finishEvent.unjustifiedAbsences,
+    });
   }
 
   const absences = await prisma.eventAbsences.findMany({
@@ -124,13 +147,15 @@ async function updateEventStatusToFinished(data: {
   );
 
   if (pendingAbsences.length > 0) {
-    throw "Existem faltas pendentes.";
+    throw "Ainda existem ausências pendentes.";
   }
 
   const deniedAbsences = await prisma.eventAbsences.findMany({
     where: { eventId: data.eventId, status: "denied" },
     include: {
-      registration: true,
+      registration: {
+        include: { user: { select: { email: true, fullName: true } } },
+      },
     },
   });
 
@@ -157,15 +182,51 @@ async function updateEventStatusToFinished(data: {
     };
   });
 
+  const suspendedRegistrations = absentRegistrations.filter(
+    (r) => r.status === "suspended"
+  );
+
+  const customDomain = await prisma.orgCustomDomain.findFirst({
+    where: { organizationId: data.organization?.id },
+  });
+  const url = customDomain
+    ? "https://" + customDomain
+    : process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (onReviewEvent.EventGroup && suspendedRegistrations.length > 0) {
+    await sendEmail(
+      suspendedRegistrations.map((r) => ({
+        template: "registration_suspended",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Inscrição Suspensa/Eliminação - ${onReviewEvent.EventGroup?.name}`,
+          to: r.user.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          eventName: onReviewEvent.EventGroup?.name,
+          mainColor:
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: data.organization?.name || "EventoSM",
+          name: r.user.fullName.split(" ")[0] as string,
+          siteLink: `${url}`,
+        },
+      }))
+    );
+  }
+
   await prisma.$transaction([
-    ...absentRegistrations.map((r) =>
-      prisma.eventRegistration.update({
+    ...absentRegistrations.map((r) => {
+      const { user, ...rest } = r;
+      return prisma.eventRegistration.update({
         where: {
           id: r.id,
         },
-        data: r,
-      })
-    ),
+        data: rest,
+      });
+    }),
 
     prisma.event.update({
       where: {
@@ -206,12 +267,19 @@ export async function updateEventStatus({
   eventGroupId,
   userSession,
   organization,
+  finishEvent,
 }: UpdateEventStatusDto & {
   userSession: UserSession;
   organization: Organization;
 }) {
   if (!eventId) throw "ID do evento é obrigatório.";
-  const args = { eventId, eventGroupId, userSession, organization };
+  const args = {
+    eventId,
+    eventGroupId,
+    userSession,
+    organization,
+    finishEvent,
+  };
   switch (status) {
     case "review":
       return updateEventStatusToReview(args);

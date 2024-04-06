@@ -127,3 +127,38 @@ export async function readAbsenceJustification(data: {
     key: `justifications/${document.justificationUrl}`,
   });
 }
+
+export async function changeMultipleAbsencesStatus({
+  registrationIds,
+  status,
+}: {
+  registrationIds: string[];
+  status: "approved" | "denied";
+}) {
+  await prisma.$transaction([
+    prisma.eventAbsences.updateMany({
+      where: {
+        registrationId: {
+          in: registrationIds,
+        },
+        status: "pending",
+      },
+      data: {
+        status,
+      },
+    }),
+    ...registrationIds.map((id) =>
+      prisma.eventRegistration.update({
+        where: { id },
+        data: {
+          unjustifiedAbsences: {
+            increment: status === "denied" ? 0 : -1,
+          },
+          justifiedAbsences: {
+            increment: status === "approved" ? 1 : 0,
+          },
+        },
+      })
+    ),
+  ]);
+}
