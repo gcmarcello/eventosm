@@ -37,7 +37,12 @@ import {
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import { Event, EventRegistrationBatch, Organization } from "@prisma/client";
+import {
+  Event,
+  EventRegistration,
+  EventRegistrationBatch,
+  Organization,
+} from "@prisma/client";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -69,7 +74,7 @@ export default function EventGroupContainer({
   nextBatch,
   registrationCount,
 }: {
-  isUserRegistered: boolean;
+  isUserRegistered?: EventRegistration | null;
   eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
@@ -242,12 +247,22 @@ export default function EventGroupContainer({
                     }}
                     className="size-4 lg:size-5"
                   />
-                  {date(eventGroup.Event[0]!.dateStart, "DD/MM/YYYY")} -{" "}
-                  {date(
-                    eventGroup.Event[eventGroup.Event.length - 1]
-                      ?.dateEnd as any,
-                    "DD/MM/YYYY"
-                  )}
+                  {
+                    <Date
+                      date={eventGroup.Event[0]!.dateStart}
+                      format="DD/MM/YYYY"
+                    />
+                  }{" "}
+                  -{" "}
+                  {
+                    <Date
+                      date={
+                        eventGroup.Event[eventGroup.Event.length - 1]
+                          ?.dateEnd as any
+                      }
+                      format="DD/MM/YYYY"
+                    />
+                  }
                 </Text>
 
                 <Text className="flex items-center gap-2 text-sm lg:text-start">
@@ -298,7 +313,7 @@ export default function EventGroupContainer({
               <div className="mt-3 hidden w-full rounded-md border border-zinc-100 p-3 lg:block">
                 <div className="text-sm font-medium">Inscrições</div>
                 <div className="my-2 space-y-2">
-                  {isUserRegistered && (
+                  {isUserRegistered?.status === "active" && (
                     <Button
                       href={`/perfil`}
                       className={"w-full"}
@@ -311,7 +326,14 @@ export default function EventGroupContainer({
                       Ver QR Code
                     </Button>
                   )}
-                  {!isUserRegistered && batch ? (
+
+                  {isUserRegistered?.status === "suspended" ? (
+                    <>
+                      <Button disabled className={"w-full"} color={"rose"}>
+                        Inscrição Suspensa
+                      </Button>
+                    </>
+                  ) : !isUserRegistered && batch ? (
                     batch.maxRegistrations <= batch._count.EventRegistration &&
                     !nextBatch ? (
                       <Button disabled color="red" className={"w-full"}>
