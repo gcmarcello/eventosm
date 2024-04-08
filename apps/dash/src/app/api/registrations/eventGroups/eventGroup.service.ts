@@ -279,6 +279,138 @@ export async function createEventGroupMultipleRegistrations(
   return { eventGroup };
 }
 
+export async function reestablishEventGroupRegistration(
+  registrationId: string
+) {
+  const oldRegistration = await prisma.eventRegistration.findUnique({
+    where: { id: registrationId },
+    include: {
+      user: true,
+      category: true,
+      modality: true,
+      eventGroup: {
+        include: {
+          Organization: { include: { OrgCustomDomain: true } },
+          Event: true,
+        },
+      },
+    },
+  });
+
+  if (!oldRegistration) throw "Inscrição não encontrada.";
+
+  const oldUnjustifiedAbsences = oldRegistration?.unjustifiedAbsences;
+
+  await prisma.$transaction([
+    prisma.eventRegistration.update({
+      where: { id: registrationId },
+      data: { status: "active", unjustifiedAbsences: 0, justifiedAbsences: 0 },
+    }),
+    prisma.eventAbsences.updateMany({
+      where: { registrationId },
+      data: { status: "approved" },
+    }),
+  ]);
+
+  const emailArray: Email<"registration_email">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: oldRegistration.user.email,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor:
+          oldRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          oldRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5"
+        ),
+        category: oldRegistration.category?.name || "",
+        modality: oldRegistration.modality?.name || "",
+        dateEnd: dayjs(
+          oldRegistration.eventGroup?.Event[
+            oldRegistration.eventGroup?.Event.length - 1
+          ]!.dateEnd
+        ).format("DD/MM/YYYY"),
+        dateStart: dayjs(
+          oldRegistration.eventGroup!.Event[0]!.dateStart
+        ).format("DD/MM/YYYY"),
+        eventName: oldRegistration.eventGroup?.name || "",
+        location: oldRegistration.eventGroup?.location || "",
+        name: oldRegistration.user.fullName || "Amigo",
+        orgName: oldRegistration.eventGroup?.Organization.name!,
+        qrCode: `https://${getServerEnv("AWS_BUCKET_NAME")}.s3.${getServerEnv("AWS_REGION")}.backblazeb2.com/qr-codes/${oldRegistration.id}.png`,
+        siteLink: `${oldRegistration?.eventGroup?.Organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: `/campeonatos/${oldRegistration?.eventGroup?.slug}`,
+      },
+    },
+  ];
+
+  return await sendEmail(emailArray);
+}
+
+export async function resendEventGroupRegistrationConfirmation(id: string) {
+  const findRegistration = await prisma.eventRegistration.findUnique({
+    where: { id },
+    include: {
+      eventGroup: {
+        include: {
+          EventRegistration: true,
+          Organization: { include: { OrgCustomDomain: true } },
+          Event: true,
+        },
+      },
+      user: true,
+      modality: true,
+      category: true,
+    },
+  });
+
+  if (!findRegistration) throw "Inscrição não encontrada.";
+
+  const emailArray: Email<"registration_email">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: findRegistration.user.email,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor:
+          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5"
+        ),
+        category: findRegistration.category?.name || "",
+        modality: findRegistration.modality?.name || "",
+        dateEnd: dayjs(
+          findRegistration.eventGroup?.Event[
+            findRegistration.eventGroup?.Event.length - 1
+          ]!.dateEnd
+        ).format("DD/MM/YYYY"),
+        dateStart: dayjs(
+          findRegistration.eventGroup!.Event[0]!.dateStart
+        ).format("DD/MM/YYYY"),
+        eventName: findRegistration.eventGroup?.name || "",
+        location: findRegistration.eventGroup?.location || "",
+        name: findRegistration.user.fullName || "Amigo",
+        orgName: findRegistration.eventGroup?.Organization.name!,
+        qrCode: `https://${getServerEnv("AWS_BUCKET_NAME")}.s3.${getServerEnv("AWS_REGION")}.backblazeb2.com/qr-codes/${findRegistration.id}.png`,
+        siteLink: `${findRegistration?.eventGroup?.Organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: `/campeonatos/${findRegistration?.eventGroup?.slug}`,
+      },
+    },
+  ];
+
+  return await sendEmail(emailArray);
+}
+
 async function verifyEventGroupRegistrationAvailability({
   registrations,
   eventGroupId,
@@ -370,63 +502,4 @@ async function verifyEventGroupAvailableSlots({
       }
     }
   }
-}
-
-export async function resendEventGroupRegistrationConfirmation(id: string) {
-  const findRegistration = await prisma.eventRegistration.findUnique({
-    where: { id },
-    include: {
-      eventGroup: {
-        include: {
-          EventRegistration: true,
-          Organization: { include: { OrgCustomDomain: true } },
-          Event: true,
-        },
-      },
-      user: true,
-      modality: true,
-      category: true,
-    },
-  });
-
-  if (!findRegistration) throw "Inscrição não encontrada.";
-
-  const emailArray: Email<"registration_email">[] = [
-    {
-      setup: {
-        from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: "Inscrição confirmada",
-        to: findRegistration.user.email,
-      },
-      template: "registration_email",
-      templateParameters: {
-        mainColor:
-          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
-            .hex || "#4F46E5",
-        headerTextColor: chooseTextColor(
-          findRegistration.eventGroup?.Organization?.options.colors.primaryColor
-            .hex || "#4F46E5"
-        ),
-        category: findRegistration.category?.name || "",
-        modality: findRegistration.modality?.name || "",
-        dateEnd: dayjs(
-          findRegistration.eventGroup?.Event[
-            findRegistration.eventGroup?.Event.length - 1
-          ]!.dateEnd
-        ).format("DD/MM/YYYY"),
-        dateStart: dayjs(
-          findRegistration.eventGroup!.Event[0]!.dateStart
-        ).format("DD/MM/YYYY"),
-        eventName: findRegistration.eventGroup?.name || "",
-        location: findRegistration.eventGroup?.location || "",
-        name: findRegistration.user.fullName || "Amigo",
-        orgName: findRegistration.eventGroup?.Organization.name!,
-        qrCode: `https://${getServerEnv("AWS_BUCKET_NAME")}.s3.${getServerEnv("AWS_REGION")}.backblazeb2.com/qr-codes/${findRegistration.id}.png`,
-        siteLink: `${findRegistration?.eventGroup?.Organization?.OrgCustomDomain[0]?.domain!}`,
-        eventLink: `/campeonatos/${findRegistration?.eventGroup?.slug}`,
-      },
-    },
-  ];
-
-  return await sendEmail(emailArray);
 }

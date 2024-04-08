@@ -45,16 +45,14 @@ export default async function TorneioPage({
   if (!eventGroup || eventGroup.status === "draft") return notFound();
 
   const isUserRegistered = userSession?.id
-    ? (
-        await prisma.eventRegistration.findMany({
-          where: {
-            eventGroupId: eventGroup.id,
-            userId: userSession?.id,
-            status: { not: "cancelled" },
-          },
-        })
-      ).length > 0
-    : false;
+    ? await prisma.eventRegistration.findFirst({
+        where: {
+          eventGroupId: eventGroup.id,
+          userId: userSession?.id,
+          status: { not: "cancelled" },
+        },
+      })
+    : null;
 
   const batch = await readActiveBatch({
     where: { eventGroupId: eventGroup?.id },
