@@ -63,7 +63,7 @@ export function registration_suspended({
       <body>
         <div class="email-container">
           <div class="email-header">
-            <h1>Justificativa Aceita!</h1>
+            <h1>Inscrição Suspensa</h1>
           </div>
           <div class="email-content">
             <p>Olá ${name}!</p>
