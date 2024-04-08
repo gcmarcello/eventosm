@@ -1,17 +1,12 @@
-import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { CreateClientDto } from "./dto/client.dto";
-import { catchError, firstValueFrom } from "rxjs";
 import { SettingsService } from "../settings/settings.service";
+import axios from "axios";
 
 @Injectable()
 export class AsaasService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly settingsService: SettingsService
-  ) {}
+  constructor(private readonly settingsService: SettingsService) {}
 
-  async asaasRequest({
+  async request({
     body,
     url,
     method,
@@ -20,24 +15,20 @@ export class AsaasService {
     url: string;
     method: "post" | "get" | "put" | "delete";
   }) {
-    const { data }: { data: any } = await firstValueFrom(
-      this.httpService[method]("https://sandbox.asaas.com/api/v3" + url, body, {
-        headers: { access_token: this.settingsService.asaasApiKey },
-      }).pipe(
-        catchError((error) => {
-          console.log(error.response);
-          throw error;
-        })
-      )
-    );
-    return data;
-  }
+    const headers = {
+      access_token: this.settingsService.asaasApiKey,
+      accept: "application/json",
+    };
 
-  async createClient(body: CreateClientDto) {
-    return await this.asaasRequest({
-      body,
-      url: "/customers",
-      method: "post",
-    });
+    const apiUrl = "https://sandbox.asaas.com/api/v3" + url;
+
+    try {
+      const { data } = await axios[method](apiUrl, body, { headers });
+      return data;
+    } catch (error) {
+      const errorMessage = (error as any).response.data.errors;
+      console.log(errorMessage);
+      return errorMessage;
+    }
   }
 }

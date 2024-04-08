@@ -1,3 +1,28 @@
+import { PartialType } from "@nestjs/swagger";
+import { MinLength, IsEmail, IsUUID } from "class-validator";
+
+export class CreateClient {
+  @MinLength(5)
+  name: string;
+  @IsEmail()
+  email: string;
+  @MinLength(11)
+  cpfCnpj: string;
+  @MinLength(11)
+  mobilePhone: string;
+  @IsUUID()
+  externalReference: string;
+  phone?: string;
+  address?: string;
+  addressNumber?: string;
+  complement?: string;
+  province?: string;
+  postalCode?: string;
+}
+
+export class UpdateClient extends PartialType(CreateClient) {
+  id: string;
+}
 export interface CreateClientResponse {
   object: "customer";
   id: string;
