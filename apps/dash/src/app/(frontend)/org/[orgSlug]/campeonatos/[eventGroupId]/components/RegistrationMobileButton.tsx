@@ -1,7 +1,11 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
-import { Organization, EventRegistrationBatch } from "@prisma/client";
+import {
+  Organization,
+  EventRegistrationBatch,
+  EventRegistration,
+} from "@prisma/client";
 import { Button } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithInfo } from "prisma/types/Events";
@@ -21,7 +25,7 @@ export default function RegistrationMobileButton({
   nextBatch,
   registrationCount,
 }: {
-  isUserRegistered: boolean;
+  isUserRegistered?: EventRegistration | null;
   eventGroup: EventGroupWithInfo;
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
@@ -29,7 +33,8 @@ export default function RegistrationMobileButton({
   registrationCount: number;
 }) {
   const handleButtonColor = () => {
-    if (isUserRegistered) return "amber";
+    if (isUserRegistered?.status === "suspended") return "rose";
+    if (isUserRegistered?.status) return "amber";
     if (!batch) return "rose";
     if (batch && batch.maxRegistrations <= batch._count.EventRegistration)
       return "rose";
@@ -38,7 +43,8 @@ export default function RegistrationMobileButton({
   };
 
   const handleButtonName = () => {
-    if (isUserRegistered) return "Inscrito!";
+    if (isUserRegistered?.status === "active") return "Inscrito!";
+    if (isUserRegistered?.status === "suspended") return "Inscrição Suspensa";
     if (
       batch &&
       batch.maxRegistrations <= batch._count.EventRegistration &&
