@@ -11,7 +11,10 @@ import {
   Select,
   useForm,
 } from "odinkit/client";
-import { EventResultWithInfo } from "prisma/types/Results";
+import {
+  EventGroupResultWithInfo,
+  EventResultWithInfo,
+} from "prisma/types/Results";
 import { useState, useMemo, useEffect } from "react";
 import { z } from "zod";
 
@@ -8929,10 +8932,17 @@ export type Result = {
   RITMO: string;
 };
 
-export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
+export function ResultsTable({
+  results,
+  eventGroup,
+}: {
+  results: EventResultWithInfo[] | EventGroupResultWithInfo[];
+  eventGroup?: Boolean;
+}) {
   const [calculatedResults, setCalculatedResults] = useState<
-    EventResultsWithPosition[] | null
+    EventResultsWithPosition[] | EventGroupResultWithInfo[] | null
   >(null);
+
   const handlePlaces = (position: number) => {
     switch (position) {
       case 1:
@@ -9118,7 +9128,7 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
           }),
           columnHelper.accessor("score", {
             id: "time",
-            header: "Tempo",
+            header: eventGroup ? "Tempo Acumulado" : "Tempo",
             enableGlobalFilter: false,
             cell: (info) => info.getValue(),
           }),
@@ -9126,6 +9136,8 @@ export function ResultsTable({ results }: { results: EventResultWithInfo[] }) {
       />
     </>
   ) : (
-    <LoadingSpinner />
+    <div className="flex items-center justify-center">
+      <LoadingSpinner />
+    </div>
   );
 }

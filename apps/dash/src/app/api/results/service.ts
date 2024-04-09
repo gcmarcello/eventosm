@@ -1,10 +1,15 @@
 import {
   reverseTimeToSeconds,
   sortPositions,
+  sortTeamPositions,
   timeToSeconds,
 } from "@/utils/results";
 import { CreateResultsDto } from "./dto";
-import { EventResultWithInfo } from "prisma/types/Results";
+import {
+  EventGroupResultWithInfo,
+  EventResultWithInfo,
+} from "prisma/types/Results";
+import { EventResult, Team } from "@prisma/client";
 
 export async function createEventResults(data: CreateResultsDto) {
   const registrationCodes = data.athletes.map((athlete) => athlete.code);
@@ -32,6 +37,48 @@ export async function createEventResults(data: CreateResultsDto) {
   });
 }
 
+export async function readEventResults(eventId: string) {
+  const allResults = await prisma.eventResult.findMany({
+    where: { eventId },
+    include: {
+      Registration: {
+        include: {
+          user: { select: { fullName: true } },
+          team: true,
+          category: true,
+        },
+      },
+    },
+  });
+
+  const participants = Array.from(
+    new Set(allResults.map((obj) => obj.Registration.id))
+  );
+
+  const allParticipantsResults: EventResultWithInfo[] = participants.map(
+    (p, i) => {
+      const details = allResults.find((r) => r.Registration.id === p)!;
+      const participantResults = allResults.filter(
+        (r) => r.Registration.id === p
+      );
+
+      let totalScore: number | null = 0;
+
+      totalScore = participantResults.reduce((acc, curr) => {
+        const time = Number(timeToSeconds(curr.score));
+        return acc + (isNaN(time) ? 0 : time);
+      }, 0);
+
+      return {
+        ...details,
+        score: reverseTimeToSeconds(totalScore) || null,
+      };
+    }
+  );
+
+  return sortPositions(allParticipantsResults);
+}
+
 export async function readEventGroupResults(eventGroupId: string) {
   const rules = await prisma.eventGroupRules.findUnique({
     where: { eventGroupId },
@@ -55,50 +102,147 @@ export async function readEventGroupResults(eventGroupId: string) {
     },
   });
 
+  const events = Array.from(new Set(allResults.map((obj) => obj.eventId)));
+
   const participants = Array.from(
     new Set(allResults.map((obj) => obj.Registration.id))
   );
 
-  const allParticipantsResults: EventResultWithInfo[] = participants.map(
-    (p) => {
+  const allParticipantsResults: EventGroupResultWithInfo[] = participants.map(
+    (p, i) => {
       const details = allResults.find((r) => r.Registration.id === p)!;
       const participantResults = allResults.filter(
         (r) => r.Registration.id === p
       );
-      let totalScore = 0;
 
-      // Only consider the best results if discard value is provided
-      if (rules.discard && rules.discard > 0) {
-        const sortedScores = participantResults
+      let totalScore: number | null = 0;
+
+      if (rules.scoreCalculation === "sum") {
+        if (rules.discard && rules.discard > 0) {
+          const sortedScores = participantResults
+            .map((result) => Number(timeToSeconds(result.score)))
+            .filter((score) => !isNaN(score))
+            .sort((a, b) => a - b);
+
+          // Ensure we have enough results to discard
+          if (rules.discard < sortedScores.length) {
+            // Calculate total score by excluding worst x results
+            const validScores = sortedScores.slice(
+              0,
+              sortedScores.length - rules.discard
+            );
+
+            totalScore = validScores.reduce((acc, curr) => acc + curr, 0);
+          } else {
+            // If there are fewer results than the number to discard, use all results
+            totalScore = sortedScores.reduce((acc, curr) => acc + curr, 0);
+          }
+        } else {
+          // Calculate total score without discarding any results
+          totalScore = participantResults.reduce((acc, curr) => {
+            const time = Number(timeToSeconds(curr.score));
+            return acc + (isNaN(time) ? 0 : time);
+          }, 0);
+        }
+      } else if (rules.scoreCalculation === "average") {
+        const validResults = participantResults
           .map((result) => Number(timeToSeconds(result.score)))
           .filter((score) => !isNaN(score))
           .sort((a, b) => a - b);
+        const numResults = Math.min(validResults.length, rules.discard || 0);
 
-        // Ensure we have enough results to discard
-        if (rules.discard < sortedScores.length) {
-          // Calculate total score by excluding worst x results
-          const validScores = sortedScores.slice(
-            0,
-            sortedScores.length - rules.discard
-          );
-          totalScore = validScores.reduce((acc, curr) => acc + curr, 0);
-        } else {
-          // If there are fewer results than the number to discard, use all results
-          totalScore = sortedScores.reduce((acc, curr) => acc + curr, 0);
-        }
-      } else {
-        // Calculate total score without discarding any results
-        totalScore = participantResults.reduce((acc, curr) => {
-          const time = Number(timeToSeconds(curr.score));
-          return acc + (isNaN(time) ? 0 : time);
-        }, 0);
+        totalScore =
+          validResults.reduce((acc, curr) => acc + curr, 0) / numResults;
+
+        totalScore = totalScore ? Math.round(totalScore) : null;
       }
+
       return {
         ...details,
-        score: reverseTimeToSeconds(totalScore),
+        eventId: null,
+        score: reverseTimeToSeconds(totalScore) || null,
       };
     }
   );
 
-  return sortPositions(allParticipantsResults);
+  return { results: sortPositions(allParticipantsResults), events };
+}
+
+export async function readEventGroupResultsByTeam(eventGroupId: string) {
+  const rules = await prisma.eventGroupRules.findUnique({
+    where: { eventGroupId },
+    include: {
+      eventGroup: { include: { _count: { select: { Event: true } } } },
+    },
+  });
+
+  if (!rules) throw "Regras do campeonato não encontradas.";
+
+  const allResults = await prisma.eventResult.findMany({
+    where: {
+      Event: {
+        EventGroup: { id: eventGroupId },
+      },
+      Registration: {
+        teamId: { not: null }, // Exclude individual athletes without a team
+      },
+    },
+    include: {
+      Registration: {
+        include: {
+          user: { select: { fullName: true } },
+          team: true,
+        },
+      },
+    },
+  });
+
+  // Group results by team
+  const teamResultsMap: { [teamId: string]: EventResultWithInfo[] } = {};
+
+  allResults.forEach((result) => {
+    const team = result.Registration.team;
+    if (team) {
+      const teamId = team.id;
+
+      if (!teamResultsMap[teamId]) {
+        teamResultsMap[teamId] = [];
+      }
+      teamResultsMap[teamId]!.push(result); // Use non-null assertion
+    }
+  });
+
+  const teamResults: { team: Team; score: number | null }[] = [];
+
+  for (const teamId in teamResultsMap) {
+    const teamResultsForId = teamResultsMap[teamId];
+    if (teamResultsForId) {
+      // Check if teamResultsForId is defined
+      let totalScore = 0;
+
+      for (const result of teamResultsForId) {
+        const timeInSeconds = Number(timeToSeconds(result.score));
+        if (!isNaN(timeInSeconds)) {
+          totalScore += timeInSeconds;
+        }
+      }
+
+      if (rules.scoreCalculation === "average") {
+        const numResults = teamResultsForId.length;
+        totalScore /= numResults;
+
+        totalScore = Math.round(totalScore);
+      }
+
+      const team = teamResultsForId[0]?.Registration.team;
+      if (team) {
+        teamResults.push({
+          team,
+          score: totalScore,
+        });
+      }
+    }
+  }
+
+  return sortTeamPositions(teamResults);
 }
