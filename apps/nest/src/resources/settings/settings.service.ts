@@ -75,4 +75,9 @@ export class SettingsService {
   get awsBucketName(): string {
     return this.get("AWS_BUCKET_NAME");
   }
+
+  // ASAAS
+  get asaasApiKey(): string {
+    return this.get("ASAAS_API_KEY");
+  }
 }
