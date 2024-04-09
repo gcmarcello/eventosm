@@ -397,7 +397,7 @@ export default function EventGroupContainer({
               <div className="xxl:flex-row xxl:items-center xxl:border-none xxl:pt-0 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
                 <Text className="font-medium">Mais Informações:</Text>
                 <Link
-                  href={`/campeonatos/${eventGroup.slug}/resultados`}
+                  href={`/resultados/campeonatos/${eventGroup.id}`}
                   className="text-sm hover:underline"
                   style={{
                     color:
