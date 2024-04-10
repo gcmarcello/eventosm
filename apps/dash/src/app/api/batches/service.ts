@@ -259,11 +259,11 @@ export async function readProtectedBatch(request: ReadRegistrationBatchDto) {
       include: {
         CategoryBatch: { include: { category: true } },
         _count: {
-          select: { EventRegistration: true },
+          select: { EventRegistration: { where: { status: "active" } } },
         },
       },
     })
-    .catch(() => {
+    .catch((e) => {
       return null;
     });
 
