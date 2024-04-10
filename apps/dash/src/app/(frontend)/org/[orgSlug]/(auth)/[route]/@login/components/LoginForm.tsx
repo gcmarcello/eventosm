@@ -53,7 +53,10 @@ export default function LoginForm({
     schema: loginDto,
     mode: "onChange",
     defaultValues: {
-      identifier: params.get("email") || "",
+      identifier:
+        params.get("alert") === "successRecovery"
+          ? ""
+          : params.get("email") ?? undefined,
       redirect: params.get("redirect") || "/",
       organizationId: organization.id,
     },
