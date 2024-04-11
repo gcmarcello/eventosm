@@ -22,9 +22,8 @@ export class WebhookService {
   }
 
   async getWebhooks() {
-    console.log("xd");
     return await this.asaasService.request({
-      url: `/webhooks/`,
+      url: `/webhooks`,
       method: "get",
     });
   }
@@ -34,5 +33,10 @@ export class WebhookService {
       url: `/webhooks/${id}`,
       method: "get",
     });
+  }
+
+  async receiveWebhook(body: any) {
+    console.log(body);
+    return body;
   }
 }

@@ -23,13 +23,11 @@ export class AsaasService {
     const apiUrl = "https://sandbox.asaas.com/api/v3" + url;
 
     try {
-      if (method === "get" || method === "delete") {
-        const response = await axios.get(apiUrl, { headers });
-        return response.data;
-      } else {
-        const { data } = await axios[method](apiUrl, body, { headers });
-        return data;
-      }
+      const { data } =
+        method === "get" || method === "delete"
+          ? await axios[method](apiUrl, { headers })
+          : await axios[method](apiUrl, body, { headers });
+      return data;
     } catch (error) {
       const errorMessage = (error as any).response.data.errors;
       console.log(errorMessage);

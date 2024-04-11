@@ -42,6 +42,11 @@ export class AsaasController {
     return await this.subAccountService.createSubAccount(body);
   }
 
+  @Post("/webhook")
+  async receiveWebhook(@Body() body: any) {
+    return await this.webhookService.receiveWebhook(body);
+  }
+
   @Post("/admin/webhook/")
   async createWebhook(@Body() body: CreateWebhookDto) {
     return await this.webhookService.createWebhook(body);
