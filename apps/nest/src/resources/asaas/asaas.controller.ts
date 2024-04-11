@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Res,
+} from "@nestjs/common";
 import { CustomerService } from "./services/customer/customer.service";
 import { PaymentService } from "./services/payment/payment.service";
 import { CreateCreditCardPayment, CreatePayment } from "./types/payment";
@@ -7,6 +15,7 @@ import { CreateSubAccountDto } from "./types/subaccount";
 import { SubAccountService } from "./services/subaccount/payment.service";
 import { WebhookService } from "./services/webhook/webhook.service";
 import { CreateWebhookDto } from "./types/webhook/webhook.request";
+import { Response } from "express";
 
 @Controller("asaas")
 export class AsaasController {
@@ -43,7 +52,8 @@ export class AsaasController {
   }
 
   @Post("/webhook")
-  async receiveWebhook(@Body() body: any) {
+  async receiveWebhook(@Body() body: any, @Res() res: Response) {
+    res.status(200).send();
     return await this.webhookService.receiveWebhook(body);
   }
 
