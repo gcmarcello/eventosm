@@ -38,8 +38,8 @@ export function sortPositions(
   resultArray: EventResultWithInfo[] | EventGroupResultWithInfo[]
 ) {
   const sortedArray = resultArray.sort((a, b) => {
-    const aTime = a.score !== null ? timeToSeconds(a.score) : null;
-    const bTime = b.score !== null ? timeToSeconds(b.score) : null;
+    const aTime = a.score;
+    const bTime = b.score;
     if (aTime === null && bTime === null) {
       return 0; // If both times are null, consider them equal
     } else if (aTime === null) {

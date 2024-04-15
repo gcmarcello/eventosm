@@ -1,4 +1,13 @@
-import { For, Heading, Link, LoadingSpinner, Table, Title, z } from "odinkit";
+import {
+  For,
+  Heading,
+  Link,
+  LoadingSpinner,
+  Table,
+  Text,
+  Title,
+  z,
+} from "odinkit";
 
 import { useEffect, useMemo, useState } from "react";
 import { ResultsTable } from "./components/ResultTable";
@@ -13,7 +22,7 @@ export default async function EventGroupResultsPage({
 }) {
   const eventGroup = await prisma.eventGroup.findUnique({
     where: { id: params.eventGroupId },
-    include: { Organization: true },
+    include: { Organization: true, EventGroupRules: true },
   });
 
   if (!eventGroup) {
@@ -24,11 +33,14 @@ export default async function EventGroupResultsPage({
   const events = await prisma.event.findMany({
     where: { id: { in: eventGroupData.events } },
   });
+  const rules = await prisma.eventGroupRules.findUnique({
+    where: { eventGroupId: eventGroup.id },
+  });
 
   return (
     <div className="mt-8 px-4 pb-20 lg:px-32">
       <Title>Classificação Geral - {eventGroup.name}</Title>
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-end">
+      <div className="mt-2 flex flex-row gap-2 lg:mt-auto lg:items-end">
         <Link
           href={`/campeonatos/${eventGroup.slug}`}
           style={{
@@ -51,8 +63,17 @@ export default async function EventGroupResultsPage({
       </div>
       <div className="divide-y">
         <div className="mb-3">
-          <ResultsTable eventGroup={true} results={eventGroupData.results} />
+          <ResultsTable
+            eventGroup={eventGroup}
+            results={eventGroupData.results}
+          />
+          <Text className="mt-2 text-xs lg:mt-1 lg:text-sm">
+            {rules?.discard
+              ? `OBS: Devido ao descarte dos ${rules.discard} piores resultados, o ranking geral só exibirá os atletas que possuírem ao menos ${rules.discard} resultados ou que participaram de todas as etapas realizadas até aqui.`
+              : null}
+          </Text>
         </div>
+
         {eventGroupData.events.length ? (
           <div id="etapas" className="pt-3">
             <div className="mb-4">

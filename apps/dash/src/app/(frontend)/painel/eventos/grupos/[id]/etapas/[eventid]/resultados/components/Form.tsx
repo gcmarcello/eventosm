@@ -75,6 +75,8 @@ export function ResultsForm({
     },
   });
 
+  console.log(form.formState.errors);
+
   return (
     <>
       <SubeventHeading organization={organization} eventGroupId={eventGroup.id}>
@@ -96,7 +98,10 @@ export function ResultsForm({
 
                 form.setValue(
                   "athletes",
-                  sheetJson.map((r) => ({ code: r.NUM!, score: r.TEMPO }))
+                  sheetJson.map((r) => ({
+                    code: r.NUM!,
+                    score: isNaN(Number(r.TEMPO)) ? undefined : Number(r.TEMPO),
+                  }))
                 );
 
                 return false;
@@ -198,13 +203,7 @@ export function ResultsForm({
               enableGlobalFilter: true,
               cell: (info) => info.getValue(),
             }),
-            columnHelper.accessor("code", {
-              id: "code",
-              header: "Número",
-              enableSorting: true,
-              enableGlobalFilter: true,
-              cell: (info) => info.getValue(),
-            }),
+
             columnHelper.accessor("score", {
               id: "score",
               header: "Tempo",

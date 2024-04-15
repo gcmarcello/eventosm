@@ -314,7 +314,7 @@ model EventResult {
   registrationId String            @db.Uuid
   Event          Event             @relation(fields: [eventId], references: [id])
   eventId        String            @db.Uuid
-  score          String?
+  score          Int?
   observation    String?
   status         EventResultStatus @default(active)
   createdAt      DateTime          @default(now())

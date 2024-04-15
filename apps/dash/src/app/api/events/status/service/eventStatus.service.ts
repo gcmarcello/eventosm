@@ -7,6 +7,7 @@ import { changeMultipleAbsencesStatus } from "@/app/api/absences/service";
 import { sendEmail } from "@/app/api/emails/service";
 import { getServerEnv } from "@/app/api/env";
 import { chooseTextColor } from "@/utils/colors";
+import { Email, EmailTemplate } from "email-templates";
 
 async function updateEventStatusToReview(data: {
   eventId: string;
@@ -39,6 +40,7 @@ async function updateEventStatusToReview(data: {
         ? { eventGroupId: data.eventGroupId }
         : { eventId: data.eventId }),
     },
+    include: { user: { select: { email: true, fullName: true } } },
   });
 
   if (eventRegistrations.length === 0)
@@ -69,15 +71,52 @@ async function updateEventStatusToReview(data: {
       };
     });
 
+  if (absentRegistrations.filter((r) => r.status === "active").length > 0) {
+    const event = await prisma.event.findUnique({
+      where: { id: data.eventId },
+      include: { Organization: { include: { OrgCustomDomain: true } } },
+    });
+
+    if (!event) throw "Evento não encontrado.";
+
+    const url = event.Organization?.OrgCustomDomain[0]?.domain
+      ? "https://" + event.Organization?.OrgCustomDomain[0]?.domain
+      : process.env.NEXT_PUBLIC_SITE_URL;
+
+    const emailArray: Email<"justification_needed">[] = absentRegistrations
+      .filter((r) => r.status === "active")
+      .map((r) => ({
+        template: "justification_needed",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Ausência em ${event.name}`,
+          to: r.user.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          eventName: event.name,
+          mainColor:
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: data.organization?.name || "EventoSM",
+          name: r.user.fullName.split(" ")[0] as string,
+          siteLink: `${url}`,
+        },
+      }));
+    await sendEmail(emailArray);
+  }
+
   await prisma.$transaction([
-    ...absentRegistrations.map((r) =>
-      prisma.eventRegistration.update({
+    ...absentRegistrations.map((r) => {
+      const { user, ...rest } = r;
+      return prisma.eventRegistration.update({
         where: {
           id: r.id,
         },
-        data: r,
-      })
-    ),
+        data: rest,
+      });
+    }),
 
     prisma.eventAbsences.createMany({
       data: absentRegistrations.map((absence) => ({
