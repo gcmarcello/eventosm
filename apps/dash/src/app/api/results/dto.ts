@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createResultsDto = z.object({
   athletes: z.array(
     z.object({
-      score: z.string().optional(),
+      score: z.number().optional(),
       code: z.string(),
     })
   ),
