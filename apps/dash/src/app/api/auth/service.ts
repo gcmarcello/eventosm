@@ -147,6 +147,7 @@ export async function login(request: LoginDto) {
     where: isIdentifierEmail
       ? { email: normalizeEmail(request.identifier) }
       : { document: normalize(request.identifier) },
+    include: { UserOrgLink: { include: { Organization: true } } },
   });
 
   if (!potentialUser) throw `Informações de login incorretas!`;

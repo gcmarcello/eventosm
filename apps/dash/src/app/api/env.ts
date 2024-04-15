@@ -15,6 +15,7 @@ const env = z.object({
   AWS_PRIVATE_BUCKET_NAME: z.string(),
   JWT_KEY: z.string(),
   SENDGRID_EMAIL: z.string(),
+  MAINTENANCE_MODE: z.string(),
 });
 
 export const getServerEnv = (key: keyof typeof env.shape) => {

@@ -65,13 +65,13 @@ export async function readEventResults(eventId: string) {
       let totalScore: number | null = 0;
 
       totalScore = participantResults.reduce((acc, curr) => {
-        const time = Number(timeToSeconds(curr.score));
-        return acc + (isNaN(time) ? 0 : time);
+        const time = curr.score;
+        return acc + (time ?? 0);
       }, 0);
 
       return {
         ...details,
-        score: reverseTimeToSeconds(totalScore) || null,
+        score: totalScore || null,
       };
     }
   );
@@ -112,15 +112,27 @@ export async function readEventGroupResults(eventGroupId: string) {
     (p, i) => {
       const details = allResults.find((r) => r.Registration.id === p)!;
       const participantResults = allResults.filter(
-        (r) => r.Registration.id === p
+        (r) => r.Registration.id === p && r.score
       );
+
+      if (
+        rules.discard &&
+        participantResults.length < rules.discard &&
+        participantResults.length !== events.length
+      ) {
+        return {
+          ...details,
+          eventId: null,
+          score: null,
+        };
+      }
 
       let totalScore: number | null = 0;
 
       if (rules.scoreCalculation === "sum") {
         if (rules.discard && rules.discard > 0) {
           const sortedScores = participantResults
-            .map((result) => Number(timeToSeconds(result.score)))
+            .map((result) => totalScore ?? 0)
             .filter((score) => !isNaN(score))
             .sort((a, b) => a - b);
 
@@ -140,13 +152,13 @@ export async function readEventGroupResults(eventGroupId: string) {
         } else {
           // Calculate total score without discarding any results
           totalScore = participantResults.reduce((acc, curr) => {
-            const time = Number(timeToSeconds(curr.score));
+            const time = Number(curr.score);
             return acc + (isNaN(time) ? 0 : time);
           }, 0);
         }
       } else if (rules.scoreCalculation === "average") {
         const validResults = participantResults
-          .map((result) => Number(timeToSeconds(result.score)))
+          .map((result) => Number(result.score))
           .filter((score) => !isNaN(score))
           .sort((a, b) => a - b);
         const numResults = Math.min(validResults.length, rules.discard || 0);
@@ -160,7 +172,7 @@ export async function readEventGroupResults(eventGroupId: string) {
       return {
         ...details,
         eventId: null,
-        score: reverseTimeToSeconds(totalScore) || null,
+        score: totalScore || null,
       };
     }
   );
@@ -221,7 +233,7 @@ export async function readEventGroupResultsByTeam(eventGroupId: string) {
       let totalScore = 0;
 
       for (const result of teamResultsForId) {
-        const timeInSeconds = Number(timeToSeconds(result.score));
+        const timeInSeconds = Number(result.score);
         if (!isNaN(timeInSeconds)) {
           totalScore += timeInSeconds;
         }
