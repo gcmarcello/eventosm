@@ -67,6 +67,7 @@ export default function FormContainer({
       },
       eventRedirect: { id: "", name: "" },
       organizationId: organization.id,
+      acceptTerms: false,
     },
   });
 
@@ -87,6 +88,7 @@ export default function FormContainer({
       "info.stateId": "35",
       "info.number": fakerPT_BR.location.buildingNumber(),
       "info.complement": fakerPT_BR.location.secondaryAddress(),
+      acceptTerms: false,
     }),
   });
 
@@ -141,7 +143,10 @@ export default function FormContainer({
               "info.number",
             ],
           },
-          confirm: { form: <ConfirmDetailsSection />, fields: [] },
+          confirm: {
+            form: <ConfirmDetailsSection organization={organization} />,
+            fields: [],
+          },
         }}
       >
         {({
