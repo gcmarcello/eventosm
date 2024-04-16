@@ -24,29 +24,30 @@ export default function SelectOrgContainer({
   });
 
   return (
-    <div>
-      <Link href="/">Voltar</Link>
+    <div className="">
       <div className="mx-6 grid grid-cols-1 py-6 lg:mx-0 lg:grid-cols-6">
         <div className="col-span-full lg:col-span-2 lg:col-start-3">
           <Text className="font-semibold">Escolher Organização</Text>
-          {organizations?.map((org, index) => (
-            <Container
-              key={`org-${index}`}
-              className="mt-4 cursor-pointer duration-500 hover:scale-105 lg:col-start-2 lg:mb-10"
-            >
-              <div
-                onClick={() => changeOrgTrigger(org.id)}
-                className="flex flex-col items-center justify-center gap-4 p-6 "
+          <div className="lg:flex">
+            {organizations?.map((org, index) => (
+              <Container
+                key={`org-${index}`}
+                className="mt-4 cursor-pointer duration-500 hover:scale-105 lg:col-start-2 lg:mb-10 "
               >
-                <Avatar
-                  src={org.options.image}
-                  className="size-32  text-indigo-600 shadow-lg"
-                />
-                <Text className="text-sm">{org.name}</Text>
-              </div>
-            </Container>
-          ))}
-          <Link href="/novaorg">
+                <div
+                  onClick={() => changeOrgTrigger(org.id)}
+                  className="flex flex-col items-center justify-center gap-4 p-6 "
+                >
+                  <Avatar
+                    src={org.options.images?.logo}
+                    className="size-32 text-indigo-600  shadow-lg lg:size-20"
+                  />
+                  <Text className="text-center text-sm">{org.name}</Text>
+                </div>
+              </Container>
+            ))}
+          </div>
+          <Link href="/novaorg" className="hidden lg:block">
             <Container className="mt-4 cursor-pointer duration-500 hover:scale-105 lg:col-start-2 lg:mb-10">
               <div className="flex flex-col items-center justify-center gap-4 p-6 ">
                 <PlusCircleIcon className="h-12 w-12 text-indigo-600" />
