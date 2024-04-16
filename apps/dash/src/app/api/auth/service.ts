@@ -152,7 +152,7 @@ export async function login(request: LoginDto) {
 
   if (!potentialUser) throw `Informações de login incorretas!`;
   if (!potentialUser.password)
-    throw `Usuário não possui uma conta configurada.`;
+    throw `Usuário não possui uma conta configurada. Por favor, acesse a recuperação de senha.`;
   if (!potentialUser.confirmed)
     throw `Usuário não confirmado. Por favor confirme sua conta através do e-mail enviado.`;
 

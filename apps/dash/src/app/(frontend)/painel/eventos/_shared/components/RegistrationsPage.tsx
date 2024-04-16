@@ -2,6 +2,14 @@
 import { SubmitButton, date } from "odinkit";
 import { Badge, Table, formatPhone } from "odinkit";
 import {
+  Field as HeadlessRadioField,
+  Radio as HeadlessRadio,
+  RadioGroup as HeadlessRadioGroup,
+  type FieldProps as HeadlessFieldProps,
+  type RadioGroupProps as HeadlessRadioGroupProps,
+  type RadioProps as HeadlessRadioProps,
+} from "@headlessui/react";
+import {
   Button,
   Date,
   Description,
@@ -14,12 +22,14 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
+  DropdownSeparator,
   ErrorMessage,
   FieldGroup,
   Fieldset,
   Form,
   Input,
   Label,
+  RadioField,
   Select,
   showToast,
   useAction,
@@ -36,6 +46,9 @@ import {
   resendEventGroupRegistrationConfirmation,
   updateRegistration,
 } from "@/app/api/registrations/action";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import RegistrationStatusDropdown from "./RegistrationStatusDropdown";
+import { EventRegistrationStatus } from "@prisma/client";
 
 export default function RegistrationsTable({
   registrations,
@@ -99,6 +112,7 @@ export default function RegistrationsTable({
     if (selectedRegistration) {
       form.setValue("registrationId", selectedRegistration?.id!);
       form.setValue("categoryId", selectedRegistration?.categoryId!);
+      form.setValue("status", selectedRegistration?.status!);
       form.setValue(
         "modalityId",
         selectedRegistration?.modalityId ?? undefined!
@@ -171,7 +185,7 @@ export default function RegistrationsTable({
                   </Description>
                 </Field>
                 <div className="flex">
-                  <div>
+                  <div className="hidden lg:block">
                     <Image
                       height={150}
                       width={150}
@@ -179,7 +193,7 @@ export default function RegistrationsTable({
                       alt="Qr Code"
                     />
                   </div>
-                  <div className="flex grow flex-col justify-evenly">
+                  <div className="flex grow flex-col justify-evenly gap-2 lg:gap-0">
                     <Button
                       className={"w-full"}
                       loading={isResendingEmailConfirmation}
@@ -190,9 +204,7 @@ export default function RegistrationsTable({
                     >
                       Reenviar QR Code
                     </Button>
-                    <Button disabled className={"w-full"} color="red">
-                      Cancelar Inscrição
-                    </Button>
+                    <RegistrationStatusDropdown />
                   </div>
                 </div>
                 <Description>ID: {selectedRegistration?.id}</Description>
@@ -227,7 +239,9 @@ export default function RegistrationsTable({
               "Opção do Kit": registration.addonOption,
             })) || [],
         }}
-        data={registrations || []}
+        data={
+          registrations.sort((a, b) => Number(b.code) - Number(a.code)) || []
+        }
         columns={(columnHelper) => [
           columnHelper.accessor("code", {
             id: "code",
