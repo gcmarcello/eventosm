@@ -30,7 +30,7 @@ export default async function RegistrationsPage({
   params: { id: string };
 }) {
   const registrations = await prisma.eventRegistration.findMany({
-    where: { eventGroupId: params.id, NOT: { status: "cancelled" } },
+    where: { eventGroupId: params.id },
     include: {
       user: { include: { info: true } },
       batch: true,

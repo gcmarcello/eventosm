@@ -113,6 +113,7 @@ export async function updateEventGroupRegistration(
     data: {
       modalityId: data.modalityId,
       categoryId: data.categoryId,
+      status: data.status,
       code: data.code,
     },
   });

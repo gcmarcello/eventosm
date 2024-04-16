@@ -46,6 +46,9 @@ export const signupDto = z.object({
     zipCode: z.string().min(9, { message: "CEP inválido" }),
   }),
   eventRedirect: z.object({ name: z.string(), id: z.string() }).optional(),
+  acceptTerms: z.boolean().refine((value) => value === true, {
+    message: "Você deve aceitar o termo de uso.",
+  }),
   organizationId: z.string().optional(),
 });
 
