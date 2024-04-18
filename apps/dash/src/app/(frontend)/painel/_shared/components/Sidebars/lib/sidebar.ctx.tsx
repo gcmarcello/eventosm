@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, createContext } from "react";
 
 import { UserWithoutPassword } from "prisma/types/User";
-import { Organization } from "@prisma/client";
+import { OrganizationWithDomain } from "prisma/types/Organization";
 
 export class SidebarContextProps {
   user: UserWithoutPassword;
-  organization: Organization;
+  organization: OrganizationWithDomain;
   visibility: {
     panelTopbar: boolean;
     panelSidebar: boolean;

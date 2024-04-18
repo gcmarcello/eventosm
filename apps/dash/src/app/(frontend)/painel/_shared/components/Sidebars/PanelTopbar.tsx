@@ -49,8 +49,8 @@ export function SupporterTopBar() {
             target="_blank"
             type="button"
             href={
-              organization.domain
-                ? `https://${organization.domain}`
+              organization.OrgCustomDomain[0]
+                ? `https://${organization.OrgCustomDomain[0]?.domain}`
                 : `/org/${organization.slug}`
             }
             className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500"
