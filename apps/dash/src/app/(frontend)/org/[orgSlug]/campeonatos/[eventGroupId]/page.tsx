@@ -8,6 +8,7 @@ import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUs
 import { readRegistrations } from "@/app/api/registrations/service";
 import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
+import OrgFooter from "../../../_shared/OrgFooter";
 
 export default async function TorneioPage({
   params,
@@ -71,13 +72,16 @@ export default async function TorneioPage({
   });
 
   return (
-    <EventGroupContainer
-      eventGroup={eventGroup}
-      isUserRegistered={isUserRegistered}
-      batch={batch}
-      nextBatch={nextBatch}
-      registrationCount={registrationCount}
-      organization={organization}
-    />
+    <>
+      <EventGroupContainer
+        eventGroup={eventGroup}
+        isUserRegistered={isUserRegistered}
+        batch={batch}
+        nextBatch={nextBatch}
+        registrationCount={registrationCount}
+        organization={organization}
+      />
+      <OrgFooter organization={organization} />
+    </>
   );
 }
