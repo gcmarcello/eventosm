@@ -68,7 +68,12 @@ export default function BatchModal({
     <Dialog
       size="5xl"
       open={modalState.isBatchModalOpen}
-      onClose={modalState.setIsBatchModalOpen}
+      onClose={() => {
+        modalState.setIsBatchModalOpen(false);
+        setTimeout(() => {
+          modalState.setShowCategoryBatches(false);
+        }, 200);
+      }}
     >
       <DialogTitle>
         {batchForm.getValues("id")
@@ -77,7 +82,7 @@ export default function BatchModal({
       </DialogTitle>
       <DialogDescription>
         {modalState.showCategoryBatches
-          ? "Controle o lote de inscrição por categoria. Qualquer valor deixado em branco irá herdar o valor do lote de inscrição."
+          ? "Controle o lote de inscrição por modalidade e categorias. Qualquer valor deixado em branco irá herdar o valor do lote de inscrição."
           : "Lotes de inscrição não podem se sobrepor nas datas de início e fim."}
       </DialogDescription>
       <DialogBody>
@@ -321,9 +326,7 @@ export default function BatchModal({
             onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
             color={organization.options.colors.secondaryColor?.tw.color}
           >
-            {modalState.showCategoryBatches
-              ? "Voltar"
-              : "Definir por Categoria"}
+            {modalState.showCategoryBatches ? "Voltar" : "Personalizar"}
           </Button>
         )}
         <SubmitButton
