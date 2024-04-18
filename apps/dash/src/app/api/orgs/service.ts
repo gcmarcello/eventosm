@@ -43,7 +43,6 @@ export async function createOrganization(
       slug: request.slug || id,
       phone: request.phone,
       document: request?.document || null,
-      domain: request?.domain,
       owner: { connect: { id: request.userSession.id } },
       options: {
         colors: {
@@ -72,23 +71,6 @@ export async function updateOrganization(
 
   if (!currentOrg) throw "Organização não encontrada";
 
-  const currentOptions = currentOrg?.options;
-
-  /* const primaryColor =
-    (await prisma.color.findFirst({
-      where: { id: data.primaryColor },
-    })) ?? undefined;
-
-  const secondaryColor =
-    (await prisma.color.findFirst({
-      where: { id: data.secondaryColor },
-    })) ?? undefined;
-
-  const tertiaryColor =
-    (await prisma.color.findFirst({
-      where: { id: data.tertiaryColor },
-    })) ?? undefined; */
-
   const updatedOrganization = await prisma.organization.update({
     where: { id: organization.id },
     data: {
@@ -98,20 +80,27 @@ export async function updateOrganization(
       abbreviation: data?.abbreviation,
       phone: normalizePhone(data.phone),
       document: data?.document || null,
-      /* options: {
-        images: {
-          bg: data?.images?.bg,
-          hero: data?.images?.hero,
-          logo: data?.images?.logo,
+      options: {
+        socialMedia: {
+          facebook: data?.options?.socialMedia?.facebook || null,
+          instagram: data?.options?.socialMedia?.instagram || null,
+          twitter: data?.options?.socialMedia?.twitter || null,
+          youtube: data?.options?.socialMedia?.youtube || null,
         },
         colors: {
-          primaryColor: primaryColor ?? currentOptions?.colors?.primaryColor!,
+          primaryColor:
+            currentOrg?.options?.colors?.primaryColor || "indigo_600",
           secondaryColor:
-            secondaryColor ?? currentOptions?.colors?.secondaryColor!,
+            currentOrg?.options?.colors?.secondaryColor || "slate_200",
           tertiaryColor:
-            tertiaryColor ?? currentOptions?.colors?.tertiaryColor!,
+            currentOrg?.options?.colors?.tertiaryColor || "zinc_700",
         },
-      }, */
+        images: {
+          bg: currentOrg?.options?.images?.bg,
+          hero: currentOrg?.options?.images?.hero,
+          logo: currentOrg?.options?.images?.logo,
+        },
+      },
     },
   });
   return updatedOrganization;

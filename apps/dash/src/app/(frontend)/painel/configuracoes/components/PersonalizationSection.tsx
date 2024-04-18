@@ -7,7 +7,13 @@ import { updateOrganizationStyleDto } from "@/app/api/orgs/dto";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { Organization } from "@prisma/client";
-import { FileImagePreview, SubmitButton, Text, z } from "odinkit";
+import {
+  BottomNavigation,
+  FileImagePreview,
+  SubmitButton,
+  Text,
+  z,
+} from "odinkit";
 import {
   ColorInput,
   Description,
@@ -77,7 +83,7 @@ export default function PersonalizationSection({
     <>
       <Form
         hform={form}
-        className="space-y-4"
+        className="space-y-4 pb-20 lg:pb-4"
         onSubmit={async (data) => {
           const { images, ...rest } = data;
           let hero;
@@ -115,7 +121,7 @@ export default function PersonalizationSection({
           });
         }}
       >
-        <Fieldset className=" grid grid-cols-2 gap-x-4 gap-y-4 rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4">
+        <Fieldset className="grid gap-x-4 gap-y-4 rounded-lg border bg-opacity-50 px-4  pt-4 shadow-sm lg:grid-cols-2 lg:pb-4">
           <FieldGroup className="space-y-2">
             <Field name="primaryColor">
               <Label>Cor Primária</Label>
@@ -138,6 +144,8 @@ export default function PersonalizationSection({
                 Usada em botões e outras áreas.
               </Description>
             </Field>
+          </FieldGroup>
+          <FieldGroup>
             <Field name="images.logo">
               <Label>Logo da Organização</Label>
               <FileInput
@@ -269,9 +277,11 @@ export default function PersonalizationSection({
                 />
               </div>
             </Field>
-            <SubmitButton>Salvar</SubmitButton>
           </FieldGroup>
         </Fieldset>
+        <BottomNavigation className="flex justify-end p-2">
+          <SubmitButton>Salvar</SubmitButton>
+        </BottomNavigation>
       </Form>
     </>
   );
