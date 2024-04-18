@@ -80,8 +80,7 @@ export default async function CompanyLayout({
         />
       )}
       <CompanyNavbar organization={organization} user={request.userSession} />
-      <div className="">{children}</div>
-      <OrgFooter organization={organization} />
+      {children}
     </>
   );
 }
