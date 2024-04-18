@@ -6,6 +6,7 @@ import EventGroupRegistrationCard from "./components/EventGroupRegistrationCard"
 import RegistrationsContainer from "./components/RegistrationsContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
+import OrgFooter from "../../_shared/OrgFooter";
 
 export default async function RegistrationsPage({
   params,
@@ -61,6 +62,7 @@ export default async function RegistrationsPage({
         teams={teams}
         organization={organization}
       />
+      <OrgFooter organization={organization} />
     </>
   );
 }

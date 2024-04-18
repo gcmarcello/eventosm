@@ -4,6 +4,7 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { notFound } from "next/navigation";
 import { isUUID } from "odinkit";
 import EventContainer from "./components/EventContainer";
+import OrgFooter from "../../../_shared/OrgFooter";
 
 export default async function EventPage({
   params,
@@ -60,13 +61,16 @@ export default async function EventPage({
   });
 
   return (
-    <EventContainer
-      event={event}
-      isUserRegistered={isUserRegistered}
-      batch={batch}
-      nextBatch={nextBatch}
-      registrationCount={registrationCount}
-      organization={organization}
-    />
+    <>
+      <EventContainer
+        event={event}
+        isUserRegistered={isUserRegistered}
+        batch={batch}
+        nextBatch={nextBatch}
+        registrationCount={registrationCount}
+        organization={organization}
+      />
+      <OrgFooter organization={organization} />
+    </>
   );
 }

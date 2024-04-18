@@ -3,5 +3,5 @@ export default function EventGroupLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-[100dvh]  bg-slate-200">{children}</div>;
+  return <div className=" bg-slate-200">{children}</div>;
 }
