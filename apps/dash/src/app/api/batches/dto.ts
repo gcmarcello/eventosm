@@ -40,6 +40,19 @@ export const upsertRegistrationBatchDto = z.object({
       })
     )
     .optional(),
+  modalityControl: z.boolean().optional(),
+  modalityBatch: z
+    .array(
+      z.object({
+        id: z.string().uuid({ message: "Formato de ID inválido" }).optional(),
+        modalityId: z
+          .string()
+          .uuid({ message: "Formato de ID de modalidade inválido" }),
+        maxRegistrations: z.number().nullable().optional(),
+        price: z.string().nullable().optional(),
+      })
+    )
+    .optional(),
   dateStart: z
     .string()
     .regex(dateRegex, { message: "Formato de data de início inválido" }),

@@ -95,6 +95,17 @@ export default function IndividualTournamentRegistration({
     },
   });
 
+  const categories = useMemo(
+    () =>
+      filterCategories(
+        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory),
+        userInfo
+      ),
+    [eventGroup, form.watch("registration.modalityId")]
+  );
+
+  const modalities = useMemo(() => eventGroup.EventModality, [eventGroup]);
+
   useEffect(() => {
     if (
       eventGroup.EventModality.length === 1 &&
@@ -102,23 +113,13 @@ export default function IndividualTournamentRegistration({
     ) {
       form.setValue("registration.modalityId", eventGroup.EventModality[0].id);
     }
-  }, [eventGroup]);
+  }, [eventGroup, form.watch("registration.modalityId")]);
 
   const Field = useMemo(() => form.createField(), []);
 
-  const categories = useMemo(
-    () =>
-      filterCategories(
-        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory),
-        userInfo
-      ),
-    [eventGroup]
-  );
-
   useEffect(() => {
-    if (categories.length === 1)
-      form.setValue("registration.categoryId", categories[0]?.id);
-  }, [categories]);
+    form.resetField("registration.categoryId", { defaultValue: "" });
+  }, [form.watch("registration.modalityId")]);
 
   return (
     <>
@@ -351,6 +352,18 @@ export default function IndividualTournamentRegistration({
                       </dd>
                     </div> */}
                       <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
+                        <dt className=" font-medium leading-6 text-gray-900">
+                          Modalidade
+                        </dt>
+                        <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          {
+                            modalities.find(
+                              (modality) =>
+                                modality.id ===
+                                form.watch("registration.modalityId")
+                            )?.name
+                          }{" "}
+                        </dd>
                         <dt className=" font-medium leading-6 text-gray-900">
                           Categoria
                         </dt>

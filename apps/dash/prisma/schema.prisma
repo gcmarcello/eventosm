@@ -296,6 +296,7 @@ model EventModality {
   deletedAt         DateTime?
   CategoryBatch     CategoryBatch[]
   EventRegistration EventRegistration[]
+  ModalityBatch     ModalityBatch[]
 
   @@schema("public")
 }
@@ -371,8 +372,10 @@ model EventRegistrationBatch {
   multipleRegistrationLimit Int?                  @db.Integer
   protectedBatch            Boolean               @default(false) @db.Boolean
   categoryControl           Boolean               @default(false) @db.Boolean
+  modalityControl           Boolean               @default(false) @db.Boolean
   EventRegistration         EventRegistration[]
   CategoryBatch             CategoryBatch[]
+  ModalityBatch             ModalityBatch[]
   createdAt                 DateTime              @default(now())
   updatedAt                 DateTime?             @updatedAt
 
@@ -387,6 +390,20 @@ model CategoryBatch {
   category         ModalityCategory       @relation(fields: [categoryId], references: [id])
   modality         EventModality          @relation(fields: [modalityId], references: [id])
   modalityId       String                 @db.Uuid
+  price            Float?
+  maxRegistrations Int?                   @db.Integer
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime?              @updatedAt
+
+  @@schema("public")
+}
+
+model ModalityBatch {
+  id               String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  batchId          String                 @db.Uuid
+  Batch            EventRegistrationBatch @relation(fields: [batchId], references: [id])
+  modalityId       String                 @db.Uuid
+  modality         EventModality          @relation(fields: [modalityId], references: [id])
   price            Float?
   maxRegistrations Int?                   @db.Integer
   createdAt        DateTime               @default(now())

@@ -341,6 +341,34 @@ async function verifyEventAvailableSlots({
   if (registrationsCount + registrations.length > batch.maxRegistrations)
     throw "Inscrições esgotadas.";
 
+  if (batch.modalityControl) {
+    const modalityBatchArray = batch.ModalityBatch;
+    const modalityArray = modalityBatchArray.map((mb) => mb.modalityId);
+
+    const modalitiesRegistrations = await prisma.eventRegistration.findMany({
+      where: {
+        modalityId: { in: modalityArray },
+        status: { not: { in: ["cancelled", "suspended"] } },
+      },
+      include: { _count: true },
+    });
+
+    for (const modality of modalityBatchArray) {
+      const modalityRegistrations = modalitiesRegistrations.filter(
+        (r) => r.modalityId === modality.modalityId
+      );
+      const count = registrations.filter(
+        (r) => r.modalityId === modality.modalityId
+      ).length;
+      const maxRegistrations = modality.maxRegistrations;
+
+      if (!maxRegistrations) throw `Limite de inscrições atingido.`;
+
+      if (count + modalityRegistrations.length > maxRegistrations)
+        throw `Limite de inscrições na modalidade ${modality.modalityId} excedido.`;
+    }
+  }
+
   if (batch.categoryControl) {
     const categoryBatchArray = batch.CategoryBatch;
     const categoryArray = categoryBatchArray.map((cb) => cb.category);
