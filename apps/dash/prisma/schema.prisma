@@ -121,7 +121,6 @@ model Organization {
   ownerId               String                  @db.Uuid
   document              String?                 @unique
   slug                  String                  @unique
-  domain                String?                 @unique
   /// [OrganizationOptions]
   options               Json                    @db.JsonB
   abbreviation          String

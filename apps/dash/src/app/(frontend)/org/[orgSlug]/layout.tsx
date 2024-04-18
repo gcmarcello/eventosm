@@ -1,17 +1,11 @@
-import { Inter } from "next/font/google";
+"use server";
 import { CompanyNavbar } from "../_shared/Navbar";
-import clsx from "clsx";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { OrgStore } from "./_shared/components/OrgStore";
-import type { Metadata, ResolvingMetadata } from "next";
-import { isDev } from "@/app/api/env";
-import dayjs from "dayjs";
-
-const inter = Inter({ subsets: ["latin"] });
+import OrgFooter from "../_shared/OrgFooter";
 
 export async function generateViewport({
   params,
@@ -86,7 +80,8 @@ export default async function CompanyLayout({
         />
       )}
       <CompanyNavbar organization={organization} user={request.userSession} />
-      {children}
+      <div className="">{children}</div>
+      <OrgFooter organization={organization} />
     </>
   );
 }

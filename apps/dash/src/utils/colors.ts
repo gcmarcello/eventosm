@@ -300,6 +300,27 @@ export function chooseTextColor(hexColor: string): string {
   return darkContrast > whiteContrast ? "#1F2937" : "white";
 }
 
+export function darkenColor(hexColor: string, percent: number): string {
+  if (!hexColor.startsWith("#")) {
+    return hexColor; // Return original color if not a valid hex color
+  }
+
+  // Parse hex color components
+  const r = parseInt(hexColor.slice(1, 3), 16);
+  const g = parseInt(hexColor.slice(3, 5), 16);
+  const b = parseInt(hexColor.slice(5, 7), 16);
+
+  // Calculate darker color components
+  const darkerR = Math.floor(r * (1 - percent / 100));
+  const darkerG = Math.floor(g * (1 - percent / 100));
+  const darkerB = Math.floor(b * (1 - percent / 100));
+
+  // Convert to hex format
+  const darkerHex = `#${darkerR.toString(16).padStart(2, "0")}${darkerG.toString(16).padStart(2, "0")}${darkerB.toString(16).padStart(2, "0")}`;
+
+  return darkerHex;
+}
+
 export function alterColorShade(tailwindColor: string, shade: number): string {
   const [color] = tailwindColor.split("-");
   if (!color || !colors.includes(color)) return tailwindColor;
