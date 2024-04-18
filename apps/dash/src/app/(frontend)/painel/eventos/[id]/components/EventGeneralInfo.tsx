@@ -57,6 +57,7 @@ export default function EventGeneralInfo({
     isMutating,
   } = useAction({
     action: upsertEvent,
+    redirect: true,
     onSuccess: () => {
       showToast({
         message: "Informações gerais atualizadas com sucesso!",
@@ -64,9 +65,9 @@ export default function EventGeneralInfo({
         variant: "success",
       });
     },
-    onError: () => {
+    onError: (error) => {
       showToast({
-        message: "Erro ao atualizar informações gerais!",
+        message: error.message || "Erro ao atualizar informações gerais",
         title: "Erro!",
         variant: "error",
       });
