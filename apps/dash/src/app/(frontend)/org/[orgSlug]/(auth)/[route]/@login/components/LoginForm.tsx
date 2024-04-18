@@ -110,7 +110,7 @@ export default function LoginForm({
                 Detectamos que você já possui uma conta cadastrada nas seguintes
                 organizações:
               </Heading>
-              <ul className="my-3">
+              <ul className="my-3 space-y-2">
                 <For each={user?.UserOrgLink!}>
                   {(org) => (
                     <li>

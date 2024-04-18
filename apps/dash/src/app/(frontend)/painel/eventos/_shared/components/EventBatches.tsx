@@ -22,8 +22,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { Badge, date } from "odinkit";
-import { Span } from "next/dist/trace";
-import { set } from "lodash";
 import { Table } from "odinkit";
 import {
   Button,
@@ -39,10 +37,8 @@ import {
   Date,
 } from "odinkit/client";
 import { Organization } from "@prisma/client";
-import { usePanel } from "../../../_shared/components/PanelStore";
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.extend(parseCustomFormat);
 
 export default function EventBatches({
   batches,
@@ -95,9 +91,6 @@ export default function EventBatches({
       });
     },
   });
-  const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
 
   function handleEditBatch({
     batch,
@@ -117,6 +110,7 @@ export default function EventBatches({
     eventBatchForm.setValue("eventId", batch?.eventId || undefined);
     eventBatchForm.setValue("eventGroupId", batch?.eventGroupId || undefined);
     eventBatchForm.setValue("categoryControl", batch.categoryControl);
+    eventBatchForm.setValue("modalityControl", batch.modalityControl);
     eventBatchForm.setValue("registrationType", batch.registrationType);
     eventBatchForm.setValue("name", batch.name || "");
     eventBatchForm.setValue(
@@ -128,19 +122,35 @@ export default function EventBatches({
       (modality) => modality.modalityCategory
     );
     eventBatchForm.setValue(
-      "categoryBatch",
-      batch.CategoryBatch.length
-        ? batch.CategoryBatch.map((categoryBatch) => ({
-            ...categoryBatch,
-            price: categoryBatch?.price?.toFixed(2).replace(".", ",") || "",
-          }))
-        : flatCategoryArray.map((category) => ({
-            categoryId: category.id,
-            modalityId: category.eventModalityId,
-            maxRegistrations: 0,
-            price: "",
-          }))
+      "modalityBatch",
+      modalities.map((mod) => {
+        const modalityBatch = batch.ModalityBatch.find(
+          (m) => m.modalityId === mod.id
+        );
+        return {
+          id: modalityBatch?.id,
+          modalityId: mod.id,
+          maxRegistrations: modalityBatch?.maxRegistrations || 0,
+          price: modalityBatch?.price?.toFixed(2).replace(".", ",") || "",
+        };
+      })
     );
+    eventBatchForm.setValue(
+      "categoryBatch",
+      flatCategoryArray.map((category) => {
+        const categoryBatch = batch.CategoryBatch.find(
+          (cb) => cb.categoryId === category.id
+        );
+        return {
+          id: categoryBatch?.id,
+          categoryId: category.id,
+          modalityId: category.eventModalityId,
+          maxRegistrations: categoryBatch?.maxRegistrations || 0,
+          price: categoryBatch?.price?.toFixed(2).replace(".", ",") || "",
+        };
+      })
+    );
+
     setIsBatchModalOpen(true);
   }
 
@@ -181,10 +191,9 @@ export default function EventBatches({
         />
       </Form>
 
-      <div className="mb-3 flex flex-col items-end justify-between gap-3 lg:flex-row-reverse">
+      <div className="my-3 flex flex-col justify-between gap-3 lg:flex-row-reverse lg:items-end">
         <Button
-          type="button"
-          color={primaryColor?.tw.color}
+          color={organization.options.colors.primaryColor.tw.color}
           onClick={() => {
             eventBatchForm.reset();
             setIsBatchModalOpen(true);
