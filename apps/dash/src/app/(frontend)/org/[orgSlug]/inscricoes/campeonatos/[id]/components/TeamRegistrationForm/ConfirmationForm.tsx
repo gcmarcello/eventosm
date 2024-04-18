@@ -71,7 +71,7 @@ export function ConfirmationForm({
                   {(field, index) => {
                     const userInfo = fetchUserInfo(field.userId!, teams, form);
 
-                    if (!form.getValues(`teamMembers.${index}.selected`))
+                    if (!form.watch(`teamMembers.${index}.selected`))
                       return <></>;
                     return (
                       <TableRow>
@@ -86,9 +86,7 @@ export function ConfirmationForm({
                             eventGroup.EventModality.find(
                               (mod) =>
                                 mod.id ===
-                                form.getValues(
-                                  `teamMembers.${index}.modalityId`
-                                )
+                                form.watch(`teamMembers.${index}.modalityId`)
                             )?.name
                           }
                         </TableCell>
@@ -97,15 +95,11 @@ export function ConfirmationForm({
                             eventGroup.EventModality.find(
                               (mod) =>
                                 mod.id ===
-                                form.getValues(
-                                  `teamMembers.${index}.modalityId`
-                                )
+                                form.watch(`teamMembers.${index}.modalityId`)
                             )?.modalityCategory.find(
                               (cat) =>
                                 cat.id ===
-                                form.getValues(
-                                  `teamMembers.${index}.categoryId`
-                                )
+                                form.watch(`teamMembers.${index}.categoryId`)
                             )?.name
                           }
                         </TableCell>
@@ -114,13 +108,11 @@ export function ConfirmationForm({
                             eventGroup.EventAddon?.find(
                               (addon) =>
                                 addon.id ===
-                                form.getValues(`teamMembers.${index}.addon.id`)
+                                form.watch(`teamMembers.${index}.addon.id`)
                             )?.name
                           }{" "}
-                          {form.getValues(
-                            `teamMembers.${index}.addon.option`
-                          ) &&
-                            ` - ${form.getValues(`teamMembers.${index}.addon.option`)}`}
+                          {form.watch(`teamMembers.${index}.addon.option`) &&
+                            ` - ${form.watch(`teamMembers.${index}.addon.option`)}`}
                         </TableCell>
                       </TableRow>
                     );

@@ -473,6 +473,49 @@ async function verifyEventGroupAvailableSlots({
   if (registrationsCount + registrations.length > batch.maxRegistrations)
     throw "Inscrições esgotadas.";
 
+  if (batch.modalityControl) {
+    const modalityBatchArray = batch.ModalityBatch;
+    const registrationModalities = Array.from(
+      new Set(registrations.map((r) => r.modalityId as string))
+    );
+
+    const modalitiesRegistrations = await prisma.eventRegistration.findMany({
+      where: {
+        modalityId: { in: registrationModalities },
+        status: { not: { in: ["cancelled", "suspended"] } },
+      },
+      select: { modalityId: true },
+    });
+
+    for (const modality of registrationModalities) {
+      console.log(modality);
+      const modalityInfo = modalityBatchArray.find(
+        (m) => m.modalityId === modality
+      );
+      const modalityRegistrations = modalitiesRegistrations.filter(
+        (r) => r.modalityId === modalityInfo?.modalityId
+      );
+
+      const potentialRegistrations = registrations.filter(
+        (r) => r.modalityId === modalityInfo?.modalityId
+      ).length;
+
+      const maxRegistrations = modalityInfo?.maxRegistrations;
+
+      if (!maxRegistrations) throw `Limite de inscrições atingido.`;
+
+      if (
+        potentialRegistrations + modalityRegistrations.length >
+        maxRegistrations
+      ) {
+        const mod = await prisma.eventModality.findUnique({
+          where: { id: modalityInfo?.modalityId },
+        });
+        throw `Limite de inscrições na modalidade ${mod?.name} excedido.`;
+      }
+    }
+  }
+
   if (batch.categoryControl) {
     const categoryBatchArray = batch.CategoryBatch;
     const categoryArray = categoryBatchArray.map((cb) => cb.category);

@@ -1,7 +1,7 @@
 import { UpsertRegistrationBatchDto } from "@/app/api/batches/dto";
 
 import clsx from "clsx";
-import { Alertbox, For, SubmitButton, Text } from "odinkit";
+import { Alertbox, For, Heading, SubmitButton, Text } from "odinkit";
 import {
   DialogBody,
   FieldGroup,
@@ -49,15 +49,15 @@ export default function BatchModal({
   const batchForm = useFormContext<UpsertRegistrationBatchDto>();
   const BatchField = useMemo(() => batchForm.createField(), []);
 
-  const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: batchForm.control,
-      name: "categoryBatch",
-    }
-  );
+  const { fields } = useFieldArray({
+    control: batchForm.control,
+    name: "categoryBatch",
+  });
+
+  const { fields: modalityFields } = useFieldArray({
+    control: batchForm.control,
+    name: "modalityBatch",
+  });
 
   const flatCategoryArray = useMemo(
     () => modalities.flatMap((modality) => modality.modalityCategory),
@@ -90,106 +90,144 @@ export default function BatchModal({
         )}
 
         {modalState.showCategoryBatches && (
-          <div className="mb-2 flex flex-col items-center justify-between gap-2 lg:flex-row">
+          <div className="my-2 flex flex-col gap-4 lg:flex-row">
+            <BatchField
+              variant="switch"
+              enableAsterisk={false}
+              name="modalityControl"
+            >
+              <Label>Controle por Modalidade</Label>
+              <Switch
+                color={organization.options.colors.primaryColor?.tw.color}
+              />
+            </BatchField>
             <BatchField
               variant="switch"
               enableAsterisk={false}
               name="categoryControl"
             >
               <Label>Controle por Categoria</Label>
-              <Switch color={primaryColor?.tw.color} />
+              <Switch
+                color={organization.options.colors.primaryColor?.tw.color}
+              />
             </BatchField>
-            <span className="text-xl">
-              Vagas:{" "}
-              {batchForm.watch("categoryControl") ? (
-                <span
-                  className={clsx(
-                    (batchForm
-                      .watch("categoryBatch")
-                      ?.reduce(
-                        (acc, f) =>
-                          (typeof f.maxRegistrations === "number"
-                            ? f.maxRegistrations
-                            : 0) + acc,
-                        0
-                      ) ?? 0) > batchForm.getValues("maxRegistrations")
-                      ? "text-red-600"
-                      : ""
-                  )}
-                >
-                  {batchForm
-                    .watch("categoryBatch")
-                    ?.reduce(
-                      (acc, f) =>
-                        (typeof f.maxRegistrations === "number"
-                          ? f.maxRegistrations
-                          : 0) + acc,
-                      0
-                    )}
-                </span>
-              ) : (
-                0
-              )}{" "}
-              / {batchForm.getValues("maxRegistrations")}
-            </span>
           </div>
         )}
         {modalState.showCategoryBatches ? (
           <Fieldset>
-            <For each={modalities} identifier="modalities">
-              {(modality, modalityIndex) => (
-                <DisclosureAccordion
-                  disabled={!batchForm.watch("categoryControl")}
-                  title={modality.name}
-                  className={clsx(
-                    !batchForm.watch("categoryControl") &&
-                      modalityIndex === modalities.length - 1 &&
-                      "rounded-b-md"
-                  )}
-                >
-                  <For
-                    each={fields.filter(
-                      (field) => field.modalityId === modality.id
-                    )}
-                    identifier="category"
-                  >
-                    {(categoryBatch, index) => {
-                      return (
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="flex items-center">
-                            <Text>
-                              {
-                                flatCategoryArray.find(
-                                  (c) => c.id === categoryBatch.categoryId
-                                )?.name
-                              }
-                            </Text>{" "}
-                          </div>
-                          <BatchField
-                            enableAsterisk={false}
-                            name={`categoryBatch.${flatCategoryArray.findIndex((i) => i.id === categoryBatch.categoryId)}.maxRegistrations`}
+            <div className="divide-y">
+              <For each={modalities} identifier="modalities">
+                {(modality, modalityIndex) => (
+                  <div className="py-4">
+                    <Heading>{modality.name}</Heading>
+                    <div className="flex flex-col justify-center gap-4 lg:flex-row">
+                      <BatchField
+                        className={"grow"}
+                        name={`modalityBatch.${modalities.findIndex((i) => i.id === modality.id)}.maxRegistrations`}
+                      >
+                        <Label>Máximo de Inscrições</Label>
+                        <Input
+                          disabled={!batchForm.watch("modalityControl")}
+                          type="number"
+                          inputMode="numeric"
+                          placeholder="1000"
+                          min={1}
+                        />
+                      </BatchField>
+                      <BatchField
+                        name={`modalityBatch.${modalities.findIndex((i) => i.id === modality.id)}.price`}
+                        className={"grow"}
+                      >
+                        <Label>Preço</Label>
+                        <Input
+                          disabled={!batchForm.watch("modalityControl")}
+                          inputMode="decimal"
+                          placeholder="99,90"
+                          min={0}
+                        />
+                      </BatchField>
+                    </div>
+                    <DisclosureAccordion
+                      border={false}
+                      disabled={!batchForm.watch("categoryControl")}
+                      title={
+                        <>
+                          <>
+                            Mostrar{" "}
+                            {
+                              fields.filter(
+                                (field) => field.modalityId === modality.id
+                              ).length
+                            }{" "}
+                            Categorias
+                          </>
+                        </>
+                      }
+                      className={clsx(
+                        !batchForm.watch("categoryControl") &&
+                          modalityIndex === modalities.length - 1 &&
+                          "rounded-b-md"
+                      )}
+                    >
+                      <div className="space-y-4 divide-y">
+                        <div className="py-4">
+                          <For
+                            each={fields.filter(
+                              (field) => field.modalityId === modality.id
+                            )}
+                            identifier="category"
                           >
-                            <Label>Inscrições</Label>
-                            <Input
-                              type="number"
-                              inputMode="numeric"
-                              placeholder="1000"
-                            />
-                          </BatchField>
-                          <BatchField
-                            enableAsterisk={false}
-                            name={`categoryBatch.${flatCategoryArray.findIndex((i) => i.id === categoryBatch.categoryId)}.price`}
-                          >
-                            <Label>Preço</Label>
-                            <Input inputMode="decimal" placeholder="99,90" />
-                          </BatchField>
+                            {(categoryBatch, index) => {
+                              return (
+                                <div className="grid grid-cols-3 gap-2">
+                                  <div className="flex items-center">
+                                    <Text>
+                                      {
+                                        flatCategoryArray.find(
+                                          (c) =>
+                                            c.id === categoryBatch.categoryId
+                                        )?.name
+                                      }
+                                    </Text>{" "}
+                                  </div>
+                                  <BatchField
+                                    enableAsterisk={false}
+                                    name={`categoryBatch.${flatCategoryArray.findIndex((i) => i.id === categoryBatch.categoryId)}.maxRegistrations`}
+                                  >
+                                    <Label>Inscrições</Label>
+                                    <Input
+                                      disabled={
+                                        !batchForm.watch("categoryControl")
+                                      }
+                                      type="number"
+                                      inputMode="numeric"
+                                      min={0}
+                                    />
+                                  </BatchField>
+                                  <BatchField
+                                    enableAsterisk={false}
+                                    name={`categoryBatch.${flatCategoryArray.findIndex((i) => i.id === categoryBatch.categoryId)}.price`}
+                                  >
+                                    <Label>Preço</Label>
+                                    <Input
+                                      disabled={
+                                        !batchForm.watch("categoryControl")
+                                      }
+                                      inputMode="decimal"
+                                      min={0}
+                                    />
+                                  </BatchField>
+                                </div>
+                              );
+                            }}
+                          </For>
                         </div>
-                      );
-                    }}
-                  </For>
-                </DisclosureAccordion>
-              )}
-            </For>
+                      </div>
+                    </DisclosureAccordion>
+                  </div>
+                )}
+              </For>
+            </div>
           </Fieldset>
         ) : (
           <Fieldset className={"my-3 space-y-3"}>
@@ -281,14 +319,16 @@ export default function BatchModal({
         {batchForm.getValues("id") && (
           <Button
             onClick={() => modalState.setShowCategoryBatches((prev) => !prev)}
-            color={secondaryColor?.tw.color}
+            color={organization.options.colors.secondaryColor?.tw.color}
           >
             {modalState.showCategoryBatches
               ? "Voltar"
               : "Definir por Categoria"}
           </Button>
         )}
-        <SubmitButton color={primaryColor?.tw.color}>
+        <SubmitButton
+          color={organization.options.colors.primaryColor?.tw.color}
+        >
           {batchForm.getValues("id") ? "Salvar" : "Criar"}
         </SubmitButton>
       </DialogActions>
