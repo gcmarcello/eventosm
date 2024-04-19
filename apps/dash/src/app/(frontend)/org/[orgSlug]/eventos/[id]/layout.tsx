@@ -1,6 +1,6 @@
 import { OrgLayoutContainer } from "../../_shared/components/OrgLayoutContainer";
 
-export default function EventGroupLayout({
+export default function EventPageLayout({
   children,
 }: {
   children: React.ReactNode;

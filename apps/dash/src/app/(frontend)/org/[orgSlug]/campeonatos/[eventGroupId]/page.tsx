@@ -9,6 +9,8 @@ import { readRegistrations } from "@/app/api/registrations/service";
 import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 import OrgFooter from "../../../_shared/OrgFooter";
+import clsx from "clsx";
+import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 
 export default async function TorneioPage({
   params,
@@ -72,7 +74,7 @@ export default async function TorneioPage({
   });
 
   return (
-    <>
+    <OrgPageContainer className="bg-slate-200" organization={organization}>
       <EventGroupContainer
         eventGroup={eventGroup}
         isUserRegistered={isUserRegistered}
@@ -81,7 +83,6 @@ export default async function TorneioPage({
         registrationCount={registrationCount}
         organization={organization}
       />
-      <OrgFooter organization={organization} />
-    </>
+    </OrgPageContainer>
   );
 }
