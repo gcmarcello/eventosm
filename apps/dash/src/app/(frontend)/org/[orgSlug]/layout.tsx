@@ -79,8 +79,10 @@ export default async function CompanyLayout({
           }}
         />
       )}
-      <CompanyNavbar organization={organization} user={request.userSession} />
-      {children}
+      <div className="flex min-h-[100dvh] flex-col">
+        <CompanyNavbar organization={organization} user={request.userSession} />
+        {children}
+      </div>
     </>
   );
 }
