@@ -11,6 +11,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Sidebar from "./components/Sidebar";
 import { Alertbox } from "odinkit";
+import OrgFooter from "../../_shared/OrgFooter";
 
 export default async function OrgProfileLayout({
   children,
@@ -52,11 +53,14 @@ export default async function OrgProfileLayout({
   if (!organization) return notFound();
 
   return (
-    <div className="mx-auto max-w-7xl  lg:flex lg:gap-x-8 lg:px-8">
-      <Sidebar organization={organization} />
-      <main className="px-4 pb-8 pt-4 sm:px-6 lg:flex-auto lg:px-0 lg:py-10">
-        {children}
-      </main>
-    </div>
+    <>
+      <div className="mx-auto max-w-7xl grow  lg:flex lg:gap-x-8 lg:px-8">
+        <Sidebar organization={organization} />
+        <main className="px-4 pb-8 pt-4 sm:px-6 lg:flex-auto lg:px-0 lg:py-10">
+          {children}
+        </main>
+      </div>
+      <OrgFooter organization={organization} />
+    </>
   );
 }
