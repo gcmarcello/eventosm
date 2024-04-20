@@ -216,7 +216,7 @@ export default function EventGroupContainer({
       <div
         ref={contentRef}
         className={clsx(
-          "mb-4 rounded-b bg-zinc-50 shadow-md  lg:mx-40 lg:bg-red-500 xl:mx-56"
+          "rounded-b bg-zinc-50 shadow-md lg:mx-40  lg:mb-4  xl:mx-56"
         )}
       >
         <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">

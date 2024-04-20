@@ -7,6 +7,8 @@ import RegistrationsContainer from "./components/RegistrationsContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
 import OrgFooter from "../../_shared/OrgFooter";
+import Sidebar from "./components/Sidebar";
+import { OrgPageContainer } from "../_shared/components/OrgPageContainer";
 
 export default async function RegistrationsPage({
   params,
@@ -57,12 +59,13 @@ export default async function RegistrationsPage({
           </Alertbox>
         </div>
       )}
-      <RegistrationsContainer
-        registrations={registrations}
-        teams={teams}
-        organization={organization}
-      />
-      <OrgFooter organization={organization} />
+      <OrgPageContainer footer={false} organization={organization}>
+        <RegistrationsContainer
+          registrations={registrations}
+          teams={teams}
+          organization={organization}
+        />
+      </OrgPageContainer>
     </>
   );
 }
