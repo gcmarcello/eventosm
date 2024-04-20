@@ -15,7 +15,7 @@ export function OrgPageContainer({
 }) {
   return (
     <>
-      <div className={clsx("grow px-6 pb-20 lg:px-16 lg:pb-8 ", className)}>
+      <div className={clsx("grow lg:px-16 lg:pb-8 ", className)}>
         {children}
       </div>
       {footer && <OrgFooter organization={organization} />}
