@@ -409,7 +409,7 @@ function CancelEventGroupRegistrationAlert({
               triggerCancellation({ registrationId: registration.id })
             }
           >
-            Cancelar
+            Cancelar Inscrição
           </Button>
         </AlertActions>
       </Alert>
