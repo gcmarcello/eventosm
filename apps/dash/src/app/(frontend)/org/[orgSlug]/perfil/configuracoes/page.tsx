@@ -5,6 +5,8 @@ import {
   readOrganizations,
 } from "@/app/api/orgs/service";
 import ProfileContainer from "../components/ProfileContainer";
+import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
+import { notFound } from "next/navigation";
 
 export default async function ProfilePage({
   params,
@@ -23,11 +25,15 @@ export default async function ProfilePage({
     where: { slug: params.orgSlug },
   });
 
+  if (!organization[0]) return notFound();
+
   return (
-    <ProfileContainer
-      connectedOrgs={connectedOrgs}
-      userSession={userSession}
-      orgSlug={params.orgSlug}
-    />
+    <OrgPageContainer footer={false} organization={organization[0]}>
+      <ProfileContainer
+        connectedOrgs={connectedOrgs}
+        userSession={userSession}
+        orgSlug={params.orgSlug}
+      />
+    </OrgPageContainer>
   );
 }

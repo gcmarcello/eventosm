@@ -62,7 +62,7 @@ export default function Sidebar({
     }
   }, []);
   return (
-    <aside className="flex overflow-x-auto border-b border-gray-900/5 py-4 lg:block lg:w-64 lg:flex-none lg:border-0 lg:py-10">
+    <aside className="flex max-w-[100dvw] overflow-x-auto border-b border-gray-900/5 py-4 lg:block lg:w-64 lg:flex-none lg:border-0 lg:py-10">
       <nav className="flex-none px-4 sm:px-6 lg:px-0">
         <ul
           role="list"
