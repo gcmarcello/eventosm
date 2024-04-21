@@ -228,6 +228,7 @@ export default function RegistrationsTable({
               Nome: registration.user.fullName,
               Cidade: registration.user.info?.city?.name,
               Status: registration.status,
+              Modalidade: registration.modality?.name,
               Categoria: registration.category?.name,
               Telefone: registration.user.phone,
               Equipe: registration.team?.name,
