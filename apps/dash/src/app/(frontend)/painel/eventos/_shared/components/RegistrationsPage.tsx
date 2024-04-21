@@ -226,6 +226,7 @@ export default function RegistrationsTable({
               Número: registration.code,
               Document: registration.user.document,
               Nome: registration.user.fullName,
+              Cidade: registration.user.info?.city?.name,
               Status: registration.status,
               Categoria: registration.category?.name,
               Telefone: registration.user.phone,
@@ -274,6 +275,13 @@ export default function RegistrationsTable({
                   return <Badge color="rose">Suspensa</Badge>;
               }
             },
+          }),
+          columnHelper.accessor("modality.name", {
+            id: "modality",
+            header: "Modalidade",
+            enableSorting: true,
+            enableGlobalFilter: false,
+            cell: (info) => info.getValue(),
           }),
           columnHelper.accessor("category.name", {
             id: "category",
