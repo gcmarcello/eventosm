@@ -80,3 +80,18 @@ export function sortTeamPositions(
   }));
   return positions;
 }
+
+export function millisecondsToTime(milliseconds: number) {
+  if (!milliseconds) return "";
+  let hours = Math.floor(milliseconds / (1000 * 60 * 60));
+  let minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+  let millis = milliseconds % 1000;
+
+  const strHours = String(hours).padStart(2, "0");
+  const strMinutes = String(minutes).padStart(2, "0");
+  const strSeconds = String(seconds).padStart(2, "0");
+  const strMillis = millis ? String(millis).padStart(3, "0") : 0;
+
+  return `${strHours}:${strMinutes}:${strSeconds}${strMillis ? `.${strMillis}` : ""}`;
+}

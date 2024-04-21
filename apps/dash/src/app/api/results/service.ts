@@ -267,10 +267,22 @@ export async function readUserEventGroupResults({
   eventGroupId: string;
   userSession: UserSession;
 }) {
-  return await prisma.eventResult.findMany({
-    where: {
-      Registration: { user: { id: userSession.id } },
-      Event: { EventGroup: { id: eventGroupId } },
-    },
+  const registration = await prisma.eventRegistration.findFirst({
+    where: { userId: userSession.id, eventGroupId, status: "active" },
   });
+  if (!registration) throw "Inscrição não encontrada!";
+
+  const results = await readEventGroupResults(eventGroupId);
+  const userPosition = results.results.find(
+    (r) => r.registrationId === registration.id
+  );
+  if (!userPosition) throw "Erro ao calcular posição!";
+  const userResults = await prisma.eventResult.findMany({
+    where: {
+      registrationId: registration.id,
+    },
+    include: { Event: true },
+  });
+
+  return { results: userResults, position: userPosition.position || 0 };
 }
