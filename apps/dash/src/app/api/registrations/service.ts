@@ -28,8 +28,11 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
   return await prisma.eventRegistration.findMany({
     where: request.where,
     include: {
-      event: true,
-      eventGroup: { include: { Event: { orderBy: { dateStart: "asc" } } } },
+      event: { where: { organizationId: request.where?.organizationId } },
+      eventGroup: {
+        where: { organizationId: request.where?.organizationId },
+        include: { Event: { orderBy: { dateStart: "asc" } } },
+      },
     },
   });
 }
