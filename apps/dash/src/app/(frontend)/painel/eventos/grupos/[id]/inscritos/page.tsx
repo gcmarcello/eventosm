@@ -1,6 +1,7 @@
 "use server";
 import {
   BatchCoupon,
+  City,
   EventAddon,
   EventCheckIn,
   EventModality,
@@ -15,7 +16,7 @@ import RegistrationsTable from "../../../_shared/components/RegistrationsPage";
 import { prisma } from "prisma/prisma";
 
 export type RegistrationWithInfo = EventRegistration & {
-  user: User & { info?: UserInfo };
+  user: User & { info?: UserInfo & { city: City | null } };
   batch: EventRegistrationBatch;
   modality?: EventModality | null;
   category?: ModalityCategory;
@@ -32,7 +33,15 @@ export default async function RegistrationsPage({
   const registrations = await prisma.eventRegistration.findMany({
     where: { eventGroupId: params.id },
     include: {
-      user: { include: { info: true } },
+      user: {
+        include: {
+          info: {
+            include: {
+              city: true,
+            },
+          },
+        },
+      },
       batch: true,
       modality: true,
       category: true,
