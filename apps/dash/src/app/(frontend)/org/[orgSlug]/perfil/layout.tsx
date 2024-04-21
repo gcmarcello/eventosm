@@ -54,7 +54,7 @@ export default async function OrgProfileLayout({
 
   return (
     <>
-      <div className="mx-auto max-w-7xl grow  lg:flex lg:gap-x-8 lg:px-8">
+      <div className="max-w-7xl grow lg:mx-32  lg:flex lg:gap-x-8 lg:px-8">
         <Sidebar organization={organization} />
         <main className="px-4 pb-8 pt-4 sm:px-6 lg:flex-auto lg:px-0 lg:py-10">
           {children}
