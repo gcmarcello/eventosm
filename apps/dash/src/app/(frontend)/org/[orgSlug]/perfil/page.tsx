@@ -33,10 +33,17 @@ export default async function RegistrationsPage({
   } = await UseMiddlewares({}, { includeInfo: true }).then(
     UserSessionMiddleware
   );
-  const registrations = await readRegistrations({
+
+  console.log(organization);
+
+  const registrations = await prisma.eventRegistration.findMany({
     where: {
       userId: userSession.id,
-      organizationId: organization.id,
+      NOT: { status: "cancelled" },
+      OR: [
+        { event: { organizationId: organization.id } },
+        { eventGroup: { organizationId: organization.id } },
+      ],
     },
   });
 
