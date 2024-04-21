@@ -91,8 +91,6 @@ export default function LoginForm({
     }
   }, [user]);
 
-  console.log(user);
-
   return (
     <>
       {user && (

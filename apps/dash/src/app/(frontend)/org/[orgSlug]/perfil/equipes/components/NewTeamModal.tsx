@@ -357,7 +357,6 @@ export function NewTeamModal({ organization }: { organization: Organization }) {
                             const errorLocation = i.path;
                             const errorRow = Number(errorLocation[0]) + 1;
                             const errorColumn = errorLocation[1];
-                            console.log(sheetJsonValidation.error.issues);
                             throw `Erro na linha ${errorRow}, coluna ${errorColumn}`;
                           }
                         );
