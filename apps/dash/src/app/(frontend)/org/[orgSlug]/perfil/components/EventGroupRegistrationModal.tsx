@@ -243,7 +243,7 @@ export function EventGroupRegistrationModal({
                     Etapas
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {registration.eventGroup?.Event?.length}
+                    {registration.eventGroup?.Event.length}
                   </dd>
                 </div>
                 <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
