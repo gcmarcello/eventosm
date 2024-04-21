@@ -10,6 +10,7 @@ import {
   EventResultWithInfo,
 } from "prisma/types/Results";
 import { EventResult, Team } from "@prisma/client";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
 
 export async function createEventResults(data: CreateResultsDto) {
   const registrationCodes = data.athletes.map((athlete) => athlete.code);
@@ -257,4 +258,19 @@ export async function readEventGroupResultsByTeam(eventGroupId: string) {
   }
 
   return sortTeamPositions(teamResults);
+}
+
+export async function readUserEventGroupResults({
+  eventGroupId,
+  userSession,
+}: {
+  eventGroupId: string;
+  userSession: UserSession;
+}) {
+  return await prisma.eventResult.findMany({
+    where: {
+      Registration: { user: { id: userSession.id } },
+      Event: { EventGroup: { id: eventGroupId } },
+    },
+  });
 }
