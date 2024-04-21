@@ -83,7 +83,6 @@ export default function UserModal({
   } = useAction({
     action: adminUpdateUser,
     requestParser: (data) => {
-      console.log(data);
       return {
         ...data,
         phone: normalizePhone(data.phone),

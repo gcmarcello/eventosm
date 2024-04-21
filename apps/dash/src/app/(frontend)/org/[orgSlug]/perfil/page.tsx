@@ -34,8 +34,6 @@ export default async function RegistrationsPage({
     UserSessionMiddleware
   );
 
-  console.log(organization);
-
   const registrations = await prisma.eventRegistration.findMany({
     where: {
       userId: userSession.id,
@@ -45,7 +43,12 @@ export default async function RegistrationsPage({
         { eventGroup: { organizationId: organization.id } },
       ],
     },
+    include: {
+      event: true,
+      eventGroup: true,
+    },
   });
+  console.log(registrations);
 
   const teams = await prisma.team.findMany({
     where: {
