@@ -50,7 +50,6 @@ export default async function RegistrationsPage({
       eventGroup: { include: { Event: true } },
     },
   });
-  console.log(registrations);
 
   const teams = await prisma.team.findMany({
     where: {
