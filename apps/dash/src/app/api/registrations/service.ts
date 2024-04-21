@@ -28,9 +28,17 @@ export async function readRegistrations(request: ReadRegistrationsDto) {
   return await prisma.eventRegistration.findMany({
     where: request.where,
     include: {
-      event: { where: { organizationId: request.where?.organizationId } },
+      event: {
+        where: {
+          organizationId: request.where?.organizationId,
+          NOT: { status: "cancelled" },
+        },
+      },
       eventGroup: {
-        where: { organizationId: request.where?.organizationId },
+        where: {
+          organizationId: request.where?.organizationId,
+          NOT: { status: "cancelled" },
+        },
         include: { Event: { orderBy: { dateStart: "asc" } } },
       },
     },
