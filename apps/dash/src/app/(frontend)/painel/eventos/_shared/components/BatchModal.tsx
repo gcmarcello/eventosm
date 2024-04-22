@@ -28,6 +28,8 @@ import { useFieldArray } from "react-hook-form";
 import { Organization } from "@prisma/client";
 import { usePanel } from "../../../_shared/components/PanelStore";
 import dayjs from "dayjs";
+import { QuickDatesButtons } from "./QuickDatesButtons";
+import { QuickTimesButtons } from "./QuickTimesButtons";
 
 export default function BatchModal({
   modalState,
@@ -65,6 +67,10 @@ export default function BatchModal({
     [modalities]
   );
 
+  function testColor(color: string) {
+    return `text-${color}-500`;
+  }
+
   return (
     <Dialog
       size="5xl"
@@ -88,7 +94,7 @@ export default function BatchModal({
       </DialogDescription>
       <DialogBody>
         {batchForm.formState.errors.root?.serverError?.message && (
-          <Alertbox type="error" className="mb-3">
+          <Alertbox type="error" dismissible className="mb-3">
             <ul>
               <li>{batchForm.formState.errors.root?.serverError?.message}</li>
             </ul>
@@ -240,6 +246,7 @@ export default function BatchModal({
             <div className={"grid grid-cols-2 gap-2"}>
               <BatchField name="dateStart">
                 <Label>Data de Início</Label>
+                <QuickDatesButtons />
                 <Input
                   mask={"99/99/9999"}
                   inputMode="numeric"
@@ -248,20 +255,16 @@ export default function BatchModal({
               </BatchField>
               <BatchField name="timeStart">
                 <Label>Hora de Início</Label>
+                <QuickTimesButtons />
+
                 <Input mask={"99:99"} inputMode="numeric" placeholder="09:40" />
               </BatchField>
-              <Button
-                outline
-                onClick={() =>
-                  batchForm.setValue("dateStart", dayjs().format("DD/MM/YYYY"))
-                }
-              >
-                Hoje
-              </Button>
             </div>
             <div className={"grid grid-cols-2 gap-2"}>
               <BatchField name="dateEnd">
                 <Label>Data de Término</Label>
+                <QuickDatesButtons />
+
                 <Input
                   mask={"99/99/9999"}
                   inputMode="numeric"
@@ -271,6 +274,8 @@ export default function BatchModal({
               </BatchField>
               <BatchField name="timeEnd">
                 <Label>Hora de Término</Label>
+                <QuickTimesButtons />
+
                 <Input mask={"99:99"} inputMode="numeric" placeholder="09:40" />
               </BatchField>
             </div>

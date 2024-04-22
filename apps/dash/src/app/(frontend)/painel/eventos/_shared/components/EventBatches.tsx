@@ -255,19 +255,22 @@ export default function EventBatches({
             cell: (info) =>
               `${info.getValue()}/${info.row.original.maxRegistrations}`,
           }),
-          columnHelper.accessor("price", {
-            id: "price",
-            header: "Preço",
+
+          columnHelper.accessor("modalityControl", {
+            id: "modalityControl",
+            header: "Por Modalidade",
             enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) =>
-              info.getValue()
-                ? `R$ ${info.getValue().toFixed(2).replace(".", ",")}`
-                : "Gratuito",
+              info.getValue() ? (
+                <CheckIcon className="h-5 w-5 text-green-600" />
+              ) : (
+                <XMarkIcon className="h-5 w-5 text-red-400" />
+              ),
           }),
           columnHelper.accessor("categoryControl", {
-            id: "batch_registrations",
-            header: "Limitado por Categoria",
+            id: "categoryControl",
+            header: "Por Categoria",
             enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) =>
@@ -279,7 +282,7 @@ export default function EventBatches({
           }),
           columnHelper.accessor("protectedBatch", {
             id: "protectedBatch",
-            header: "Lote Privado",
+            header: "Status",
             enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) =>
