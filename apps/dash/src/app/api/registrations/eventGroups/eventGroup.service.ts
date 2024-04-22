@@ -508,10 +508,10 @@ async function verifyEventGroupAvailableSlots({
         potentialRegistrations + modalityRegistrations.length >
         maxRegistrations
       ) {
-        const mod = await prisma.eventModality.findUnique({
+        const modalityName = await prisma.eventModality.findUnique({
           where: { id: modalityInfo?.modalityId },
         });
-        throw `Limite de inscrições na modalidade ${mod?.name} excedido.`;
+        throw `Limite de inscrições na modalidade ${modalityName?.name} excedido.`;
       }
     }
   }

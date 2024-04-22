@@ -27,6 +27,7 @@ import { Dispatch, SetStateAction, useMemo } from "react";
 import { useFieldArray } from "react-hook-form";
 import { Organization } from "@prisma/client";
 import { usePanel } from "../../../_shared/components/PanelStore";
+import dayjs from "dayjs";
 
 export default function BatchModal({
   modalState,
@@ -249,6 +250,14 @@ export default function BatchModal({
                 <Label>Hora de Início</Label>
                 <Input mask={"99:99"} inputMode="numeric" placeholder="09:40" />
               </BatchField>
+              <Button
+                outline
+                onClick={() =>
+                  batchForm.setValue("dateStart", dayjs().format("DD/MM/YYYY"))
+                }
+              >
+                Hoje
+              </Button>
             </div>
             <div className={"grid grid-cols-2 gap-2"}>
               <BatchField name="dateEnd">
