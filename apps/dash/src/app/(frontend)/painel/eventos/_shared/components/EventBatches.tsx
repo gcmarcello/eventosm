@@ -171,6 +171,21 @@ export default function EventBatches({
     [batches]
   );
 
+  function generateBatchLink(
+    batch: EventRegistrationBatchesWithCategoriesAndRegistrations
+  ) {
+    const url = organization.OrgCustomDomain[0]?.domain;
+    const eventGroup = batch.eventGroupId;
+    const team = batch.registrationType === "team" ? "&team=true" : "";
+    return (
+      url +
+      (eventGroup ? "/inscricoes/campeonatos/" : "/inscricoes/") +
+      (eventGroup ? batch.eventGroupId : batch.eventId) +
+      `?batch=${batch.id}` +
+      (batch.registrationType === "team" ? "&team=true" : "")
+    );
+  }
+
   return (
     <>
       <Form
@@ -314,13 +329,7 @@ export default function EventBatches({
                   <DropdownItem
                     onClick={async () => {
                       await navigator.clipboard.writeText(
-                        organization.OrgCustomDomain[0]?.domain +
-                          "/inscricoes/campeonatos/" +
-                          info.row.original.eventGroupId +
-                          `?batch=${info.row.original.id}` +
-                          (info.row.original.registrationType === "team"
-                            ? "&team=true"
-                            : "")
+                        generateBatchLink(info.row.original)
                       );
                       return showToast({
                         message: "Link copiado.",
