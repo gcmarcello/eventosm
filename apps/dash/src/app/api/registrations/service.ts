@@ -126,6 +126,8 @@ export async function updateEventGroupRegistration(
       categoryId: data.categoryId,
       status: data.status,
       code: data.code,
+      justifiedAbsences: data.justifiedAbsences,
+      unjustifiedAbsences: data.unjustifiedAbsences,
     },
   });
 

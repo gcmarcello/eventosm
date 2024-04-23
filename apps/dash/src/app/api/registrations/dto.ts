@@ -147,6 +147,8 @@ export const updateRegistrationDto = z.object({
   categoryId: z.string().uuid(),
   modalityId: z.string().uuid(),
   status: nativeEnum(EventRegistrationStatus),
+  justifiedAbsences: z.number().optional(),
+  unjustifiedAbsences: z.number().optional(),
   code: z.string(),
 });
 
