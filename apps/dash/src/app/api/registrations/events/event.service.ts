@@ -349,6 +349,7 @@ async function verifyEventAvailableSlots({
       where: {
         modalityId: { in: modalityArray },
         status: { not: { in: ["cancelled", "suspended"] } },
+        batchId: batch.id,
       },
       include: { _count: true },
     });
@@ -367,6 +368,8 @@ async function verifyEventAvailableSlots({
       const modalityName = await prisma.eventModality.findUnique({
         where: { id: modality.modalityId },
       });
+
+      console.log(modalityRegistrations.length);
 
       if (count + modalityRegistrations.length > maxRegistrations)
         throw `Limite de inscrições na modalidade ${modalityName?.name || modality.id} excedido.`;
