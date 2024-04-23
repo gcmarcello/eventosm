@@ -361,14 +361,19 @@ export default function IndividualRegistration({
                       </FieldGroup>
                     </Fieldset>
                     <dl className="divide-y divide-gray-100">
-                      {/* <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                      <dt className=" font-medium leading-6 text-gray-900">
-                        Nome
-                      </dt>
-                      <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        {userSession.fullName}
-                      </dd>
-                    </div> */}
+                      <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
+                        <dt className=" font-medium leading-6 text-gray-900">
+                          Modalidade
+                        </dt>
+                        <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          {
+                            event.EventModality.find(
+                              (m) =>
+                                m.id === form.watch("registration.modalityId")
+                            )?.name
+                          }
+                        </dd>
+                      </div>
                       <div className=" py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
                         <dt className=" font-medium leading-6 text-gray-900">
                           Categoria
