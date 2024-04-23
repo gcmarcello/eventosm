@@ -117,6 +117,14 @@ export default function RegistrationsTable({
         "modalityId",
         selectedRegistration?.modalityId ?? undefined!
       );
+      form.setValue(
+        "justifiedAbsences",
+        selectedRegistration?.justifiedAbsences ?? 0
+      );
+      form.setValue(
+        "unjustifiedAbsences",
+        selectedRegistration?.unjustifiedAbsences ?? 0
+      );
       form.setValue("code", selectedRegistration?.code!);
     }
   }, [selectedRegistration]);
@@ -184,6 +192,18 @@ export default function RegistrationsTable({
                     permitidas.
                   </Description>
                 </Field>
+                <div className="flex gap-2">
+                  <Field name="justifiedAbsences">
+                    <Label>Ausências Justificadas</Label>
+                    <Input type="number" />
+                    <ErrorMessage />
+                  </Field>
+                  <Field name="unjustifiedAbsences">
+                    <Label>Ausências Não Justificadas</Label>
+                    <Input type="number" />
+                    <ErrorMessage />
+                  </Field>
+                </div>
                 <div className="flex">
                   <div className="hidden lg:block">
                     <Image
