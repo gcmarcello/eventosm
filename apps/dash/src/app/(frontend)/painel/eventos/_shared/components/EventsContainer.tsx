@@ -246,7 +246,7 @@ export default function EventsContainer({
               }),
               columnHelper.accessor("_count.EventRegistration", {
                 id: "registrations",
-                header: "Inscritos",
+                header: "Inscrições Ativas",
                 enableSorting: true,
                 enableGlobalFilter: true,
                 cell: (info) => info.getValue(),

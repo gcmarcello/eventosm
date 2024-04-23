@@ -162,7 +162,9 @@ export async function readEvents(request: ReadEventDto) {
   const events = await prisma.event.findMany({
     where: request.where,
     include: {
-      _count: { select: { EventRegistration: true } },
+      _count: {
+        select: { EventRegistration: { where: { status: "active" } } },
+      },
       EventModality: { include: { modalityCategory: true } },
       EventRegistration: true,
       EventRegistrationBatch: {
@@ -180,7 +182,9 @@ export async function readEventGroups(request: ReadEventGroupDto) {
     include: {
       Event: { orderBy: { dateStart: "asc" } },
       EventGroupRules: true,
-      EventRegistration: { include: { user: true } },
+      EventRegistration: {
+        include: { user: true },
+      },
       EventModality: { include: { modalityCategory: true } },
       EventAddon: true,
       EventRegistrationBatch: {
