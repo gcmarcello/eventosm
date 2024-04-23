@@ -63,7 +63,7 @@ export function justification_denied({
       <body>
         <div class="email-container">
           <div class="email-header">
-            <h1>Justificativa Aceita!</h1>
+            <h1>Justificativa Reprovada!</h1>
           </div>
           <div class="email-content">
             <p>Olá ${name}!</p>
