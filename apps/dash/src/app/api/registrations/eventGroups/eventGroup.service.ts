@@ -483,6 +483,7 @@ async function verifyEventGroupAvailableSlots({
       where: {
         modalityId: { in: registrationModalities },
         status: { not: { in: ["cancelled", "suspended"] } },
+        batchId: batch.id,
       },
       select: { modalityId: true },
     });
