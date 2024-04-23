@@ -108,7 +108,13 @@ export default function ConfirmEventFinishModal({
               ).length ? (
                 <Field name="finishEvent.unjustifiedAbsences">
                   <Alertbox className="my-2" type="info">
-                    O evento ainda possui {subeventAttendance.absences.length}{" "}
+                    O evento ainda possui{" "}
+                    {
+                      subeventAttendance.absences.filter(
+                        (abs: EventAbsences) =>
+                          abs.status === EventAbsenceStatus.pending
+                      ).length
+                    }{" "}
                     justificativa
                     {subeventAttendance.absences.length > 1 ? "s" : ""} de
                     ausência pendentes, o que você deseja fazer?
