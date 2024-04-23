@@ -380,7 +380,7 @@ export default function EventGroupContainer({
                       format="DD/MM/YYYY HH:mm"
                     />
                   </Button>
-                ) : (
+                ) : isUserRegistered ? null : (
                   <Button className={"w-full"} disabled color="rose">
                     Inscrições Indisponíveis
                   </Button>
