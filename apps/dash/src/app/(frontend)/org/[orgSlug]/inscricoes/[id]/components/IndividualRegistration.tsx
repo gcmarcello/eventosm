@@ -127,6 +127,10 @@ export default function IndividualRegistration({
       form.setValue("registration.categoryId", categories[0]?.id);
   }, [categories]);
 
+  useEffect(() => {
+    form.resetField("registration.categoryId", { defaultValue: "" });
+  }, [form.watch("registration.modalityId")]);
+
   return (
     <>
       <Dialog open={showRules} onClose={setShowRules}>
