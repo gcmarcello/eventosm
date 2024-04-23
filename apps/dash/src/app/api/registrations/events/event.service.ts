@@ -364,8 +364,12 @@ async function verifyEventAvailableSlots({
 
       if (!maxRegistrations) throw `Limite de inscrições atingido.`;
 
+      const modalityName = await prisma.eventModality.findUnique({
+        where: { id: modality.modalityId },
+      });
+
       if (count + modalityRegistrations.length > maxRegistrations)
-        throw `Limite de inscrições na modalidade ${modality.modalityId} excedido.`;
+        throw `Limite de inscrições na modalidade ${modalityName?.name || modality.id} excedido.`;
     }
   }
 

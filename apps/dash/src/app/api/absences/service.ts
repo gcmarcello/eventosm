@@ -39,12 +39,12 @@ export async function changeAbsenceStatus(
   await sendEmail([
     {
       template:
-        currentStatus.status === "denied"
+        data.status === "denied"
           ? "justification_denied"
           : "justification_accepted",
       setup: {
         from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: `Justificativa Aceita - ${currentStatus.event.name}`,
+        subject: `${data.status === "denied" ? "Justificativa Reprovada" : "Justificativa Aceita"} - ${currentStatus.event.name}`,
         to: currentStatus.registration.user.email,
       },
       templateParameters: {
@@ -61,7 +61,7 @@ export async function changeAbsenceStatus(
     },
   ]);
 
-  await prisma.eventAbsences.update({
+  return await prisma.eventAbsences.update({
     where: { id: data.absenceId },
     data: {
       status: data.status,
@@ -78,11 +78,6 @@ export async function changeAbsenceStatus(
         },
       },
     },
-  });
-
-  return await prisma.eventAbsences.update({
-    where: { id: data.absenceId },
-    data: { status: data.status },
     include: { event: true },
   });
 }
