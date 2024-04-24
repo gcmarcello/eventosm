@@ -1,6 +1,6 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UpsertRegistrationBatchDto } from "./dto";
+import { ReadRegistrationBatchDto, UpsertRegistrationBatchDto } from "./dto";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import * as service from "./service";
@@ -23,6 +23,24 @@ export async function upsertRegistrationBatch(
     });
   } catch (error) {
     console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function readModalityBatchRegistrations(request: {
+  batchId: string;
+}) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+    const registrations =
+      await service.readModalityBatchRegistrations(parsedRequest);
+    return ActionResponse.success({
+      data: registrations,
+      message: "Informações encontradas com sucesso.",
+    });
+  } catch (error) {
     return ActionResponse.error(error);
   }
 }

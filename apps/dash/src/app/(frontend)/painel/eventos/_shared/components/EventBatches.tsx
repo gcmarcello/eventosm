@@ -36,7 +36,8 @@ import {
   DropdownSeparator,
   Date,
 } from "odinkit/client";
-import { Organization } from "@prisma/client";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
+import { ModalityControlModal } from "./ModalityControlModal";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -57,6 +58,12 @@ export default function EventBatches({
 }) {
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [showCategoryBatches, setShowCategoryBatches] = useState(false);
+  const [showModalityControlModal, setShowModalityControlModal] =
+    useState(false);
+  const [selectedBatch, setSelectedBatch] = useState<
+    undefined | EventRegistrationBatch
+  >(undefined);
+
   const eventBatchForm = useForm({
     schema: upsertRegistrationBatchDto,
     mode: "onChange",
@@ -154,6 +161,11 @@ export default function EventBatches({
     setIsBatchModalOpen(true);
   }
 
+  function handleModalityControlModal(batch: EventRegistrationBatch) {
+    setSelectedBatch(batch);
+    setShowModalityControlModal(true);
+  }
+
   const stats = useMemo(
     () => [
       {
@@ -192,6 +204,13 @@ export default function EventBatches({
         hform={eventBatchForm}
         onSubmit={(data) => triggerRegistrationBatch(data)}
       >
+        {selectedBatch && (
+          <ModalityControlModal
+            isOpen={showModalityControlModal}
+            setIsOpen={setShowModalityControlModal}
+            batch={selectedBatch}
+          />
+        )}
         <BatchModal
           organization={organization}
           batches={batches}
@@ -278,7 +297,13 @@ export default function EventBatches({
             enableGlobalFilter: false,
             cell: (info) =>
               info.getValue() ? (
-                <CheckIcon className="h-5 w-5 text-green-600" />
+                <Button
+                  onClick={() => {
+                    handleModalityControlModal(info.row.original);
+                  }}
+                >
+                  ModalityControlModal
+                </Button>
               ) : (
                 <XMarkIcon className="h-5 w-5 text-red-400" />
               ),
@@ -290,7 +315,13 @@ export default function EventBatches({
             enableGlobalFilter: false,
             cell: (info) =>
               info.getValue() ? (
-                <CheckIcon className="h-5 w-5 text-green-600" />
+                <Button
+                  onClick={() => {
+                    handleModalityControlModal(info.row.original);
+                  }}
+                >
+                  ModalityControlModal
+                </Button>
               ) : (
                 <XMarkIcon className="h-5 w-5 text-red-400" />
               ),

@@ -165,6 +165,11 @@ export async function readRegistrationBatches(
     where: request.where,
     include: {
       CategoryBatch: { include: { category: true } },
+      ModalityBatch: {
+        include: {
+          modality: true,
+        },
+      },
       _count: {
         select: {
           EventRegistration: { where: { status: { not: "cancelled" } } },
@@ -345,4 +350,27 @@ export async function readNextBatch(request: ReadRegistrationBatchDto) {
     },
   });
   return batch;
+}
+
+export async function readModalityBatchRegistrations({
+  batchId,
+}: {
+  batchId: string;
+}) {
+  const registrationCounts = await prisma.eventRegistration.groupBy({
+    by: ["modalityId"],
+    where: { batchId, status: "active" },
+    _count: {
+      modalityId: true,
+    },
+  });
+
+  const modalities = await prisma.eventModality.findMany({
+    where: { id: { in: registrationCounts.map((rc) => rc.modalityId!) } },
+  });
+
+  return registrationCounts.map((rc) => ({
+    ...rc,
+    modality: modalities.find((m) => m.id === rc.modalityId),
+  }));
 }

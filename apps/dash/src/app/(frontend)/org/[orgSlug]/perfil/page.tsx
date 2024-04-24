@@ -48,6 +48,7 @@ export default async function RegistrationsPage({
       modality: true,
       category: true,
       eventGroup: { include: { Event: true } },
+      team: true,
     },
   });
 
