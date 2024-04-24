@@ -112,10 +112,7 @@ export async function createEventIndividualRegistration(
   const emailArray: Email<"registration_email">[] = [
     {
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: userSession.email,
       },
@@ -237,10 +234,7 @@ export async function createEventMultipleRegistrations(
 
     emailArray.push({
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: users.find((u) => u.id === user.userId)?.email!,
       },
