@@ -110,10 +110,7 @@ export async function createEventGroupRegistration(
   const emailArray: Email<"registration_email">[] = [
     {
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: userSession.email,
       },
@@ -235,10 +232,7 @@ export async function createEventGroupMultipleRegistrations(
 
     emailArray.push({
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: users.find((u) => u.id === user.userId)?.email!,
       },
@@ -321,10 +315,7 @@ export async function reestablishEventGroupRegistration(
   const emailArray: Email<"registration_email">[] = [
     {
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: oldRegistration.eventGroup?.Organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: oldRegistration.user.email,
       },
@@ -383,10 +374,7 @@ export async function resendEventGroupRegistrationConfirmation(id: string) {
   const emailArray: Email<"registration_email">[] = [
     {
       setup: {
-        from: {
-          email: getServerEnv("SENDGRID_EMAIL")!,
-          name: findRegistration.eventGroup?.Organization?.name,
-        },
+        from: getServerEnv("SENDGRID_EMAIL")!,
         subject: "Inscrição confirmada",
         to: findRegistration.user.email,
       },
