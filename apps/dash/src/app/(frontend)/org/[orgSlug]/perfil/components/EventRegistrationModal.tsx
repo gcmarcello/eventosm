@@ -175,6 +175,8 @@ export function EventRegistrationModal({
 
   if (!registration) return null;
 
+  console.log(registration);
+
   return (
     <>
       <Dialog open={isOpen} onClose={setIsOpen}>
