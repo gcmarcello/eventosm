@@ -358,20 +358,23 @@ async function verifyEventAvailableSlots({
       const modalityRegistrations = modalitiesRegistrations.filter(
         (r) => r.modalityId === modality.modalityId
       );
+      if (!modalityRegistrations.length) continue;
       const count = registrations.filter(
         (r) => r.modalityId === modality.modalityId
       ).length;
       const maxRegistrations = modality.maxRegistrations;
 
-      if (!maxRegistrations) throw `Limite de inscrições atingido.`;
+      if (!maxRegistrations && modalityRegistrations.length)
+        throw `Limite de inscrições atingido.`;
 
       const modalityName = await prisma.eventModality.findUnique({
         where: { id: modality.modalityId },
       });
 
-      console.log(modalityRegistrations.length);
-
-      if (count + modalityRegistrations.length > maxRegistrations)
+      if (
+        !maxRegistrations ||
+        count + modalityRegistrations.length > maxRegistrations
+      )
         throw `Limite de inscrições na modalidade ${modalityName?.name || modality.id} excedido.`;
     }
   }

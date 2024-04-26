@@ -489,7 +489,6 @@ async function verifyEventGroupAvailableSlots({
     });
 
     for (const modality of registrationModalities) {
-      console.log(modality);
       const modalityInfo = modalityBatchArray.find(
         (m) => m.modalityId === modality
       );
@@ -501,13 +500,16 @@ async function verifyEventGroupAvailableSlots({
         (r) => r.modalityId === modalityInfo?.modalityId
       ).length;
 
+      if (!potentialRegistrations) continue;
+
       const maxRegistrations = modalityInfo?.maxRegistrations;
 
-      if (!maxRegistrations) throw `Limite de inscrições atingido.`;
+      if (!maxRegistrations && potentialRegistrations)
+        throw `Limite de inscrições atingido.`;
 
       if (
-        potentialRegistrations + modalityRegistrations.length >
-        maxRegistrations
+        !maxRegistrations ||
+        potentialRegistrations + modalityRegistrations.length > maxRegistrations
       ) {
         const modalityName = await prisma.eventModality.findUnique({
           where: { id: modalityInfo?.modalityId },
