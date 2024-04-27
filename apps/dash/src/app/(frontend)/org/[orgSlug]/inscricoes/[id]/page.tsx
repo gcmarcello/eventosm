@@ -1,17 +1,12 @@
-import { readEventGroups } from "@/app/api/events/service";
-import IndividualTournamentRegistration from "./components/IndividualRegistration";
-import TeamTournamentRegistration from "./components/TeamRegistrationForm/Form";
 import { notFound, redirect } from "next/navigation";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
-import { readTeams } from "@/app/api/teams/service";
-import { readModalityCategories } from "@/app/api/categories/service";
 import { readActiveBatch, readProtectedBatch } from "@/app/api/batches/service";
 import { readUserInfo } from "@/app/api/users/service";
-import { readRegistrations } from "@/app/api/registrations/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 import TeamRegistration from "./components/TeamRegistrationForm/Form";
 import IndividualRegistration from "./components/IndividualRegistration";
+import { Alertbox } from "odinkit";
 
 export default async function InscricaoPage({
   searchParams,
@@ -54,7 +49,7 @@ export default async function InscricaoPage({
   );
 
   if (isUserRegistered && !searchParams.team) {
-    return redirect(`/campeonatos/${params.id}`);
+    return redirect(`/eventos/${params.id}?registered=true`);
   }
 
   let batch;
@@ -100,27 +95,31 @@ export default async function InscricaoPage({
       },
     });
     return (
-      <TeamRegistration
-        event={event}
-        teams={teams}
-        organization={organization}
-        batch={batch}
-        userSession={userSession}
-      />
+      <>
+        <TeamRegistration
+          event={event}
+          teams={teams}
+          organization={organization}
+          batch={batch}
+          userSession={userSession}
+        />
+      </>
     );
   } else {
     const teams = await prisma.team.findMany({
       where: { User: { some: { id: userSession.id } } },
     });
     return (
-      <IndividualRegistration
-        teams={teams}
-        event={event}
-        organization={organization}
-        batch={batch}
-        userSession={userSession}
-        userInfo={userInfo}
-      />
+      <>
+        <IndividualRegistration
+          teams={teams}
+          event={event}
+          organization={organization}
+          batch={batch}
+          userSession={userSession}
+          userInfo={userInfo}
+        />
+      </>
     );
   }
 }

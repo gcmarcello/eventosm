@@ -2,7 +2,7 @@ import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { notFound } from "next/navigation";
-import { isUUID } from "odinkit";
+import { Alertbox, isUUID } from "odinkit";
 import EventContainer from "./components/EventContainer";
 import OrgFooter from "../../../_shared/OrgFooter";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
