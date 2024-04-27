@@ -116,17 +116,17 @@ export default function EventContainer({
   return (
     <>
       <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
-        {params.get("registered") && (
-          <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
-            Você já está inscrito neste evento.
-          </Alertbox>
-        )}
         <div
           ref={contentRef}
           className={clsx(
             "mb-4 rounded-b bg-zinc-50 shadow-md  lg:mx-40 lg:bg-white xl:mx-56"
           )}
         >
+          {params.get("registered") && (
+            <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
+              Você já está inscrito neste evento.
+            </Alertbox>
+          )}
           <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
             <div className="relative h-[50vh] w-full">
               <Image
