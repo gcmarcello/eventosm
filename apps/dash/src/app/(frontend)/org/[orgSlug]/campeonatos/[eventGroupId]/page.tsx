@@ -1,6 +1,6 @@
 import { readEventGroups } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
-import { isUUID } from "odinkit";
+import { Alertbox, isUUID } from "odinkit";
 
 import EventGroupContainer from "./components/EventGroupContainer";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";

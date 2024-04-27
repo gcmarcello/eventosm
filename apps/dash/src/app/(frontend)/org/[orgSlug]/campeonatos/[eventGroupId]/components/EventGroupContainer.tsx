@@ -15,6 +15,7 @@ import {
   Badge,
   Table,
   Link,
+  Alertbox,
 } from "odinkit";
 import {
   Dropdown,
@@ -65,6 +66,7 @@ import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../_shared/components/OrgStore";
 import { Field } from "@headlessui/react";
+import { useSearchParams } from "next/navigation";
 
 export default function EventGroupContainer({
   eventGroup,
@@ -185,6 +187,8 @@ export default function EventGroupContainer({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
+  const params = useSearchParams();
+
   function handleEventModal(id: string) {
     const event = eventGroup.Event.find((e) => e.id === id);
     if (!event) return;
@@ -219,6 +223,11 @@ export default function EventGroupContainer({
           "rounded-b bg-zinc-50 shadow-md lg:mx-40  lg:mb-4  xl:mx-56"
         )}
       >
+        {params.get("registered") && (
+          <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
+            Você já está inscrito neste campeonato.
+          </Alertbox>
+        )}
         <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
           <div className="relative h-[50vh] w-full">
             <Image
