@@ -15,6 +15,7 @@ import {
   Badge,
   Table,
   Link,
+  Alertbox,
 } from "odinkit";
 import {
   Dropdown,
@@ -64,6 +65,7 @@ import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../_shared/components/OrgStore";
 import { Field } from "@headlessui/react";
 import RegistrationMobileButton from "./RegistrationMobileButton";
+import { useSearchParams } from "next/navigation";
 
 export default function EventContainer({
   event,
@@ -108,11 +110,17 @@ export default function EventContainer({
   ];
 
   const { image } = useOrg();
+  const params = useSearchParams();
   const contentRef = useRef(null);
 
   return (
     <>
       <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
+        {params.get("registered") && (
+          <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
+            Você já está inscrito neste evento.
+          </Alertbox>
+        )}
         <div
           ref={contentRef}
           className={clsx(
