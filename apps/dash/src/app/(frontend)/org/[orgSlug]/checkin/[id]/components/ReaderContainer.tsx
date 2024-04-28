@@ -5,7 +5,7 @@ import {
   MagnifyingGlassIcon,
   QrCodeIcon,
 } from "@heroicons/react/24/outline";
-import { Event, Organization } from "@prisma/client";
+import { Event, EventGroup, Organization } from "@prisma/client";
 import { For, SubmitButton, Text, Title } from "odinkit";
 import {
   Button,
@@ -23,6 +23,7 @@ import { NoSsrReader } from "./NoSSRReader";
 import {
   eventGroupSubeventCheckin,
   readEventGroupRegistrationCheckin,
+  readEventRegistrationCheckin,
 } from "@/app/api/checkins/action";
 import clsx from "clsx";
 
@@ -41,7 +42,9 @@ export default function ReaderContainer({
   });
 
   const { data, trigger, isMutating, reset } = useAction({
-    action: readEventGroupRegistrationCheckin,
+    action: event.eventGroupId
+      ? readEventGroupRegistrationCheckin
+      : readEventRegistrationCheckin,
     onError: (error) =>
       showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
@@ -136,27 +139,31 @@ export default function ReaderContainer({
                       </dd>
                     </div>
                   )}
-                  <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm font-medium leading-6 text-gray-900">
-                      Check-in das Etapas
-                    </dt>
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      <div className="flex justify-evenly">
-                        <For each={data.existingUserEventGroupCheckins}>
-                          {(checkin) => (
-                            <CheckCircleIcon
-                              className={clsx(
-                                "size-8",
-                                checkin.EventCheckIn.length
-                                  ? "text-green-500"
-                                  : ""
-                              )}
-                            />
-                          )}
-                        </For>
-                      </div>
-                    </dd>
-                  </div>
+                  {event.eventGroupId && (
+                    <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium leading-6 text-gray-900">
+                        Check-in das Etapas
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <div className="flex justify-evenly">
+                          <For
+                            each={(data as any).existingUserEventGroupCheckins}
+                          >
+                            {(checkin) => (
+                              <CheckCircleIcon
+                                className={clsx(
+                                  "size-8",
+                                  (checkin as any)?.EventCheckIn?.length
+                                    ? "text-green-500"
+                                    : ""
+                                )}
+                              />
+                            )}
+                          </For>
+                        </div>
+                      </dd>
+                    </div>
+                  )}
                 </dl>
               </div>
             </div>

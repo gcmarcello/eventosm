@@ -28,7 +28,7 @@ export default function NewEventForm({
     mode: "onChange",
     schema: upsertEventDto
       .omit({ imageUrl: true })
-      .merge(z.object({ image: z.array(z.any()) })),
+      .merge(z.object({ image: z.array(z.any()).optional() })),
     defaultValues: {
       name: "",
       location: "",
