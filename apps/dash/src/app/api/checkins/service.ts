@@ -127,7 +127,7 @@ export async function readEventRegistrationCheckin(
     },
   });
 
-  if (existingCheckin) throw "Check-in da etapa já realizado!";
+  if (existingCheckin) throw "Check-in já realizado!";
 
   return { existingRegistration };
 }
