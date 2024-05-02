@@ -7,6 +7,7 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import TeamRegistration from "./components/TeamRegistrationForm/Form";
 import IndividualRegistration from "./components/IndividualRegistration";
 import { Alertbox } from "odinkit";
+import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 
 export default async function InscricaoPage({
   searchParams,
@@ -15,13 +16,13 @@ export default async function InscricaoPage({
   searchParams: { team: string; batch: string };
   params: { orgSlug: string; id: string };
 }) {
-  const info = await UseMiddlewares().then(UserSessionMiddleware);
+  const info = await UseMiddlewares().then(OptionalUserSessionMiddleware);
   const event = await prisma.event.findUnique({
     where: { id: params.id, Organization: { slug: params.orgSlug } },
     include: {
       EventRegistration: {
         where: {
-          userId: info.request.userSession.id,
+          userId: info.request.userSession?.id,
           status: { not: "cancelled" },
         },
       },
@@ -40,9 +41,9 @@ export default async function InscricaoPage({
 
   const {
     request: { userSession },
-  } = await UseMiddlewares().then(UserSessionMiddleware);
+  } = await UseMiddlewares().then(OptionalUserSessionMiddleware);
 
-  const userInfo = await readUserInfo({ id: userSession.infoId });
+  const userInfo = await readUserInfo({ id: userSession?.infoId });
 
   const isUserRegistered = event.EventRegistration.find(
     (reg) => reg.userId === userSession?.id && reg.status !== "cancelled"
