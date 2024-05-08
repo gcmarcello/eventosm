@@ -9,6 +9,7 @@ import {
   cpfValidator,
   isEmail,
   normalize,
+  normalizeDocument,
   normalizeEmail,
   normalizePhone,
   normalizeZipCode,
@@ -121,10 +122,23 @@ export async function resendConfirmationEmail({
   return user;
 }
 
-export async function linkUserToOrg(request: {
-  user: UserSession;
-  orgId: string;
-}) {}
+export async function readUserFromDocument(data: {
+  document: string;
+  organizationId: string;
+}) {
+  const user = await prisma.user.findUnique({
+    where: { document: normalizeDocument(data.document) },
+    include: { UserOrgLink: true },
+  });
+
+  if (!user) return { existent: false };
+
+  const organizationsArray = user?.UserOrgLink.map((org) => org.organizationId);
+
+  const loginOrg = organizationsArray?.includes(data.organizationId);
+
+  return { existent: !!user, type: loginOrg ? "sameorg" : "differentOrg" };
+}
 
 export function createToken(request: { id: string }) {
   const JWT_KEY = new TextEncoder().encode(getServerEnv("JWT_KEY"));

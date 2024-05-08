@@ -57,7 +57,7 @@ export default function LoginForm({
         params.get("alert") === "successRecovery"
           ? ""
           : params.get("email") ?? undefined,
-      redirect: params.get("redirect") || "/",
+      redirect: params.get("redirect") || "/perfil",
       organizationId: organization.id,
     },
   });
@@ -135,9 +135,9 @@ export default function LoginForm({
           <DialogActions>
             <Button
               color={organization.options.colors.secondaryColor.tw.color}
-              href="./cadastro"
+              onClick={() => setOpenTermsModal(false)}
             >
-              Cadastrar nova conta
+              Voltar
             </Button>
             <Button
               color={organization.options.colors.primaryColor.tw.color}
@@ -152,7 +152,7 @@ export default function LoginForm({
         </Dialog>
       )}
 
-      <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="mx-auto w-full">
         <div>
           {/* <img
               className="h-10 w-auto"
