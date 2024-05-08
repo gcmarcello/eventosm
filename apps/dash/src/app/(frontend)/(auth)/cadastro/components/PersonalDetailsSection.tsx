@@ -158,16 +158,18 @@ export default function PersonalDetailSections({
           {addressMode === "show" && (
             <dl className="mb-1 divide-y divide-gray-100">
               <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                <dt className=" font-medium leading-6 text-gray-900">
+                <dt className="text-base/6 leading-6 text-zinc-900 sm:text-sm/6">
                   Endereço
                 </dt>
-                <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dd className="mt-1  leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                   {form.getValues("info.address")}
                 </dd>
               </div>
               <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                <dt className=" font-medium leading-6 text-gray-900">Cidade</dt>
-                <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dt className="text-base/6 leading-6 text-zinc-900 sm:text-sm/6">
+                  Cidade
+                </dt>
+                <dd className="mt-1  leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                   {viaCEPInfo.city.name} - {viaCEPInfo.state.name}
                 </dd>
               </div>

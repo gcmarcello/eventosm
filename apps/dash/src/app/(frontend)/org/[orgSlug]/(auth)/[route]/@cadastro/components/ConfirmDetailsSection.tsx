@@ -80,8 +80,8 @@ export default function ConfirmDetailsSection({
             </Label>
             <ErrorMessage />
             <Description>
-              Este é um cadastro geral em nosso sistema. Inscrições são
-              realizadas separadamente, evento a evento.
+              Este é apenas um cadastro. Inscrições são realizadas
+              separadamente, evento a evento.
             </Description>
           </Field>
         </div>

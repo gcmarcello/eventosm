@@ -118,9 +118,7 @@ export default function EventContainer({
       <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
         <div
           ref={contentRef}
-          className={clsx(
-            "mb-4 rounded-b bg-zinc-50 shadow-md  lg:mx-40 lg:bg-white xl:mx-56"
-          )}
+          className={clsx("mb-4 rounded-b bg-zinc-50 shadow-md   lg:bg-white ")}
         >
           {params.get("registered") && (
             <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
