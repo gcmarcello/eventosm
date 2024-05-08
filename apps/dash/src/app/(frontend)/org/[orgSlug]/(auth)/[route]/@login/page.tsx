@@ -34,7 +34,7 @@ export default async function LoginPage({
 
   return (
     <>
-      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-20 lg:py-12 xl:px-24">
+      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-16 lg:py-12 xl:px-20">
         <LoginAlert />
         <LoginForm organization={organization} />
       </div>

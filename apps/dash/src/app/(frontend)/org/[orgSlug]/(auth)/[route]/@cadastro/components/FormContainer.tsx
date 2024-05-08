@@ -29,9 +29,11 @@ import {
   Container,
   For,
   SubmitButton,
+  Title,
 } from "odinkit";
 import { Transition } from "@headlessui/react";
 import { Organization, State } from "@prisma/client";
+import DocumentSection from "./DocumentSection";
 
 export default function FormContainer({
   states,
@@ -107,20 +109,23 @@ export default function FormContainer({
         variant: "error",
         title: "Erro!",
       });
-      /* form.setError("root.serverError", {
-        type: "400",
-        message: (error as string) || "Erro inesperado",
-      }); */
     },
   });
 
   return (
     <Container className="mx-4 mb-16 mt-4 lg:col-start-2 lg:mb-10 lg:px-12 lg:pt-10">
+      <Title className="my-4">Cadastro de Atleta</Title>
       <MultistepForm
         onSubmit={(data) => signUpTrigger(data)}
         hform={form}
-        order={["general", "personal", "confirm"]}
+        order={["document", "general", "personal", "confirm"]}
         steps={{
+          document: {
+            form: <DocumentSection organization={organization} />,
+            fields: [
+              form.getValues("foreigner") ? "foreignDocument" : "document",
+            ],
+          },
           general: {
             form: <GeneralDetailsSection />,
             fields: [
@@ -224,6 +229,7 @@ export default function FormContainer({
                       type="button"
                       onClick={() => {
                         walk(1);
+                        scrollTo({ top: 0, behavior: "smooth" });
                       }}
                       disabled={!isCurrentStepValid}
                     >

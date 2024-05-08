@@ -9,6 +9,7 @@ import { Gender } from "@prisma/client";
 import { info } from "console";
 import { get } from "lodash";
 import { deletePrivateFile, getPreSignedURL } from "../uploads/service";
+import { orgSeed } from "prisma/seed/org.seed";
 
 export async function readUser({
   userId,
