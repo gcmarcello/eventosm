@@ -38,6 +38,10 @@ import {
 } from "odinkit/client";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
 import { ModalityControlModal } from "./ModalityControlModal";
+import {
+  Cog6ToothIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -301,8 +305,9 @@ export default function EventBatches({
                   onClick={() => {
                     handleModalityControlModal(info.row.original);
                   }}
+                  color={organization.options.colors.primaryColor.tw.color}
                 >
-                  ModalityControlModal
+                  <InformationCircleIcon className="h-5 w-5" />
                 </Button>
               ) : (
                 <XMarkIcon className="h-5 w-5 text-red-400" />

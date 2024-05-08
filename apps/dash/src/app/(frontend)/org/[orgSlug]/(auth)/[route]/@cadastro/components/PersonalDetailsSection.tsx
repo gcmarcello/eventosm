@@ -4,6 +4,7 @@ import { State } from "@prisma/client";
 import { Text } from "odinkit";
 
 import {
+  Description,
   ErrorMessage,
   FieldGroup,
   Fieldset,
@@ -166,46 +167,68 @@ export default function PersonalDetailSections({
           {addressMode === "show" && viaCEPInfo.city && (
             <dl className="mb-1 divide-y divide-gray-100">
               <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                <dt className=" font-medium leading-6 text-gray-900">
-                  Endereço
+                <dt>
+                  <div className="text-base/6 font-medium leading-6 text-zinc-900 sm:text-sm/6">
+                    Endereço
+                  </div>
+                  {!viaCEPInfo.address && (
+                    <Text>
+                      Sua região utiliza um CEP único, portanto não tem um
+                      endereço cadastrado.
+                    </Text>
+                  )}
                 </dt>
-                <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                  {form.getValues("info.address")}
+                <dd className="mt-1  sm:col-span-2 sm:mt-0">
+                  {viaCEPInfo && !viaCEPInfo.address ? (
+                    <Field
+                      disabled={loadingCep}
+                      name="info.address"
+                      className="my-2 space-y-3"
+                    >
+                      <Input />
+                      <ErrorMessage />
+                    </Field>
+                  ) : (
+                    <Text>{form.getValues("info.address")}</Text>
+                  )}
                 </dd>
               </div>
               <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
-                <dt className=" font-medium leading-6 text-gray-900">Cidade</dt>
-                <dd className="mt-1  leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                  {viaCEPInfo.city.name} - {viaCEPInfo.state.name}
+                <dt className=" text-base/6 font-medium leading-6 text-zinc-900 sm:text-sm/6">
+                  Cidade
+                </dt>
+                <dd>
+                  <Text>
+                    {viaCEPInfo.city.name} - {viaCEPInfo.state.name}
+                  </Text>
+                </dd>
+              </div>
+              <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:py-4">
+                <dt>
+                  <Field
+                    disabled={loadingCep}
+                    name="info.number"
+                    className="my-2 space-y-3"
+                  >
+                    <Label>Número</Label>
+                    <Input />
+                    <ErrorMessage>CEP Inválido</ErrorMessage>
+                  </Field>
+                </dt>
+                <dd className="sm:col-span-2">
+                  <Field
+                    enableAsterisk={false}
+                    disabled={loadingCep}
+                    name="info.complement"
+                    className="my-2 space-y-3"
+                  >
+                    <Label>Complemento</Label>
+                    <Input />
+                    <ErrorMessage>CEP Inválido</ErrorMessage>
+                  </Field>
                 </dd>
               </div>
             </dl>
-          )}
-          {addressMode && (
-            <div className="grid grid-cols-5 gap-4">
-              <div className="col-span-3">
-                <Field
-                  disabled={loadingCep}
-                  name="info.number"
-                  className="my-2 space-y-3"
-                >
-                  <Label>Número</Label>
-                  <Input placeholder="Rua X." />
-                  <ErrorMessage>CEP Inválido</ErrorMessage>
-                </Field>
-              </div>
-              <div className="col-span-2">
-                <Field
-                  disabled={loadingCep}
-                  name="info.complement"
-                  className="my-2 space-y-3"
-                >
-                  <Label>Complemento</Label>
-                  <Input placeholder="Rua X." />
-                  <ErrorMessage>CEP Inválido</ErrorMessage>
-                </Field>
-              </div>
-            </div>
           )}
         </div>
       </FieldGroup>

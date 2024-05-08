@@ -75,3 +75,15 @@ export async function resendConfirmationEmail(request: { userId: string }) {
     return ActionResponse.error(error);
   }
 }
+
+export async function readUserFromDocument(request: {
+  document: string;
+  organizationId: string;
+}) {
+  try {
+    const user = await service.readUserFromDocument(request);
+    return ActionResponse.success({ data: user });
+  } catch (error) {
+    return ActionResponse.error(error);
+  }
+}
