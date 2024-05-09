@@ -13,7 +13,7 @@ import { Team } from "@prisma/client";
 import { EventWithInfo } from "prisma/types/Events";
 import dayjs from "dayjs";
 import parseCustomFormat from "dayjs/plugin/customParseFormat";
-import { SignupRegistrationDto } from "@/app/api/registrations/dto";
+import { SignupRegistrationDto } from "@/app/api/registrations/events/event.dto";
 dayjs.extend(parseCustomFormat);
 
 export function SportDetails({
