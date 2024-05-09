@@ -49,6 +49,10 @@ export default function EventGeneralInfo({
       dateStart: dayjs(event.dateStart).utc().format("DD/MM/YYYY"),
       slug: event.slug,
       id: event.id,
+      options: {
+        accountlessRegistration: event.options?.accountlessRegistration,
+        multipleRegistrations: event.options?.multipleRegistrations,
+      },
     },
   });
 
@@ -153,7 +157,7 @@ export default function EventGeneralInfo({
               terá acesso ao site depois de confirmá-la.
             </Description>
           </Field>
-          <Field enableAsterisk={false} name="options.accountlessRegistration">
+          <Field enableAsterisk={false} name="options.multipleRegistrations">
             <Checkbox />
             <Label className={"ms-3"}>Múltiplas inscrições por usuário</Label>
 
