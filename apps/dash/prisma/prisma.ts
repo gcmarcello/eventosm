@@ -27,6 +27,16 @@ declare global {
       };
     };
 
+    type EventOptions = {
+      accountlessRegistration?: boolean;
+      multipleRegistrations?: boolean;
+    };
+
+    type EventGroupOptions = {
+      accountlessRegistration?: boolean;
+      multipleRegistrations?: boolean;
+    };
+
     type TailwindColor = {
       id: string;
       color: twColor;

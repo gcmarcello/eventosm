@@ -1,7 +1,11 @@
-import { UserSession } from "@/middleware/functions/userSession.middleware";
+import {
+  UserSession,
+  UserSessionMiddleware,
+} from "@/middleware/functions/userSession.middleware";
 import {
   EventCreateMultipleRegistrationsDto,
   EventCreateRegistrationDto,
+  SignupRegistrationDto,
 } from "./event.dto";
 import { readActiveBatch, readProtectedBatch } from "../../batches/service";
 import { readRegistrationPrice } from "../service";
@@ -16,6 +20,9 @@ import { RegistrationDto } from "../dto";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { BatchCoupon, EventRegistrationStatus } from "@prisma/client";
 import { formatCPF } from "odinkit";
+import { signup } from "../../auth/service";
+import { cleanupUser } from "../../users/service";
+import { getOrganizationLink } from "../../orgs/utils/orgLink";
 
 export async function createEventIndividualRegistration(
   request: EventCreateRegistrationDto & { userSession: UserSession }
@@ -40,7 +47,7 @@ export async function createEventIndividualRegistration(
         where: { eventId: request.eventId },
       });
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
 
   await verifyEventRegistrationAvailability({
     registrations: [registrationInfo],
@@ -291,7 +298,6 @@ async function verifyEventRegistrationAvailability({
   userIds: string[];
 }) {
   let coupon: BatchCoupon | null = null;
-
   if (!batch) throw "Lote de inscrição ativo não encontrado";
   if (batch.registrationType === "team" && registrations.length <= 1)
     throw "Lote não permitido para inscrições individuais.";
@@ -407,5 +413,46 @@ async function verifyEventAvailableSlots({
           throw `Limite de inscrições na categoria ${categoryName} excedido. ${Math.max(0, maxRegistrations - categoryExistingRegistrations)} restantes.`;
       }
     }
+  }
+}
+
+export async function createEventSignupRegistration(
+  data: SignupRegistrationDto
+) {
+  const user = await signup(data, true);
+
+  try {
+    const registration = await createEventIndividualRegistration({
+      ...data,
+      userSession: user,
+    });
+    const organization = await prisma.organization.findUnique({
+      where: { id: data.organizationId },
+      include: { OrgCustomDomain: true },
+    });
+    const url = getOrganizationLink(organization);
+    await sendEmail([
+      {
+        template: "welcome_email",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+          to: user.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: organization?.name || "EventoSM",
+          name: user.fullName.split(" ")[0] as string,
+          siteLink: `${url}/confirmar/${user.id}`,
+        },
+      },
+    ]);
+    return { user, registration };
+  } catch (error) {
+    await cleanupUser(user, data.organizationId);
+    throw error;
   }
 }

@@ -7,6 +7,9 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import TeamRegistration from "./components/TeamRegistrationForm/Form";
 import IndividualRegistration from "./components/IndividualRegistration";
 import { Alertbox } from "odinkit";
+import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
+import SignupRegistration from "./components/SignupRegistration";
+import { readStates } from "@/app/api/geo/service";
 
 export default async function InscricaoPage({
   searchParams,
@@ -15,13 +18,15 @@ export default async function InscricaoPage({
   searchParams: { team: string; batch: string };
   params: { orgSlug: string; id: string };
 }) {
-  const info = await UseMiddlewares().then(UserSessionMiddleware);
+  const {
+    request: { userSession },
+  } = await UseMiddlewares().then(OptionalUserSessionMiddleware);
   const event = await prisma.event.findUnique({
     where: { id: params.id, Organization: { slug: params.orgSlug } },
     include: {
       EventRegistration: {
         where: {
-          userId: info.request.userSession.id,
+          userId: userSession?.id,
           status: { not: "cancelled" },
         },
       },
@@ -37,20 +42,6 @@ export default async function InscricaoPage({
   )[0];
 
   if (!event || !organization) return notFound();
-
-  const {
-    request: { userSession },
-  } = await UseMiddlewares().then(UserSessionMiddleware);
-
-  const userInfo = await readUserInfo({ id: userSession.infoId });
-
-  const isUserRegistered = event.EventRegistration.find(
-    (reg) => reg.userId === userSession?.id && reg.status !== "cancelled"
-  );
-
-  if (isUserRegistered && !searchParams.team) {
-    return redirect(`/eventos/${params.id}?registered=true`);
-  }
 
   let batch;
   if (searchParams.batch) {
@@ -77,6 +68,30 @@ export default async function InscricaoPage({
     redirect(`/${params.id}`);
   }
 
+  if (!userSession) {
+    if (!event.options?.accountlessRegistration)
+      redirect(`/login?redirect=/inscricoes/${params.id}`);
+    const states = await readStates();
+    return (
+      <SignupRegistration
+        event={event}
+        organization={organization}
+        batch={batch}
+        states={states}
+      />
+    );
+  }
+
+  const userInfo = await readUserInfo({ id: userSession?.infoId });
+
+  const isUserRegistered = event.EventRegistration.find(
+    (reg) => reg.userId === userSession?.id && reg.status !== "cancelled"
+  );
+
+  if (isUserRegistered && !searchParams.team) {
+    return redirect(`/eventos/${params.id}?registered=true`);
+  }
+
   if (
     searchParams.team &&
     (batch.registrationType === "team" || batch.registrationType === "mixed")
@@ -85,7 +100,17 @@ export default async function InscricaoPage({
       where: { ownerId: userSession.id },
       include: {
         User: {
-          include: {
+          select: {
+            fullName: true,
+            id: true,
+            email: true,
+            createdAt: true,
+            updatedAt: true,
+            document: true,
+            role: true,
+            confirmed: true,
+            infoId: true,
+            phone: true,
             EventRegistration: {
               where: { eventId: event.id, status: "active" },
             },

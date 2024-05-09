@@ -17,9 +17,11 @@ export function determineCategoryAvailability(
   user: { gender: string; birthDate: Date }
 ) {
   const currentYear = dayjs().year();
+
   const userBirthDateThisYear = Number(
     dayjs(user.birthDate).toISOString().split("-")[0]
   );
+
   const userAge = currentYear - userBirthDateThisYear;
 
   if (

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createMultipleRegistrationsDto, createRegistrationDto } from "../dto";
+import { signupDto } from "../../auth/dto";
 
 export const eventCreateRegistrationDto = createRegistrationDto.merge(
   z.object({ eventId: z.string().uuid() })
@@ -8,6 +9,12 @@ export const eventCreateRegistrationDto = createRegistrationDto.merge(
 export type EventCreateRegistrationDto = z.infer<
   typeof eventCreateRegistrationDto
 >;
+
+export const signupRegistrationDto = signupDto.merge(
+  eventCreateRegistrationDto
+);
+
+export type SignupRegistrationDto = z.infer<typeof signupRegistrationDto>;
 
 export const eventCreateMultipleRegistrationsDto =
   createMultipleRegistrationsDto.merge(
