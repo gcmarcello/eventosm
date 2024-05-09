@@ -1,12 +1,15 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
-import { ActionResponse } from "odinkit";
+import { ActionResponse, maskEmail } from "odinkit";
 import {
   EventCreateMultipleRegistrationsDto,
   EventCreateRegistrationDto,
+  SignupRegistrationDto,
 } from "./event.dto";
 import * as service from "./event.service";
+import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
+import { SignupMiddleware } from "@/middleware/functions/signup.middleware";
 
 export async function createEventIndividualRegistration(
   request: EventCreateRegistrationDto
@@ -25,6 +28,26 @@ export async function createEventIndividualRegistration(
     redirect:
       "/perfil?alert=success&message=" +
       encodeURIComponent("Inscrição realizada com sucesso!"),
+  });
+}
+
+export async function createEventSignupRegistration(
+  request: SignupRegistrationDto
+) {
+  await UseMiddlewares(request).then(SignupMiddleware);
+  let data;
+  try {
+    data = await service.createEventSignupRegistration(request);
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+
+  return ActionResponse.success({
+    redirect:
+      `/eventos/${request.eventId}` +
+      "?registrationCompleted=true" +
+      `&email=${maskEmail(data.user.email)}`,
   });
 }
 

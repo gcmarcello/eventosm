@@ -1,9 +1,9 @@
-import { dateRegex } from "@/utils/regex";
-import { readDto, sheetToJson } from "odinkit";
+import { readDto } from "odinkit";
 import { z } from "odinkit";
-import { teamSignUpDto } from "../auth/dto";
-import { EventRegistrationStatus, Gender } from "@prisma/client";
+import { signupDto } from "../auth/dto";
+import { EventRegistrationStatus } from "@prisma/client";
 import { nativeEnum } from "zod";
+import { eventCreateRegistrationDto } from "./events/event.dto";
 
 export const excelDataSchema = z.array(
   z.object({

@@ -290,12 +290,6 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
     },
   });
 
-  if (
-    batch?.maxRegistrations &&
-    batch._count.EventRegistration >= batch.maxRegistrations
-  )
-    return null;
-
   return batch;
 }
 

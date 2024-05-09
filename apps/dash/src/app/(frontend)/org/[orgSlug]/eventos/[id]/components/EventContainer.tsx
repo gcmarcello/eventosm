@@ -125,6 +125,13 @@ export default function EventContainer({
               Você já está inscrito neste evento.
             </Alertbox>
           )}
+          {params.get("registrationCompleted") && (
+            <Alertbox className="py-3 lg:mx-auto" type="success" dismissible>
+              Sua inscrição foi realizada com sucesso! Verifique seu email (
+              {params.get("email")}) para mais informações e instruções de como
+              acessar sua conta.
+            </Alertbox>
+          )}
           <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
             <div className="relative h-[50vh] w-full">
               <Image

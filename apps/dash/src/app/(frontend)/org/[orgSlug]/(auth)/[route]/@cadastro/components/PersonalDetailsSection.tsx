@@ -18,11 +18,7 @@ import {
 } from "odinkit/client";
 import { useMemo, useState } from "react";
 
-export default function PersonalDetailSections({
-  states,
-}: {
-  states: State[];
-}) {
+export default function PersonalDetailSection({ states }: { states: State[] }) {
   const form = useFormContext<SignupDto>();
   const Field = useMemo(() => form.createField(), []);
   const [addressMode, setAddressMode] = useState<"edit" | "show" | null>(null);

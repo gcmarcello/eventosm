@@ -13,9 +13,10 @@ import { Input } from "odinkit/client";
 import { Switch } from "@headlessui/react";
 import { useMemo } from "react";
 import { SignupDto } from "@/app/api/auth/dto";
+import { SignupRegistrationDto } from "@/app/api/registrations/dto";
 
 export default function GeneralDetailsSection() {
-  const form = useFormContext<SignupDto>();
+  const form = useFormContext<SignupDto | SignupRegistrationDto>();
   const Field = useMemo(() => form.createField(), []);
   return (
     <Fieldset>

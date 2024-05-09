@@ -41,7 +41,7 @@ export async function createEventGroupRegistration(
         where: { eventGroupId: request.eventGroupId },
       });
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
 
   await verifyEventGroupRegistrationAvailability({
     registrations: [registrationInfo],
@@ -167,7 +167,7 @@ export async function createEventGroupMultipleRegistrations(
         where: { eventGroupId: eventGroup?.id },
       });
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
 
   if (
     batch.multipleRegistrationLimit &&
@@ -424,7 +424,7 @@ async function verifyEventGroupRegistrationAvailability({
 }) {
   let coupon: BatchCoupon | null = null;
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
   if (batch.registrationType === "team" && registrations.length <= 1)
     throw "Lote não permitido para inscrições individuais.";
   if (batch.registrationType === "individual" && registrations.length > 1)
