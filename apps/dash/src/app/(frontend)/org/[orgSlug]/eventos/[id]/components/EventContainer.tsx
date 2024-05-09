@@ -115,7 +115,9 @@ export default function EventContainer({
 
   return (
     <>
-      <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
+      <div
+        className={clsx(!image && "bg-slate-200", "xxl:mx-40 h-fit bg-cover")}
+      >
         <div
           ref={contentRef}
           className={clsx("mb-4 rounded-b bg-zinc-50 shadow-md   lg:bg-white ")}
