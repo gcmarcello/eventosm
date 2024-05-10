@@ -28,19 +28,17 @@ export const upsertOrganizationDto = z.object({
     .min(14, { message: "Telefone Inválido" })
     .max(15, { message: "Telefone inválido" }),
   document: z.string().optional().nullable(),
-  abbreviation: z.string().max(10, { message: "No máximo 10 caracteres" }),
-
-  /* .refine(
-      (data) => {
-        if (!data) return true;
-        const isCpfValid = cpfValidator(data);
-        return isCpfValid;
-      },
-      {
-        message: "CPF inválido",
-        path: ["value"],
-      }
-    ) @todo Validador de CNPJ */ domain: z.string().optional(),
+  options: z
+    .object({
+      socialMedia: z.object({
+        facebook: z.string().url().or(z.literal("")).optional(),
+        instagram: z.string().url().or(z.literal("")).optional(),
+        twitter: z.string().url().or(z.literal("")).optional(),
+        youtube: z.string().url().or(z.literal("")).optional(),
+      }),
+    })
+    .optional(),
+  abbreviation: z.string().max(15, { message: "No máximo 15 caracteres" }),
 });
 
 export type UpsertOrganizationDto = z.infer<typeof upsertOrganizationDto>;

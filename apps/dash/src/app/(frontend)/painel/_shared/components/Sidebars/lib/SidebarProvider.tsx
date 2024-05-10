@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SidebarContext } from "./sidebar.ctx";
-import { Organization, Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { OrganizationWithDomain } from "prisma/types/Organization";
 
 export default function SidebarProvider({
   children,
@@ -11,7 +12,7 @@ export default function SidebarProvider({
 }: {
   children: React.ReactNode;
   user: Omit<User, "password">;
-  organization: Organization;
+  organization: OrganizationWithDomain;
 }) {
   const [visibility, setVisibility] = useState({
     panelTopbar: true,

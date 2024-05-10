@@ -2,6 +2,14 @@
 import { SubmitButton, date } from "odinkit";
 import { Badge, Table, formatPhone } from "odinkit";
 import {
+  Field as HeadlessRadioField,
+  Radio as HeadlessRadio,
+  RadioGroup as HeadlessRadioGroup,
+  type FieldProps as HeadlessFieldProps,
+  type RadioGroupProps as HeadlessRadioGroupProps,
+  type RadioProps as HeadlessRadioProps,
+} from "@headlessui/react";
+import {
   Button,
   Date,
   Description,
@@ -14,12 +22,14 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
+  DropdownSeparator,
   ErrorMessage,
   FieldGroup,
   Fieldset,
   Form,
   Input,
   Label,
+  RadioField,
   Select,
   showToast,
   useAction,
@@ -36,6 +46,9 @@ import {
   resendEventGroupRegistrationConfirmation,
   updateRegistration,
 } from "@/app/api/registrations/action";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import RegistrationStatusDropdown from "./RegistrationStatusDropdown";
+import { EventRegistrationStatus } from "@prisma/client";
 
 export default function RegistrationsTable({
   registrations,
@@ -99,9 +112,18 @@ export default function RegistrationsTable({
     if (selectedRegistration) {
       form.setValue("registrationId", selectedRegistration?.id!);
       form.setValue("categoryId", selectedRegistration?.categoryId!);
+      form.setValue("status", selectedRegistration?.status!);
       form.setValue(
         "modalityId",
         selectedRegistration?.modalityId ?? undefined!
+      );
+      form.setValue(
+        "justifiedAbsences",
+        selectedRegistration?.justifiedAbsences ?? 0
+      );
+      form.setValue(
+        "unjustifiedAbsences",
+        selectedRegistration?.unjustifiedAbsences ?? 0
       );
       form.setValue("code", selectedRegistration?.code!);
     }
@@ -170,8 +192,20 @@ export default function RegistrationsTable({
                     permitidas.
                   </Description>
                 </Field>
+                <div className="flex gap-2">
+                  <Field name="justifiedAbsences">
+                    <Label>Ausências Justificadas</Label>
+                    <Input type="number" />
+                    <ErrorMessage />
+                  </Field>
+                  <Field name="unjustifiedAbsences">
+                    <Label>Ausências Não Justificadas</Label>
+                    <Input type="number" />
+                    <ErrorMessage />
+                  </Field>
+                </div>
                 <div className="flex">
-                  <div>
+                  <div className="hidden lg:block">
                     <Image
                       height={150}
                       width={150}
@@ -179,7 +213,7 @@ export default function RegistrationsTable({
                       alt="Qr Code"
                     />
                   </div>
-                  <div className="flex grow flex-col justify-evenly">
+                  <div className="flex grow flex-col justify-evenly gap-2 lg:gap-0">
                     <Button
                       className={"w-full"}
                       loading={isResendingEmailConfirmation}
@@ -190,9 +224,7 @@ export default function RegistrationsTable({
                     >
                       Reenviar QR Code
                     </Button>
-                    <Button disabled className={"w-full"} color="red">
-                      Cancelar Inscrição
-                    </Button>
+                    <RegistrationStatusDropdown />
                   </div>
                 </div>
                 <Description>ID: {selectedRegistration?.id}</Description>
@@ -214,7 +246,9 @@ export default function RegistrationsTable({
               Número: registration.code,
               Document: registration.user.document,
               Nome: registration.user.fullName,
+              Cidade: registration.user.info?.city?.name,
               Status: registration.status,
+              Modalidade: registration.modality?.name,
               Categoria: registration.category?.name,
               Telefone: registration.user.phone,
               Equipe: registration.team?.name,
@@ -227,7 +261,9 @@ export default function RegistrationsTable({
               "Opção do Kit": registration.addonOption,
             })) || [],
         }}
-        data={registrations || []}
+        data={
+          registrations.sort((a, b) => Number(b.code) - Number(a.code)) || []
+        }
         columns={(columnHelper) => [
           columnHelper.accessor("code", {
             id: "code",
@@ -260,6 +296,13 @@ export default function RegistrationsTable({
                   return <Badge color="rose">Suspensa</Badge>;
               }
             },
+          }),
+          columnHelper.accessor("modality.name", {
+            id: "modality",
+            header: "Modalidade",
+            enableSorting: true,
+            enableGlobalFilter: false,
+            cell: (info) => info.getValue(),
           }),
           columnHelper.accessor("category.name", {
             id: "category",

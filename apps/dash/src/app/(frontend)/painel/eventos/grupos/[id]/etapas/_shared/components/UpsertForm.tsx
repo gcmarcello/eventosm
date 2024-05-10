@@ -80,7 +80,7 @@ export function UpsertForm({
       dateEnd: dayjs(subevent?.dateEnd).format("DD/MM/YYYY") || "",
       location: subevent?.location || "",
       rules: eventGroup?.rules || "",
-      description: eventGroup?.description || "",
+      description: subevent?.description || "",
     },
   });
 
@@ -169,7 +169,7 @@ export function UpsertForm({
     <Form hform={form} onSubmit={trigger} className="pb-20 pt-4 lg:pb-4">
       <div className="flex w-full justify-between">
         <div className="mb-3 items-center gap-3 lg:flex">
-          <Heading>Resultados - {eventGroup.Event[0]?.name}</Heading>
+          <Heading>Resultados - {subevent?.name}</Heading>
           <Link
             className="text-sm"
             style={{

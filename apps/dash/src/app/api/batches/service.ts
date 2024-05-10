@@ -26,7 +26,8 @@ export async function upsertRegistrationBatch(
     organization: Organization;
   }
 ) {
-  const { organization, userSession, categoryBatch, ...rest } = request;
+  const { organization, userSession, categoryBatch, modalityBatch, ...rest } =
+    request;
   if (
     !dayjs(rest.dateStart, "DD/MM/YYYY HH:mm").isValid() ||
     !dayjs(rest.dateEnd, "DD/MM/YYYY HH:mm").isValid()
@@ -77,6 +78,36 @@ export async function upsertRegistrationBatch(
     },
   });
 
+  if (modalityBatch?.length && rest.id) {
+    const totalSlots = modalityBatch.reduce(
+      (acc, mb) =>
+        (typeof mb.maxRegistrations === "number" ? mb.maxRegistrations : 0) +
+        acc,
+      0
+    );
+
+    if (totalSlots > rest.maxRegistrations && rest.modalityControl)
+      throw "O número de vagas das modalidades não pode ser maior que o número de vagas do lote de inscrição.";
+    await prisma.$transaction(
+      modalityBatch?.map((mb) => {
+        const id = mb.id ?? crypto.randomUUID();
+        return prisma.modalityBatch.upsert({
+          where: { id, batchId: rest.id },
+          update: {
+            ...mb,
+            price: mb.price ? Number(mb.price.replace(",", ".")) : null,
+          },
+          create: {
+            ...mb,
+            id,
+            batchId: rest.id!,
+            price: mb.price ? Number(mb.price.replace(",", ".")) : null,
+          },
+        });
+      })
+    );
+  }
+
   if (categoryBatch?.length && rest.id) {
     const totalSlots = categoryBatch.reduce(
       (acc, cb) =>
@@ -84,6 +115,22 @@ export async function upsertRegistrationBatch(
         acc,
       0
     );
+
+    if (rest.modalityControl && modalityBatch?.length) {
+      for (const modality of modalityBatch.map((mb) => mb.modalityId)) {
+        const totalModalitySlots = categoryBatch
+          .filter((cb) => cb.modalityId === modality)
+          .reduce(
+            (acc, cb) =>
+              (typeof cb.maxRegistrations === "number"
+                ? cb.maxRegistrations
+                : 0) + acc,
+            0
+          );
+        if (totalModalitySlots > rest.maxRegistrations && rest.categoryControl)
+          throw "O número de vagas das categorias não pode ser maior que o número de vagas da modalidade.";
+      }
+    }
 
     if (totalSlots > rest.maxRegistrations && rest.categoryControl)
       throw "O número de vagas das categorias não pode ser maior que o número de vagas do lote de inscrição.";
@@ -118,6 +165,11 @@ export async function readRegistrationBatches(
     where: request.where,
     include: {
       CategoryBatch: { include: { category: true } },
+      ModalityBatch: {
+        include: {
+          modality: true,
+        },
+      },
       _count: {
         select: {
           EventRegistration: { where: { status: { not: "cancelled" } } },
@@ -229,6 +281,7 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
     },
     include: {
       CategoryBatch: { include: { category: true } },
+      ModalityBatch: true,
       _count: {
         select: {
           EventRegistration: { where: { status: { not: "cancelled" } } },
@@ -236,12 +289,6 @@ export async function readActiveBatch(request: ReadRegistrationBatchDto) {
       },
     },
   });
-
-  if (
-    batch?.maxRegistrations &&
-    batch._count.EventRegistration >= batch.maxRegistrations
-  )
-    return null;
 
   return batch;
 }
@@ -258,12 +305,13 @@ export async function readProtectedBatch(request: ReadRegistrationBatchDto) {
       },
       include: {
         CategoryBatch: { include: { category: true } },
+        ModalityBatch: true,
         _count: {
-          select: { EventRegistration: true },
+          select: { EventRegistration: { where: { status: "active" } } },
         },
       },
     })
-    .catch(() => {
+    .catch((e) => {
       return null;
     });
 
@@ -296,4 +344,27 @@ export async function readNextBatch(request: ReadRegistrationBatchDto) {
     },
   });
   return batch;
+}
+
+export async function readModalityBatchRegistrations({
+  batchId,
+}: {
+  batchId: string;
+}) {
+  const registrationCounts = await prisma.eventRegistration.groupBy({
+    by: ["modalityId"],
+    where: { batchId, status: "active" },
+    _count: {
+      modalityId: true,
+    },
+  });
+
+  const modalities = await prisma.eventModality.findMany({
+    where: { id: { in: registrationCounts.map((rc) => rc.modalityId!) } },
+  });
+
+  return registrationCounts.map((rc) => ({
+    ...rc,
+    modality: modalities.find((m) => m.id === rc.modalityId),
+  }));
 }

@@ -97,6 +97,7 @@ export const orgSeed = async (userId: string) => {
       EventModality: {
         create: {
           name: "7km",
+          id: "8f95a855-5c36-47fd-b09e-6e208243fd3d",
           modalityCategory: {
             create: {
               id: categoryId,
@@ -137,6 +138,7 @@ export const orgSeed = async (userId: string) => {
       code: "1",
       status: "active",
       batchId,
+      modalityId: "8f95a855-5c36-47fd-b09e-6e208243fd3d",
       categoryId,
       userId: userId,
       eventGroupId: eventGroup.id,

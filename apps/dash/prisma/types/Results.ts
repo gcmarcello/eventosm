@@ -12,4 +12,7 @@ export type EventResultWithInfo = EventResult & {
     team?: Team | null;
     category?: ModalityCategory;
   };
+  position?: number;
 };
+
+export type EventGroupResultWithInfo = Omit<EventResultWithInfo, "eventId">;

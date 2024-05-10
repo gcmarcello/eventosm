@@ -15,7 +15,7 @@ import { useMemo } from "react";
 import { SignupDto } from "@/app/api/auth/dto";
 
 export default function GeneralDetailsSection() {
-  const form = useFormContext<SignupDto>();
+  const form = useFormContext();
   const Field = useMemo(() => form.createField(), []);
   return (
     <Fieldset>
@@ -56,51 +56,6 @@ export default function GeneralDetailsSection() {
               <Label>Email</Label>
               <Input />
               <ErrorMessage />
-            </Field>
-          </div>
-          <div>
-            {!form.getValues("foreigner") ? (
-              <Field name="document" className="my-2 space-y-3">
-                <Label>Documento {"(CPF)"}</Label>
-                <Input
-                  inputMode="tel"
-                  mask={() => {
-                    return "999.999.999-99";
-                  }}
-                />
-                <ErrorMessage />
-              </Field>
-            ) : (
-              <Field name="foreignDocument" className="my-2 space-y-3">
-                <Label>Documento {"(Passaporte ou RNE)"}</Label>
-                <Input />
-                <ErrorMessage />
-              </Field>
-            )}
-            <Field name="foreigner">
-              <Switch
-                onChange={() => {
-                  form.setValue("foreigner", !form.getValues("foreigner"));
-                  form.resetField("document");
-                  form.resetField("foreignDocument");
-                }}
-              >
-                {({ checked }) => (
-                  <Description>
-                    {checked ? (
-                      <>
-                        <span className="underline">Clique aqui</span> para usar
-                        seu CPF.
-                      </>
-                    ) : (
-                      <>
-                        Estrangeiro?{" "}
-                        <span className="underline">clique aqui!</span>
-                      </>
-                    )}
-                  </Description>
-                )}
-              </Switch>
             </Field>
           </div>
         </div>

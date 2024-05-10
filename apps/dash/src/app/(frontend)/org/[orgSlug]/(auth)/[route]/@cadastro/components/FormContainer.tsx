@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import GeneralDetailsSection from "./GeneralDetailsSection";
 
-import PersonalDetailSections from "./PersonalDetailsSection";
+import PersonalDetailSection from "./PersonalDetailsSection";
 import clsx from "clsx";
 
 import { signupDto } from "@/app/api/auth/dto";
@@ -29,9 +29,11 @@ import {
   Container,
   For,
   SubmitButton,
+  Title,
 } from "odinkit";
 import { Transition } from "@headlessui/react";
 import { Organization, State } from "@prisma/client";
+import DocumentSection from "./DocumentSection";
 
 export default function FormContainer({
   states,
@@ -67,6 +69,7 @@ export default function FormContainer({
       },
       eventRedirect: { id: "", name: "" },
       organizationId: organization.id,
+      acceptTerms: false,
     },
   });
 
@@ -87,12 +90,13 @@ export default function FormContainer({
       "info.stateId": "35",
       "info.number": fakerPT_BR.location.buildingNumber(),
       "info.complement": fakerPT_BR.location.secondaryAddress(),
+      acceptTerms: false,
     }),
   });
 
   const steps = [
     GeneralDetailsSection,
-    PersonalDetailSections,
+    PersonalDetailSection,
     ConfirmDetailsSection,
   ];
 
@@ -105,20 +109,23 @@ export default function FormContainer({
         variant: "error",
         title: "Erro!",
       });
-      /* form.setError("root.serverError", {
-        type: "400",
-        message: (error as string) || "Erro inesperado",
-      }); */
     },
   });
 
   return (
     <Container className="mx-4 mb-16 mt-4 lg:col-start-2 lg:mb-10 lg:px-12 lg:pt-10">
+      <Title className="my-4">Cadastro de Atleta</Title>
       <MultistepForm
         onSubmit={(data) => signUpTrigger(data)}
         hform={form}
-        order={["general", "personal", "confirm"]}
+        order={["document", "general", "personal", "confirm"]}
         steps={{
+          document: {
+            form: <DocumentSection organization={organization} />,
+            fields: [
+              form.getValues("foreigner") ? "foreignDocument" : "document",
+            ],
+          },
           general: {
             form: <GeneralDetailsSection />,
             fields: [
@@ -131,7 +138,7 @@ export default function FormContainer({
             ],
           },
           personal: {
-            form: <PersonalDetailSections states={states} />,
+            form: <PersonalDetailSection states={states} />,
             fields: [
               "info.address",
               "info.birthDate",
@@ -141,7 +148,10 @@ export default function FormContainer({
               "info.number",
             ],
           },
-          confirm: { form: <ConfirmDetailsSection />, fields: [] },
+          confirm: {
+            form: <ConfirmDetailsSection organization={organization} />,
+            fields: [],
+          },
         }}
       >
         {({
@@ -219,6 +229,7 @@ export default function FormContainer({
                       type="button"
                       onClick={() => {
                         walk(1);
+                        scrollTo({ top: 0, behavior: "smooth" });
                       }}
                       disabled={!isCurrentStepValid}
                     >

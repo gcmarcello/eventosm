@@ -47,8 +47,8 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-1">
-      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-20 lg:py-12 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-16 lg:py-12 xl:px-20">
+        <div className="mx-auto w-full ">
           <div>
             <img
               className="h-10 w-auto"

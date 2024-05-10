@@ -12,11 +12,17 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { EventAbsences, Organization, Team } from "@prisma/client";
+import {
+  Event,
+  EventAbsences,
+  EventResult,
+  Organization,
+  Team,
+} from "@prisma/client";
 import clsx from "clsx";
 import { set } from "lodash";
 import Image from "next/image";
-import { Badge, For, SubmitButton } from "odinkit";
+import { Badge, For, Heading, SubmitButton } from "odinkit";
 import {
   Alert,
   AlertActions,
@@ -46,6 +52,9 @@ import { format } from "path";
 import DocumentModal from "./AbsenceJustificationModal";
 import AbsenceJustificationModal from "./AbsenceJustificationModal";
 import { redirect } from "next/dist/server/api-utils";
+import { readUserEventGroupResults } from "@/app/api/results/action";
+import { readEventGroupResults } from "@/app/api/results/service";
+import EventGroupUserResultList from "./EventGroupUserResultList";
 
 const secondaryNavigation = [
   {
@@ -79,6 +88,13 @@ export function EventGroupRegistrationModal({
   teams: Team[];
 }) {
   const [showJustificationModal, setShowJustificationModal] = useState(false);
+  const [userResults, setUserResults] = useState<
+    | {
+        results: (EventResult & { Event: Event })[];
+        position: number;
+      }
+    | undefined
+  >();
   const [selectedAbsence, setSelectedAbsence] = useState<EventAbsences | null>(
     null
   );
@@ -119,6 +135,17 @@ export function EventGroupRegistrationModal({
     onSuccess: (data) => {
       if (data.data)
         setEventGroup(data.data as EventGroupEventCheckinsAndAbsences);
+    },
+  });
+
+  const {
+    data: eventGroupResultsData,
+    trigger: eventGroupResultsTrigger,
+    isMutating: eventGroupResultsMutating,
+  } = useAction({
+    action: readUserEventGroupResults,
+    onSuccess: (data) => {
+      setUserResults(data.data);
     },
   });
 
@@ -165,9 +192,27 @@ export function EventGroupRegistrationModal({
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (eventGroup?.id) {
+      eventGroupResultsTrigger({ eventGroupId: eventGroup.eventGroupId! });
+    }
+  }, [eventGroup]);
+
   function handleAbsenceModal(absence: EventAbsences) {
     setSelectedAbsence(absence);
     setShowJustificationModal(true);
+  }
+  function handlePositionCircleColor(position: number) {
+    switch (position) {
+      case 1:
+        return "bg-yellow-500";
+      case 2:
+        return "bg-gray-500";
+      case 3:
+        return "bg-yellow-500";
+      default:
+        return "bg-blue-500";
+    }
   }
 
   if (!registration) return null;
@@ -243,7 +288,7 @@ export function EventGroupRegistrationModal({
                     Etapas
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {registration.eventGroup?.Event?.length}
+                    {registration.eventGroup?.Event.length}
                   </dd>
                 </div>
                 <div className="px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -454,6 +499,30 @@ export function EventGroupRegistrationModal({
               </dl>
             </>
           )}
+          {screen === "results" &&
+            (!userResults?.position || !userResults?.results.length ? null : (
+              <div className="flex flex-col items-center justify-center space-y-2 py-4 lg:flex-row lg:divide-x">
+                <div className="pe-2">
+                  <div className="text-center">
+                    <Heading>Posição Geral</Heading>
+                  </div>
+                  <div
+                    className={clsx(
+                      "mt-2 flex size-32 items-center justify-center rounded-full",
+                      handlePositionCircleColor(userResults?.position || 4)
+                    )}
+                  >
+                    <div className="flex size-28 items-center justify-center rounded-full bg-white text-4xl font-semibold text-gray-800">
+                      {userResults?.position}
+                    </div>
+                  </div>
+                </div>
+                <div className="ps-2">
+                  <Heading>Etapas</Heading>
+                  <EventGroupUserResultList results={userResults.results} />
+                </div>
+              </div>
+            ))}
         </DialogBody>
 
         <DialogActions className="flex justify-between">
@@ -503,7 +572,7 @@ function CancelEventGroupRegistrationAlert({
               triggerCancellation({ registrationId: registration.id })
             }
           >
-            Cancelar
+            Cancelar Inscrição
           </Button>
         </AlertActions>
       </Alert>

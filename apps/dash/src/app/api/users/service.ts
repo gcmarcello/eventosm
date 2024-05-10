@@ -5,10 +5,11 @@ import { TeamSignUpDto } from "../auth/dto";
 import { readAddressFromZipCode } from "../geo/service";
 import dayjs from "dayjs";
 import { normalizeDocument, normalizeZipCode } from "odinkit";
-import { Gender } from "@prisma/client";
+import { Gender, Prisma, User } from "@prisma/client";
 import { info } from "console";
 import { get } from "lodash";
 import { deletePrivateFile, getPreSignedURL } from "../uploads/service";
+import { orgSeed } from "prisma/seed/org.seed";
 
 export async function readUser({
   userId,
@@ -164,4 +165,26 @@ export async function deleteUserDocument(data: {
   await deletePrivateFile(`documents/${document.key}`);
 
   return await prisma.userDocument.delete({ where: { id: data.id } });
+}
+
+export async function cleanupUser(user: User, organizationId?: string) {
+  const cleanupTasks: any = [
+    prisma.user.delete({ where: { id: user.id } }),
+    prisma.userInfo.delete({ where: { id: user.infoId } }),
+  ];
+
+  if (organizationId) {
+    cleanupTasks.unshift(
+      prisma.userOrgLink.delete({
+        where: {
+          userId_organizationId: {
+            userId: user.id,
+            organizationId: organizationId,
+          },
+        },
+      })
+    );
+  }
+
+  await prisma.$transaction(cleanupTasks);
 }

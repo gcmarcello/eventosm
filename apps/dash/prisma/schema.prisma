@@ -121,7 +121,6 @@ model Organization {
   ownerId               String                  @db.Uuid
   document              String?                 @unique
   slug                  String                  @unique
-  domain                String?                 @unique
   /// [OrganizationOptions]
   options               Json                    @db.JsonB
   abbreviation          String
@@ -272,6 +271,8 @@ model EventGroup {
   rules                  String?
   description            String?
   details                String?
+  /// [EventGroupOptions]
+  options                Json?                    @db.JsonB
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime?                @updatedAt
   EventGroupRules        EventGroupRules?
@@ -296,6 +297,7 @@ model EventModality {
   deletedAt         DateTime?
   CategoryBatch     CategoryBatch[]
   EventRegistration EventRegistration[]
+  ModalityBatch     ModalityBatch[]
 
   @@schema("public")
 }
@@ -314,7 +316,7 @@ model EventResult {
   registrationId String            @db.Uuid
   Event          Event             @relation(fields: [eventId], references: [id])
   eventId        String            @db.Uuid
-  score          String?
+  score          Int?
   observation    String?
   status         EventResultStatus @default(active)
   createdAt      DateTime          @default(now())
@@ -371,8 +373,10 @@ model EventRegistrationBatch {
   multipleRegistrationLimit Int?                  @db.Integer
   protectedBatch            Boolean               @default(false) @db.Boolean
   categoryControl           Boolean               @default(false) @db.Boolean
+  modalityControl           Boolean               @default(false) @db.Boolean
   EventRegistration         EventRegistration[]
   CategoryBatch             CategoryBatch[]
+  ModalityBatch             ModalityBatch[]
   createdAt                 DateTime              @default(now())
   updatedAt                 DateTime?             @updatedAt
 
@@ -387,6 +391,20 @@ model CategoryBatch {
   category         ModalityCategory       @relation(fields: [categoryId], references: [id])
   modality         EventModality          @relation(fields: [modalityId], references: [id])
   modalityId       String                 @db.Uuid
+  price            Float?
+  maxRegistrations Int?                   @db.Integer
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime?              @updatedAt
+
+  @@schema("public")
+}
+
+model ModalityBatch {
+  id               String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  batchId          String                 @db.Uuid
+  Batch            EventRegistrationBatch @relation(fields: [batchId], references: [id])
+  modalityId       String                 @db.Uuid
+  modality         EventModality          @relation(fields: [modalityId], references: [id])
   price            Float?
   maxRegistrations Int?                   @db.Integer
   createdAt        DateTime               @default(now())
@@ -476,6 +494,8 @@ model Event {
   Organization           Organization             @relation(fields: [organizationId], references: [id])
   organizationId         String                   @db.Uuid
   EventAddon             EventAddon[]
+  /// [EventOptions]
+  options                Json?                    @db.JsonB
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime?                @updatedAt
   EventCheckIn           EventCheckIn[]

@@ -2,8 +2,10 @@ import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { notFound } from "next/navigation";
-import { isUUID } from "odinkit";
+import { Alertbox, isUUID } from "odinkit";
 import EventContainer from "./components/EventContainer";
+import OrgFooter from "../../../_shared/OrgFooter";
+import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 
 export default async function EventPage({
   params,
@@ -28,6 +30,7 @@ export default async function EventPage({
   });
   const organization = await prisma.organization.findUnique({
     where: { slug: params.orgSlug },
+    include: { OrgCustomDomain: true },
   });
   if (!event || !organization) return notFound();
 
@@ -60,13 +63,17 @@ export default async function EventPage({
   });
 
   return (
-    <EventContainer
-      event={event}
-      isUserRegistered={isUserRegistered}
-      batch={batch}
-      nextBatch={nextBatch}
-      registrationCount={registrationCount}
-      organization={organization}
-    />
+    <>
+      <OrgPageContainer className="bg-slate-200" organization={organization}>
+        <EventContainer
+          event={event}
+          isUserRegistered={isUserRegistered}
+          batch={batch}
+          nextBatch={nextBatch}
+          registrationCount={registrationCount}
+          organization={organization}
+        />
+      </OrgPageContainer>
+    </>
   );
 }

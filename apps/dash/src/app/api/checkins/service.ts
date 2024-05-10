@@ -73,6 +73,65 @@ export async function readEventGroupRegistrationCheckin(
   return { existingRegistration, existingUserEventGroupCheckins };
 }
 
+export async function readEventRegistrationCheckin(
+  data: SubeventEventGroupCheckinDto
+) {
+  if (!data.subeventId) throw "Evento não informado.";
+  const event = await prisma.event.findFirst({
+    where: { id: data.subeventId },
+  });
+
+  if (!event) throw "Evento não encontrado.";
+
+  if (data.registrationId && !isUUID(data.registrationId))
+    throw "QR code inválido.";
+
+  const existingRegistration = data.document
+    ? await prisma.eventRegistration.findFirst({
+        where: {
+          user: { document: normalize(data.document) },
+          event: { id: data.subeventId },
+          status: "active",
+        },
+        include: {
+          user: true,
+          modality: true,
+          category: true,
+          addon: true,
+          team: true,
+        },
+      })
+    : await prisma.eventRegistration.findUnique({
+        where: {
+          id: data.registrationId,
+          event: { id: data.subeventId },
+          status: "active",
+        },
+        include: {
+          user: true,
+          modality: true,
+          category: true,
+          addon: true,
+          team: true,
+        },
+      });
+
+  if (!existingRegistration) throw "Inscrição não encontrada.";
+
+  const existingCheckin = await prisma.eventCheckIn.findFirst({
+    where: {
+      AND: [
+        { registrationId: data.registrationId ?? existingRegistration.id },
+        { eventId: data.subeventId },
+      ],
+    },
+  });
+
+  if (existingCheckin) throw "Check-in já realizado!";
+
+  return { existingRegistration };
+}
+
 export async function eventGroupSubeventCheckin(
   data: SubeventEventGroupCheckinDto & { userSession: UserSession }
 ) {

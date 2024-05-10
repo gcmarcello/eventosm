@@ -19,6 +19,7 @@ export default async function BatchesPage({
     where: { eventGroupId: eventGroup.id },
     include: {
       CategoryBatch: { include: { category: true } },
+      ModalityBatch: true,
       _count: {
         select: {
           EventRegistration: {

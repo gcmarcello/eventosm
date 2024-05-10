@@ -50,7 +50,11 @@ export default async function EventCard({
         <div className="">
           <div className="col-span-2">
             <div className="relative h-full w-full">
-              <img className="rounded-t" src={event.imageUrl || ""} alt="" />
+              <img
+                className="hidden rounded-t md:block"
+                src={event.imageUrl || ""}
+                alt=""
+              />
             </div>
           </div>
           <div className="col-span-3 flex  flex-col px-4">
@@ -101,22 +105,23 @@ export default async function EventCard({
         </div>
         <div>
           <div className="-mt-px flex  ">
-            {availableBatch && (
-              <div className="relative -mr-px  inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-r-none rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900 duration-200 hover:bg-gray-100">
+            {availableBatch ? (
+              <div className="relative -mr-px  inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-r-none rounded-bl-lg border border-transparent py-3 text-sm font-semibold text-gray-900 duration-200 hover:bg-gray-100">
                 <ClipboardDocumentListIcon
                   className="h-5 w-5 text-gray-400"
                   aria-hidden="true"
                 />
                 Inscrições
               </div>
+            ) : (
+              <div className="relative -mr-px  inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-b-lg rounded-l-none border border-transparent py-3 text-sm font-semibold text-gray-900 duration-200 hover:bg-gray-100">
+                <InformationCircleIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+                Informações
+              </div>
             )}
-            <div className="relative -mr-px  inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-b-lg rounded-l-none border border-transparent py-4 text-sm font-semibold text-gray-900 duration-200 hover:bg-gray-100">
-              <InformationCircleIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-              Informações
-            </div>
           </div>
         </div>
       </div>

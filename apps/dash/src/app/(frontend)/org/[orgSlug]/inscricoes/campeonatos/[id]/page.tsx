@@ -10,6 +10,7 @@ import { readActiveBatch, readProtectedBatch } from "@/app/api/batches/service";
 import { readUserInfo } from "@/app/api/users/service";
 import { readRegistrations } from "@/app/api/registrations/service";
 import { readOrganizations } from "@/app/api/orgs/service";
+import { Alertbox } from "odinkit";
 
 export default async function InscricaoPage({
   searchParams,
@@ -41,7 +42,7 @@ export default async function InscricaoPage({
   );
 
   if (isUserRegistered && !searchParams.team) {
-    return redirect(`/campeonatos/${params.id}`);
+    return redirect(`/campeonatos/${params.id}?registered=true`);
   }
 
   let batch;
@@ -88,27 +89,31 @@ export default async function InscricaoPage({
       },
     });
     return (
-      <TeamTournamentRegistration
-        eventGroup={eventGroup}
-        teams={teams}
-        organization={organization}
-        batch={batch}
-        userSession={userSession}
-      />
+      <>
+        <TeamTournamentRegistration
+          eventGroup={eventGroup}
+          teams={teams}
+          organization={organization}
+          batch={batch}
+          userSession={userSession}
+        />
+      </>
     );
   } else {
     const teams = await prisma.team.findMany({
       where: { User: { some: { id: userSession.id } } },
     });
     return (
-      <IndividualTournamentRegistration
-        teams={teams}
-        eventGroup={eventGroup}
-        organization={organization}
-        batch={batch}
-        userSession={userSession}
-        userInfo={userInfo}
-      />
+      <>
+        <IndividualTournamentRegistration
+          teams={teams}
+          eventGroup={eventGroup}
+          organization={organization}
+          batch={batch}
+          userSession={userSession}
+          userInfo={userInfo}
+        />
+      </>
     );
   }
 }

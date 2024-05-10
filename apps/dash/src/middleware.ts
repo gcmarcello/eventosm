@@ -4,6 +4,12 @@ import { customDomainMiddleware } from "./customDomainMiddleware";
 import { getServerEnv } from "./app/api/env";
 
 export async function middleware(request: NextRequest) {
+  const maintenanceMode = getServerEnv("MAINTENANCE_MODE") ?? "false";
+
+  if (maintenanceMode === "true") {
+    return NextResponse.json("Site em Manutenção");
+  }
+
   const startsWith = (arg: (string | RegExp)[]) => {
     const testArray = [];
     for (const a of arg) {
@@ -49,15 +55,7 @@ export async function middleware(request: NextRequest) {
   if (startsWith(["/painel"]) && !(await userId(["user"])))
     return authRedirect({ url: "/login?redirect=/painel" });
 
-  if (
-    startsWith([
-      "/inscricoes",
-      /^\/org\/[^\/]+\/inscricoes/,
-      "/equipes",
-      "/perfil",
-    ]) &&
-    !(await userId())
-  ) {
+  if (startsWith(["/equipes", "/perfil"]) && !(await userId())) {
     return authRedirect({
       url: `/login?&redirect=${request.nextUrl.pathname}`,
     });

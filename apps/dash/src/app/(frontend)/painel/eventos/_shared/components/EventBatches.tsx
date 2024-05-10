@@ -22,8 +22,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { Badge, date } from "odinkit";
-import { Span } from "next/dist/trace";
-import { set } from "lodash";
 import { Table } from "odinkit";
 import {
   Button,
@@ -38,11 +36,14 @@ import {
   DropdownSeparator,
   Date,
 } from "odinkit/client";
-import { Organization } from "@prisma/client";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { EventRegistrationBatch, Organization } from "@prisma/client";
+import { ModalityControlModal } from "./ModalityControlModal";
+import {
+  Cog6ToothIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.extend(parseCustomFormat);
 
 export default function EventBatches({
   batches,
@@ -61,6 +62,12 @@ export default function EventBatches({
 }) {
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
   const [showCategoryBatches, setShowCategoryBatches] = useState(false);
+  const [showModalityControlModal, setShowModalityControlModal] =
+    useState(false);
+  const [selectedBatch, setSelectedBatch] = useState<
+    undefined | EventRegistrationBatch
+  >(undefined);
+
   const eventBatchForm = useForm({
     schema: upsertRegistrationBatchDto,
     mode: "onChange",
@@ -95,9 +102,6 @@ export default function EventBatches({
       });
     },
   });
-  const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
 
   function handleEditBatch({
     batch,
@@ -117,6 +121,7 @@ export default function EventBatches({
     eventBatchForm.setValue("eventId", batch?.eventId || undefined);
     eventBatchForm.setValue("eventGroupId", batch?.eventGroupId || undefined);
     eventBatchForm.setValue("categoryControl", batch.categoryControl);
+    eventBatchForm.setValue("modalityControl", batch.modalityControl);
     eventBatchForm.setValue("registrationType", batch.registrationType);
     eventBatchForm.setValue("name", batch.name || "");
     eventBatchForm.setValue(
@@ -128,20 +133,41 @@ export default function EventBatches({
       (modality) => modality.modalityCategory
     );
     eventBatchForm.setValue(
-      "categoryBatch",
-      batch.CategoryBatch.length
-        ? batch.CategoryBatch.map((categoryBatch) => ({
-            ...categoryBatch,
-            price: categoryBatch?.price?.toFixed(2).replace(".", ",") || "",
-          }))
-        : flatCategoryArray.map((category) => ({
-            categoryId: category.id,
-            modalityId: category.eventModalityId,
-            maxRegistrations: 0,
-            price: "",
-          }))
+      "modalityBatch",
+      modalities.map((mod) => {
+        const modalityBatch = batch.ModalityBatch.find(
+          (m) => m.modalityId === mod.id
+        );
+        return {
+          id: modalityBatch?.id,
+          modalityId: mod.id,
+          maxRegistrations: modalityBatch?.maxRegistrations || 0,
+          price: modalityBatch?.price?.toFixed(2).replace(".", ",") || "",
+        };
+      })
     );
+    eventBatchForm.setValue(
+      "categoryBatch",
+      flatCategoryArray.map((category) => {
+        const categoryBatch = batch.CategoryBatch.find(
+          (cb) => cb.categoryId === category.id
+        );
+        return {
+          id: categoryBatch?.id,
+          categoryId: category.id,
+          modalityId: category.eventModalityId,
+          maxRegistrations: categoryBatch?.maxRegistrations || 0,
+          price: categoryBatch?.price?.toFixed(2).replace(".", ",") || "",
+        };
+      })
+    );
+
     setIsBatchModalOpen(true);
+  }
+
+  function handleModalityControlModal(batch: EventRegistrationBatch) {
+    setSelectedBatch(batch);
+    setShowModalityControlModal(true);
   }
 
   const stats = useMemo(
@@ -161,12 +187,34 @@ export default function EventBatches({
     [batches]
   );
 
+  function generateBatchLink(
+    batch: EventRegistrationBatchesWithCategoriesAndRegistrations
+  ) {
+    const url = organization.OrgCustomDomain[0]?.domain;
+    const eventGroup = batch.eventGroupId;
+    const team = batch.registrationType === "team" ? "&team=true" : "";
+    return (
+      url +
+      (eventGroup ? "/inscricoes/campeonatos/" : "/inscricoes/") +
+      (eventGroup ? batch.eventGroupId : batch.eventId) +
+      `?batch=${batch.id}` +
+      (batch.registrationType === "team" ? "&team=true" : "")
+    );
+  }
+
   return (
     <>
       <Form
         hform={eventBatchForm}
         onSubmit={(data) => triggerRegistrationBatch(data)}
       >
+        {selectedBatch && (
+          <ModalityControlModal
+            isOpen={showModalityControlModal}
+            setIsOpen={setShowModalityControlModal}
+            batch={selectedBatch}
+          />
+        )}
         <BatchModal
           organization={organization}
           batches={batches}
@@ -181,10 +229,9 @@ export default function EventBatches({
         />
       </Form>
 
-      <div className="mb-3 flex flex-col items-end justify-between gap-3 lg:flex-row-reverse">
+      <div className="my-3 flex flex-col justify-between gap-3 lg:flex-row-reverse lg:items-end">
         <Button
-          type="button"
-          color={primaryColor?.tw.color}
+          color={organization.options.colors.primaryColor.tw.color}
           onClick={() => {
             eventBatchForm.reset();
             setIsBatchModalOpen(true);
@@ -246,31 +293,47 @@ export default function EventBatches({
             cell: (info) =>
               `${info.getValue()}/${info.row.original.maxRegistrations}`,
           }),
-          columnHelper.accessor("price", {
-            id: "price",
-            header: "Preço",
-            enableSorting: false,
-            enableGlobalFilter: false,
-            cell: (info) =>
-              info.getValue()
-                ? `R$ ${info.getValue().toFixed(2).replace(".", ",")}`
-                : "Gratuito",
-          }),
-          columnHelper.accessor("categoryControl", {
-            id: "batch_registrations",
-            header: "Limitado por Categoria",
+
+          columnHelper.accessor("modalityControl", {
+            id: "modalityControl",
+            header: "Por Modalidade",
             enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) =>
               info.getValue() ? (
-                <CheckIcon className="h-5 w-5 text-green-600" />
+                <Button
+                  onClick={() => {
+                    handleModalityControlModal(info.row.original);
+                  }}
+                  color={organization.options.colors.primaryColor.tw.color}
+                >
+                  <InformationCircleIcon className="h-5 w-5" />
+                </Button>
+              ) : (
+                <XMarkIcon className="h-5 w-5 text-red-400" />
+              ),
+          }),
+          columnHelper.accessor("categoryControl", {
+            id: "categoryControl",
+            header: "Por Categoria",
+            enableSorting: false,
+            enableGlobalFilter: false,
+            cell: (info) =>
+              info.getValue() ? (
+                <Button
+                  onClick={() => {
+                    handleModalityControlModal(info.row.original);
+                  }}
+                >
+                  ModalityControlModal
+                </Button>
               ) : (
                 <XMarkIcon className="h-5 w-5 text-red-400" />
               ),
           }),
           columnHelper.accessor("protectedBatch", {
             id: "protectedBatch",
-            header: "Lote Privado",
+            header: "Status",
             enableSorting: false,
             enableGlobalFilter: false,
             cell: (info) =>
@@ -302,13 +365,7 @@ export default function EventBatches({
                   <DropdownItem
                     onClick={async () => {
                       await navigator.clipboard.writeText(
-                        organization.OrgCustomDomain[0]?.domain +
-                          "/inscricoes/campeonatos/" +
-                          info.row.original.eventGroupId +
-                          `?batch=${info.row.original.id}` +
-                          (info.row.original.registrationType === "team"
-                            ? "&team=true"
-                            : "")
+                        generateBatchLink(info.row.original)
                       );
                       return showToast({
                         message: "Link copiado.",

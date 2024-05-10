@@ -1,6 +1,6 @@
 import { readEventGroups } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
-import { isUUID } from "odinkit";
+import { Alertbox, isUUID } from "odinkit";
 
 import EventGroupContainer from "./components/EventGroupContainer";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
@@ -8,6 +8,9 @@ import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUs
 import { readRegistrations } from "@/app/api/registrations/service";
 import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
+import OrgFooter from "../../../_shared/OrgFooter";
+import clsx from "clsx";
+import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 
 export default async function TorneioPage({
   params,
@@ -71,13 +74,15 @@ export default async function TorneioPage({
   });
 
   return (
-    <EventGroupContainer
-      eventGroup={eventGroup}
-      isUserRegistered={isUserRegistered}
-      batch={batch}
-      nextBatch={nextBatch}
-      registrationCount={registrationCount}
-      organization={organization}
-    />
+    <OrgPageContainer className="bg-slate-200" organization={organization}>
+      <EventGroupContainer
+        eventGroup={eventGroup}
+        isUserRegistered={isUserRegistered}
+        batch={batch}
+        nextBatch={nextBatch}
+        registrationCount={registrationCount}
+        organization={organization}
+      />
+    </OrgPageContainer>
   );
 }

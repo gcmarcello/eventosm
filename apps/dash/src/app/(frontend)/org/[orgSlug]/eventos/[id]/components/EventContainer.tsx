@@ -15,6 +15,7 @@ import {
   Badge,
   Table,
   Link,
+  Alertbox,
 } from "odinkit";
 import {
   Dropdown,
@@ -25,7 +26,6 @@ import {
   DropdownSeparator,
   DropdownDescription,
   Button,
-  DisclosureAccordion,
   Date,
   Dialog,
   DialogActions,
@@ -34,6 +34,7 @@ import {
   DialogTitle,
   Input,
   Label,
+  DisclosureAccordion,
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
@@ -64,6 +65,7 @@ import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../_shared/components/OrgStore";
 import { Field } from "@headlessui/react";
 import RegistrationMobileButton from "./RegistrationMobileButton";
+import { useSearchParams } from "next/navigation";
 
 export default function EventContainer({
   event,
@@ -108,17 +110,30 @@ export default function EventContainer({
   ];
 
   const { image } = useOrg();
+  const params = useSearchParams();
   const contentRef = useRef(null);
 
   return (
     <>
-      <div className={clsx(!image && "bg-slate-200", "bg-cover, h-fit")}>
+      <div
+        className={clsx(!image && "bg-slate-200", "xxl:mx-40 h-fit bg-cover")}
+      >
         <div
           ref={contentRef}
-          className={clsx(
-            "mb-4 rounded-b bg-zinc-50 shadow-md  lg:mx-40 lg:bg-white xl:mx-56"
-          )}
+          className={clsx("mb-4 rounded-b bg-zinc-50 shadow-md   lg:bg-white ")}
         >
+          {params.get("registered") && (
+            <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
+              Você já está inscrito neste evento.
+            </Alertbox>
+          )}
+          {params.get("registrationCompleted") && (
+            <Alertbox className="py-3 lg:mx-auto" type="success" dismissible>
+              Sua inscrição foi realizada com sucesso! Verifique seu email (
+              {params.get("email")}) para mais informações e instruções de como
+              acessar sua conta.
+            </Alertbox>
+          )}
           <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
             <div className="relative h-[50vh] w-full">
               <Image
@@ -272,7 +287,7 @@ export default function EventContainer({
                         format="DD/MM/YYYY HH:mm"
                       />
                     </Button>
-                  ) : (
+                  ) : isUserRegistered ? null : (
                     <Button className={"w-full"} disabled color="rose">
                       Inscrições Indisponíveis
                     </Button>
@@ -283,7 +298,7 @@ export default function EventContainer({
               <div className="xxl:flex-row xxl:items-center xxl:border-none xxl:pt-0 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
                 <Text className="font-medium">Mais Informações:</Text>
                 <Link
-                  href={`/${event.slug}/resultados`}
+                  href={`/resultados/${event.id}`}
                   className="text-sm hover:underline"
                   style={{
                     color:
@@ -331,93 +346,6 @@ export default function EventContainer({
         </div>
       </div>
       <BottomNavigation className="lg:hidden">
-        {/* <div className="flex flex-row-reverse items-center justify-between p-2">
-          {batch ? (
-            registrationCount >= batch.maxRegistrations ? (
-              <Button disabled color="red" className={"w-full"}>
-                Inscrições Esgotadas
-              </Button>
-            ) : (
-              <>
-                <Dropdown>
-                  <DropdownButton
-                    className={"w-full"}
-                    color={
-                      isUserRegistered
-                        ? "amber"
-                        : organization.options.colors.primaryColor.tw.color
-                    }
-                  >
-                    {isUserRegistered ? "Inscrito!" : "Inscrição"}
-
-                    <ChevronUpIcon className="block size-5 lg:hidden" />
-                    <ChevronDownIcon className=" hidden size-5 lg:block" />
-                  </DropdownButton>
-                  <DropdownMenu>
-                    {
-                      <DropdownItem
-                        disabled={
-                          isUserRegistered ||
-                          !(
-                            batch.registrationType === "individual" ||
-                            batch.registrationType === "mixed"
-                          )
-                        }
-                        href={`/inscricoes/campeonatos/${eventGroup.id}`}
-                      >
-                        <DropdownLabel>
-                          <span className="inline-flex gap-2">
-                            <UserIcon className="h-5 w-5" />
-                            Individual
-                          </span>
-                        </DropdownLabel>
-                      </DropdownItem>
-                    }
-                    <DropdownSeparator />
-                    {
-                      <DropdownItem
-                        href={`/inscricoes/campeonatos/${eventGroup.id}?team=true`}
-                        disabled={
-                          !(
-                            batch.registrationType === "team" ||
-                            batch.registrationType === "mixed"
-                          )
-                        }
-                      >
-                        <DropdownLabel>
-                          <span className="inline-flex gap-2">
-                            <UserGroupIcon className="h-5 w-5" />
-                            Por Equipes
-                          </span>
-                        </DropdownLabel>
-                        <DropdownDescription>
-                          Inscreva toda a equipe de uma só vez.
-                        </DropdownDescription>
-                      </DropdownItem>
-                    }
-                  </DropdownMenu>
-                </Dropdown>
-              </>
-            )
-          ) : isUserRegistered ? (
-            <Button disabled color="amber" className={"w-full"}>
-              Inscrito!
-            </Button>
-          ) : nextBatch ? (
-            <Button disabled color="red" className={"w-full"}>
-              Inscrições à partir de{" "}
-              <Date
-                date={nextBatch.dateStart}
-                format="DD/MM/YYYY HH:mm"
-                localTime
-              />
-            </Button>
-          ) : (
-            <Button disabled color="red" className={"w-full"}>
-              Inscrições Indisponíveis
-            </Button>
-          )}
-        </div> */}
         <RegistrationMobileButton
           organization={organization}
           batch={batch}

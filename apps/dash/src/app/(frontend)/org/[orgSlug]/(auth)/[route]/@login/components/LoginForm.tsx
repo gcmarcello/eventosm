@@ -53,8 +53,11 @@ export default function LoginForm({
     schema: loginDto,
     mode: "onChange",
     defaultValues: {
-      identifier: params.get("email") || "",
-      redirect: params.get("redirect") || "/",
+      identifier:
+        params.get("alert") === "successRecovery"
+          ? ""
+          : params.get("email") ?? undefined,
+      redirect: params.get("redirect") || "/perfil",
       organizationId: organization.id,
     },
   });
@@ -96,31 +99,45 @@ export default function LoginForm({
             Conectar Conta EventoSM
           </DialogTitle>
           <DialogBody>
-            <div className="flex flex-col gap-y-2">
+            <div className="mt-3 flex flex-col gap-y-2">
               <Text className="font-semibold">
                 Olá {user?.fullName.split(" ")[0]}!
               </Text>
-              <Text className="text-sm lg:text-xs">
-                A(o) {organization.abbreviation ?? organization.name} utiliza o
-                sistema EventoSM para administrar suas inscrições e eventos.
+
+              <Heading>
                 Detectamos que você já possui uma conta cadastrada nas seguintes
                 organizações:
-              </Text>
+              </Heading>
+              <ul className="my-3 space-y-2">
+                <For each={user?.UserOrgLink!}>
+                  {(org) => (
+                    <li>
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={org.Organization.options.images?.logo}
+                          className="max-w-28"
+                          alt=""
+                        />
+                        <Text>{org.Organization.name}</Text>
+                      </div>
+                    </li>
+                  )}
+                </For>
+              </ul>
+
               <Text>
-                <ul className="ms-5 list-disc">
-                  <For each={user?.UserOrgLink!}>
-                    {(org) => <li>{org.Organization.name}</li>}
-                  </For>
-                </ul>
+                Ao conectar sua conta, você não precisará preencher outro
+                cadastro, e seus dados serão compartilhados com a{" "}
+                {organization.name}.
               </Text>
             </div>
           </DialogBody>
           <DialogActions>
             <Button
               color={organization.options.colors.secondaryColor.tw.color}
-              href="./cadastro"
+              onClick={() => setOpenTermsModal(false)}
             >
-              Cadastrar nova conta
+              Voltar
             </Button>
             <Button
               color={organization.options.colors.primaryColor.tw.color}
@@ -135,7 +152,7 @@ export default function LoginForm({
         </Dialog>
       )}
 
-      <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="mx-auto w-full">
         <div>
           {/* <img
               className="h-10 w-auto"

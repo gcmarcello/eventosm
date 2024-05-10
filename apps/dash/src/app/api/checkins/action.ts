@@ -17,6 +17,18 @@ export async function readEventGroupRegistrationCheckin(
   }
 }
 
+export async function readEventRegistrationCheckin(
+  request: SubeventEventGroupCheckinDto
+) {
+  try {
+    const data = await service.readEventRegistrationCheckin(request);
+    return ActionResponse.success({ data });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
 export async function eventGroupSubeventCheckin(
   request: SubeventEventGroupCheckinDto
 ) {

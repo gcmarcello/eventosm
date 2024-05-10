@@ -41,7 +41,7 @@ export async function createEventGroupRegistration(
         where: { eventGroupId: request.eventGroupId },
       });
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
 
   await verifyEventGroupRegistrationAvailability({
     registrations: [registrationInfo],
@@ -167,7 +167,7 @@ export async function createEventGroupMultipleRegistrations(
         where: { eventGroupId: eventGroup?.id },
       });
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
 
   if (
     batch.multipleRegistrationLimit &&
@@ -424,7 +424,7 @@ async function verifyEventGroupRegistrationAvailability({
 }) {
   let coupon: BatchCoupon | null = null;
 
-  if (!batch) throw "Lote de inscrição ativo não encontrado";
+  if (!batch) throw "Lote de inscrição ativo não encontrado.";
   if (batch.registrationType === "team" && registrations.length <= 1)
     throw "Lote não permitido para inscrições individuais.";
   if (batch.registrationType === "individual" && registrations.length > 1)
@@ -472,6 +472,52 @@ async function verifyEventGroupAvailableSlots({
 
   if (registrationsCount + registrations.length > batch.maxRegistrations)
     throw "Inscrições esgotadas.";
+
+  if (batch.modalityControl) {
+    const modalityBatchArray = batch.ModalityBatch;
+    const registrationModalities = Array.from(
+      new Set(registrations.map((r) => r.modalityId as string))
+    );
+
+    const modalitiesRegistrations = await prisma.eventRegistration.findMany({
+      where: {
+        modalityId: { in: registrationModalities },
+        status: { not: { in: ["cancelled", "suspended"] } },
+        batchId: batch.id,
+      },
+      select: { modalityId: true },
+    });
+
+    for (const modality of registrationModalities) {
+      const modalityInfo = modalityBatchArray.find(
+        (m) => m.modalityId === modality
+      );
+      const modalityRegistrations = modalitiesRegistrations.filter(
+        (r) => r.modalityId === modalityInfo?.modalityId
+      );
+
+      const potentialRegistrations = registrations.filter(
+        (r) => r.modalityId === modalityInfo?.modalityId
+      ).length;
+
+      if (!potentialRegistrations) continue;
+
+      const maxRegistrations = modalityInfo?.maxRegistrations;
+
+      if (!maxRegistrations && potentialRegistrations)
+        throw `Limite de inscrições atingido.`;
+
+      if (
+        !maxRegistrations ||
+        potentialRegistrations + modalityRegistrations.length > maxRegistrations
+      ) {
+        const modalityName = await prisma.eventModality.findUnique({
+          where: { id: modalityInfo?.modalityId },
+        });
+        throw `Limite de inscrições na modalidade ${modalityName?.name} excedido.`;
+      }
+    }
+  }
 
   if (batch.categoryControl) {
     const categoryBatchArray = batch.CategoryBatch;

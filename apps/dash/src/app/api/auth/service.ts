@@ -9,6 +9,7 @@ import {
   cpfValidator,
   isEmail,
   normalize,
+  normalizeDocument,
   normalizeEmail,
   normalizePhone,
   normalizeZipCode,
@@ -21,7 +22,7 @@ import { getClientEnv } from "@/app/(frontend)/env";
 import { Organization } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
-export async function signup(request: SignupDto) {
+export async function signup(request: SignupDto, bypassEmail = false) {
   const newUser = await prisma.user.create({
     data: {
       fullName: request.fullName,
@@ -53,30 +54,31 @@ export async function signup(request: SignupDto) {
       },
     });
   }
+  if (!bypassEmail) {
+    const url = organization?.OrgCustomDomain[0]?.domain
+      ? "https://" + organization?.OrgCustomDomain[0]?.domain
+      : process.env.NEXT_PUBLIC_SITE_URL;
 
-  const url = organization?.OrgCustomDomain[0]?.domain
-    ? "https://" + organization?.OrgCustomDomain[0]?.domain
-    : process.env.NEXT_PUBLIC_SITE_URL;
-
-  await sendEmail([
-    {
-      template: "welcome_email",
-      setup: {
-        from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
-        to: newUser.email,
+    await sendEmail([
+      {
+        template: "welcome_email",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+          to: newUser.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: organization?.name || "EventoSM",
+          name: newUser.fullName.split(" ")[0] as string,
+          siteLink: `${url}/confirmar/${newUser.id}`,
+        },
       },
-      templateParameters: {
-        headerTextColor: chooseTextColor(
-          organization?.options.colors.primaryColor.hex || "#4F46E5"
-        ),
-        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-        orgName: organization?.name || "EventoSM",
-        name: newUser.fullName.split(" ")[0] as string,
-        siteLink: `${url}/confirmar/${newUser.id}`,
-      },
-    },
-  ]);
+    ]);
+  }
   return newUser;
 }
 
@@ -121,10 +123,23 @@ export async function resendConfirmationEmail({
   return user;
 }
 
-export async function linkUserToOrg(request: {
-  user: UserSession;
-  orgId: string;
-}) {}
+export async function readUserFromDocument(data: {
+  document: string;
+  organizationId: string;
+}) {
+  const user = await prisma.user.findUnique({
+    where: { document: normalizeDocument(data.document) },
+    include: { UserOrgLink: true },
+  });
+
+  if (!user) return { existent: false };
+
+  const organizationsArray = user?.UserOrgLink.map((org) => org.organizationId);
+
+  const loginOrg = organizationsArray?.includes(data.organizationId);
+
+  return { existent: !!user, type: loginOrg ? "sameorg" : "differentOrg" };
+}
 
 export function createToken(request: { id: string }) {
   const JWT_KEY = new TextEncoder().encode(getServerEnv("JWT_KEY"));
@@ -147,11 +162,12 @@ export async function login(request: LoginDto) {
     where: isIdentifierEmail
       ? { email: normalizeEmail(request.identifier) }
       : { document: normalize(request.identifier) },
+    include: { UserOrgLink: { include: { Organization: true } } },
   });
 
   if (!potentialUser) throw `Informações de login incorretas!`;
   if (!potentialUser.password)
-    throw `Usuário não possui uma conta configurada.`;
+    throw `Usuário não possui uma conta configurada. Por favor, acesse a recuperação de senha.`;
   if (!potentialUser.confirmed)
     throw `Usuário não confirmado. Por favor confirme sua conta através do e-mail enviado.`;
 

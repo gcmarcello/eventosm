@@ -15,11 +15,26 @@ declare global {
         hero?: string;
         logo?: string;
       };
-      image?: string;
+      socialMedia?: {
+        facebook?: string | null;
+        instagram?: string | null;
+        twitter?: string | null;
+        youtube?: string | null;
+      };
       colors: OrganizationColors;
       pages?: {
         documents?: boolean;
       };
+    };
+
+    type EventOptions = {
+      accountlessRegistration?: boolean;
+      multipleRegistrations?: boolean;
+    };
+
+    type EventGroupOptions = {
+      accountlessRegistration?: boolean;
+      multipleRegistrations?: boolean;
     };
 
     type TailwindColor = {
