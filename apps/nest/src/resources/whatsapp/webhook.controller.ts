@@ -4,7 +4,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { SignatureGuard } from "./signature.guard";
 import { WebhookGuard } from "./webhook.guard";
 
-@ApiTags("webhooks")
+@ApiTags("Whatsapp")
 @Controller("webhooks/whatsapp")
 export class WhatsappWebhooksController {
   constructor() {}

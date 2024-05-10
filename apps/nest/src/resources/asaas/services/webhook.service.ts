@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { AsaasService } from "../../asaas.service";
-import { CreateWebhookDto } from "../../types/webhook/webhook.request";
+import { AsaasService } from "../asaas.service";
+import { CreateWebhookDto } from "../types/webhook/webhook.dto";
 
 @Injectable()
 export class WebhookService {

@@ -37,6 +37,11 @@ declare global {
       multipleRegistrations?: boolean;
     };
 
+    type OrderItems = {
+      registrations?: string[];
+      subscriptions?: string[];
+    };
+
     type TailwindColor = {
       id: string;
       color: twColor;

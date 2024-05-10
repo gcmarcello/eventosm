@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { AsaasService } from "../../asaas.service";
-import { CreateCreditCardPayment, CreatePayment } from "../../types/payment";
+import { AsaasService } from "../asaas.service";
+import { CreateCreditCardPayment, CreatePayment } from "../types/payment.dto";
 
 @Injectable()
 export class PaymentService {

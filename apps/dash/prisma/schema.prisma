@@ -537,8 +537,6 @@ model EventRegistration {
   addonId             String?                 @db.Uuid
   addonOption         String?
   status              EventRegistrationStatus @default(pending)
-  order               Order?                  @relation(fields: [orderId], references: [id])
-  orderId             String?                 @db.Uuid
   qrCode              String
   justifiedAbsences   Int                     @default(0) @db.Integer
   unjustifiedAbsences Int                     @default(0) @db.Integer
@@ -576,13 +574,13 @@ model Team {
 }
 
 model Order {
-  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  orderId           String              @db.VarChar
-  status            OrderStatus
-  type              OrderType
-  EventRegistration EventRegistration[]
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime?           @updatedAt
+  id        String      @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  orderId   String      @db.VarChar
+  status    OrderStatus
+  items     Json        @db.JsonB
+  data      Json?       @db.Json
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @updatedAt
 
   @@schema("public")
 }
@@ -669,12 +667,7 @@ enum OrderStatus {
   pending
   paid
   cancelled
-
-  @@schema("public")
-}
-
-enum OrderType {
-  eventRegistration
+  refunded
 
   @@schema("public")
 }
