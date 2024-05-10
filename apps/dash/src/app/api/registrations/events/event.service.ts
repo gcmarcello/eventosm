@@ -9,7 +9,7 @@ import {
 } from "./event.dto";
 import { readActiveBatch, readProtectedBatch } from "../../batches/service";
 import { readRegistrationPrice } from "../service";
-import { createOrder } from "../../payments/service";
+import { createOrder, createPayment } from "../../payments/service";
 import { getServerEnv } from "../../env";
 import { generateQrCodes } from "../../qrcode/service";
 import { Email } from "email-templates";
@@ -70,18 +70,25 @@ export async function createEventIndividualRegistration(
 
   if (!code) throw "Código de participante não encontrado";
 
-  const categoryPrice: number = await readRegistrationPrice({
+  const addonInfo =
+    addon && (await prisma.eventAddon.findUnique({ where: { id: addon.id } }));
+
+  const registrationPrice: number = readRegistrationPrice({
     batch,
     categoryId: registrationInfo.categoryId,
+    modalityId: registrationInfo.modalityId,
+    addon: addonInfo,
   });
 
-  const orderId = categoryPrice ? await createOrder("@todo") : null;
-  const status = categoryPrice ? "pending" : "active";
+  const paymentId = registrationPrice
+    ? await createPayment({ registrations: [registrationId] })
+    : null;
+
+  const status = registrationPrice ? "pending" : "active";
   const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
   const region = getServerEnv("AWS_REGION") || "";
   const createRegistration = await prisma.eventRegistration.create({
     data: {
-      ...registrationInfo,
       teamId: request?.teamId || null,
       modalityId: registrationInfo.modalityId,
       categoryId: registrationInfo.categoryId,
@@ -91,10 +98,10 @@ export async function createEventIndividualRegistration(
       qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${registrationId}.png`,
       code,
       status,
-      orderId,
       batchId: batch.id,
       addonId: addon?.id,
       addonOption: addon?.option,
+      paymentId: paymentId?.id,
     },
   });
 
@@ -286,6 +293,47 @@ export async function createEventMultipleRegistrations(
   return { event };
 }
 
+export async function createEventSignupRegistration(
+  data: SignupRegistrationDto
+) {
+  const user = await signup(data, true);
+
+  try {
+    const registration = await createEventIndividualRegistration({
+      ...data,
+      userSession: user,
+    });
+    const organization = await prisma.organization.findUnique({
+      where: { id: data.organizationId },
+      include: { OrgCustomDomain: true },
+    });
+    const url = getOrganizationLink(organization);
+    await sendEmail([
+      {
+        template: "welcome_email",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+          to: user.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: organization?.name || "EventoSM",
+          name: user.fullName.split(" ")[0] as string,
+          siteLink: `${url}/confirmar/${user.id}`,
+        },
+      },
+    ]);
+    return { user, registration };
+  } catch (error) {
+    await cleanupUser(user, data.organizationId);
+    throw error;
+  }
+}
+
 async function verifyEventRegistrationAvailability({
   registrations,
   eventId,
@@ -413,46 +461,5 @@ async function verifyEventAvailableSlots({
           throw `Limite de inscrições na categoria ${categoryName} excedido. ${Math.max(0, maxRegistrations - categoryExistingRegistrations)} restantes.`;
       }
     }
-  }
-}
-
-export async function createEventSignupRegistration(
-  data: SignupRegistrationDto
-) {
-  const user = await signup(data, true);
-
-  try {
-    const registration = await createEventIndividualRegistration({
-      ...data,
-      userSession: user,
-    });
-    const organization = await prisma.organization.findUnique({
-      where: { id: data.organizationId },
-      include: { OrgCustomDomain: true },
-    });
-    const url = getOrganizationLink(organization);
-    await sendEmail([
-      {
-        template: "welcome_email",
-        setup: {
-          from: getServerEnv("SENDGRID_EMAIL")!,
-          subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
-          to: user.email,
-        },
-        templateParameters: {
-          headerTextColor: chooseTextColor(
-            organization?.options.colors.primaryColor.hex || "#4F46E5"
-          ),
-          mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-          orgName: organization?.name || "EventoSM",
-          name: user.fullName.split(" ")[0] as string,
-          siteLink: `${url}/confirmar/${user.id}`,
-        },
-      },
-    ]);
-    return { user, registration };
-  } catch (error) {
-    await cleanupUser(user, data.organizationId);
-    throw error;
   }
 }

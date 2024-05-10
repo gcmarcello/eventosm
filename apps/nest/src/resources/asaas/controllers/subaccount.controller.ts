@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from "@nestjs/common";
-import { CreateSubAccountDto } from "../types/subaccount.dto";
 import { SubAccountService } from "../services/subaccount.service";
+import { CreateSubAccountDto } from "shared-types";
 
 @Controller("asaas/account")
 export class SubaccountController {

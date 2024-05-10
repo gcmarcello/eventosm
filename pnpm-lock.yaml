@@ -215,6 +215,9 @@ importers:
       reactflow:
         specifier: ^11.10.1
         version: 11.10.2(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+      shared-types:
+        specifier: workspace:*
+        version: link:../../packages/shared-types
       sharp:
         specifier: ^0.33.2
         version: 0.33.2
@@ -311,6 +314,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      shared-types:
+        specifier: workspace:*
+        version: link:../../packages/shared-types
       ts-morph:
         specifier: 22.0.0
         version: 22.0.0
@@ -546,6 +552,27 @@ importers:
       zustand:
         specifier: ^4.4.7
         version: 4.4.7(@types/react@18.2.21)(react@18.2.0)
+
+  packages/shared-types:
+    dependencies:
+      '@ferstack/libuilderjs':
+        specifier: 4.2.0
+        version: 4.2.0
+      '@repo/config':
+        specifier: workspace:*
+        version: link:../config
+      '@sendgrid/mail':
+        specifier: 8.1.1
+        version: 8.1.1
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
+      typescript:
+        specifier: 5.3.2
+        version: 5.3.2
 
 packages:
 

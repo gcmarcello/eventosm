@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AsaasService } from "../asaas.service";
-import { CreateCustomer, UpdateCustomer } from "../types/customer.dto";
+import { CreateCustomer, UpdateCustomer } from "shared-types";
 
 @Injectable()
 export class CustomerService {

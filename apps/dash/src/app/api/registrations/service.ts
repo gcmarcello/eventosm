@@ -5,7 +5,13 @@ import {
   UpdateRegistrationDto,
 } from "./dto";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
-import { EventRegistrationStatus } from "@prisma/client";
+import {
+  CategoryBatch,
+  EventAddon,
+  EventRegistrationStatus,
+  ModalityBatch,
+} from "@prisma/client";
+import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -59,23 +65,37 @@ export async function updateRegistrationStatus(request: {
   return updatedRegistration;
 }
 
-export async function readRegistrationPrice({
+export function readRegistrationPrice({
   batch,
+  modalityId,
   categoryId,
-  coupon,
+  addon,
 }: {
-  batch: EventRegistrationBatchesWithCategories;
+  batch: EventRegistrationBatchesWithCategoriesAndRegistrations;
+  addon?: EventAddon | null;
+  modalityId: string;
   categoryId: string;
-  coupon?: string;
 }) {
+  let totalPrice = 0;
   if (!batch) throw "Lote de inscrição não encontrado";
 
-  const category = batch?.CategoryBatch.find(
-    (cb) => cb.categoryId === categoryId
-  );
+  if (addon) totalPrice += addon.price;
 
-  if (category && category.price) return category.price;
-  return batch.price || 0;
+  if (batch.categoryControl) {
+    const categoryBatch = batch.CategoryBatch.find(
+      (c) => c.categoryId === categoryId
+    );
+    if (categoryBatch) return (totalPrice += categoryBatch.price ?? 0);
+  }
+
+  if (batch.modalityControl) {
+    const modalityBatch = batch.ModalityBatch.find(
+      (m) => m.modalityId === modalityId
+    );
+    if (modalityBatch) return (totalPrice += modalityBatch.price ?? 0);
+  }
+
+  return totalPrice;
 }
 
 export async function connectRegistrationToTeam(

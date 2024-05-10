@@ -1,0 +1,19 @@
+{
+  "name": "shared-types",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index",
+  "scripts": {
+    "dev": "libuilder --watch ./libuilder.mjs & tsc",
+    "postinstall": "libuilder ./libuilder.mjs & tsc"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "@sendgrid/mail": "8.1.1",
+    "dayjs": "^1.11.10",
+    "@repo/config": "workspace:*",
+    "typescript": "5.3.2",
+    "@ferstack/libuilderjs": "4.2.0",
+    "class-validator": "^0.14.1"
+  }
+}

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AsaasService } from "../asaas.service";
-import { CreateSubAccountDto } from "../types/subaccount.dto";
+import { CreateSubAccountDto } from "shared-types";
 
 @Injectable()
 export class SubAccountService {

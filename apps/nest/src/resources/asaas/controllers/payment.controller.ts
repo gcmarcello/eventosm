@@ -1,7 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
-
-import { CreateCreditCardPayment, CreatePayment } from "../types/payment.dto";
 import { PaymentService } from "../services/payment.service";
+import { CreatePayment, CreateCreditCardPayment } from "shared-types";
 
 @Controller("asaas/payment")
 export class PaymentController {

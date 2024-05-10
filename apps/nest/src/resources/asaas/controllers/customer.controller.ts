@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 
 import { CustomerService } from "../services/customer.service";
-import { CreateCustomer } from "../types/customer.dto";
+import { CreateCustomer } from "shared-types";
 
 @Controller("asaas/customer")
 export class CustomerController {

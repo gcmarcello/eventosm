@@ -1,4 +1,3 @@
-import { PartialType } from "@nestjs/swagger";
 import { MinLength, IsEmail, IsUUID } from "class-validator";
 
 export class CreateCustomer {
@@ -20,7 +19,7 @@ export class CreateCustomer {
   postalCode?: string;
 }
 
-export class UpdateCustomer extends PartialType(CreateCustomer) {
+export class UpdateCustomer extends CreateCustomer {
   id: string;
 }
 export interface CreateCustomerResponse {

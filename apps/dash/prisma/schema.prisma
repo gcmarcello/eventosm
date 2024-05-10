@@ -545,6 +545,8 @@ model EventRegistration {
   EventCheckIn        EventCheckIn[]
   EventAbsences       EventAbsences[]
   EventResults        EventResult[]
+  Payment             Payment?                @relation(fields: [paymentId], references: [id])
+  paymentId           String?                 @db.Uuid
 
   @@schema("public")
 }
@@ -573,14 +575,14 @@ model Team {
   @@schema("public")
 }
 
-model Order {
-  id        String      @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  orderId   String      @db.VarChar
-  status    OrderStatus
-  items     Json        @db.JsonB
-  data      Json?       @db.Json
-  createdAt DateTime    @default(now())
-  updatedAt DateTime?   @updatedAt
+model Payment {
+  id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  paymentId         String?             @db.VarChar
+  status            PaymentStatus
+  EventRegistration EventRegistration[]
+  data              Json?               @db.Json
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt
 
   @@schema("public")
 }
@@ -663,7 +665,7 @@ enum NewsStatus {
   @@schema("public")
 }
 
-enum OrderStatus {
+enum PaymentStatus {
   pending
   paid
   cancelled
