@@ -47,10 +47,8 @@ export async function customDomainMiddleware({
 
   if (
     startsWith([
-      /^\/org\/[^\/]+\/inscricoes/,
       /^\/org\/[^\/]+\/equipes/,
       /^\/org\/[^\/]+\/perfil/,
-      "/inscricoes",
       "/equipes",
       "/perfil",
       "/checkin",

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import GeneralDetailsSection from "./GeneralDetailsSection";
 
-import PersonalDetailSections from "./PersonalDetailsSection";
+import PersonalDetailSection from "./PersonalDetailsSection";
 import clsx from "clsx";
 
 import { signupDto } from "@/app/api/auth/dto";
@@ -96,7 +96,7 @@ export default function FormContainer({
 
   const steps = [
     GeneralDetailsSection,
-    PersonalDetailSections,
+    PersonalDetailSection,
     ConfirmDetailsSection,
   ];
 
@@ -138,7 +138,7 @@ export default function FormContainer({
             ],
           },
           personal: {
-            form: <PersonalDetailSections states={states} />,
+            form: <PersonalDetailSection states={states} />,
             fields: [
               "info.address",
               "info.birthDate",

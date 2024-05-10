@@ -1,5 +1,5 @@
 "use client";
-import { Alertbox, Link, Text, Title, cpfValidator } from "odinkit";
+import { Alertbox, Link, Text, cpfValidator } from "odinkit";
 import {
   Description,
   ErrorMessage,
@@ -19,8 +19,10 @@ import { Organization } from "@prisma/client";
 
 export default function DocumentSection({
   organization,
+  eventId,
 }: {
   organization: Organization;
+  eventId?: string;
 }) {
   const form = useFormContext<SignupDto>();
   const Field = useMemo(() => form.createField(), []);
@@ -48,7 +50,10 @@ export default function DocumentSection({
         <Alertbox className="my-2" type="error">
           {form.formState.errors.root.serverError.message}!{" "}
           <br className="lg:hidden" />{" "}
-          <Link className="me-1 font-medium underline" href="/login">
+          <Link
+            className="me-1 font-medium underline"
+            href={eventId ? "/login" : `/login?redirect=inscricoes/${eventId}`}
+          >
             Clique aqui
           </Link>
           para ir à página de login ou recuperação de senha.

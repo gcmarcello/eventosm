@@ -1,5 +1,5 @@
 import { dateRegex } from "@/utils/regex";
-import { z } from "odinkit";
+import { options, z } from "odinkit";
 
 import { readDto } from "../_shared/dto/read";
 import { EventStatus } from "@prisma/client";
@@ -41,6 +41,12 @@ export const upsertEventDto = z.object({
   description: z.string().optional(),
   rules: z.string().optional(),
   imageUrl: z.string().optional(),
+  options: z
+    .object({
+      accountlessRegistration: z.boolean().optional(),
+      multipleRegistrations: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 export type UpsertEventDto = z.infer<typeof upsertEventDto>;
@@ -86,6 +92,12 @@ export const upsertEventGroupDto = z.object({
   registrationType: z.enum(["individual", "team", "mixed"]),
   eventGroupType: z.enum(["championship", "free"]),
   ruleLogic: upsertEventGroupRulesDto.optional(),
+  options: z
+    .object({
+      accountlessRegistration: z.boolean().optional(),
+      multipleRegistrations: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 export type UpsertEventGroupDto = z.infer<typeof upsertEventGroupDto>;

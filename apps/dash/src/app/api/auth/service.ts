@@ -22,7 +22,7 @@ import { getClientEnv } from "@/app/(frontend)/env";
 import { Organization } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
-export async function signup(request: SignupDto) {
+export async function signup(request: SignupDto, bypassEmail = false) {
   const newUser = await prisma.user.create({
     data: {
       fullName: request.fullName,
@@ -54,30 +54,31 @@ export async function signup(request: SignupDto) {
       },
     });
   }
+  if (!bypassEmail) {
+    const url = organization?.OrgCustomDomain[0]?.domain
+      ? "https://" + organization?.OrgCustomDomain[0]?.domain
+      : process.env.NEXT_PUBLIC_SITE_URL;
 
-  const url = organization?.OrgCustomDomain[0]?.domain
-    ? "https://" + organization?.OrgCustomDomain[0]?.domain
-    : process.env.NEXT_PUBLIC_SITE_URL;
-
-  await sendEmail([
-    {
-      template: "welcome_email",
-      setup: {
-        from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
-        to: newUser.email,
+    await sendEmail([
+      {
+        template: "welcome_email",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Bem vindo ${organization?.id ? `à ${organization.name}` : "ao Evento SM"}`,
+          to: newUser.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: organization?.name || "EventoSM",
+          name: newUser.fullName.split(" ")[0] as string,
+          siteLink: `${url}/confirmar/${newUser.id}`,
+        },
       },
-      templateParameters: {
-        headerTextColor: chooseTextColor(
-          organization?.options.colors.primaryColor.hex || "#4F46E5"
-        ),
-        mainColor: organization?.options.colors.primaryColor.hex || "#4F46E5",
-        orgName: organization?.name || "EventoSM",
-        name: newUser.fullName.split(" ")[0] as string,
-        siteLink: `${url}/confirmar/${newUser.id}`,
-      },
-    },
-  ]);
+    ]);
+  }
   return newUser;
 }
 

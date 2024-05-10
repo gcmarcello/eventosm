@@ -15,7 +15,7 @@ import { useMemo } from "react";
 import { SignupDto } from "@/app/api/auth/dto";
 
 export default function GeneralDetailsSection() {
-  const form = useFormContext<SignupDto>();
+  const form = useFormContext();
   const Field = useMemo(() => form.createField(), []);
   return (
     <Fieldset>

@@ -17,8 +17,9 @@ import {
   FileInput,
   FileDropArea,
   FieldGroup,
+  Checkbox,
 } from "odinkit/client";
-import { FileImagePreview, SubmitButton, Text, z } from "odinkit";
+import { FileImagePreview, Heading, SubmitButton, Text, z } from "odinkit";
 import { EventWithRegistrationCount } from "prisma/types/Events";
 import { useMemo } from "react";
 import utc from "dayjs/plugin/utc";
@@ -48,6 +49,10 @@ export default function EventGeneralInfo({
       dateStart: dayjs(event.dateStart).utc().format("DD/MM/YYYY"),
       slug: event.slug,
       id: event.id,
+      options: {
+        accountlessRegistration: event.options?.accountlessRegistration,
+        multipleRegistrations: event.options?.multipleRegistrations,
+      },
     },
   });
 
@@ -141,6 +146,26 @@ export default function EventGeneralInfo({
         </FieldGroup>
 
         <FieldGroup className="col-span-2 lg:col-span-1">
+          <Heading>Opções do Evento</Heading>
+          <Field enableAsterisk={false} name="options.accountlessRegistration">
+            <Checkbox />
+            <Label className={"ms-3"}>Inscrição sem conta</Label>
+
+            <ErrorMessage />
+            <Description>
+              O sistema criará uma conta no ato da inscrição, porém o usuário só
+              terá acesso ao site depois de confirmá-la.
+            </Description>
+          </Field>
+          <Field enableAsterisk={false} name="options.multipleRegistrations">
+            <Checkbox />
+            <Label className={"ms-3"}>Múltiplas inscrições por usuário</Label>
+
+            <ErrorMessage />
+            <Description>
+              Permite que um usuário faça inscrições em mais de uma categoria.
+            </Description>
+          </Field>
           <Field name="image">
             <Label>Capa do Evento</Label>
             <div className="my-3 flex justify-center ">
