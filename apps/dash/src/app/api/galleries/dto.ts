@@ -3,8 +3,8 @@ import { z } from "zod";
 export const upsertGalleryDto = z.object({
   name: z.string().min(3).max(255),
   description: z.string().min(3).max(255).optional(),
-  eventGroupId: z.string().optional(),
-  eventId: z.string().optional(),
+  eventGroupId: z.string().nullable().optional(),
+  eventId: z.string().nullable().optional(),
   mediaUrls: z.array(z.string()).optional(),
   id: z.string().optional(),
 });

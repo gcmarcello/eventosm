@@ -413,22 +413,28 @@ export default function EventGroupContainer({
                 </div>
               </Link>
 
-              <Link
-                href="#"
-                className="text-sm hover:underline"
-                style={{
-                  color:
-                    eventGroup.status === "published"
-                      ? "gray"
-                      : organization.options.colors.primaryColor.hex,
-                }}
-              >
-                <div className="flex gap-1">
-                  <CameraIcon className="size-5" />
-                  Fotos e Vídeos{" "}
-                  {eventGroup.status === "published" ? "(Em Breve)" : ""}
-                </div>
-              </Link>
+              {
+                <Link
+                  href={
+                    eventGroup.Gallery[0]
+                      ? `/galerias/${eventGroup.Gallery[0].id}`
+                      : "#"
+                  }
+                  className="text-sm hover:underline"
+                  style={{
+                    color:
+                      eventGroup.status === "published"
+                        ? "gray"
+                        : organization.options.colors.primaryColor.hex,
+                  }}
+                >
+                  <div className="flex gap-1">
+                    <CameraIcon className="size-5" />
+                    Fotos e Vídeos{" "}
+                    {eventGroup.Gallery.length > 0 ? "" : "(Em Breve)"}
+                  </div>
+                </Link>
+              }
             </div>
           </div>
         </div>

@@ -163,6 +163,7 @@ export async function readEvents(request: ReadEventDto) {
       EventRegistrationBatch: {
         include: { _count: { select: { EventRegistration: true } } },
       },
+      Gallery: true,
     },
   });
 
@@ -189,6 +190,7 @@ export async function readEventGroups(request: ReadEventGroupDto) {
           },
         },
       },
+      Gallery: true,
     },
   });
 

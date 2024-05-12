@@ -1,11 +1,24 @@
+import { Organization } from "@prisma/client";
 import { CreateGalleryPhotosDto, UpsertGalleryDto } from "./dto";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
 
-export async function upsertGallery(data: UpsertGalleryDto) {
+export async function upsertGallery(
+  data: UpsertGalleryDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
+) {
+  const { organization, userSession, ...parsedData } = data;
   const id = data.id ?? crypto.randomUUID();
+  const { mediaUrls, ...rest } = parsedData;
+  console.log(rest);
   return await prisma.gallery.upsert({
     where: { id },
-    update: data,
-    create: data,
+    update: rest,
+    create: {
+      ...rest,
+      GalleryPhoto: { create: mediaUrls?.map((url) => ({ imageUrl: url })) },
+    },
   });
 }
 

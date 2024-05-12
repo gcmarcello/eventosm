@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
-import { GalleryForm } from "./shared/GalleryForm";
 import { notFound } from "next/navigation";
-import { GalleryTable } from "./components/GalleryTable";
+import { GalleryForm } from "../shared/GalleryForm";
 
 export default async function GalleriesPage() {
   const activeOrg = cookies().get("activeOrg")?.value;
@@ -11,15 +10,9 @@ export default async function GalleriesPage() {
     where: { id: activeOrg },
   });
   if (!organization) return notFound();
-
-  const galleries = await prisma.gallery.findMany({
-    where: { organizationId: activeOrg },
-    include: { GalleryPhoto: true, Event: true, EventGroup: true },
-  });
-
   return (
     <>
-      <GalleryTable galleries={galleries} />
+      <GalleryForm organization={organization} />
     </>
   );
 }
