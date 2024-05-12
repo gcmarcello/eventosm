@@ -27,6 +27,10 @@ export function getPageName(url: string, mobile: boolean = false): string {
         return "Eventos";
       case "/painel/configuracoes":
         return "Configurações";
+      case "/painel/galerias":
+        return "Galerias";
+      case "/painel/galerias/nova":
+        return "Nova Galeria";
       default:
         return "Painel";
     }
@@ -38,6 +42,10 @@ export function getPageName(url: string, mobile: boolean = false): string {
         return "Eventos";
       case "/painel/configuracoes":
         return "Configurações da Organização";
+      case "/painel/galerias":
+        return "Galerias";
+      case "/painel/galerias/nova":
+        return "Nova Galeria";
       default:
         return "Painel";
     }

@@ -77,6 +77,8 @@
     "react-leaflet": "^4.2.1",
     "react-leaflet-cluster": "^2.1.0",
     "react-leaflet-fullscreen": "^4.1.1",
+    "react-photo-album": "^2.3.1",
+    "yet-another-react-lightbox": "^3.18.0",
     "react-qr-code": "^2.0.12",
     "reactflow": "^11.10.1",
     "odinkit": "workspace:*",

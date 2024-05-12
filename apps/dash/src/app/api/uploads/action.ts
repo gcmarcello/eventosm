@@ -1,12 +1,12 @@
 export async function uploadFiles<T extends string>(
-  files: { name: T; file: File }[],
+  files: { name?: T; file: File }[],
   folder?: string,
   privateFile: boolean = false
 ) {
   const formData = new FormData();
   if (!files) return;
   for (const file of files) {
-    formData.append(file.name, file.file);
+    formData.append(file.name || crypto.randomUUID(), file.file);
   }
   const uploadedFiles: {
     [key in T]:

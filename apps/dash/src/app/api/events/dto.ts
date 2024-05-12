@@ -166,6 +166,7 @@ export const readEventDto = readDto(
   z.object({
     id: z.string().uuid().optional(),
     eventGroupId: z.string().uuid().nullable().optional(),
+    name: z.string().optional(),
     organizationId: z.string().uuid().optional(),
     Organization: z
       .object({
@@ -182,6 +183,7 @@ export const readEventGroupDto = readDto(
   z.object({
     id: z.string().uuid().optional(),
     organizationId: z.string().uuid().optional(),
+    name: z.string().optional(),
     slug: z.string().optional(),
     status: z.nativeEnum(EventStatus).optional(),
     Organization: z

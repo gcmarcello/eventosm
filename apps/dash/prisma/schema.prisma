@@ -135,6 +135,7 @@ model Organization {
   Team                  Team[]
   OrganizationRole      OrganizationRole[]
   OrganizationDocument  OrganizationDocument[]
+  Gallery               Gallery[]
 
   @@schema("public")
 }
@@ -280,6 +281,7 @@ model EventGroup {
   EventRegistrationBatch EventRegistrationBatch[]
   EventAddon             EventAddon[]
   EventRegistration      EventRegistration[]
+  Gallery                Gallery[]
 
   @@schema("public")
 }
@@ -501,6 +503,7 @@ model Event {
   EventCheckIn           EventCheckIn[]
   EventAbsences          EventAbsences[]
   EventResults           EventResult[]
+  Gallery                Gallery[]
 
   @@schema("public")
 }
@@ -654,6 +657,36 @@ model News {
   updatedAt      DateTime?     @updatedAt
 
   @@unique([slug, organizationId])
+  @@schema("public")
+}
+
+model GalleryPhoto {
+  id          String   @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  imageUrl    String
+  description String?
+  Gallery     Gallery? @relation(fields: [galleryId], references: [id])
+  galleryId   String?  @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@schema("public")
+}
+
+model Gallery {
+  id             String         @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name           String
+  description    String?
+  Event          Event?         @relation(fields: [eventId], references: [id])
+  eventId        String?        @db.Uuid
+  EventGroup     EventGroup?    @relation(fields: [eventGroupId], references: [id])
+  eventGroupId   String?        @db.Uuid
+  GalleryPhoto   GalleryPhoto[]
+  Organization   Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?        @db.Uuid
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime?      @updatedAt
+
   @@schema("public")
 }
 
