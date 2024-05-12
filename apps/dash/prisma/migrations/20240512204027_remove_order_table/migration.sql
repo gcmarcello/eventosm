@@ -6,10 +6,6 @@
 
 */
 -- DropForeignKey
-ALTER TABLE "public"."EventRegistration" DROP CONSTRAINT "EventRegistration_orderId_fkey";
-
--- AlterTable
-ALTER TABLE "public"."EventRegistration" DROP COLUMN "orderId";
 
 -- DropTable
 DROP TABLE "public"."Order";
