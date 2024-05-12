@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { uploadFile, uploadPrivateFile } from "./service";
 import { ObjectCannedACL } from "@aws-sdk/client-s3";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "20mb",
+    },
+  },
+};
+
 export async function POST(request: NextRequest) {
   try {
     const folder = request.nextUrl.searchParams.get("folder");

@@ -193,12 +193,20 @@ export function GalleryForm({
                     <>
                       <Text>
                         <span className="font-semibold">Arquivos:</span>{" "}
-                        {form.watch("medias")?.length}{" "}
+                        {form.watch("medias")?.length} -{" "}
+                        {(
+                          form
+                            .watch("medias")
+                            .reduce((acc, file) => acc + file.size, 0) /
+                          1024 /
+                          1024
+                        ).toFixed(2)}{" "}
+                        MB
                         <span
                           onClick={() => {
                             form.resetField("medias");
                           }}
-                          className="cursor-pointer font-semibold text-emerald-600"
+                          className="ms-1 cursor-pointer font-semibold text-emerald-600"
                         >
                           Trocar
                         </span>
