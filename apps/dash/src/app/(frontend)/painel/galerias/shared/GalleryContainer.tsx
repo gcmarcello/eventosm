@@ -4,7 +4,7 @@ import { Event, EventGroup, Gallery, Organization } from "@prisma/client";
 import { BottomNavigation, SubmitButton, Text, z } from "odinkit";
 import { Form, useForm } from "odinkit/client";
 import { GalleryForm } from "./GalleryForm";
-import React from "react";
+import React, { useMemo } from "react";
 import { upsertGallery } from "@/app/api/galleries/action";
 import { uploadFiles } from "@/app/api/uploads/action";
 
@@ -30,6 +30,7 @@ export function GalleryContainer({
       id: gallery?.id,
     },
   });
+
   return (
     <>
       <Form
