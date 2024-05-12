@@ -416,8 +416,8 @@ export default function EventGroupContainer({
               {
                 <Link
                   href={
-                    eventGroup.Gallery[0]
-                      ? `/galerias/${eventGroup.Gallery[0].id}`
+                    eventGroup.Gallery
+                      ? `/galerias/${eventGroup.Gallery[0]?.id}`
                       : "#"
                   }
                   className="text-sm hover:underline"
@@ -431,7 +431,9 @@ export default function EventGroupContainer({
                   <div className="flex gap-1">
                     <CameraIcon className="size-5" />
                     Fotos e Vídeos{" "}
-                    {eventGroup.Gallery.length > 0 ? "" : "(Em Breve)"}
+                    {eventGroup.Gallery && eventGroup.Gallery.length > 0
+                      ? ""
+                      : "(Em Breve)"}
                   </div>
                 </Link>
               }
