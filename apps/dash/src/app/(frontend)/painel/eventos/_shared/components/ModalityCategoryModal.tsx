@@ -70,6 +70,24 @@ export default function ModalityCategoryModal({
     categoryForm.setValue("categories", newModalities);
   }
 
+  const stats = useMemo(
+    () => [
+      {
+        name: "Categorias com Inscritos Ativos",
+        stats: modalities
+          .find((m) => m.id === activeModality)
+          ?.modalityCategory.filter((c) => c._count?.EventRegistration).length,
+      },
+      {
+        name: "Categorias sem Inscritos Ativos",
+        stats: modalities
+          .find((m) => m.id === activeModality)
+          ?.modalityCategory.filter((c) => !c._count?.EventRegistration).length,
+      },
+    ],
+    []
+  );
+
   return (
     <Form hform={categoryForm} onSubmit={(data) => categoriesTrigger(data)}>
       <Dialog
@@ -99,7 +117,7 @@ export default function ModalityCategoryModal({
               </span>
             )}
         </DialogDescription>
-        <DialogBody className="overflow-y-auto lg:max-h-none">
+        <DialogBody className="overflow-x-auto lg:max-h-none lg:overflow-x-hidden">
           {showForm || fields.every((f) => !f.name) ? (
             <>
               <For each={fields} identifier="category">
@@ -161,13 +179,37 @@ export default function ModalityCategoryModal({
             </>
           ) : (
             <div>
+              <div className="mb-3 flex flex-col gap-2 lg:flex-row">
+                <For each={stats}>
+                  {(stat) => (
+                    <div className="mx-1 flex-grow overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 ">
+                      <dt className="truncate text-sm font-medium text-gray-500">
+                        {stat.name}
+                      </dt>
+                      <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                        {stat.stats}
+                      </dd>
+                    </div>
+                  )}
+                </For>
+              </div>
               <Table
-                data={fields.filter((item) => item.name)}
+                data={
+                  modalities.find((m) => m.id === activeModality)!
+                    ?.modalityCategory
+                }
                 search={false}
                 columns={(columnHelper) => [
                   columnHelper.accessor("name", {
                     id: "name",
                     header: "Nome",
+                    enableSorting: true,
+                    enableGlobalFilter: true,
+                    cell: (info) => info.getValue(),
+                  }),
+                  columnHelper.accessor("_count.EventRegistration", {
+                    id: "registrations",
+                    header: "Inscritos Ativos",
                     enableSorting: true,
                     enableGlobalFilter: true,
                     cell: (info) => info.getValue(),

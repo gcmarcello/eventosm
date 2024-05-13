@@ -24,7 +24,18 @@ export default async function ModalitiesPage({
 
   const modalities = await prisma.eventModality.findMany({
     where: { eventGroupId: eventGroup.id },
-    include: { modalityCategory: true },
+    include: {
+      modalityCategory: {
+        include: {
+          _count: {
+            select: { EventRegistration: { where: { status: "active" } } },
+          },
+        },
+      },
+      _count: {
+        select: { EventRegistration: { where: { status: "active" } } },
+      },
+    },
   });
 
   return <EventModalities eventGroup={eventGroup} modalities={modalities} />;
