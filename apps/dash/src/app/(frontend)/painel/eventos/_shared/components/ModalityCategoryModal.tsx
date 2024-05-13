@@ -85,8 +85,10 @@ export default function ModalityCategoryModal({
           ?.modalityCategory.filter((c) => !c._count?.EventRegistration).length,
       },
     ],
-    []
+    [modalities, activeModality]
   );
+
+  console.log(stats);
 
   return (
     <Form hform={categoryForm} onSubmit={(data) => categoriesTrigger(data)}>
