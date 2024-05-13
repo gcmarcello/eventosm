@@ -85,7 +85,7 @@ export default function ModalityCategoryModal({
           ?.modalityCategory.filter((c) => !c._count?.EventRegistration).length,
       },
     ],
-    []
+    [modalities, activeModality]
   );
 
   return (
