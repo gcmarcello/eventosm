@@ -55,7 +55,7 @@ export async function nestUpload<T extends string>({
     formData.append("file", file.file);
     fileToUpload = await fetch(
       process.env.NEXT_PUBLIC_API_URL +
-        "?" +
+        "/uploads?" +
         (folder ? `folder=${folder}` : "") +
         `&private=${privateFile}`,
       {
