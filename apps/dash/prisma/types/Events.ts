@@ -21,8 +21,12 @@ export type EventWithRegistrationCount = Event & {
   })[];
 };
 
-export type EventModalityWithCategories = EventModality & {
-  modalityCategory: ModalityCategory[];
+export type EventModalityWithCategories = (EventModality & {
+  _count?: { EventRegistration?: number };
+}) & {
+  modalityCategory: (ModalityCategory & {
+    _count?: { EventRegistration?: number };
+  })[];
 };
 
 export type EventGroupWithInfo = EventGroup & {

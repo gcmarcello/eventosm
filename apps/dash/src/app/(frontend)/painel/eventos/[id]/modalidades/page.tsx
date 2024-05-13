@@ -16,7 +16,18 @@ export default async function EventBatches({
 
   const modalities = await prisma.eventModality.findMany({
     where: { event: { id: event.id } },
-    include: { modalityCategory: true },
+    include: {
+      modalityCategory: {
+        include: {
+          _count: {
+            select: { EventRegistration: { where: { status: "active" } } },
+          },
+        },
+      },
+      _count: {
+        select: { EventRegistration: { where: { status: "active" } } },
+      },
+    },
   });
 
   return <EventModalities event={event} modalities={modalities} />;
