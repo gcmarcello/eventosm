@@ -32,7 +32,17 @@ export function GalleryPhotos({ photos }: { photos: GalleryPhoto[] }) {
           header: "Mídia",
           enableSorting: true,
           enableGlobalFilter: true,
-          cell: (info) => <img height={50} width={50} src={info.getValue()} />,
+          cell: (info) => (
+            <img
+              height={50}
+              width={50}
+              src={
+                process.env.NEXT_PUBLIC_BUCKET_URL +
+                "/images/" +
+                info.getValue()
+              }
+            />
+          ),
         }),
         columnHelper.accessor("createdAt", {
           id: "createdAt",

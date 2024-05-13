@@ -11,13 +11,18 @@ export async function upsertGallery(
   const { organization, userSession, ...parsedData } = data;
   const id = data.id ?? crypto.randomUUID();
   const { mediaUrls, ...rest } = parsedData;
-  console.log(rest);
+  const parsedMedia = mediaUrls?.map((url) => ({ imageUrl: url }));
   return await prisma.gallery.upsert({
     where: { id },
-    update: rest,
+    update: {
+      ...rest,
+      organizationId: organization.id,
+      GalleryPhoto: { create: parsedMedia },
+    },
     create: {
       ...rest,
-      GalleryPhoto: { create: mediaUrls?.map((url) => ({ imageUrl: url })) },
+      organizationId: organization.id,
+      GalleryPhoto: { create: parsedMedia },
     },
   });
 }

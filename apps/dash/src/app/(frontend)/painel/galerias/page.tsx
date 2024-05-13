@@ -19,7 +19,7 @@ export default async function GalleriesPage() {
 
   return (
     <>
-      <GalleryTable galleries={galleries} />
+      <GalleryTable galleries={galleries} organization={organization} />
     </>
   );
 }
