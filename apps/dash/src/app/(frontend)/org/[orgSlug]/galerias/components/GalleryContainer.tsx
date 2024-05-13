@@ -22,7 +22,7 @@ export function GalleryContainer({
   const lightboxMedias = useMemo(
     () =>
       gallery.GalleryPhoto.map(({ imageUrl }) => ({
-        src: imageUrl,
+        src: process.env.NEXT_PUBLIC_BUCKET_URL + "/images/" + imageUrl,
       })),
     [gallery.GalleryPhoto]
   );
@@ -30,7 +30,7 @@ export function GalleryContainer({
   const albumMedias = useMemo(
     () =>
       gallery.GalleryPhoto.map(({ imageUrl }) => ({
-        src: imageUrl,
+        src: process.env.NEXT_PUBLIC_BUCKET_URL + "/images/" + imageUrl,
         width: 250,
         height: 250,
       })),
