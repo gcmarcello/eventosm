@@ -88,8 +88,6 @@ export default function ModalityCategoryModal({
     [modalities, activeModality]
   );
 
-  console.log(stats);
-
   return (
     <Form hform={categoryForm} onSubmit={(data) => categoriesTrigger(data)}>
       <Dialog
