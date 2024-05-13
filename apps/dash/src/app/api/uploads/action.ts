@@ -33,3 +33,47 @@ export async function uploadFiles<T extends string>(
 
   return uploadedFiles;
 }
+
+export async function nestUpload<T extends string>({
+  files,
+  folder,
+  privateFile = false,
+  progress,
+}: {
+  files: { name?: T; file: File }[];
+  folder?: string;
+  privateFile?: boolean;
+  progress?: (progress: number) => void;
+}) {
+  if (!files) return;
+  let fileProgress = 0;
+  let fileToUpload;
+  let filesArray = [];
+
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append("file", file.file);
+    fileToUpload = await fetch(
+      `http://localhost:5000/uploads` +
+        "?" +
+        (folder ? `folder=${folder}` : "") +
+        `&private=${privateFile}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        console.log(error);
+        throw error;
+      });
+    if (progress) {
+      fileProgress += 1;
+      progress(fileProgress);
+    }
+    filesArray.push(fileToUpload);
+  }
+
+  return filesArray;
+}

@@ -12,10 +12,11 @@ export async function upsertGallery(request: UpsertGalleryDto) {
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
 
-    const gallery = await service.upsertGallery(parsedRequest);
-    return ActionResponse.success({ data: gallery });
+    await service.upsertGallery(parsedRequest);
   } catch (error) {
     console.log(error);
     return ActionResponse.error({ error });
   }
+
+  return ActionResponse.success({ redirect: `/painel/galerias/` });
 }
