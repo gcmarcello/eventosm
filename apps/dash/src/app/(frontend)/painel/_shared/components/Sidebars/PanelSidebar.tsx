@@ -52,19 +52,19 @@ export default function PanelSideBar() {
       icon: UserGroupIcon,
       current: pathname.includes("/usuarios"),
     },
-
+    {
+      name: "Galerias",
+      href: `/painel/galerias`,
+      icon: PhotoIcon,
+      current: pathname.includes("/tmidiasme"),
+    },
     /*{
       name: "Documentos",
       href: `/painel/documentos`,
       icon: DocumentIcon,
       current: pathname.includes("/documentos"),
     },
-    {
-      name: "Galerias",
-      href: `/painel/galerias`,
-      icon: PhotoIcon,
-      current: pathname.includes("/tmidiasme"),
-    }, */
+    */
   ];
 
   return (

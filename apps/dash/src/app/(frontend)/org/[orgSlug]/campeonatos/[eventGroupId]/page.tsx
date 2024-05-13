@@ -1,15 +1,12 @@
 import { readEventGroups } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
-import { Alertbox, isUUID } from "odinkit";
+import { isUUID } from "odinkit";
 
 import EventGroupContainer from "./components/EventGroupContainer";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
-import { readRegistrations } from "@/app/api/registrations/service";
 import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
-import OrgFooter from "../../../_shared/OrgFooter";
-import clsx from "clsx";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 
 export default async function TorneioPage({

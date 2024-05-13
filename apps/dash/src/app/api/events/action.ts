@@ -1,6 +1,7 @@
 "use server";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import {
+  ReadEventDto,
   ReadEventGroupCheckinsAndAbsencesDto,
   ReadEventGroupDto,
   ReadEventTypeDto,
@@ -17,6 +18,7 @@ import { revalidatePath } from "next/cache";
 import { ActionResponse } from "odinkit";
 import { UpdateEventStatusDto } from "./status/dto";
 import { useHeaders } from "../_shared/utils/useHeaders";
+import { Event } from "@prisma/client";
 
 export async function readEventGroups(request: ReadEventGroupDto) {
   try {
@@ -157,5 +159,39 @@ export async function readSubeventReviewData(request: { eventId: string }) {
     return ActionResponse.error({
       message: "Erro ao buscar dados de revisão.",
     });
+  }
+}
+
+export async function readEventFulltext(request: ReadEventDto) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+
+    if (!parsedRequest)
+      throw "Informações não encontradas. Por favor, tente novamente.";
+
+    const events = await service.readEventFulltext(parsedRequest);
+
+    return ActionResponse.success({ data: events as Event[] });
+  } catch (err) {
+    return ActionResponse.error(err);
+  }
+}
+
+export async function readEventGroupFulltext(request: ReadEventDto) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request)
+      .then(UserSessionMiddleware)
+      .then(OrganizationMiddleware);
+
+    if (!parsedRequest)
+      throw "Informações não encontradas. Por favor, tente novamente.";
+
+    const eventGroups = await service.readEventGroupFulltext(parsedRequest);
+
+    return ActionResponse.success({ data: eventGroups as Event[] });
+  } catch (err) {
+    return ActionResponse.error(err);
   }
 }
