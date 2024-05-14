@@ -37,7 +37,7 @@ import {
 } from "odinkit/client";
 import { useEffect, useMemo, useState } from "react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { RegistrationWithInfo } from "../../grupos/[id]/inscritos/page";
+import { RegistrationWithInfo } from "../../../grupos/[id]/inscritos/page";
 import { ModalitiesWithCategories } from "prisma/types/Modalities";
 import { updateRegistrationDto } from "@/app/api/registrations/dto";
 import { determineCategoryAvailability } from "@/app/(frontend)/org/[orgSlug]/inscricoes/utils/categories";
@@ -47,7 +47,7 @@ import {
   updateRegistration,
 } from "@/app/api/registrations/action";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import RegistrationStatusDropdown from "./RegistrationStatusDropdown";
+import RegistrationStatusDropdown from "../RegistrationStatusDropdown";
 import { EventRegistrationStatus } from "@prisma/client";
 
 export default function RegistrationsTable({

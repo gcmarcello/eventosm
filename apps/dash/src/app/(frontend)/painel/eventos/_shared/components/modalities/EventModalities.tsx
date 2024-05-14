@@ -25,7 +25,7 @@ import { EllipsisVerticalIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { upsertEventModalityCategories } from "@/app/api/categories/action";
 import ModalityModal from "./ModalityModal";
 import ModalityCategoryModal from "./ModalityCategoryModal";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../../../_shared/components/PanelStore";
 import { Event } from "@prisma/client";
 
 export default function EventModalities({

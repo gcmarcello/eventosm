@@ -1,4 +1,4 @@
-import EventModalities from "../../_shared/components/EventModalities";
+import EventModalities from "../../_shared/components/modalities/EventModalities";
 import { readEvents } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
 

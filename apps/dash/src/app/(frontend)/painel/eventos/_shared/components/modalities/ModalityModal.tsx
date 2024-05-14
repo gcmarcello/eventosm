@@ -19,7 +19,7 @@ import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { format } from "path";
 import { SubmitButton } from "odinkit";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../../../_shared/components/PanelStore";
 
 export default function ModalityModal({
   modalState,
