@@ -1,19 +1,8 @@
 "use client";
 import { createEventResults } from "@/app/api/results/action";
 import { createResultsDto } from "@/app/api/results/dto";
-import { EventGroup, Organization } from "@prisma/client";
-
-import {
-  For,
-  Heading,
-  Link,
-  SubmitButton,
-  Table,
-  TableMock,
-  Text,
-  sheetToJson,
-  z,
-} from "odinkit";
+import { Event, EventGroup, Organization } from "@prisma/client";
+import { Heading, SubmitButton, Table, Text, sheetToJson, z } from "odinkit";
 import {
   FileDropArea,
   FileInput,
@@ -22,10 +11,8 @@ import {
   useAction,
   useForm,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
 import { EventResultWithInfo } from "prisma/types/Results";
 import { useMemo, useState } from "react";
-import SubeventHeading from "../../components/SubeventHeading";
 
 const excelDataSchema = z.array(
   z.object({
@@ -35,19 +22,17 @@ const excelDataSchema = z.array(
 );
 
 export function ResultsForm({
-  eventId,
-  eventGroup,
+  event,
   results,
   organization,
 }: {
-  eventId: string;
-  eventGroup: EventGroupWithEvents;
+  event: Event;
   results: EventResultWithInfo[];
   organization: Organization;
 }) {
   const form = useForm({
     schema: createResultsDto,
-    defaultValues: { eventId, eventGroupId: eventGroup.id },
+    defaultValues: { eventId: event.id },
   });
 
   const Field = useMemo(() => form.createField(), []);
@@ -77,9 +62,7 @@ export function ResultsForm({
 
   return (
     <>
-      <SubeventHeading organization={organization} eventGroupId={eventGroup.id}>
-        Resultados - {eventGroup.Event[0]?.name}
-      </SubeventHeading>
+      <Heading>Resultados - {event.name}</Heading>
       {!results.length && (
         <Form hform={form} onSubmit={(data) => trigger(data)}>
           <Field name="file">
