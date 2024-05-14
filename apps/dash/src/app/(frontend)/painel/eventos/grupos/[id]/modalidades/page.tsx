@@ -4,7 +4,7 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { redirect } from "next/navigation";
 import GeralForm from "../geral/form";
-import EventModalities from "../../../_shared/components/EventModalities";
+import EventModalities from "../../../_shared/components/modalities/EventModalities";
 
 export default async function ModalitiesPage({
   params,

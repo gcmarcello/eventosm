@@ -10,10 +10,10 @@ import {
   DropdownMenu,
 } from "odinkit/client";
 import { useState } from "react";
-import AddonModal from "./AddonModal";
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { formatPrice } from "@/app/(frontend)/org/[orgSlug]/inscricoes/utils/price";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../../../_shared/components/PanelStore";
+import AddonModal from "./AddonModal";
 
 export default function EventAddons({
   addons,

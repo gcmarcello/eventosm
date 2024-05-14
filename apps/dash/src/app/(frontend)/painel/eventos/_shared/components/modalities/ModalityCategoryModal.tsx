@@ -22,7 +22,7 @@ import { Button } from "odinkit/client";
 
 import { Table } from "odinkit";
 import { EventModalityWithCategories } from "prisma/types/Events";
-import { usePanel } from "../../../_shared/components/PanelStore";
+import { usePanel } from "../../../../_shared/components/PanelStore";
 
 export default function ModalityCategoryModal({
   modalState,

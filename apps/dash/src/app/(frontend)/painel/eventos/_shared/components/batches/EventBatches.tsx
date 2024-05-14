@@ -37,7 +37,7 @@ import {
   Date,
 } from "odinkit/client";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
-import { ModalityControlModal } from "./ModalityControlModal";
+import { ModalityControlModal } from "../modalities/ModalityControlModal";
 import {
   Cog6ToothIcon,
   InformationCircleIcon,
