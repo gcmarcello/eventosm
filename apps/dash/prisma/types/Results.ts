@@ -1,4 +1,5 @@
 import {
+  EventModality,
   EventRegistration,
   EventResult,
   ModalityCategory,
@@ -11,6 +12,7 @@ export type EventResultWithInfo = EventResult & {
     user: { fullName: string };
     team?: Team | null;
     category?: ModalityCategory;
+    modality?: EventModality | null;
   };
   position?: number;
 };
