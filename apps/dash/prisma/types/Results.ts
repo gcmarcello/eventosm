@@ -15,6 +15,7 @@ export type EventResultWithInfo = EventResult & {
     modality?: EventModality | null;
   };
   position?: number;
+  catPosition?: number;
 };
 
 export type EventGroupResultWithInfo = Omit<EventResultWithInfo, "eventId">;
