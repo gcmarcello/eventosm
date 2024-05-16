@@ -12,7 +12,8 @@ import {
   UserInfo,
 } from "@prisma/client";
 import { prisma } from "prisma/prisma";
-import RegistrationsTable from "../../_shared/components/registrations/RegistrationsPage";
+import RegistrationsTable from "../../_shared/components/registrations/RegistrationsContainer";
+import RegistrationsContainer from "../../_shared/components/registrations/RegistrationsContainer";
 
 export type RegistrationWithInfo = EventRegistration & {
   user: User & { info?: UserInfo };
@@ -50,7 +51,7 @@ export default async function RegistrationsPage({
 
   return (
     <div className="pb-20 lg:pb-10">
-      <RegistrationsTable
+      <RegistrationsContainer
         modalitiesWithCategories={modalitiesWithCategories}
         registrations={registrations}
       />

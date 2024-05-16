@@ -2,7 +2,6 @@
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { EventRegistrationStatus } from "@prisma/client";
-import { For } from "odinkit";
 import {
   Dropdown,
   DropdownButton,
@@ -11,8 +10,6 @@ import {
   DropdownSeparator,
   useFormContext,
 } from "odinkit/client";
-import { EventRegistrationWithInfo } from "prisma/types/Registrations";
-import { RegistrationWithInfo } from "../../[id]/inscritos/page";
 import clsx from "clsx";
 import { UpdateRegistrationDto } from "@/app/api/registrations/dto";
 

@@ -14,7 +14,7 @@ export default function EventRegistrationCard({
   registration,
   handleModalOpen,
 }: {
-  handleModalOpen: (registration: EventGroupRegistration) => void;
+  handleModalOpen: (registration: EventRegistrationWithInfo) => void;
   registration: EventRegistrationWithInfo;
 }) {
   return (
