@@ -17,8 +17,16 @@ export async function createEventResults(data: CreateResultsDto) {
 
   const registrations = await prisma.eventRegistration.findMany({
     where: data.eventGroupId
-      ? { eventGroupId: data.eventGroupId, code: { in: registrationCodes } }
-      : { eventId: data.eventId, code: { in: registrationCodes } },
+      ? {
+          eventGroupId: data.eventGroupId,
+          code: { in: registrationCodes },
+          status: { notIn: ["cancelled", "suspended"] },
+        }
+      : {
+          eventId: data.eventId,
+          code: { in: registrationCodes },
+          status: { notIn: ["cancelled", "suspended"] },
+        },
     select: { id: true, code: true },
   });
 
@@ -47,6 +55,7 @@ export async function readEventResults(eventId: string) {
           user: { select: { fullName: true } },
           team: true,
           category: true,
+          modality: true,
         },
       },
     },
@@ -98,6 +107,7 @@ export async function readEventGroupResults(eventGroupId: string) {
           user: { select: { fullName: true } },
           team: true,
           category: true,
+          modality: true,
         },
       },
     },

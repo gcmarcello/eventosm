@@ -26,10 +26,9 @@ import { EventModalityWithCategories } from "prisma/types/Events";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useFieldArray } from "react-hook-form";
 import { Organization } from "@prisma/client";
-import { usePanel } from "../../../_shared/components/PanelStore";
 import dayjs from "dayjs";
-import { QuickDatesButtons } from "./QuickDatesButtons";
-import { QuickTimesButtons } from "./QuickTimesButtons";
+import { QuickDatesButtons } from "../QuickDatesButtons";
+import { QuickTimesButtons } from "../QuickTimesButtons";
 
 export default function BatchModal({
   modalState,

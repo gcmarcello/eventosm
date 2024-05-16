@@ -1,8 +1,13 @@
 "use client";
-import { EventResultsWithPosition, sortPositions } from "@/utils/results";
+import {
+  EventResultsWithPosition,
+  calculatePosition,
+  sortPositions,
+} from "@/utils/results";
 import {
   EventGroup,
   EventGroupRules,
+  EventModality,
   EventResult,
   Organization,
 } from "@prisma/client";
@@ -22,6 +27,7 @@ import {
 } from "prisma/types/Results";
 import { useState, useMemo, useEffect } from "react";
 import { z } from "zod";
+import { ModalitySelection } from "./ModalitySelection";
 
 export type Result = {
   POS: string;
@@ -89,61 +95,6 @@ export function ResultsTable({
     }
   };
 
-  const uniqueCategories: string[] = useMemo(
-    () =>
-      Array.from(
-        new Set(results.map((obj) => obj.Registration.category!.name))
-      ).sort(),
-    []
-  );
-  const uniqueTeams: string[] = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          results
-            .filter((r) => r.Registration.team)
-            .map((obj) => obj.Registration.team!.name)
-        )
-      ).sort(),
-    []
-  );
-
-  const form = useForm({
-    schema: z.object({
-      categoryId: z.string().optional(),
-      teamId: z.string().optional(),
-    }),
-  });
-
-  const Field = useMemo(() => form.createField(), []);
-
-  useEffect(() => {
-    setCalculatedResults(sortPositions(results));
-  }, []);
-
-  function handleFilter(type: "category" | "team", value: any) {
-    if (!value) return setCalculatedResults(sortPositions(results));
-    if (value === "Geral FEM")
-      return setCalculatedResults(
-        sortPositions(
-          results.filter(
-            (obj) => obj.Registration.category?.gender === "female"
-          )
-        )
-      );
-    if (value === "Geral MASC")
-      return setCalculatedResults(
-        sortPositions(
-          results.filter((obj) => obj.Registration.category?.gender === "male")
-        )
-      );
-    setCalculatedResults(
-      sortPositions(
-        results.filter((obj) => obj.Registration[type]?.name === value)
-      )
-    );
-  }
-
   function millisecondsToTime(milliseconds: number) {
     if (!milliseconds) return "";
     let hours = Math.floor(milliseconds / (1000 * 60 * 60));
@@ -159,67 +110,76 @@ export function ResultsTable({
     return `${strHours}:${strMinutes}:${strSeconds}${strMillis ? `.${strMillis}` : ""}`;
   }
 
-  function clearFilter() {
-    form.reset({ categoryId: "", teamId: "" });
-    setCalculatedResults(sortPositions(results));
-  }
-  return calculatedResults ? (
+  const [filter, setFilter] = useState<any>(null);
+  const [filteredResults, setFilteredResults] = useState(results);
+
+  const uniqueModalities = useMemo(() => {
+    const unique = results.reduce((acc, obj) => {
+      const modalityId = obj.Registration.modality?.id;
+      if (!acc.has(modalityId)) {
+        acc.set(modalityId, obj.Registration.modality);
+      }
+      return acc;
+    }, new Map());
+
+    return Array.from(unique.values()).sort((a, b) => a.id.localeCompare(b.id));
+  }, [results]);
+
+  useEffect(() => {
+    if (filter) {
+      setFilteredResults(
+        results.filter((r) => r.Registration.modalityId === filter)
+      );
+    } else {
+      setFilteredResults(results);
+    }
+  }, [filter]);
+
+  return (
     <>
-      <Form hform={form} className="mt-4 items-center gap-3">
-        <Fieldset>
-          <FieldGroup className="flex-row space-y-3 lg:flex lg:items-end lg:justify-between lg:gap-2 lg:space-y-0">
-            <div className="gap-2 lg:flex">
-              <Field name="categoryId">
-                <Label>Filtrar por Categoria</Label>
-                <Select
-                  disabled={Boolean(form.watch("teamId"))}
-                  data={[
-                    { id: "Geral FEM" },
-                    { id: "Geral MASC" },
-                    ...uniqueCategories.map((c) => ({ id: c })),
-                  ]}
-                  displayValueKey="id"
-                  onChange={(event: any) =>
-                    handleFilter("category", event.target.value)
-                  }
-                />
-              </Field>
-              <Field name="teamId">
-                <Label>Filtrar por Equipe</Label>
-                <Select
-                  disabled={Boolean(form.watch("categoryId"))}
-                  data={uniqueTeams.map((t) => ({ id: t }))}
-                  displayValueKey="id"
-                  onChange={(event: any) =>
-                    handleFilter("team", event.target.value)
-                  }
-                />
-              </Field>
-            </div>
-            <div className="pb-1">
-              <Button
-                className={"my-auto  w-full lg:w-auto"}
-                onClick={() => clearFilter()}
-              >
-                Limpar Filtros
-              </Button>
-            </div>
-          </FieldGroup>
-        </Fieldset>
-      </Form>
+      <ModalitySelection
+        modalities={uniqueModalities ?? []}
+        setFilter={setFilter}
+      />
       <Table
-        data={calculatedResults}
+        data={filteredResults}
+        search={false}
         columns={(columnHelper) => [
           columnHelper.accessor("position", {
             id: "position",
             header: "Posição",
+            enableColumnFilter: false,
             enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) => handlePlaces(Number(info.getValue())),
+            cell: (info) =>
+              handlePlaces(
+                calculatePosition(
+                  results.filter(
+                    (r) =>
+                      r.Registration.modalityId ===
+                      info.row.original.Registration.modalityId
+                  ),
+                  info.row.original
+                )
+              ),
+          }),
+          columnHelper.accessor("position", {
+            id: "catposition",
+            header: "Cat.",
+            enableColumnFilter: false,
+            enableSorting: true,
+            cell: (info) =>
+              calculatePosition(
+                results.filter(
+                  (r) =>
+                    r.Registration.categoryId ===
+                    info.row.original.Registration.categoryId
+                ),
+                info.row.original
+              ),
           }),
           columnHelper.accessor("Registration.code", {
             id: "number",
-            header: "Numero",
+            header: "Número",
             enableSorting: true,
             enableGlobalFilter: true,
             cell: (info) => Number(info.getValue()),
@@ -235,6 +195,7 @@ export function ResultsTable({
             id: "category",
             header: "Categoria",
             enableSorting: true,
+            meta: { filterVariant: "select" },
             enableGlobalFilter: true,
             cell: (info) => info.getValue(),
           }),
@@ -243,10 +204,12 @@ export function ResultsTable({
             header: "Equipe",
             enableSorting: true,
             enableGlobalFilter: true,
+            meta: { filterVariant: "select" },
             cell: (info) => info.getValue(),
           }),
           columnHelper.accessor("score", {
             id: "time",
+            enableColumnFilter: false,
             header: eventGroup
               ? eventGroup.EventGroupRules?.scoreCalculation === "average"
                 ? "Tempo Médio"
@@ -258,9 +221,5 @@ export function ResultsTable({
         ]}
       />
     </>
-  ) : (
-    <div className="flex items-center justify-center">
-      <LoadingSpinner />
-    </div>
   );
 }
