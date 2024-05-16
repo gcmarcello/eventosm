@@ -6,20 +6,26 @@ import { useEffect, useState } from "react";
 import { EventGroupRegistrationModal } from "./EventGroupRegistrationModal";
 import { EventRegistrationModal } from "./EventRegistrationModal";
 import EventRegistrationCard from "./EventRegistrationCard";
+import {
+  EventGroupRegistrationWithInfo,
+  EventRegistrationWithInfo,
+} from "prisma/types/Registrations";
 
 export default function RegistrationsContainer({
   registrations,
   organization,
   teams,
 }: {
-  registrations: EventRegistration[];
+  registrations: (EventRegistrationWithInfo | EventGroupRegistrationWithInfo)[];
   organization: Organization;
   teams: Team[];
 }) {
-  const [modalInfo, setModalInfo] = useState<EventRegistration | null>(null);
+  const [modalInfo, setModalInfo] = useState<EventRegistrationWithInfo | null>(
+    null
+  );
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  function handleModalOpen(registration: EventRegistration) {
+  function handleModalOpen(registration: EventRegistrationWithInfo) {
     setModalInfo(registration);
     setModalOpen(true);
   }
@@ -44,14 +50,16 @@ export default function RegistrationsContainer({
                   return (
                     <EventGroupRegistrationCard
                       handleModalOpen={handleModalOpen}
-                      registration={registration}
+                      registration={
+                        registration as EventGroupRegistrationWithInfo
+                      }
                     />
                   );
                 }
                 return (
                   <EventRegistrationCard
                     handleModalOpen={handleModalOpen}
-                    registration={registration}
+                    registration={registration as EventRegistrationWithInfo}
                   />
                 );
               }}
@@ -73,7 +81,9 @@ export default function RegistrationsContainer({
                 return (
                   <EventGroupRegistrationCard
                     handleModalOpen={handleModalOpen}
-                    registration={registration}
+                    registration={
+                      registration as EventGroupRegistrationWithInfo
+                    }
                   />
                 );
               }}

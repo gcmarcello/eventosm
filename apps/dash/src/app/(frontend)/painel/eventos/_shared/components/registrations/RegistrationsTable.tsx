@@ -8,14 +8,14 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "odinkit/client";
-import { RegistrationWithInfo } from "prisma/types/Registrations";
+import { EventRegistrationWithInfo } from "prisma/types/Registrations";
 
 export function RegistrationsTable({
   registrations,
   handleSelectedRegistration,
 }: {
-  handleSelectedRegistration: (registration: RegistrationWithInfo) => void;
-  registrations: RegistrationWithInfo[];
+  handleSelectedRegistration: (registration: EventRegistrationWithInfo) => void;
+  registrations: EventRegistrationWithInfo[];
 }) {
   return (
     <Table

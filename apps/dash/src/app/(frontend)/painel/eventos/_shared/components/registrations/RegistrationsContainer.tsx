@@ -45,24 +45,22 @@ import {
   resendEventGroupRegistrationConfirmation,
   updateRegistration,
 } from "@/app/api/registrations/action";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import RegistrationStatusDropdown from "../RegistrationStatusDropdown";
-import { EventRegistrationStatus } from "@prisma/client";
-import { RegistrationWithInfo } from "prisma/types/Registrations";
+import { EventRegistrationWithInfo } from "prisma/types/Registrations";
 import { RegistrationsTable } from "./RegistrationsTable";
 
 export default function RegistrationsContainer({
   registrations,
   modalitiesWithCategories,
 }: {
-  registrations: RegistrationWithInfo[];
+  registrations: EventRegistrationWithInfo[];
   modalitiesWithCategories: ModalitiesWithCategories[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedRegistration, setSelectedRegistration] =
-    useState<null | RegistrationWithInfo>(null);
+    useState<null | EventRegistrationWithInfo>(null);
 
-  function handleSelectedRegistration(registration: RegistrationWithInfo) {
+  function handleSelectedRegistration(registration: EventRegistrationWithInfo) {
     setSelectedRegistration(registration);
     setIsOpen(true);
   }

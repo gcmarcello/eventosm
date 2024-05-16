@@ -21,21 +21,27 @@ export type EventRegistrationBatchesWithCategories = EventRegistrationBatch & {
 
 export type EventGroupRegistration = EventRegistration & {
   eventGroup?: EventGroupWithEvents;
-  modality?: EventModality;
+  modality?: EventModality | null;
   category?: ModalityCategory;
-  team?: Team;
+  team?: Team | null;
 };
 
 export type EventRegistrationWithEvent = EventRegistration & {
   event?: Event;
 };
 
-export type RegistrationWithInfo = EventRegistration & {
+export type EventRegistrationWithInfo = EventRegistration & {
+  event?: Event | null;
   user?: User & { info?: UserInfo & { city: City | null } };
-  batch: EventRegistrationBatch;
+  batch?: EventRegistrationBatch;
   modality?: EventModality | null;
   category?: ModalityCategory;
-  team: Team | null;
+  team?: Team | null;
   addon?: EventAddon | null;
   coupon?: BatchCoupon | null;
 };
+
+export type EventGroupRegistrationWithInfo = Omit<
+  EventGroupRegistration,
+  "event"
+> & { EventGroup: EventGroupWithEvents };
