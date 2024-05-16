@@ -11,7 +11,7 @@ import {
   EventResult,
   Organization,
 } from "@prisma/client";
-import { Table, LoadingSpinner } from "odinkit";
+import { Table, LoadingSpinner, BottomNavigation } from "odinkit";
 import {
   Button,
   FieldGroup,
@@ -20,6 +20,7 @@ import {
   Label,
   Select,
   useForm,
+  useFormContext,
 } from "odinkit/client";
 import {
   EventGroupResultWithInfo,
@@ -27,7 +28,7 @@ import {
 } from "prisma/types/Results";
 import { useState, useMemo, useEffect } from "react";
 import { z } from "zod";
-import { ModalitySelection } from "./ModalitySelection";
+import { format } from "path";
 
 export type Result = {
   POS: string;
@@ -110,10 +111,7 @@ export function ResultsTable({
     return `${strHours}:${strMinutes}:${strSeconds}${strMillis ? `.${strMillis}` : ""}`;
   }
 
-  const [filter, setFilter] = useState<any>(null);
-  const [filteredResults, setFilteredResults] = useState(results);
-
-  const uniqueModalities = useMemo(() => {
+  const uniqueModalities: EventModality[] = useMemo(() => {
     const unique = results.reduce((acc, obj) => {
       const modalityId = obj.Registration.modality?.id;
       if (!acc.has(modalityId)) {
@@ -125,24 +123,30 @@ export function ResultsTable({
     return Array.from(unique.values()).sort((a, b) => a.id.localeCompare(b.id));
   }, [results]);
 
-  useEffect(() => {
-    if (filter) {
-      setFilteredResults(
-        results.filter((r) => r.Registration.modalityId === filter)
-      );
-    } else {
-      setFilteredResults(results);
-    }
-  }, [filter]);
+  const modalityForm = useForm({
+    schema: z.object({
+      modality: z.string().nullable(),
+    }),
+    defaultValues: {
+      modality: results[results.length - 1]?.Registration.modalityId,
+    },
+    mode: "onChange",
+  });
+
+  const Field = useMemo(() => modalityForm.createField(), []);
 
   return (
     <>
-      <ModalitySelection
-        modalities={uniqueModalities ?? []}
-        setFilter={setFilter}
-      />
+      <Form className="my-4 mb-2" hform={modalityForm}>
+        <Field name="modality">
+          <Label>Modalidade</Label>
+          <Select data={uniqueModalities} displayValueKey="name" />
+        </Field>
+      </Form>
       <Table
-        data={filteredResults}
+        data={results.filter(
+          (r) => r.Registration.modalityId === modalityForm.watch("modality")
+        )}
         search={false}
         columns={(columnHelper) => [
           columnHelper.accessor("position", {
@@ -164,7 +168,7 @@ export function ResultsTable({
           }),
           columnHelper.accessor("position", {
             id: "catposition",
-            header: "Cat.",
+            header: "Pos. Cat.",
             enableColumnFilter: false,
             enableSorting: true,
             cell: (info) =>
@@ -179,7 +183,7 @@ export function ResultsTable({
           }),
           columnHelper.accessor("Registration.code", {
             id: "number",
-            header: "Número",
+            header: "Num.",
             enableSorting: true,
             enableGlobalFilter: true,
             cell: (info) => Number(info.getValue()),
@@ -219,7 +223,7 @@ export function ResultsTable({
             cell: (info) => millisecondsToTime(info.getValue()),
           }),
         ]}
-      />
+      ></Table>
     </>
   );
 }
