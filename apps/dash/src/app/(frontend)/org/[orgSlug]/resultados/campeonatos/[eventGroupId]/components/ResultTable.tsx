@@ -166,7 +166,7 @@ export function ResultsTable({
                 )
               ),
           }),
-          columnHelper.accessor("position", {
+          columnHelper.accessor("catPosition", {
             id: "catposition",
             header: "Pos. Cat.",
             enableColumnFilter: false,
