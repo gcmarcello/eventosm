@@ -7,6 +7,7 @@ import {
 import {
   EventGroup,
   EventGroupRules,
+  EventModality,
   EventResult,
   Organization,
 } from "@prisma/client";
@@ -26,6 +27,7 @@ import {
 } from "prisma/types/Results";
 import { useState, useMemo, useEffect } from "react";
 import { z } from "zod";
+import { ModalitySelection } from "./ModalitySelection";
 
 export type Result = {
   POS: string;
@@ -108,66 +110,116 @@ export function ResultsTable({
     return `${strHours}:${strMinutes}:${strSeconds}${strMillis ? `.${strMillis}` : ""}`;
   }
 
+  const [filter, setFilter] = useState<any>(null);
+  const [filteredResults, setFilteredResults] = useState(results);
+
+  const uniqueModalities = useMemo(() => {
+    const unique = results.reduce((acc, obj) => {
+      const modalityId = obj.Registration.modality?.id;
+      if (!acc.has(modalityId)) {
+        acc.set(modalityId, obj.Registration.modality);
+      }
+      return acc;
+    }, new Map());
+
+    return Array.from(unique.values()).sort((a, b) => a.id.localeCompare(b.id));
+  }, [results]);
+
+  useEffect(() => {
+    if (filter) {
+      setFilteredResults(
+        results.filter((r) => r.Registration.modalityId === filter)
+      );
+    } else {
+      setFilteredResults(results);
+    }
+  }, [filter]);
+
   return (
-    <Table
-      data={results}
-      search={false}
-      columns={(columnHelper) => [
-        columnHelper.accessor("position", {
-          id: "position",
-          header: "Posição",
-          enableColumnFilter: false,
-          enableSorting: true,
-          cell: (info) =>
-            handlePlaces(
+    <>
+      <ModalitySelection
+        modalities={uniqueModalities ?? []}
+        setFilter={setFilter}
+      />
+      <Table
+        data={filteredResults}
+        search={false}
+        columns={(columnHelper) => [
+          columnHelper.accessor("position", {
+            id: "position",
+            header: "Posição",
+            enableColumnFilter: false,
+            enableSorting: true,
+            cell: (info) =>
+              handlePlaces(
+                calculatePosition(
+                  results.filter(
+                    (r) =>
+                      r.Registration.modalityId ===
+                      info.row.original.Registration.modalityId
+                  ),
+                  info.row.original
+                )
+              ),
+          }),
+          columnHelper.accessor("position", {
+            id: "catposition",
+            header: "Cat.",
+            enableColumnFilter: false,
+            enableSorting: true,
+            cell: (info) =>
               calculatePosition(
-                info.table.getFilteredRowModel().rows.map((r) => r.original),
+                results.filter(
+                  (r) =>
+                    r.Registration.categoryId ===
+                    info.row.original.Registration.categoryId
+                ),
                 info.row.original
-              )
-            ),
-        }),
-        columnHelper.accessor("Registration.code", {
-          id: "number",
-          header: "Número",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => Number(info.getValue()),
-        }),
-        columnHelper.accessor("Registration.user.fullName", {
-          id: "name",
-          header: "Nome",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => info.getValue(),
-        }),
-        columnHelper.accessor("Registration.category.name", {
-          id: "category",
-          header: "Categoria",
-          enableSorting: true,
-          meta: { filterVariant: "select" },
-          enableGlobalFilter: true,
-          cell: (info) => info.getValue(),
-        }),
-        columnHelper.accessor("Registration.team.name", {
-          id: "team",
-          header: "Equipe",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          meta: { filterVariant: "select" },
-          cell: (info) => info.getValue(),
-        }),
-        columnHelper.accessor("score", {
-          id: "time",
-          enableColumnFilter: false,
-          header: eventGroup
-            ? eventGroup.EventGroupRules?.scoreCalculation === "average"
-              ? "Tempo Médio"
-              : "Tempo Acumulado"
-            : "Tempo",
-          enableGlobalFilter: false,
-          cell: (info) => millisecondsToTime(info.getValue()),
-        }),
-      ]}
-    />
+              ),
+          }),
+          columnHelper.accessor("Registration.code", {
+            id: "number",
+            header: "Número",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => Number(info.getValue()),
+          }),
+          columnHelper.accessor("Registration.user.fullName", {
+            id: "name",
+            header: "Nome",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("Registration.category.name", {
+            id: "category",
+            header: "Categoria",
+            enableSorting: true,
+            meta: { filterVariant: "select" },
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("Registration.team.name", {
+            id: "team",
+            header: "Equipe",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            meta: { filterVariant: "select" },
+            cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("score", {
+            id: "time",
+            enableColumnFilter: false,
+            header: eventGroup
+              ? eventGroup.EventGroupRules?.scoreCalculation === "average"
+                ? "Tempo Médio"
+                : "Tempo Acumulado"
+              : "Tempo",
+            enableGlobalFilter: false,
+            cell: (info) => millisecondsToTime(info.getValue()),
+          }),
+        ]}
+      />
+    </>
   );
 }
