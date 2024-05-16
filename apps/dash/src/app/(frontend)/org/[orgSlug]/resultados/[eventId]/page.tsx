@@ -38,7 +38,7 @@ export default async function EventResultPage({
               color:
                 event.EventGroup?.Organization.options.colors.primaryColor.hex,
             }}
-            href={`/resultados/campeonatos/${event.eventGroupId}`}
+            href={`/eventos/${event.eventGroupId}`}
           >
             Voltar à página do evento.
           </Link>
