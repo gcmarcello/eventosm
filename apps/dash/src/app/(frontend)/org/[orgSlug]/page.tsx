@@ -43,7 +43,10 @@ export default async function CompanyHome({
 
   return (
     <>
-      <OrgPageContainer className="bg-slate-200" organization={organization}>
+      <OrgPageContainer
+        className="grow bg-slate-200 lg:px-16 lg:pb-8 "
+        organization={organization}
+      >
         <div className={clsx("rounded-b-md bg-white pb-4 xl:mx-16 2xl:mx-72")}>
           <div className="col-span-6 flex  flex-col gap-4">
             {organization.options?.images?.hero && (
