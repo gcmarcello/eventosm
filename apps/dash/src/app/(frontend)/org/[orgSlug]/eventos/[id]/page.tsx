@@ -64,7 +64,10 @@ export default async function EventPage({
 
   return (
     <>
-      <OrgPageContainer className="bg-slate-200" organization={organization}>
+      <OrgPageContainer
+        className="grow bg-slate-200 lg:px-16 lg:pb-8 "
+        organization={organization}
+      >
         <EventContainer
           event={event}
           isUserRegistered={isUserRegistered}

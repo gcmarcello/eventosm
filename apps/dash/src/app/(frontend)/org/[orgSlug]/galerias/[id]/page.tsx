@@ -25,7 +25,10 @@ export default async function GalleryPage({
 
   return (
     <>
-      <OrgPageContainer className="bg-slate-200" organization={organization}>
+      <OrgPageContainer
+        className="grow bg-slate-200 lg:px-16 lg:pb-8 "
+        organization={organization}
+      >
         <GalleryContainer organization={organization} gallery={gallery} />
       </OrgPageContainer>
     </>
