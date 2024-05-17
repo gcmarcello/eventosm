@@ -40,12 +40,12 @@ export default function AbsenceJustificationModal({
   showJustificationModal,
   setShowJustificationModal,
   absenceId,
-  fetchCheckinsAndAbsences,
+  triggerUpdate,
 }: {
   showJustificationModal: boolean;
   setShowJustificationModal: Dispatch<SetStateAction<boolean>>;
   absenceId: string;
-  fetchCheckinsAndAbsences: () => void;
+  triggerUpdate: () => void;
 }) {
   const [isSafetyDisclaimerOpen, setIsSafetyDisclaimerOpen] = useState(false);
 
@@ -62,8 +62,8 @@ export default function AbsenceJustificationModal({
     action: updateAbsenceJustification,
     onSuccess: () => {
       setShowJustificationModal(false);
-      fetchCheckinsAndAbsences();
       form.reset();
+      triggerUpdate();
       showToast({
         message: "Atestado enviado com sucesso!",
         variant: "success",
