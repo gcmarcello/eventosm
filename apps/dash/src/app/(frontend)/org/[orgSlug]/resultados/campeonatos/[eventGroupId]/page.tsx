@@ -47,7 +47,7 @@ export default async function EventGroupResultsPage({
     <>
       <OrgPageContainer
         organization={eventGroup.Organization}
-        className="bg-white px-4 pb-16 pt-4 lg:pt-8"
+        className="grow bg-white px-4 pb-16 pt-4 lg:px-16 lg:pb-8 lg:pt-8 "
       >
         <Title>Classificação Geral - {eventGroup.name}</Title>
         <div className="mt-2 flex flex-row gap-2 lg:mt-auto lg:items-end">

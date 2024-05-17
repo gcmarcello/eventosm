@@ -31,7 +31,7 @@ import { z } from "zod";
 import { createUserDocument } from "@/app/api/users/action";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { SubmitButton, Text } from "odinkit";
-import SafetyAlert from "./SafetyAlert";
+import SafetyAlert from "../SafetyAlert";
 import { createAbsenceJustificationDto } from "@/app/api/absences/dto";
 import { updateAbsenceJustification } from "@/app/api/absences/action";
 import { Event, EventAbsences } from "@prisma/client";
@@ -40,12 +40,12 @@ export default function AbsenceJustificationModal({
   showJustificationModal,
   setShowJustificationModal,
   absenceId,
-  fetchCheckinsAndAbsences,
+  triggerUpdate,
 }: {
   showJustificationModal: boolean;
   setShowJustificationModal: Dispatch<SetStateAction<boolean>>;
   absenceId: string;
-  fetchCheckinsAndAbsences: () => void;
+  triggerUpdate: () => void;
 }) {
   const [isSafetyDisclaimerOpen, setIsSafetyDisclaimerOpen] = useState(false);
 
@@ -62,8 +62,8 @@ export default function AbsenceJustificationModal({
     action: updateAbsenceJustification,
     onSuccess: () => {
       setShowJustificationModal(false);
-      fetchCheckinsAndAbsences();
       form.reset();
+      triggerUpdate();
       showToast({
         message: "Atestado enviado com sucesso!",
         variant: "success",

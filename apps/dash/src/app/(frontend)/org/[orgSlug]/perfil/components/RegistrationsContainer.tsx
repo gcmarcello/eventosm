@@ -3,8 +3,8 @@ import { For, Heading, Text } from "odinkit";
 import { EventRegistration, Organization, Team } from "@prisma/client";
 import EventGroupRegistrationCard from "./EventGroupRegistrationCard";
 import { useEffect, useState } from "react";
-import { EventGroupRegistrationModal } from "./EventGroupRegistrationModal";
-import { EventRegistrationModal } from "./EventRegistrationModal";
+import { EventGroupRegistrationModal } from "./RegistrationModal/EventGroupRegistrationModal";
+import { EventRegistrationModal } from "./RegistrationModal/EventRegistrationModal";
 import EventRegistrationCard from "./EventRegistrationCard";
 import {
   EventGroupRegistrationWithInfo,
@@ -35,7 +35,7 @@ export default function RegistrationsContainer({
       <div>
         <Heading>Inscrições Ativas</Heading>
         {registrations.filter((reg) => reg.status === "active").length > 0 ? (
-          <div className="mt-2 grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="mt-2 grid grid-cols-1 gap-5 md:grid-cols-2">
             <For
               each={registrations
                 .filter((reg) => reg.status === "active")

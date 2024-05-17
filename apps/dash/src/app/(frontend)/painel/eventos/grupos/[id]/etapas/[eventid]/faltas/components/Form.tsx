@@ -103,6 +103,7 @@ export function AbsencesForm({
         </div>
         <Table
           data={sortAbsences(eventReview?.absences) || []}
+          search={false}
           columns={(columnHelper) => [
             columnHelper.accessor("registration.user.fullName", {
               id: "name",
@@ -111,36 +112,11 @@ export function AbsencesForm({
               enableGlobalFilter: true,
               cell: (info) => info.getValue(),
             }),
-            columnHelper.accessor("registration.user.phone", {
-              id: "phone",
-              header: "Telefone",
-              enableSorting: false,
-              enableGlobalFilter: false,
-              cell: (info) => formatPhone(info.getValue()),
-            }),
-            columnHelper.accessor("justificationUrl", {
-              id: "justificationUrl",
-              header: "Atestado",
-              enableSorting: true,
-              enableGlobalFilter: true,
-              cell: (info) =>
-                info.getValue() ? (
-                  <Badge
-                    color="blue"
-                    className="cursor-pointer underline hover:no-underline"
-                    onClick={() => trigger({ id: info.row.original.id })}
-                  >
-                    Ver Atestado
-                  </Badge>
-                ) : (
-                  <Badge color="amber">Envio Pendente</Badge>
-                ),
-            }),
             columnHelper.accessor("status", {
               id: "status",
               header: "Status da Ausência",
               enableSorting: true,
-              enableGlobalFilter: true,
+              meta: { filterVariant: "select" },
               cell: (info) => {
                 switch (info.getValue()) {
                   case "pending":
@@ -155,11 +131,42 @@ export function AbsencesForm({
                 }
               },
             }),
+            columnHelper.accessor("registration.user.phone", {
+              id: "phone",
+              header: "Telefone",
+              enableSorting: false,
+              enableColumnFilter: false,
+              enableGlobalFilter: false,
+
+              cell: (info) => formatPhone(info.getValue()),
+            }),
+
+            columnHelper.accessor("justificationUrl", {
+              id: "justificationUrl",
+              header: "Atestado",
+              enableSorting: true,
+              enableGlobalFilter: false,
+              enableColumnFilter: false,
+              cell: (info) =>
+                info.getValue() ? (
+                  <Badge
+                    color="blue"
+                    className="cursor-pointer underline hover:no-underline"
+                    onClick={() => trigger({ id: info.row.original.id })}
+                  >
+                    Ver Atestado
+                  </Badge>
+                ) : (
+                  <Badge color="amber">Envio Pendente</Badge>
+                ),
+            }),
+
             columnHelper.accessor("id", {
               id: "id",
               header: "Opções",
               enableSorting: true,
               enableGlobalFilter: true,
+              enableColumnFilter: false,
               cell: (info) =>
                 info.row.original.status === "approved" ? (
                   <Badge color="green">Atestado Verificado</Badge>

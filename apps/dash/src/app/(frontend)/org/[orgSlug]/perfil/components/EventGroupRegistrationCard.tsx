@@ -2,13 +2,9 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import Image from "next/image";
-import { Badge, Link, date } from "odinkit";
+import { Badge } from "odinkit";
 
-import {
-  EventGroupRegistration,
-  EventGroupRegistrationWithInfo,
-} from "prisma/types/Registrations";
-import { useState } from "react";
+import { EventGroupRegistrationWithInfo } from "prisma/types/Registrations";
 
 export default function EventGroupRegistrationCard({
   registration,
@@ -20,7 +16,7 @@ export default function EventGroupRegistrationCard({
   return (
     <div className="flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-start shadow-md duration-500 md:col-span-1 ">
       <div className="grid min-h-[100px] grow grid-cols-4">
-        <div className="col-span-2">
+        <div className="col-span-4 h-[150px] xl:col-span-2 xl:h-auto">
           <div className="relative h-full w-full">
             <Image
               className="rounded-t"
@@ -31,7 +27,7 @@ export default function EventGroupRegistrationCard({
             />
           </div>
         </div>
-        <div className="col-span-2 flex  flex-col px-4">
+        <div className="col-span-4 flex flex-col px-4 xl:col-span-2">
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             {registration.eventGroup?.name}
           </h3>

@@ -71,7 +71,10 @@ export default async function TorneioPage({
   });
 
   return (
-    <OrgPageContainer className="bg-slate-200" organization={organization}>
+    <OrgPageContainer
+      className="grow bg-slate-200 lg:px-16 lg:pb-8"
+      organization={organization}
+    >
       <EventGroupContainer
         eventGroup={eventGroup}
         isUserRegistered={isUserRegistered}

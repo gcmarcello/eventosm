@@ -103,11 +103,10 @@ export default function EventsContainer({
       </div>
       <div className="flex flex-col gap-4">
         <div>
-          <div className="font-semibold">Grupos de Eventos</div>
+          <div className="font-semibold">Campeonatos</div>
           <Table
             striped
-            search={false}
-            pagination={false}
+            pagination={true}
             className="my-2"
             data={eventGroups}
             columns={(columnHelper) => [
@@ -115,13 +114,14 @@ export default function EventsContainer({
                 id: "image",
                 header: "",
                 enableSorting: false,
+                enableColumnFilter: false,
                 enableGlobalFilter: false,
                 cell: (info) =>
                   info.getValue() && (
                     <Image
                       width={56}
                       height={56}
-                      className="size-10 rounded-full"
+                      className="rounded-full"
                       src={info.getValue()}
                       alt={`event-${info.row.original.slug}`}
                     />
@@ -130,6 +130,7 @@ export default function EventsContainer({
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
+                enableColumnFilter: false,
                 enableSorting: true,
                 enableGlobalFilter: true,
                 cell: (info) => (
@@ -141,26 +142,12 @@ export default function EventsContainer({
                   </Link>
                 ),
               }),
-              columnHelper.accessor("eventGroupType", {
-                id: "type",
-                header: "Tipo",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) =>
-                  info.getValue() === "championship" ? "Torneio" : "Livre",
-              }),
-              columnHelper.accessor("Event", {
-                id: "events",
-                header: "Etapas",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) => info.getValue()?.length || 0,
-              }),
               columnHelper.accessor("status", {
                 id: "status",
                 header: "Status",
                 enableSorting: true,
-                enableGlobalFilter: true,
+                enableColumnFilter: false,
+                enableGlobalFilter: false,
                 cell: (info) => {
                   switch (info.getValue()) {
                     case "draft":
@@ -170,8 +157,18 @@ export default function EventsContainer({
                   }
                 },
               }),
+              columnHelper.accessor("Event", {
+                id: "events",
+                header: "Etapas",
+                enableSorting: true,
+                enableColumnFilter: false,
+                enableGlobalFilter: false,
+                cell: (info) => info.getValue()?.length || 0,
+              }),
+
               columnHelper.accessor("id", {
                 id: "id",
+                enableColumnFilter: false,
                 header: "",
                 cell: (info) => (
                   <Dropdown>
@@ -196,31 +193,33 @@ export default function EventsContainer({
           <div className="font-semibold">Eventos</div>
           <Table
             striped
-            search={false}
+            search={true}
             className="my-2"
             data={events}
             columns={(columnHelper) => [
-              /* columnHelper.accessor("image", {
-            id: "image",
-            header: "image",
-            enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) =>
-              info.getValue() && (
-                <Image
-                  width={56}
-                  height={56}
-                  className="h-14 w-14 rounded-full"
-                  src={info.getValue()}
-                  alt={`event-${info.row.original.slug}`}
-                />
-              ),
-          }), */
+              columnHelper.accessor("imageUrl", {
+                id: "image",
+                header: "",
+                enableSorting: true,
+                enableGlobalFilter: false,
+                enableColumnFilter: false,
+                cell: (info) =>
+                  info.getValue() && (
+                    <Image
+                      width={56}
+                      height={56}
+                      className="rounded-full"
+                      src={info.getValue()}
+                      alt={`event-${info.row.original.slug}`}
+                    />
+                  ),
+              }),
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
                 enableSorting: true,
                 enableGlobalFilter: true,
+                enableColumnFilter: false,
                 cell: (info) => (
                   <Link
                     className="underline"
@@ -234,7 +233,8 @@ export default function EventsContainer({
                 id: "status",
                 header: "Status",
                 enableSorting: true,
-                enableGlobalFilter: true,
+                enableColumnFilter: false,
+                enableGlobalFilter: false,
                 cell: (info) => {
                   switch (info.getValue()) {
                     case "draft":
@@ -248,12 +248,15 @@ export default function EventsContainer({
                 id: "registrations",
                 header: "Inscrições Ativas",
                 enableSorting: true,
-                enableGlobalFilter: true,
+                enableColumnFilter: false,
+                enableGlobalFilter: false,
                 cell: (info) => info.getValue(),
               }),
               columnHelper.accessor("id", {
                 id: "id",
                 header: "",
+                enableColumnFilter: false,
+                enableGlobalFilter: false,
                 cell: (info) => (
                   <Dropdown>
                     <DropdownButton plain>
