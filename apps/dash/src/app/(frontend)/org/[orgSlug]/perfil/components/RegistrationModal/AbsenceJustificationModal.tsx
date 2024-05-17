@@ -31,7 +31,7 @@ import { z } from "zod";
 import { createUserDocument } from "@/app/api/users/action";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { SubmitButton, Text } from "odinkit";
-import SafetyAlert from "./SafetyAlert";
+import SafetyAlert from "../SafetyAlert";
 import { createAbsenceJustificationDto } from "@/app/api/absences/dto";
 import { updateAbsenceJustification } from "@/app/api/absences/action";
 import { Event, EventAbsences } from "@prisma/client";

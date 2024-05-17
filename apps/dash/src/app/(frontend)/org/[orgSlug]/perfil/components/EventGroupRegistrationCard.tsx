@@ -2,13 +2,9 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import Image from "next/image";
-import { Badge, Link, date } from "odinkit";
+import { Badge } from "odinkit";
 
-import {
-  EventGroupRegistration,
-  EventGroupRegistrationWithInfo,
-} from "prisma/types/Registrations";
-import { useState } from "react";
+import { EventGroupRegistrationWithInfo } from "prisma/types/Registrations";
 
 export default function EventGroupRegistrationCard({
   registration,

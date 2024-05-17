@@ -29,7 +29,7 @@ import TabNavigation, { Tab } from "../../../_shared/components/TabNavigation";
 import { GeneralEventGroupRegistrationInfo } from "./EventGroup/GeneralEventGroupRegistrationInfo";
 import { EventGroupAttendance } from "./EventGroup/EventGroupAttendance";
 import { EventGroupResults } from "./EventGroup/EventGroupResults";
-import { CancelRegistrationModal } from "../CancelRegistrationModal";
+import { CancelRegistrationModal } from "./CancelRegistrationModal";
 
 export function EventGroupRegistrationModal({
   registration,

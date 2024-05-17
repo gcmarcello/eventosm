@@ -51,8 +51,8 @@ import {
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { connectRegistrationToTeamDto } from "@/app/api/registrations/dto";
 import { format } from "path";
-import DocumentModal from "../AbsenceJustificationModal";
-import AbsenceJustificationModal from "../AbsenceJustificationModal";
+import DocumentModal from "./AbsenceJustificationModal";
+import AbsenceJustificationModal from "./AbsenceJustificationModal";
 import { redirect } from "next/dist/server/api-utils";
 
 const secondaryNavigation = [
@@ -167,11 +167,6 @@ export function EventRegistrationModal({
       fetchCheckinsAndAbsences();
     }
   }, [isOpen]);
-
-  function handleAbsenceModal(absence: EventAbsences) {
-    setSelectedAbsence(absence);
-    setShowJustificationModal(true);
-  }
 
   if (!registration) return null;
 
