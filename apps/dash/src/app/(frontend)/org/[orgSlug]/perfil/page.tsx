@@ -2,7 +2,6 @@ import { readRegistrations } from "@/app/api/registrations/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { Alertbox, For, Heading } from "odinkit";
-import EventGroupRegistrationCard from "./components/RegistrationModal/EventGroupRegistrationCard";
 import RegistrationsContainer from "./components/RegistrationsContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
