@@ -80,11 +80,16 @@ export async function createEventIndividualRegistration(
     addon: addonInfo,
   });
 
+<<<<<<< HEAD
   const paymentId = registrationPrice
     ? await createPayment({ registrations: [registrationId] })
     : null;
 
   const status = registrationPrice ? "pending" : "active";
+=======
+  const orderId = /* categoryPrice ? await createOrder("@todo") : */ null;
+  const status = categoryPrice ? "pending" : "active";
+>>>>>>> dev
   const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
   const region = getServerEnv("AWS_REGION") || "";
   const createRegistration = await prisma.eventRegistration.create({

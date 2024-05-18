@@ -1,29 +1,5 @@
-"use server";
-import {
-  BatchCoupon,
-  City,
-  EventAddon,
-  EventCheckIn,
-  EventModality,
-  EventRegistration,
-  EventRegistrationBatch,
-  ModalityCategory,
-  Team,
-  User,
-  UserInfo,
-} from "@prisma/client";
-import RegistrationsTable from "../../../_shared/components/RegistrationsPage";
+import RegistrationsContainer from "../../../_shared/components/registrations/RegistrationsContainer";
 import { prisma } from "prisma/prisma";
-
-export type RegistrationWithInfo = EventRegistration & {
-  user: User & { info?: UserInfo & { city: City | null } };
-  batch: EventRegistrationBatch;
-  modality?: EventModality | null;
-  category?: ModalityCategory;
-  team: Team | null;
-  addon: EventAddon | null;
-  coupon: BatchCoupon | null;
-};
 
 export default async function RegistrationsPage({
   params,
@@ -59,7 +35,7 @@ export default async function RegistrationsPage({
 
   return (
     <div className="pb-20 lg:pb-10">
-      <RegistrationsTable
+      <RegistrationsContainer
         modalitiesWithCategories={modalitiesWithCategories}
         registrations={registrations}
       />

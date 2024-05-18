@@ -19,15 +19,8 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventModalityWithCategories } from "prisma/types/Events";
 import { EventGroupRules, Organization } from "@prisma/client";
 import { UpdateEventStatusDto } from "./status/dto";
+import { fullTextSearch } from "odinkit";
 dayjs.extend(customParseFormat);
-
-/* export async function upsertEventGroupType(request: UpsertEventGroupTypeDto) {
-  const newEventType = await prisma.eventType.create({
-    data: request,
-  });
-
-  return newEventType;
-} */
 
 export async function verifySlugUniqueness({
   slug,
@@ -170,6 +163,7 @@ export async function readEvents(request: ReadEventDto) {
       EventRegistrationBatch: {
         include: { _count: { select: { EventRegistration: true } } },
       },
+      Gallery: true,
     },
   });
 
@@ -196,6 +190,7 @@ export async function readEventGroups(request: ReadEventGroupDto) {
           },
         },
       },
+      Gallery: true,
     },
   });
 
@@ -360,4 +355,46 @@ export async function upsertEventGroupRules({
         : null,
     },
   });
+}
+
+export async function readEventFulltext(
+  request: ReadEventDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
+) {
+  const searchQuery = request.where?.name ? `'${request.where?.name}':*` : "";
+
+  const query = await fullTextSearch({
+    table: ["public", "Event"],
+    tableAlias: "e",
+    where: [`e."organizationId" = '${request.organization.id}'`],
+    searchField: ["e", "name"],
+    orderBy: ["e", "id"],
+  });
+
+  const locations = await prisma.$queryRawUnsafe<any[]>(query, searchQuery, 10);
+
+  return locations;
+}
+
+export async function readEventGroupFulltext(
+  request: ReadEventGroupDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
+) {
+  const searchQuery = request.where?.name ? `'${request.where?.name}':*` : "";
+
+  const query = await fullTextSearch({
+    table: ["public", "EventGroup"],
+    tableAlias: "e",
+    where: [`e."organizationId" = '${request.organization.id}'`],
+    searchField: ["e", "name"],
+    orderBy: ["e", "id"],
+  });
+
+  const locations = await prisma.$queryRawUnsafe<any[]>(query, searchQuery, 10);
+
+  return locations;
 }

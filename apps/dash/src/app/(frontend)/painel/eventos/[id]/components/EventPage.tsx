@@ -28,8 +28,8 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
 import { updateEventStatusDto } from "@/app/api/events/status/dto";
 import { updateEventStatus } from "@/app/api/events/status/action";
-import EventModalities from "../../_shared/components/EventModalities";
-import EventBatches from "../../_shared/components/EventBatches";
+import EventModalities from "../../_shared/components/modalities/EventModalities";
+import EventBatches from "../../_shared/components/batches/EventBatches";
 
 export default function UpdateEventPage({
   event,

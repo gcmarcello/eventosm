@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import EventBatches from "../../_shared/components/EventBatches";
+import EventBatches from "../../_shared/components/batches/EventBatches";
 import { cookies } from "next/headers";
 
 export default async function EventBatchesPage({

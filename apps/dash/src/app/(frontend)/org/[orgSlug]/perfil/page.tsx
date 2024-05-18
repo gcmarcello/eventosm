@@ -2,7 +2,6 @@ import { readRegistrations } from "@/app/api/registrations/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { Alertbox, For, Heading } from "odinkit";
-import EventGroupRegistrationCard from "./components/EventGroupRegistrationCard";
 import RegistrationsContainer from "./components/RegistrationsContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
@@ -50,6 +49,7 @@ export default async function RegistrationsPage({
       eventGroup: { include: { Event: true } },
       team: true,
     },
+    orderBy: { createdAt: "desc" },
   });
 
   const teams = await prisma.team.findMany({

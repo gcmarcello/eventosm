@@ -52,12 +52,7 @@ export default function PanelSideBar() {
       icon: DocumentIcon,
       current: pathname.includes("/documentos"),
     },
-    {
-      name: "Galerias",
-      href: `/painel/galerias`,
-      icon: PhotoIcon,
-      current: pathname.includes("/tmidiasme"),
-    }, */
+     */
   ];
 
   return (

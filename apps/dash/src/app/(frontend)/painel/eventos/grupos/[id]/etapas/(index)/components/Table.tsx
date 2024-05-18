@@ -86,41 +86,13 @@ export function SubeventsTable({
       </div>
       <Table
         data={eventGroup.Event}
+        search={false}
         columns={(columnHelper) => [
-          columnHelper.accessor("imageUrl", {
-            id: "imageUrl",
-            header: "",
-            enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) =>
-              info.getValue() && (
-                <Image
-                  src={info.getValue()}
-                  className="rounded-md"
-                  alt="imagem da etapa"
-                  height={64}
-                  width={64}
-                />
-              ),
-          }),
           columnHelper.accessor("name", {
             id: "name",
             header: "Nome",
             enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) => info.getValue(),
-          }),
-          columnHelper.accessor("dateStart", {
-            id: "dateStart",
-            header: "Início",
-            enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) => <Date date={info.getValue()} format="DD/MM/YYYY" />,
-          }),
-          columnHelper.accessor("location", {
-            id: "location",
-            header: "Local",
-            enableSorting: true,
+            enableColumnFilter: true,
             enableGlobalFilter: true,
             cell: (info) => info.getValue(),
           }),
@@ -129,6 +101,7 @@ export function SubeventsTable({
             header: "Status",
             enableSorting: true,
             enableGlobalFilter: true,
+            meta: { filterVariant: "select" },
             cell: (info) =>
               ({
                 finished: <Badge color="amber">Finalizado</Badge>,
@@ -139,10 +112,29 @@ export function SubeventsTable({
                 info.getValue() as "draft" | "published" | "review" | "finished"
               ],
           }),
+          columnHelper.accessor("dateStart", {
+            id: "dateStart",
+            header: "Início",
+            enableSorting: true,
+            enableColumnFilter: false,
+            enableGlobalFilter: false,
+            cell: (info) => <Date date={info.getValue()} format="DD/MM/YYYY" />,
+          }),
+          columnHelper.accessor("location", {
+            id: "location",
+            header: "Local",
+            enableSorting: true,
+            enableColumnFilter: false,
+
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue(),
+          }),
+
           columnHelper.accessor("id", {
             id: "id",
             header: "Opções",
             enableSorting: true,
+            enableColumnFilter: false,
             enableGlobalFilter: true,
             cell: (info) => (
               <Dropdown>

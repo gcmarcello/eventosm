@@ -89,6 +89,7 @@ export default function EventGroupContainer({
         <div className="my-2 text-sm">
           <Table
             data={eventGroup.Event}
+            disableMobileFilters={true}
             pagination={false}
             search={false}
             columns={(columnHelper) => [
@@ -130,26 +131,6 @@ export default function EventGroupContainer({
                 enableGlobalFilter: true,
                 cell: (info) => info.getValue(),
               }),
-              /* columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) =>
-                  eventGroup.Event.find((e) => e.id === info.getValue())
-                    ?.description ? (
-                    <Button
-                      plain
-                      type="button"
-                      onClick={() => handleEventModal(info.getValue())}
-                    >
-                      Detalhes
-                    </Button>
-                  ) : (
-                    "Informações em breve."
-                  ),
-              }), */
             ]}
           />
         </div>
@@ -413,22 +394,30 @@ export default function EventGroupContainer({
                 </div>
               </Link>
 
-              <Link
-                href="#"
-                className="text-sm hover:underline"
-                style={{
-                  color:
-                    eventGroup.status === "published"
-                      ? "gray"
-                      : organization.options.colors.primaryColor.hex,
-                }}
-              >
-                <div className="flex gap-1">
-                  <CameraIcon className="size-5" />
-                  Fotos e Vídeos{" "}
-                  {eventGroup.status === "published" ? "(Em Breve)" : ""}
-                </div>
-              </Link>
+              {
+                <Link
+                  href={
+                    eventGroup.Gallery
+                      ? `/galerias/${eventGroup.Gallery[0]?.id}`
+                      : "#"
+                  }
+                  className="text-sm hover:underline"
+                  style={{
+                    color:
+                      eventGroup.status === "published"
+                        ? "gray"
+                        : organization.options.colors.primaryColor.hex,
+                  }}
+                >
+                  <div className="flex gap-1">
+                    <CameraIcon className="size-5" />
+                    Fotos e Vídeos{" "}
+                    {eventGroup.Gallery && eventGroup.Gallery.length > 0
+                      ? ""
+                      : "(Em Breve)"}
+                  </div>
+                </Link>
+              }
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { readEventResults } from "@/app/api/results/service";
 import { ResultsTable } from "../campeonatos/[eventGroupId]/components/ResultTable";
 import { Link, Title } from "odinkit";
+import { notFound } from "next/navigation";
 
 export default async function EventResultPage({
   params,
@@ -13,11 +14,13 @@ export default async function EventResultPage({
     include: { EventGroup: { include: { Organization: true } } },
   });
 
+  if (!event) return notFound();
+
   return (
     <div className="mt-8 px-4 pb-20 lg:px-32">
-      <div className="flex items-end gap-2">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-end">
         <Title>Resultados - {event?.name}</Title>
-        {event?.eventGroupId && (
+        {event.eventGroupId ? (
           <Link
             className="text-sm underline"
             style={{
@@ -27,6 +30,17 @@ export default async function EventResultPage({
             href={`/resultados/campeonatos/${event.eventGroupId}`}
           >
             Voltar ao resultado geral
+          </Link>
+        ) : (
+          <Link
+            className="text-sm underline"
+            style={{
+              color:
+                event.EventGroup?.Organization.options.colors.primaryColor.hex,
+            }}
+            href={`/eventos/${event.eventGroupId}`}
+          >
+            Voltar à página do evento.
           </Link>
         )}
       </div>

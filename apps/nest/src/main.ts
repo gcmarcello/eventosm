@@ -16,6 +16,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({}));
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      forbidNonWhitelisted: true,
+      whitelist: true,
+    })
+  );
+  app.enableCors();
   await app.listen(5000);
 }
 bootstrap();

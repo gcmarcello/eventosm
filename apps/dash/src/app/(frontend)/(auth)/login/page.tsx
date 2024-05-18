@@ -46,8 +46,8 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex min-h-full flex-1">
-      <div className="flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-16 lg:py-12 xl:px-20">
+    <div className="grid min-h-full flex-1 grid-cols-8">
+      <div className="col-span-8 flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-16 lg:py-12 xl:col-span-3 xl:px-16">
         <div className="mx-auto w-full ">
           <div>
             <img
@@ -199,7 +199,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden w-0 flex-1 lg:block">
+      <div className="relative hidden flex-1  xl:col-span-5 xl:block">
         <img
           className="absolute inset-0 h-full w-full object-cover"
           src="https://c02.purpledshub.com/uploads/sites/39/2022/10/Fox-DHX-Factory-rear-mountain-bike-shock-2-3e0ee7f.jpg"

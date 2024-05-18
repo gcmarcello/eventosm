@@ -69,7 +69,7 @@ export async function createEventGroupRegistration(
     categoryId: registrationInfo.categoryId,
   });
 
-  const orderId = categoryPrice ? await createOrder("@todo") : null;
+  const orderId = /* categoryPrice ? await createOrder("@todo") :  */ null;
   const status = categoryPrice ? "pending" : "active";
   const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
   const region = getServerEnv("AWS_REGION") || "";
@@ -85,7 +85,6 @@ export async function createEventGroupRegistration(
       qrCode: `https://${bucketName}.s3.${region}.backblazeb2.com/qr-codes/${registrationId}.png`,
       code,
       status,
-      orderId,
       batchId: batch.id,
       addonId: addon?.id,
       addonOption: addon?.option,

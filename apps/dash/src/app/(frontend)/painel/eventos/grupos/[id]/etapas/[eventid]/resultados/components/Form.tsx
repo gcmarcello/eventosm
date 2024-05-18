@@ -75,8 +75,6 @@ export function ResultsForm({
     },
   });
 
-  console.log(form.formState.errors);
-
   return (
     <>
       <SubeventHeading organization={organization} eventGroupId={eventGroup.id}>

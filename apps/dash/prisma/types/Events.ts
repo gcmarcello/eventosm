@@ -8,6 +8,7 @@ import {
   EventModality,
   EventRegistration,
   EventRegistrationBatch,
+  Gallery,
   ModalityCategory,
   User,
 } from "@prisma/client";
@@ -20,8 +21,12 @@ export type EventWithRegistrationCount = Event & {
   })[];
 };
 
-export type EventModalityWithCategories = EventModality & {
-  modalityCategory: ModalityCategory[];
+export type EventModalityWithCategories = (EventModality & {
+  _count?: { EventRegistration?: number };
+}) & {
+  modalityCategory: (ModalityCategory & {
+    _count?: { EventRegistration?: number };
+  })[];
 };
 
 export type EventGroupWithInfo = EventGroup & {
@@ -33,6 +38,7 @@ export type EventGroupWithInfo = EventGroup & {
   EventRegistrationBatch: (EventRegistrationBatch & {
     _count: { EventRegistration: number };
   })[];
+  Gallery?: Gallery[];
 };
 
 export type EventGroupWithEvents = EventGroup & { Event: Event[] };
@@ -50,4 +56,5 @@ export type EventWithInfo = Event & {
   EventRegistrationBatch: (EventRegistrationBatch & {
     _count: { EventRegistration: number };
   })[];
+  Gallery?: Gallery[];
 };
