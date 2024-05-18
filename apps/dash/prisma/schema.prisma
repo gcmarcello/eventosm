@@ -540,11 +540,6 @@ model EventRegistration {
   addonId             String?                 @db.Uuid
   addonOption         String?
   status              EventRegistrationStatus @default(pending)
-<<<<<<< HEAD
-=======
-  //  order               Order?                  @relation(fields: [orderId], references: [id])
-  //  orderId             String?                 @db.Uuid
->>>>>>> dev
   qrCode              String
   justifiedAbsences   Int                     @default(0) @db.Integer
   unjustifiedAbsences Int                     @default(0) @db.Integer
@@ -583,7 +578,6 @@ model Team {
   @@schema("public")
 }
 
-<<<<<<< HEAD
 model Payment {
   id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   paymentId         String?             @db.VarChar
@@ -595,19 +589,6 @@ model Payment {
 
   @@schema("public")
 }
-=======
-// model Order {
-//   id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-//   orderId           String              @db.VarChar
-//   status            OrderStatus
-//   type              OrderType
-//   EventRegistration EventRegistration[]
-//   createdAt         DateTime            @default(now())
-//   updatedAt         DateTime?           @updatedAt
-// 
-//   @@schema("public")
-// }
->>>>>>> dev
 
 model EventCheckIn {
   id             String            @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
