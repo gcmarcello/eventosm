@@ -50,11 +50,10 @@ export function sortPositions(
     return aTime - bTime;
   });
 
-  const positions: EventResultsWithPosition[] | EventGroupResultWithInfo[] =
-    sortedArray.map((obj, index) => ({
-      ...obj,
-      position: index + 1,
-    }));
+  const positions = sortedArray.map((obj, index) => ({
+    ...obj,
+    position: index + 1,
+  }));
   return positions;
 }
 

@@ -2,21 +2,15 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import Image from "next/image";
-import { Badge, Link, date } from "odinkit";
+import { Badge } from "odinkit";
 
-import {
-  EventGroupRegistration,
-  EventRegistrationWithInfo,
-} from "prisma/types/Registrations";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { EventRegistrationModalContext } from "../context/RegistrationModal.ctx";
 
-export default function EventRegistrationCard({
-  registration,
-  handleModalOpen,
-}: {
-  handleModalOpen: (registration: EventRegistrationWithInfo) => void;
-  registration: EventRegistrationWithInfo;
-}) {
+export default function EventRegistrationCard() {
+  const { registration, visibility, setVisibility } = useContext(
+    EventRegistrationModalContext
+  );
   return (
     <div className="flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-start shadow-md duration-500 md:col-span-1 ">
       <div className="grid min-h-[100px] grow grid-cols-4">
@@ -46,7 +40,7 @@ export default function EventRegistrationCard({
       <div>
         <div className="-mt-px flex">
           <div
-            onClick={() => handleModalOpen(registration)}
+            onClick={() => setVisibility(true)}
             className="relative -mr-px  inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-b-lg rounded-l-none border border-transparent py-4 text-sm font-semibold text-gray-900 duration-200 hover:bg-gray-100"
           >
             <InformationCircleIcon

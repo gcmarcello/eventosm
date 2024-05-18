@@ -10,7 +10,7 @@ import { Badge, For, LoadingSpinner } from "odinkit";
 import { useAction } from "odinkit/client";
 import { EventGroupEventCheckinsAndAbsences } from "prisma/types/Events";
 import { useEffect, useState } from "react";
-import AbsenceJustificationModal from "../AbsenceJustificationModal";
+import AbsenceJustificationModal from "../../AbsenceJustificationModal";
 
 export function EventGroupAttendance({
   registration,

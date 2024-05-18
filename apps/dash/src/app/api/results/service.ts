@@ -296,3 +296,30 @@ export async function readUserEventGroupResults({
 
   return { results: userResults, position: userPosition.position || 0 };
 }
+
+export async function readUserEventResults({
+  eventId,
+  userSession,
+}: {
+  eventId: string;
+  userSession: UserSession;
+}) {
+  const registration = await prisma.eventRegistration.findFirst({
+    where: { userId: userSession.id, eventId, status: "active" },
+  });
+  if (!registration) throw "Inscrição não encontrada!";
+
+  const results = await readEventResults(eventId);
+  const userPosition = results.find(
+    (r) => r.registrationId === registration.id
+  );
+  if (!userPosition) throw "Erro ao calcular posição!";
+  const userResults = await prisma.eventResult.findMany({
+    where: {
+      registrationId: registration.id,
+    },
+    include: { Event: true },
+  });
+
+  return { results: userResults, position: userPosition.position || 0 };
+}

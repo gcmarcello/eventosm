@@ -14,19 +14,19 @@ import {
   showToast,
 } from "odinkit/client";
 import { EventGroupRegistration } from "prisma/types/Registrations";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useContext, useMemo } from "react";
 
 import { z } from "zod";
+import { EventGroupRegistrationModalContext } from "../../context/RegistrationModal.ctx";
 
 export function CancelRegistrationModal({
   isOpen,
   setIsOpen,
-  registration,
 }: {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  registration: EventGroupRegistration;
 }) {
+  const { registration } = useContext(EventGroupRegistrationModalContext);
   const form = useForm({
     schema: z.object({ confirm: z.literal("Cancelar") }),
   });

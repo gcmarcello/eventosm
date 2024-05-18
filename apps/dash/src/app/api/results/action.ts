@@ -40,3 +40,19 @@ export async function readUserEventGroupResults(request: {
     return ActionResponse.error(error);
   }
 }
+
+export async function readUserEventResults(request: { eventId: string }) {
+  try {
+    const { request: parsedRequest } = await UseMiddlewares(request).then(
+      UserSessionMiddleware
+    );
+
+    return ActionResponse.success({
+      data: await service.readUserEventResults(parsedRequest),
+      message: "Resultados carregados com sucesso.",
+    });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
