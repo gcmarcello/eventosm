@@ -18,22 +18,38 @@ import {
   useForm,
 } from "odinkit/client";
 import { EventGroupRegistration } from "prisma/types/Registrations";
-import { useMemo, useState } from "react";
-import { TeamChangeModal } from "../TeamChangeModal";
+import { useContext, useMemo, useState } from "react";
+import { TeamChangeModal } from "../../TeamChangeModal";
+import { EventGroupRegistrationModalContext } from "../../context/RegistrationModal.ctx";
 
-export function GeneralEventGroupRegistrationInfo({
-  organization,
-  registration,
-  teams,
-}: {
-  organization: Organization;
-  registration: EventGroupRegistration;
-  teams: Team[];
-}) {
+export function EventGroupRegistrationInfo() {
   const [isTeamChangeOpen, setIsTeamChangeOpen] = useState(false);
+  const { registration, teams, organization } = useContext(
+    EventGroupRegistrationModalContext
+  );
 
   const registrationInfo = useMemo(
     () => [
+      {
+        title: "QR Code de Confirmação",
+        content: (
+          <>
+            <div className="flex flex-col items-center justify-center lg:items-start">
+              <div className="relative h-36 w-36 border border-slate-100 p-5">
+                <Image
+                  fill={true}
+                  alt="qrcode da inscricao"
+                  src={registration.qrCode}
+                ></Image>
+              </div>
+              <DialogDescription>
+                O QR Code é a sua identificação para o check-in em todas as
+                etapas, não o compartilhe com ninguém.
+              </DialogDescription>
+            </div>
+          </>
+        ),
+      },
       {
         title: "Evento",
         content: registration.eventGroup?.name,
@@ -60,7 +76,9 @@ export function GeneralEventGroupRegistrationInfo({
               <>
                 <span
                   className="cursor-pointer underline hover:no-underline"
-                  onClick={() => setIsTeamChangeOpen(true)}
+                  onClick={() => {
+                    setIsTeamChangeOpen(true);
+                  }}
                 >
                   Atribuir equipe
                 </span>
@@ -83,36 +101,16 @@ export function GeneralEventGroupRegistrationInfo({
           </>
         ),
       },
-      {
-        title: "QR Code de Confirmação",
-        content: (
-          <>
-            <div className="flex flex-col items-center justify-center lg:items-start">
-              <div className="relative h-36 w-36 border border-slate-100 p-5">
-                <Image
-                  fill={true}
-                  alt="qrcode da inscricao"
-                  src={registration.qrCode}
-                ></Image>
-              </div>
-              <DialogDescription>
-                O QR Code é a sua identificação para o check-in em todas as
-                etapas, não o compartilhe com ninguém.
-              </DialogDescription>
-            </div>
-          </>
-        ),
-      },
     ],
-    [registration.team]
+    [registration.team, isTeamChangeOpen]
   );
 
   return (
-    <div className="mt-2 border-gray-100 lg:border-t">
+    <div className="mt-2 border-gray-100 ">
       <dl className="divide-y divide-gray-100">
         <For each={registrationInfo}>
           {(info) => (
-            <div className="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:px-4">
+            <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 lg:px-4">
               <dt className="text-sm font-medium leading-6 text-gray-900">
                 {info.title}
               </dt>
