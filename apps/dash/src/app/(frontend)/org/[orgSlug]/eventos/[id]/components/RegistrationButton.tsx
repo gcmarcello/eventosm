@@ -13,7 +13,12 @@ import { Button, Date } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { useContext } from "react";
 import { EventPageContext } from "../context/EventPage.ctx";
-import { Alertbox, Link } from "odinkit";
+import { Alertbox, Link, Text, formatPhone } from "odinkit";
+import BatchModal from "@/app/(frontend)/painel/eventos/_shared/components/batches/BatchModal";
+import { formatPrice } from "../../../inscricoes/utils/price";
+import PixIcon from "node_modules/odinkit/src/icons/PixIcon";
+import BarcodeIcon from "node_modules/odinkit/src/icons/BarcodeIcon";
+import { CreditCardIcon } from "@heroicons/react/24/solid";
 
 export function RegistrationButton() {
   const { event, organization, userRegistration, activeBatch, nextBatch } =
@@ -114,5 +119,42 @@ export function RegistrationButton() {
     );
   }
 
-  return <div className="my-3">{handleButtons()}</div>;
+  return (
+    <div className="mt-2 hidden w-full lg:block">
+      {activeBatch && (
+        <div className="mt-3 space-y-3 rounded-lg border border-zinc-200 p-3">
+          <div className="space-y-1">
+            <Text>
+              <span className="font-medium">Inscrições</span>{" "}
+              {activeBatch.price ? (
+                <>à partir de {formatPrice(activeBatch.price)}</>
+              ) : (
+                <div className="inline-flex font-medium text-green-500">
+                  Gratuitas!
+                </div>
+              )}
+            </Text>
+            <Text>
+              <span className="font-medium">Lote {activeBatch.name}: </span>
+              <Date
+                date={activeBatch.dateStart}
+                format="DD/MM/YYYY HH:mm"
+              /> - <Date date={activeBatch.dateEnd} format="DD/MM/YYYY HH:mm" />
+            </Text>
+            {activeBatch.price ? (
+              <div className="flex gap-1 font-medium">
+                <Text>Formas de Pagamento: </Text>
+                <div className="inline-flex gap-2 text-zinc-500">
+                  <PixIcon />
+                  <BarcodeIcon />
+                  <CreditCardIcon className="size-6" />
+                </div>
+              </div>
+            ) : null}
+          </div>
+          {handleButtons()}
+        </div>
+      )}
+    </div>
+  );
 }

@@ -17,6 +17,7 @@ import { EventHeader } from "./EventHeader";
 import { EventInfoSection } from "./EventInfoSection";
 import { RegistrationButton } from "./RegistrationButton";
 import { EventPageContext } from "../context/EventPage.ctx";
+import { NoSsrMap } from "../../../campeonatos/[eventGroupId]/components/NoSSRLocationMap";
 
 export default function EventContainer() {
   const { event, organization } = useContext(EventPageContext);
@@ -67,24 +68,23 @@ export default function EventContainer() {
               acessar sua conta.
             </Alertbox>
           )}
-          <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8  lg:pt-0">
-            <div className="relative h-[50vh] w-full">
-              <Image
+          <div className="xs:pt-0 mb-3 flex flex-col justify-center gap-2 lg:mb-0 lg:me-5 lg:flex-row lg:gap-8 lg:pt-0">
+            <div className="relative flex-grow">
+              <img
                 alt="Capa do Evento"
                 src={event?.imageUrl || ""}
-                fill
-                className=""
+                className="h-full max-h-[900px]"
               />
             </div>
 
-            <div className="flex w-full  flex-col items-start gap-1  px-3 pt-1 lg:mt-5  lg:px-0">
+            <div className="flex w-full flex-col  items-start gap-1 px-3  pt-1 lg:mt-5 lg:min-w-[500px]  lg:px-0">
               <EventHeader />
 
               <EventInfoSection />
 
               <RegistrationButton />
 
-              <div className="xxl:flex-row xxl:items-center xxl:border-none xxl:pt-0 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
+              <div className="xxl:flex-row xxl:items-center  xxl:pt-2 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
                 <Text className="font-medium">Mais Informações:</Text>
                 <Link
                   href={`/resultados/${event.id}`}
