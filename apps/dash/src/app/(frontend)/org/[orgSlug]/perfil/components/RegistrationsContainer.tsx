@@ -1,7 +1,7 @@
 "use client";
 import { For, Heading, Text } from "odinkit";
 import { EventRegistration, Organization, Team } from "@prisma/client";
-import EventGroupRegistrationCard from "./RegistrationModal/EventGroupRegistrationCard";
+import EventGroupRegistrationCard from "./RegistrationModal/EventGroup/EventGroupRegistrationCard";
 import { useEffect, useState } from "react";
 import { EventGroupRegistrationModal } from "./RegistrationModal/EventGroup/EventGroupRegistrationModal";
 import { EventRegistrationModal } from "./RegistrationModal/Event/EventRegistrationModal";

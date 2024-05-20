@@ -6,6 +6,7 @@ import { EventGroup, Gender } from "@prisma/client";
 import { normalizeEmail } from "odinkit";
 
 export const userSeed = async () => {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   const cities = await fetch(
     "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
   ).then((res) => res.json());

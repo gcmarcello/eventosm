@@ -1,8 +1,9 @@
 import EventModalities from "../../_shared/components/modalities/EventModalities";
 import { readEvents } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
+import { ModalityPageProvider } from "../../_shared/components/modalities/context/ModalityPageProvider";
 
-export default async function EventBatches({
+export default async function EventModalitiesPage({
   params,
 }: {
   params: { id: string };
@@ -30,5 +31,9 @@ export default async function EventBatches({
     },
   });
 
-  return <EventModalities event={event} modalities={modalities} />;
+  return (
+    <ModalityPageProvider event={event} modalities={modalities}>
+      <EventModalities />
+    </ModalityPageProvider>
+  );
 }

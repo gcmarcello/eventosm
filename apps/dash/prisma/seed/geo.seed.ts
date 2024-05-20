@@ -1,6 +1,7 @@
 import { prisma } from "../prisma";
 
 export const geoSeed = async () => {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   const cities = await fetch(
     "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
   ).then((res) => res.json());

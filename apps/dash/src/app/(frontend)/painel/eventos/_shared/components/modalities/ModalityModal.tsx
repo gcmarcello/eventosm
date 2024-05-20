@@ -1,3 +1,4 @@
+"use client";
 import {
   UpsertEventModalityDto,
   upsertEventModalityDto,
@@ -12,39 +13,64 @@ import {
   Form,
   Label,
   UseFormReturn,
+  showToast,
+  useAction,
+  useForm,
 } from "odinkit/client";
 
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 import { Button } from "odinkit/client";
 import { Input } from "odinkit/client";
 import { format } from "path";
 import { SubmitButton } from "odinkit";
 import { usePanel } from "../../../../_shared/components/PanelStore";
+import { ModalityPageContext } from "./context/ModalityPage.ctx";
+import { upsertEventModality } from "@/app/api/events/action";
+import { EventModality } from "@prisma/client";
+import ModalityRemovalModal from "./ModalityRemovalModal";
 
-export default function ModalityModal({
-  modalState,
-  trigger,
-  modalityForm,
-  isLoading,
-}: {
-  modalState: {
-    setIsModalityModalOpen: Dispatch<SetStateAction<boolean>>;
-    isModalityModalOpen: boolean;
-  };
-  trigger: (data: any) => void;
-  modalityForm: UseFormReturn<UpsertEventModalityDto>;
-  isLoading?: boolean;
-}) {
-  const ModalityField = useMemo(() => modalityForm.createField(), []);
+export default function ModalityModal() {
   const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
+    modalVisibility,
+    setModalVisibility,
+    modalityForm,
+    handleModalClose,
+    handleRemovalModalOpen,
+    modalities,
+  } = useContext(ModalityPageContext);
+
+  const {
+    data,
+    trigger: upsertModalityTrigger,
+    isMutating: upsertModalityLoading,
+  } = useAction({
+    action: upsertEventModality,
+    redirect: false,
+    onSuccess: () => {
+      showToast({
+        message: "Modalidade criada com sucesso!",
+        title: "Sucesso",
+        variant: "success",
+      });
+      handleModalClose();
+    },
+    onError: (error) =>
+      showToast({
+        message: error.message,
+        title: "Erro!",
+        variant: "error",
+      }),
+  });
+
+  const ModalityField = useMemo(() => modalityForm.createField(), []);
+
   return (
-    <Form hform={modalityForm} onSubmit={trigger}>
-      <Dialog
-        size="5xl"
-        open={modalState.isModalityModalOpen}
-        onClose={modalState.setIsModalityModalOpen}
+    <Dialog open={modalVisibility} onClose={handleModalClose}>
+      <ModalityRemovalModal />
+      <Form
+        className="flex h-full flex-col"
+        hform={modalityForm}
+        onSubmit={upsertModalityTrigger}
       >
         <DialogTitle>
           {modalityForm.getValues("id") ? "Atualizar" : "Criar"} Modalidade
@@ -53,25 +79,34 @@ export default function ModalityModal({
           Ao criar a modalidade, você poderá criar as categorias de inscrição no
           seu evento.
         </DialogDescription>
-        <DialogBody>
+        <DialogBody className="mt-2 grow">
           <ModalityField name="name">
             <Label>Nome</Label>
             <Input placeholder="Ex.: 5Km" />
-            <Description>{modalityForm.getValues("id")}</Description>
+            <Description></Description>
           </ModalityField>
         </DialogBody>
         <DialogActions>
-          <Button
-            color="white"
-            onClick={() => modalState.setIsModalityModalOpen(false)}
-          >
+          {modalityForm.watch("id") && modalities.length > 1 ? (
+            <Button
+              color="red"
+              onClick={() =>
+                modalityForm.watch("id")
+                  ? handleRemovalModalOpen(modalityForm.watch("id")!)
+                  : null
+              }
+            >
+              Remover Modalidade
+            </Button>
+          ) : null}
+          <Button color="white" onClick={() => setModalVisibility(false)}>
             Cancelar
           </Button>
-          <SubmitButton color={primaryColor?.tw.color}>
+          <SubmitButton>
             {modalityForm.getValues("id") ? "Salvar" : "Criar"}
           </SubmitButton>
-        </DialogActions>
-      </Dialog>
-    </Form>
+        </DialogActions>{" "}
+      </Form>
+    </Dialog>
   );
 }
