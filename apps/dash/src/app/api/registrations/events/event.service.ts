@@ -70,8 +70,9 @@ export async function createEventIndividualRegistration(
 
   if (!code) throw "Código de participante não encontrado";
 
-  const addonInfo =
-    addon && (await prisma.eventAddon.findUnique({ where: { id: addon.id } }));
+  const addonInfo = addon?.id
+    ? await prisma.eventAddon.findUnique({ where: { id: addon.id } })
+    : null;
 
   const registrationPrice: number = readRegistrationPrice({
     batch,
@@ -79,10 +80,6 @@ export async function createEventIndividualRegistration(
     modalityId: registrationInfo.modalityId,
     addon: addonInfo,
   });
-
-  const paymentId = registrationPrice
-    ? await createPayment({ registrations: [registrationId] })
-    : null;
 
   const status = registrationPrice ? "pending" : "active";
   const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
@@ -101,11 +98,19 @@ export async function createEventIndividualRegistration(
       batchId: batch.id,
       addonId: addon?.id,
       addonOption: addon?.option,
-      paymentId: paymentId?.id,
     },
   });
 
   if (!createRegistration) throw "Erro ao criar inscrição.";
+
+  const paymentId =
+    registrationPrice &&
+    (await createPayment({
+      registrations: [registrationId],
+      status: "pending",
+      userId: userSession.id,
+      value: registrationPrice,
+    }));
 
   const event = request.eventId
     ? await prisma.event.findUnique({

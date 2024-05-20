@@ -12,6 +12,7 @@ import {
   ModalityBatch,
 } from "@prisma/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
+import { cancelPayment } from "../payments/service";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -61,6 +62,10 @@ export async function updateRegistrationStatus(request: {
     data: { status: request.status },
   });
 
+  if (updatedRegistration.paymentId && request.status === "cancelled") {
+    await cancelPayment(updatedRegistration.paymentId);
+  }
+
   if (!updatedRegistration) throw "Erro ao atualizar inscrição.";
   return updatedRegistration;
 }
@@ -95,7 +100,7 @@ export function readRegistrationPrice({
     if (modalityBatch) return (totalPrice += modalityBatch.price ?? 0);
   }
 
-  return totalPrice;
+  return (totalPrice += batch.price);
 }
 
 export async function connectRegistrationToTeam(

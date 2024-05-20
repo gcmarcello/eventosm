@@ -39,6 +39,7 @@ model User {
   updatedAt             DateTime?              @updatedAt
   UserDocument          UserDocument[]
   EventCheckIn          EventCheckIn[]
+  Payment               Payment[]
 
   @@schema("public")
 }
@@ -526,8 +527,8 @@ model EventRegistration {
   eventId             String?                 @db.Uuid
   eventGroup          EventGroup?             @relation(fields: [eventGroupId], references: [id])
   eventGroupId        String?                 @db.Uuid
-  modality            EventModality?          @relation(fields: [modalityId], references: [id])
-  modalityId          String?                 @db.Uuid
+  modality            EventModality           @relation(fields: [modalityId], references: [id])
+  modalityId          String                  @db.Uuid
   category            ModalityCategory        @relation(fields: [categoryId], references: [id])
   categoryId          String                  @db.Uuid
   batch               EventRegistrationBatch  @relation(fields: [batchId], references: [id])
@@ -581,6 +582,9 @@ model Team {
 model Payment {
   id                String              @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
   paymentId         String?             @db.VarChar
+  value             Float
+  user              User                @relation(fields: [userId], references: [id])
+  userId            String              @db.Uuid
   status            PaymentStatus
   EventRegistration EventRegistration[]
   data              Json?               @db.Json

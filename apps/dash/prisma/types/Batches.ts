@@ -7,7 +7,11 @@ import {
 
 export type EventRegistrationBatchesWithCategoriesAndRegistrations =
   EventRegistrationBatch & {
-    CategoryBatch: (CategoryBatch & { category: ModalityCategory })[];
-    ModalityBatch: ModalityBatch[];
+    CategoryBatch: (CategoryBatch & {
+      category: ModalityCategory & { _count?: { EventRegistration: number } };
+    })[];
+    ModalityBatch: (ModalityBatch & {
+      _count?: { EventRegistration: number };
+    })[];
     _count: { EventRegistration: number };
   };

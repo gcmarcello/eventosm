@@ -49,7 +49,7 @@ export default async function TorneioPage({
         where: {
           eventGroupId: eventGroup.id,
           userId: userSession?.id,
-          status: { not: "cancelled" },
+          status: { notIn: ["cancelled", "pending"] },
         },
       })
     : null;

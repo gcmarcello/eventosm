@@ -1,52 +1,43 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
-import { Organization, EventRegistrationBatch, Event } from "@prisma/client";
 import {
   QrCodeIcon,
   UserCircleIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { formatPrice } from "../../../inscricoes/utils/price";
-import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { Button, Date } from "odinkit/client";
+import { useContext } from "react";
+import { EventPageContext } from "../context/EventPage.ctx";
 
-export default function RegistrationMobileButton({
-  event,
-  isUserRegistered,
-  batch,
-  organization,
-  nextBatch,
-  registrationCount,
-}: {
-  isUserRegistered: boolean;
-  event: Event;
-  batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
-  organization: Organization;
-  nextBatch: EventRegistrationBatch | null;
-  registrationCount: number;
-}) {
+export default function RegistrationMobileButton() {
+  const { event, organization, userRegistration, activeBatch, nextBatch } =
+    useContext(EventPageContext);
   const handleButtonColor = () => {
-    if (isUserRegistered) return "amber";
-    if (!batch) return "rose";
-    if (batch && batch.maxRegistrations <= batch._count.EventRegistration)
+    if (userRegistration) return "amber";
+    if (!activeBatch) return "rose";
+    if (
+      activeBatch &&
+      activeBatch.maxRegistrations <= activeBatch._count.EventRegistration
+    )
       return "rose";
 
     return organization.options.colors.primaryColor.tw.color;
   };
 
   const handleButtonName = () => {
-    if (isUserRegistered) return "Inscrito!";
+    if (userRegistration) return "Inscrito!";
     if (
-      batch &&
-      batch.maxRegistrations <= batch._count.EventRegistration &&
+      activeBatch &&
+      activeBatch.maxRegistrations <= activeBatch._count.EventRegistration &&
       !nextBatch
     )
       return "Inscrições Esgotadas!";
-    if (batch) return "Inscrição";
+    if (activeBatch) return "Inscrição";
 
-    if (!batch && nextBatch) return "Inscrições em Breve!";
-    if (!batch && !nextBatch) return "Inscrições Indisponíveis";
+    if (!activeBatch && nextBatch) return "Inscrições em Breve!";
+    if (!activeBatch && !nextBatch) return "Inscrições Indisponíveis";
   };
 
   return (
@@ -54,16 +45,17 @@ export default function RegistrationMobileButton({
       {({ open }) => (
         <>
           <Disclosure.Button
-            disabled={!batch && !nextBatch}
+            disabled={!activeBatch && !nextBatch}
             as="div"
             className="w-full p-2 shadow-sm"
           >
             <Button
               disabled={
-                (!batch && !nextBatch) ||
+                (!activeBatch && !nextBatch) ||
                 Boolean(
-                  batch &&
-                    batch.maxRegistrations <= batch._count.EventRegistration &&
+                  activeBatch &&
+                    activeBatch.maxRegistrations <=
+                      activeBatch._count.EventRegistration &&
                     !nextBatch
                 )
               }
@@ -71,7 +63,7 @@ export default function RegistrationMobileButton({
               color={handleButtonColor()}
             >
               {handleButtonName()}
-              {!batch && !nextBatch ? (
+              {!activeBatch && !nextBatch ? (
                 ""
               ) : open ? (
                 <ChevronDownIcon className="size-5" />
@@ -91,9 +83,9 @@ export default function RegistrationMobileButton({
           >
             <Disclosure.Panel>
               <div className=" bg-zinc-50 p-5">
-                {batch ? (
-                  batch.maxRegistrations <= batch._count.EventRegistration &&
-                  !nextBatch ? (
+                {activeBatch ? (
+                  activeBatch.maxRegistrations <=
+                    activeBatch._count.EventRegistration && !nextBatch ? (
                     "teste"
                   ) : (
                     <div className="space-y-2 rounded-lg bg-white p-2">
@@ -102,8 +94,8 @@ export default function RegistrationMobileButton({
                           Valor da inscrição:
                         </span>
                         <span className="text-sm  text-zinc-500">
-                          {batch.price ? (
-                            formatPrice(batch?.price)
+                          {activeBatch.price ? (
+                            formatPrice(activeBatch?.price)
                           ) : (
                             <span className="text-green-400">Grátis!</span>
                           )}
@@ -115,13 +107,13 @@ export default function RegistrationMobileButton({
                         </span>
                         <span className="text-xs">
                           <Date
-                            date={batch.dateEnd}
+                            date={activeBatch.dateEnd}
                             format="DD/MM/YYYY HH:mm"
                           />
                         </span>
                       </div>
                       <div className="flex justify-between gap-2 border-t border-zinc-200 pt-2">
-                        {isUserRegistered ? (
+                        {userRegistration ? (
                           <Button
                             href={`/perfil`}
                             plain
@@ -136,7 +128,7 @@ export default function RegistrationMobileButton({
                             Ver QR Code
                           </Button>
                         ) : (
-                          batch.registrationType !== "team" && (
+                          activeBatch.registrationType !== "team" && (
                             <Button
                               href={`/inscricoes/${event.id}`}
                               plain
@@ -152,7 +144,7 @@ export default function RegistrationMobileButton({
                             </Button>
                           )
                         )}
-                        {batch.registrationType !== "individual" && (
+                        {activeBatch.registrationType !== "individual" && (
                           <Button
                             className="flex grow gap-2 underline"
                             href={`/inscricoes/${event.id}?team=true`}

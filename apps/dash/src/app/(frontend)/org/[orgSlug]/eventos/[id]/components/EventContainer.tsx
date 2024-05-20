@@ -1,87 +1,25 @@
 "use client";
-import {
-  ChevronUpIcon,
-  ChevronDownIcon,
-  UserIcon,
-  UserGroupIcon,
-} from "@heroicons/react/20/solid";
 import clsx from "clsx";
-import {
-  BottomNavigation,
-  Text,
-  TabItem,
-  For,
-  date,
-  Badge,
-  Table,
-  Link,
-  Alertbox,
-} from "odinkit";
-import {
-  Dropdown,
-  DropdownButton,
-  DropdownMenu,
-  DropdownItem,
-  DropdownLabel,
-  DropdownSeparator,
-  DropdownDescription,
-  Button,
-  Date,
-  Dialog,
-  DialogActions,
-  DialogBody,
-  DialogDescription,
-  DialogTitle,
-  Input,
-  Label,
-  DisclosureAccordion,
-} from "odinkit/client";
-import { EventGroupWithInfo } from "prisma/types/Events";
-import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
-import {
-  Event,
-  EventModality,
-  EventRegistrationBatch,
-  Organization,
-} from "@prisma/client";
-import { useRef, useState } from "react";
+import { BottomNavigation, Text, TabItem, For, Link, Alertbox } from "odinkit";
+import { DisclosureAccordion } from "odinkit/client";
+
+import { useContext, useRef } from "react";
 import Image from "next/image";
 import {
-  CalendarDaysIcon,
-  CalendarIcon,
   CameraIcon,
   ClipboardDocumentListIcon,
-  MapPinIcon,
-  QrCodeIcon,
-  TrophyIcon,
-  UserCircleIcon,
-  UsersIcon,
 } from "@heroicons/react/24/outline";
 
-import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
-import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
-import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
-import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import { useOrg } from "../../../_shared/components/OrgStore";
-import { Field } from "@headlessui/react";
 import RegistrationMobileButton from "./RegistrationMobileButton";
 import { useSearchParams } from "next/navigation";
+import { EventHeader } from "./EventHeader";
+import { EventInfoSection } from "./EventInfoSection";
+import { RegistrationButton } from "./RegistrationButton";
+import { EventPageContext } from "../context/EventPage.ctx";
 
-export default function EventContainer({
-  event,
-  isUserRegistered,
-  batch,
-  organization,
-  nextBatch,
-  registrationCount,
-}: {
-  isUserRegistered: boolean;
-  event: Event & { EventModality: EventModality[] };
-  batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
-  organization: Organization;
-  nextBatch: EventRegistrationBatch | null;
-  registrationCount: number;
-}) {
+export default function EventContainer() {
+  const { event, organization } = useContext(EventPageContext);
   const generalTabs: TabItem[] = [
     {
       content: (
@@ -109,17 +47,12 @@ export default function EventContainer({
     },
   ];
 
-  const { image } = useOrg();
   const params = useSearchParams();
-  const contentRef = useRef(null);
 
   return (
     <>
-      <div
-        className={clsx(!image && "bg-slate-200", "xxl:mx-40 h-fit bg-cover")}
-      >
+      <div className={clsx("bg-slate-200", "xxl:mx-40 h-fit bg-cover")}>
         <div
-          ref={contentRef}
           className={clsx("mb-4 rounded-b bg-zinc-50 shadow-md   lg:bg-white ")}
         >
           {params.get("registered") && (
@@ -145,155 +78,11 @@ export default function EventContainer({
             </div>
 
             <div className="flex w-full  flex-col items-start gap-1  px-3 pt-1 lg:mt-5  lg:px-0">
-              <div className=" flex w-full items-center justify-between gap-2 text-base font-semibold text-gray-800 lg:w-auto lg:text-2xl">
-                <>{event.name} </>
-                <Badge color="purple" className="my-auto">
-                  Evento
-                </Badge>
-              </div>
+              <EventHeader />
 
-              <div className="mt-1 grid w-full grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3 ">
-                <Text className="flex items-center gap-2 text-sm lg:text-start">
-                  <CalendarIcon
-                    style={{
-                      color: organization.options.colors.primaryColor.hex,
-                    }}
-                    className="size-4 lg:size-5"
-                  />
-                  {event.dateStart.toISOString() ===
-                  event.dateEnd.toISOString() ? (
-                    <>
-                      <Date date={event.dateStart} format="DD/MM/YYYY" />
-                    </>
-                  ) : (
-                    <>
-                      <Date date={event.dateStart} format="DD/MM/YYYY" /> -{" "}
-                      <Date date={event.dateEnd} format="DD/MM/YYYY" />
-                    </>
-                  )}
-                </Text>
+              <EventInfoSection />
 
-                <Text className="flex items-center gap-2 text-sm lg:text-start">
-                  <TrophyIcon
-                    style={{
-                      color: organization.options.colors.primaryColor.hex,
-                    }}
-                    className="size-4 lg:size-5"
-                  />
-                  {event.EventModality.length > 1
-                    ? `${event.EventModality.length} Modalidades`
-                    : `Modalidade ${event.EventModality[0]?.name}`}
-                </Text>
-
-                <div className="col-span-2 flex grid-cols-2 justify-between lg:grid ">
-                  <Text className="flex items-center gap-2 text-sm lg:text-start">
-                    <MapPinIcon
-                      style={{
-                        color: organization.options.colors.primaryColor.hex,
-                      }}
-                      className="size-4 lg:size-5"
-                    />
-                    {`${event.location}`}
-                  </Text>
-                  <div className="flex gap-2">
-                    <Link
-                      target="_blank"
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
-                    >
-                      <FacebookIcon size={22} />
-                    </Link>
-                    <Link
-                      target="_blank"
-                      href={`https://twitter.com/intent/tweet?text=Olha+esse+evento%3A+${encodeURIComponent(event.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
-                    >
-                      <XIcon size={22} />
-                    </Link>
-                    <Link
-                      target="_blank"
-                      href={`https://api.whatsapp.com/send?text=Olha+esse+evento%3A+${encodeURIComponent(event.name)}+Acesse+no+link%3A++${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/campeonatos/${event.slug}`)}`}
-                    >
-                      <WhatsappIcon size={23} />
-                    </Link>
-                    <Text className="hidden lg:block">Compartilhe!</Text>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 hidden w-full rounded-md border border-zinc-100 p-3 lg:block">
-                <div className="text-sm font-medium">Inscrições</div>
-                <div className="my-2 space-y-2">
-                  {isUserRegistered && (
-                    <Button
-                      href={`/perfil`}
-                      className={"w-full"}
-                      color={organization.options.colors.primaryColor.tw.color}
-                    >
-                      <QrCodeIcon
-                        color={organization.options.colors.primaryColor.hex}
-                        className="size-6"
-                      />
-                      Ver QR Code
-                    </Button>
-                  )}
-                  {!isUserRegistered && batch ? (
-                    batch.maxRegistrations <= batch._count.EventRegistration &&
-                    !nextBatch ? (
-                      <Button disabled color="red" className={"w-full"}>
-                        Inscrições Esgotadas
-                      </Button>
-                    ) : (
-                      <div className="flex justify-between gap-5 pt-2">
-                        {batch.registrationType !== "team" && (
-                          <Button
-                            href={`/inscricoes/${event.id}`}
-                            className={"grow"}
-                            color={
-                              organization.options.colors.primaryColor.tw.color
-                            }
-                          >
-                            <UserCircleIcon
-                              color={
-                                organization.options.colors.primaryColor.hex
-                              }
-                              className="size-6"
-                            />
-                            Inscrição Individual
-                          </Button>
-                        )}
-                        {batch.registrationType !== "individual" && (
-                          <Button
-                            href={`/inscricoes/${event.id}?team=true`}
-                            className={"grow"}
-                            color={
-                              organization.options.colors.secondaryColor.tw
-                                .color
-                            }
-                          >
-                            <UserGroupIcon
-                              color={
-                                organization.options.colors.primaryColor.hex
-                              }
-                              className="size-6"
-                            />
-                            Inscrição de Equipe
-                          </Button>
-                        )}
-                      </div>
-                    )
-                  ) : nextBatch ? (
-                    <Button className={"w-full"} disabled color="rose">
-                      Inscrições em breve{" - "}
-                      <Date
-                        date={nextBatch.dateStart}
-                        format="DD/MM/YYYY HH:mm"
-                      />
-                    </Button>
-                  ) : isUserRegistered ? null : (
-                    <Button className={"w-full"} disabled color="rose">
-                      Inscrições Indisponíveis
-                    </Button>
-                  )}
-                </div>
-              </div>
+              <RegistrationButton />
 
               <div className="xxl:flex-row xxl:items-center xxl:border-none xxl:pt-0 my-2 flex w-full flex-col gap-2 border-t border-zinc-200 pt-2">
                 <Text className="font-medium">Mais Informações:</Text>
@@ -346,14 +135,7 @@ export default function EventContainer({
         </div>
       </div>
       <BottomNavigation className="lg:hidden">
-        <RegistrationMobileButton
-          organization={organization}
-          batch={batch}
-          nextBatch={nextBatch}
-          isUserRegistered={isUserRegistered}
-          registrationCount={registrationCount}
-          event={event}
-        />
+        <RegistrationMobileButton />
       </BottomNavigation>
     </>
   );

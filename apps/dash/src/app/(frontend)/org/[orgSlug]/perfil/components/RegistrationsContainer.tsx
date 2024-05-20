@@ -21,23 +21,13 @@ export default function RegistrationsContainer({
   organization: Organization;
   teams: Team[];
 }) {
-  const [modalInfo, setModalInfo] = useState<EventRegistrationWithInfo | null>(
-    null
-  );
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  function handleModalOpen(registration: EventRegistrationWithInfo) {
-    setModalInfo(registration);
-    setModalOpen(true);
-  }
-
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 divide-y divide-zinc-200">
       <div>
         <Heading>Inscrições Ativas</Heading>
         {registrations.filter((reg) => reg.status === "active").length > 0 ? (
           <div className="mt-2 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-            <For each={registrations}>
+            <For each={registrations.filter((reg) => reg.status === "active")}>
               {(registration) => (
                 <RegistrationModalProvider
                   teams={teams}
@@ -63,7 +53,7 @@ export default function RegistrationsContainer({
           <Text>Nenhuma inscrição ativa.</Text>
         )}
       </div>
-      <div>
+      <div className="py-3">
         <Heading>Inscrições Pendentes</Heading>
         {registrations.filter((reg) => reg.status === "active").length > 0 ? (
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -79,9 +69,15 @@ export default function RegistrationsContainer({
                     organization={organization}
                   >
                     {registration.eventGroupId ? (
-                      <EventGroupRegistrationCard />
+                      <>
+                        <EventGroupRegistrationCard />
+                        <EventGroupRegistrationModal />
+                      </>
                     ) : (
-                      <EventRegistrationCard />
+                      <>
+                        <EventRegistrationCard />
+                        <EventRegistrationModal />
+                      </>
                     )}
                   </RegistrationModalProvider>
                 );

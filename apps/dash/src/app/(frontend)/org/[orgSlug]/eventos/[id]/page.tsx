@@ -6,6 +6,7 @@ import { Alertbox, isUUID } from "odinkit";
 import EventContainer from "./components/EventContainer";
 import OrgFooter from "../../../_shared/OrgFooter";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
+import { EventPageProvider } from "./context/EventPageProvider";
 
 export default async function EventPage({
   params,
@@ -26,41 +27,31 @@ export default async function EventPage({
           slug: params.id,
           Organization: { slug: params.orgSlug },
         },
-    include: { EventModality: true },
+    include: {
+      EventModality: { include: { modalityCategory: true } },
+      EventRegistrationBatch: {
+        include: { _count: { select: { EventRegistration: true } } },
+      },
+    },
   });
   const organization = await prisma.organization.findUnique({
     where: { slug: params.orgSlug },
     include: { OrgCustomDomain: true },
   });
+
   if (!event || !organization) return notFound();
 
-  const isUserRegistered = userSession?.id
-    ? (
-        await prisma.eventRegistration.findMany({
-          where: {
-            eventId: event.id,
-            userId: userSession?.id,
-            status: { not: "cancelled" },
-          },
-        })
-      ).length > 0
-    : false;
+  const userRegistration = userSession?.id
+    ? await prisma.eventRegistration.findFirst({
+        where: {
+          eventId: event.id,
+          userId: userSession?.id,
+          status: { notIn: ["cancelled"] },
+        },
+      })
+    : null;
 
-  const batch = await readActiveBatch({
-    where: { eventId: event.id },
-  });
-
-  const nextBatch = await readNextBatch({
-    where: { eventId: event.id },
-  });
-
-  const registrationCount = await prisma.eventRegistration.count({
-    where: {
-      eventId: event.id,
-      batchId: batch?.id,
-      status: "active",
-    },
-  });
+  const activeBatch = await readActiveBatch({ where: { eventId: event.id } });
 
   return (
     <>
@@ -68,14 +59,14 @@ export default async function EventPage({
         className="grow bg-slate-200 lg:px-16 lg:pb-8 "
         organization={organization}
       >
-        <EventContainer
-          event={event}
-          isUserRegistered={isUserRegistered}
-          batch={batch}
-          nextBatch={nextBatch}
-          registrationCount={registrationCount}
+        <EventPageProvider
           organization={organization}
-        />
+          event={event}
+          userRegistration={userRegistration}
+          activeBatch={activeBatch}
+        >
+          <EventContainer />
+        </EventPageProvider>
       </OrgPageContainer>
     </>
   );

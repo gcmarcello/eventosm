@@ -14,6 +14,14 @@ export class PaymentService {
     });
   }
 
+  async deletePayment(body: { paymentId: string }) {
+    return await this.asaasService.request({
+      body,
+      url: "/payments",
+      method: "delete",
+    });
+  }
+
   async createCreditCardPayment(body: CreateCreditCardPayment) {
     return await this.asaasService.request({
       body,

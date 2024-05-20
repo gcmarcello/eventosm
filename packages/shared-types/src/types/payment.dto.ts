@@ -12,7 +12,7 @@ export class CreatePayment {
   @MinLength(7)
   customer: string;
   @IsEnum(["CREDIT_CARD", "PIX", "BOLETO"])
-  billingType: string;
+  billingType: PaymentType;
   @IsPositive()
   value: number;
   @Matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
@@ -77,6 +77,8 @@ export class CreateCreditCardPayment extends CreatePayment {
 export class UpdatePayment extends CreatePayment {
   id: string;
 }
+
+export type PaymentType = ["CREDIT_CARD", "PIX", "BOLETO"][number];
 
 export class SplitPayment {
   walletId: string;
