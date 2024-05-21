@@ -5,7 +5,12 @@ import {
   upsertEventModalityCategoriesDto,
   upsertEventModalityDto,
 } from "@/app/api/events/dto";
-import { Button, showToast, useAction } from "odinkit/client";
+import {
+  Button,
+  DropdownSeparator,
+  showToast,
+  useAction,
+} from "odinkit/client";
 import { useForm } from "odinkit/client";
 import {
   EventGroupWithEvents,
@@ -34,8 +39,13 @@ export default function EventModalities() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [activeModality, setActiveModality] = useState("");
 
-  const { setModalVisibility, modalityForm, modalities, handleModalOpen } =
-    useContext(ModalityPageContext);
+  const {
+    setModalVisibility,
+    modalityForm,
+    modalities,
+    handleModalOpen,
+    handleRemovalModalOpen,
+  } = useContext(ModalityPageContext);
 
   const categoryForm = useForm({
     mode: "onChange",
@@ -146,6 +156,14 @@ export default function EventModalities() {
                     }}
                   >
                     Editar
+                  </DropdownItem>
+                  <DropdownSeparator />
+                  <DropdownItem
+                    onClick={() => {
+                      handleModalOpen(info.row.original);
+                    }}
+                  >
+                    <span className="text-red-600">Remover</span>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
