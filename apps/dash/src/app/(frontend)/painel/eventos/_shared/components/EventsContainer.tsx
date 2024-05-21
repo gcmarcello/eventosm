@@ -110,23 +110,6 @@ export default function EventsContainer({
             className="my-2"
             data={eventGroups}
             columns={(columnHelper) => [
-              columnHelper.accessor("imageUrl", {
-                id: "image",
-                header: "",
-                enableSorting: false,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) =>
-                  info.getValue() && (
-                    <Image
-                      width={56}
-                      height={56}
-                      className="rounded-full"
-                      src={info.getValue()}
-                      alt={`event-${info.row.original.slug}`}
-                    />
-                  ),
-              }),
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
@@ -135,9 +118,18 @@ export default function EventsContainer({
                 enableGlobalFilter: true,
                 cell: (info) => (
                   <Link
-                    className="underline"
+                    className="flex items-center gap-3 underline"
                     href={`/painel/eventos/grupos/${info.row.original.id}/geral`}
                   >
+                    {info.row.original.imageUrl && (
+                      <Image
+                        width={56}
+                        height={56}
+                        className="rounded-full"
+                        src={info.row.original.imageUrl}
+                        alt={`event-${info.row.original.slug}`}
+                      />
+                    )}
                     {info.getValue()}
                   </Link>
                 ),
@@ -197,23 +189,6 @@ export default function EventsContainer({
             className="my-2"
             data={events}
             columns={(columnHelper) => [
-              columnHelper.accessor("imageUrl", {
-                id: "image",
-                header: "",
-                enableSorting: true,
-                enableGlobalFilter: false,
-                enableColumnFilter: false,
-                cell: (info) =>
-                  info.getValue() && (
-                    <Image
-                      width={56}
-                      height={56}
-                      className="rounded-full"
-                      src={info.getValue()}
-                      alt={`event-${info.row.original.slug}`}
-                    />
-                  ),
-              }),
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
@@ -222,9 +197,18 @@ export default function EventsContainer({
                 enableColumnFilter: false,
                 cell: (info) => (
                   <Link
-                    className="underline"
+                    className="flex items-center gap-3 underline"
                     href={`/painel/eventos/${info.row.original.id}/geral`}
                   >
+                    {info.row.original.imageUrl && (
+                      <Image
+                        width={56}
+                        height={56}
+                        className="rounded-full"
+                        src={info.row.original.imageUrl}
+                        alt={`event-${info.row.original.slug}`}
+                      />
+                    )}
                     {info.getValue()}
                   </Link>
                 ),

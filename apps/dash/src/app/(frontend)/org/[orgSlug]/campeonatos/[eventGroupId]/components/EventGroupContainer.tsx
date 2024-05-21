@@ -89,6 +89,7 @@ export default function EventGroupContainer({
         <div className="my-2 text-sm">
           <Table
             data={eventGroup.Event}
+            disableMobileFilters={true}
             pagination={false}
             search={false}
             columns={(columnHelper) => [
@@ -130,26 +131,6 @@ export default function EventGroupContainer({
                 enableGlobalFilter: true,
                 cell: (info) => info.getValue(),
               }),
-              /* columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-
-                enableSorting: true,
-                enableGlobalFilter: true,
-                cell: (info) =>
-                  eventGroup.Event.find((e) => e.id === info.getValue())
-                    ?.description ? (
-                    <Button
-                      plain
-                      type="button"
-                      onClick={() => handleEventModal(info.getValue())}
-                    >
-                      Detalhes
-                    </Button>
-                  ) : (
-                    "Informações em breve."
-                  ),
-              }), */
             ]}
           />
         </div>

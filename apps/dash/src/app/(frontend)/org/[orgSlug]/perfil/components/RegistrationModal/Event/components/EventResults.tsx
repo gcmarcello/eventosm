@@ -1,12 +1,13 @@
 import { Event, EventResult } from "@prisma/client";
 import clsx from "clsx";
 import { Heading, LoadingSpinner } from "odinkit";
-import EventGroupUserResultList from "./EventGroupUserResultList";
 import { useAction } from "odinkit/client";
 import { readUserEventGroupResults } from "@/app/api/results/action";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { EventRegistrationModalContext } from "../../context/RegistrationModal.ctx";
 
-export function EventGroupResults({ eventGroupId }: { eventGroupId: string }) {
+export function EventResults() {
+  const { registration } = useContext(EventRegistrationModalContext);
   const {
     data: eventGroupResultsData,
     trigger: eventGroupResultsTrigger,
@@ -16,7 +17,7 @@ export function EventGroupResults({ eventGroupId }: { eventGroupId: string }) {
   });
 
   useEffect(() => {
-    eventGroupResultsTrigger({ eventGroupId });
+    eventGroupResultsTrigger({ eventGroupId: registration.eventGroupId! });
   }, []);
 
   function handlePositionCircleColor(position: number) {
@@ -56,10 +57,6 @@ export function EventGroupResults({ eventGroupId }: { eventGroupId: string }) {
             {eventGroupResultsData?.position}
           </div>
         </div>
-      </div>
-      <div className="ps-2">
-        <Heading>Etapas</Heading>
-        <EventGroupUserResultList results={eventGroupResultsData.results} />
       </div>
     </div>
   );

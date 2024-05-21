@@ -137,7 +137,6 @@ export function GalleryForm({
                             }
                           }}
                           onChange={(item) => {
-                            console.log(item);
                             if (!item) return;
                             setSelectedEvent(item ?? null);
                             handleDisableComboboxes();

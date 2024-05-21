@@ -5,6 +5,7 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import { redirect } from "next/navigation";
 import GeralForm from "../geral/form";
 import EventModalities from "../../../_shared/components/modalities/EventModalities";
+import { ModalityPageProvider } from "../../../_shared/components/modalities/context/ModalityPageProvider";
 
 export default async function ModalitiesPage({
   params,
@@ -17,26 +18,33 @@ export default async function ModalitiesPage({
 
   const eventGroup = await prisma.eventGroup.findUnique({
     where: { id: params.id },
-    include: { Event: true },
-  });
-
-  if (!eventGroup) return redirect("/painel/eventos");
-
-  const modalities = await prisma.eventModality.findMany({
-    where: { eventGroupId: eventGroup.id },
     include: {
-      modalityCategory: {
+      Event: true,
+      EventModality: {
         include: {
+          modalityCategory: {
+            include: {
+              _count: {
+                select: { EventRegistration: { where: { status: "active" } } },
+              },
+            },
+          },
           _count: {
             select: { EventRegistration: { where: { status: "active" } } },
           },
         },
       },
-      _count: {
-        select: { EventRegistration: { where: { status: "active" } } },
-      },
     },
   });
 
-  return <EventModalities eventGroup={eventGroup} modalities={modalities} />;
+  if (!eventGroup) return redirect("/painel/eventos");
+
+  return (
+    <ModalityPageProvider
+      modalities={eventGroup.EventModality}
+      eventGroup={eventGroup}
+    >
+      <EventModalities />
+    </ModalityPageProvider>
+  );
 }
