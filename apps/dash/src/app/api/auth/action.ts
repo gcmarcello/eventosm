@@ -4,7 +4,6 @@ import { LoginDto, SignupDto } from "./dto";
 import { SignupMiddleware } from "@/middleware/functions/signup.middleware";
 import * as service from "./service";
 import { cookies } from "next/headers";
-import path from "path";
 import { ActionResponse } from "odinkit";
 import { User } from "@prisma/client";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
