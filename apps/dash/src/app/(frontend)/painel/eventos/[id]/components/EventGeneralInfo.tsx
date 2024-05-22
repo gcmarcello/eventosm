@@ -26,6 +26,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 import { upsertEvent } from "@/app/api/events/action";
 import { uploadFiles } from "@/app/api/uploads/action";
+import { RTE } from "../../../_shared/RichText";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -210,12 +211,12 @@ export default function EventGeneralInfo({
         </FieldGroup>
         <Field className="col-span-2" name="description">
           <Label>Descrição do Evento</Label>
-          <RichTextEditor />
+          <RTE />
           <ErrorMessage />
         </Field>
         <Field className="col-span-2" name="rules">
           <Label>Regulamento do Evento</Label>
-          <RichTextEditor />
+          <RTE />
           <ErrorMessage />
         </Field>
       </Fieldset>

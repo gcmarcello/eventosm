@@ -1,7 +1,7 @@
 "use client";
 import { upsertNews } from "@/app/api/news/action";
 import { upsertNewsDto } from "@/app/api/news/dto";
-import { uploadFiles } from "@/app/api/uploads/action";
+import { nestUpload, uploadFiles } from "@/app/api/uploads/action";
 import { News } from "@prisma/client";
 import { FileImagePreview, SubmitButton, Text, slugify } from "odinkit";
 import {
@@ -22,6 +22,7 @@ import {
 import { OrganizationWithDomain } from "prisma/types/Organization";
 import { useEffect, useMemo } from "react";
 import { z } from "zod";
+import { RTE } from "../../_shared/RichText";
 
 export function NewsForm({
   news,
@@ -171,7 +172,7 @@ export function NewsForm({
             </Field>
             <Field name="content" className="col-span-1 lg:col-span-2">
               <Label>Descrição do Grupo de Eventos</Label>
-              <RichTextEditor />
+              <RTE />
             </Field>
           </div>
         </FieldGroup>
