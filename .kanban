@@ -29,9 +29,9 @@
       "title": "To do",
       "cards": [
         {
-          "id": "9789a2d4-2c1f-430b-8afa-fa511143cdbf",
+          "id": "f71cfea7-a94e-4029-a863-444798bfe180",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Remover modalidade",
+          "title": "Confirmacao antes de revisar",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -47,36 +47,9 @@
           "comments": []
         },
         {
-          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Upload de arquivos no tinymce",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "f71cfea7-a94e-4029-a863-444798bfe180",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Confirmacao antes de revisar",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "67afd20e-82f8-4c4d-8a0c-c62b24489459",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Eventos em destaque",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "e55c2ab2-98e5-4856-83f5-2c6435ef38cd",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Pagina de Eventos",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -120,6 +93,33 @@
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
       "cards": [
+        {
+          "id": "e55c2ab2-98e5-4856-83f5-2c6435ef38cd",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Pagina de Eventos",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Upload de arquivos no tinymce",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "9789a2d4-2c1f-430b-8afa-fa511143cdbf",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Remover modalidade",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
         {
           "id": "2a744096-7e91-44df-8e13-788982f4ac66",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
@@ -331,6 +331,15 @@
           "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Mudar url do primeiro step (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "eb33f2ba-33aa-4c8d-af23-4060bd171f3d",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Bug de ultima pagina com filtros (tabela)",
           "description": "",
           "labels": [],
           "checkboxes": [],

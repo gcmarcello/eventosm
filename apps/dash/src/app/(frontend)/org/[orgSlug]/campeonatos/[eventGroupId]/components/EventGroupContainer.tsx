@@ -200,7 +200,9 @@ export default function EventGroupContainer({
       </Dialog>
       <div
         ref={contentRef}
-        className={clsx("xxl:mx-40 rounded-b bg-zinc-50   shadow-md  lg:mb-4")}
+        className={clsx(
+          "xxl:mx-40 rounded-b bg-zinc-50 shadow-md   lg:mb-4  lg:bg-white"
+        )}
       >
         {params.get("registered") && (
           <Alertbox className="py-3 lg:mx-auto" type="error" dismissible>
