@@ -1,5 +1,6 @@
 "use client";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
+import dayjs from "dayjs";
 import { Badge, Table, date } from "odinkit";
 import {
   Date,
@@ -20,22 +21,34 @@ export function RegistrationsTable({
   return (
     <Table
       xlsx={{
+        fileName: `Inscrições - ${date(dayjs().toDate(), "DD-MM-YYYY")}`,
         data:
           registrations?.map((registration) => ({
-            Número: registration.code,
-            Document: registration.user?.document,
+            Número: isNaN(Number(registration.code))
+              ? registration.code
+              : Number(registration.code),
+            Documento: registration.user?.document,
             Nome: registration.user?.fullName,
             Cidade: registration.user?.info?.city?.name,
-            Status: registration.status,
+            Status: (() => {
+              switch (registration.status) {
+                case "active":
+                  return "Ativa";
+                case "cancelled":
+                  return "Cancelada";
+                case "pending":
+                  return "Pendente";
+                case "suspended":
+                  return "Suspensa";
+                default:
+                  break;
+              }
+            })(),
             Modalidade: registration.modality?.name,
             Categoria: registration.category?.name,
             Telefone: registration.user?.phone,
             Equipe: registration.team?.name,
-            "Data de Inscrição": date(
-              registration.createdAt,
-              "DD/MM/YYYY HH:mm",
-              true
-            ),
+            "Data de Inscrição": registration.createdAt,
             Kit: registration.addon?.name,
             "Opção do Kit": registration.addonOption,
           })) || [],
