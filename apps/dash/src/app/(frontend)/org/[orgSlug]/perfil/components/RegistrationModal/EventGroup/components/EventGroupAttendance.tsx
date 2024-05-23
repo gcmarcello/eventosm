@@ -89,6 +89,12 @@ export function EventGroupAttendance({
           default:
             break;
         }
+      } else {
+        return (
+          <Badge className="my-auto" color="red">
+            Ausente
+          </Badge>
+        );
       }
     }
   }
