@@ -47,7 +47,7 @@ export default async function EventGroupPanelLayout({
         <EventNavbar event={event} organization={request.organization} />
       </div>
 
-      {children}
+      <div className="pb-20 lg:pb-8">{children}</div>
 
       <BottomNavigation className="flex flex-row-reverse justify-between gap-3 p-3 px-3">
         <EventPublishing
