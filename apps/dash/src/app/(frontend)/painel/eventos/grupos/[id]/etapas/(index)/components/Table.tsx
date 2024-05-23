@@ -30,6 +30,7 @@ import {
 } from "@heroicons/react/24/outline";
 import ConfirmEventFinishModal from "./ConfirmEventFinishModal";
 import { set } from "lodash";
+import ConfirmEventReviewModal from "./ConfirmEventReviewModal";
 
 export function SubeventsTable({
   eventGroup,
@@ -39,30 +40,17 @@ export function SubeventsTable({
   organization: OrganizationWithDomain;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const {
-    data: eventStatusData,
-    trigger: eventStatusTrigger,
-    isMutating,
-  } = useAction({
-    action: updateEventStatus,
-    onSuccess: () =>
-      showToast({
-        message: "Status do evento atualizado com sucesso!",
-        variant: "success",
-        title: "Sucesso!",
-      }),
-    onError: (error) =>
-      showToast({
-        message: error.message,
-        variant: "error",
-        title: "Erro!",
-      }),
-  });
 
   function handleFinishEvent(event: Event) {
     setSelectedEvent(event);
     setIsModalOpen(true);
+  }
+
+  function handleReviewEvent(event: Event) {
+    setSelectedEvent(event);
+    setIsReviewModalOpen(true);
   }
 
   return (
@@ -71,6 +59,14 @@ export function SubeventsTable({
         <ConfirmEventFinishModal
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
+          event={selectedEvent}
+        />
+      )}
+
+      {selectedEvent && (
+        <ConfirmEventReviewModal
+          isOpen={isReviewModalOpen}
+          setIsOpen={setIsReviewModalOpen}
           event={selectedEvent}
         />
       )}
@@ -154,13 +150,7 @@ export function SubeventsTable({
                         disabled={info.row.original.status === "review"}
                       >
                         <DropdownLabel
-                          onClick={() =>
-                            eventStatusTrigger({
-                              status: "review",
-                              eventId: info.row.original.id,
-                              eventGroupId: eventGroup.id,
-                            })
-                          }
+                          onClick={() => handleReviewEvent(info.row.original)}
                         >
                           Revisar
                         </DropdownLabel>

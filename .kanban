@@ -56,18 +56,9 @@
           "comments": []
         },
         {
-          "id": "b11cafb0-4477-4776-8c9f-0d8482f2221d",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Busca nas tabelas",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "c7551f18-70eb-4d92-9bd8-830a7c87e20a",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Passo do kit opcional",
+          "title": "Refatorar Multistep Form",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -78,7 +69,17 @@
     {
       "id": "b3345057-2ade-4c51-b359-446bcfd7648b",
       "title": "On going",
-      "cards": []
+      "cards": [
+        {
+          "id": "b11cafb0-4477-4776-8c9f-0d8482f2221d",
+          "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
+          "title": "Busca nas tabelas",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     },
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
