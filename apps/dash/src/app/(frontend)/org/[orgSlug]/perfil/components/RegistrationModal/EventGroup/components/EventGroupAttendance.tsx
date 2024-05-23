@@ -90,11 +90,21 @@ export function EventGroupAttendance({
             break;
         }
       } else {
-        return (
-          <Badge className="my-auto" color="red">
-            Ausente
-          </Badge>
-        );
+        switch (absenceJustification?.status) {
+          case "approved":
+            return (
+              <Badge className="my-auto" color="purple">
+                Ausência justificada
+              </Badge>
+            );
+
+          default:
+            return (
+              <Badge className="my-auto" color="red">
+                Ausente
+              </Badge>
+            );
+        }
       }
     }
   }
