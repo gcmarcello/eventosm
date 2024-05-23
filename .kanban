@@ -56,15 +56,6 @@
           "comments": []
         },
         {
-          "id": "aac65a85-8f93-4ea0-9a62-02218522b535",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Modal do kit",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "05122da0-f7ea-4297-babf-564081390c43",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Padding cadastro sem login",
@@ -81,13 +72,32 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
+        },
+        {
+          "id": "c7551f18-70eb-4d92-9bd8-830a7c87e20a",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Passo do kit opcional",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
         }
       ]
     },
     {
       "id": "b3345057-2ade-4c51-b359-446bcfd7648b",
       "title": "On going",
-      "cards": []
+      "cards": [
+        {
+          "id": "aac65a85-8f93-4ea0-9a62-02218522b535",
+          "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
+          "title": "Modal do kit",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     },
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
