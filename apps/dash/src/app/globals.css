@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  padding-right: 0px !important;
+}
+
 [type="text"]:focus,
 [type="email"]:focus,
 [type="url"]:focus,
