@@ -47,7 +47,7 @@ export default function EventAddons({
         data={addons}
         link={
           <Button type="button" onClick={() => handleAddonModal(null)}>
-            Novo Kit
+            Novo <span className="hidden lg:inline-block">Kit</span>
           </Button>
         }
         columns={(columnHelper) => [
@@ -56,18 +56,21 @@ export default function EventAddons({
             header: "Nome",
             enableSorting: true,
             enableGlobalFilter: true,
+            enableColumnFilter: false,
             cell: (info) => info.getValue(),
           }),
           columnHelper.accessor("price", {
             id: "price",
             header: "Preço",
-
+            enableColumnFilter: false,
             cell: (info) => formatPrice(info.getValue()),
           }),
           columnHelper.accessor("id", {
             id: "id",
             header: "Opções",
             enableSorting: false,
+            enableColumnFilter: false,
+            enableGlobalFilter: false,
             cell: (info) => (
               <Dropdown>
                 <DropdownButton plain>
