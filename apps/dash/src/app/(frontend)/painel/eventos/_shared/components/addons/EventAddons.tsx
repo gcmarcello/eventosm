@@ -26,9 +26,6 @@ export default function EventAddons({
 }) {
   const [isAddonModalOpen, setIsAddonModalOpen] = useState(false);
   const [selectedAddon, setSelectedAddon] = useState<EventAddon | null>(null);
-  const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
 
   function handleAddonModal(addon: EventAddon | null) {
     setSelectedAddon(addon);
@@ -44,18 +41,15 @@ export default function EventAddons({
         eventId={eventId}
         addon={selectedAddon}
       />
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          color={primaryColor?.tw.color}
-          onClick={() => handleAddonModal(null)}
-        >
-          Novo Kit
-        </Button>
-      </div>
+
       <Table
         striped
         data={addons}
+        link={
+          <Button type="button" onClick={() => handleAddonModal(null)}>
+            Novo Kit
+          </Button>
+        }
         columns={(columnHelper) => [
           columnHelper.accessor("name", {
             id: "name",

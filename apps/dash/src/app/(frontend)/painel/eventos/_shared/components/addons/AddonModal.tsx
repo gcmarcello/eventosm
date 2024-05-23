@@ -28,6 +28,7 @@ import { z } from "odinkit";
 import { useFieldArray } from "react-hook-form";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { usePanel } from "../../../../_shared/components/PanelStore";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 const schema = upsertEventAddonDto.omit({ image: true }).merge(
   z.object({
@@ -143,16 +144,27 @@ export default function AddonModal({
                   {fields.map((field, index) => (
                     <Field key={field.id} name={`options.${index}.name`}>
                       <Label>Opção {index + 1}</Label>
-                      <Input />
-                      <Button onClick={() => remove(index)}>
-                        Remover {index}
-                      </Button>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="grow">
+                          <Input />
+                          <ErrorMessage />
+                        </div>
+                        <Button
+                          plain
+                          className={"mb-1 mt-[11px]"}
+                          onClick={() => remove(index)}
+                        >
+                          <div>
+                            <XCircleIcon className="size-6 text-red-600" />
+                          </div>
+                        </Button>
+                      </div>
                     </Field>
                   ))}
 
                   <div className="mt-3 flex justify-end">
                     <Button
-                      className="flex gap-2 "
+                      className="flex grow gap-2 "
                       onClick={() => append({ name: "" })}
                     >
                       <PlusIcon className="size-5" />

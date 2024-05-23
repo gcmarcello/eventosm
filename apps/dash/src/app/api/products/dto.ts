@@ -27,7 +27,7 @@ export const upsertEventAddonDto = z.object({
   description: z.string().optional(),
   price: z.string().regex(/^\d+(?:,\d+)?$/g),
   status: z.nativeEnum(EventStatus).optional(),
-  options: z.array(z.object({ name: z.string() })).optional(),
+  options: z.array(z.object({ name: z.string().min(1) })).optional(),
 });
 
 export type UpsertEventAddonDto = z.infer<typeof upsertEventAddonDto>;
