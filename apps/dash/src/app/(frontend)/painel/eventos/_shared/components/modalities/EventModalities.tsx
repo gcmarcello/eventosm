@@ -133,9 +133,15 @@ export default function EventModalities() {
             enableColumnFilter: false,
             cell: (info) => (
               <Button
+                outline
                 onClick={() => handleOpenCategoryModal(info.row.original.id)}
               >
-                {`${info.getValue().length} Categorias`}
+                <div className="flex items-end gap-1 lg:items-center">
+                  {`${info.getValue().length} Categorias`}{" "}
+                  <span className="text-sm font-medium underline hover:no-underline">
+                    (editar)
+                  </span>
+                </div>
               </Button>
             ),
           }),
