@@ -230,15 +230,6 @@ export default function EventBatches({
       </Form>
 
       <div className="my-3 flex flex-col justify-between gap-3 lg:flex-row-reverse lg:items-end">
-        <Button
-          color={organization.options.colors.primaryColor.tw.color}
-          onClick={() => {
-            eventBatchForm.reset();
-            setIsBatchModalOpen(true);
-          }}
-        >
-          Novo Lote
-        </Button>
         <div className="grow">
           {/*           <h3 className="text-base font-semibold leading-6 text-gray-900">
             Last 30 days
@@ -262,12 +253,32 @@ export default function EventBatches({
       </div>
       <Table
         data={batches}
+        link={
+          <Button
+            color={organization.options.colors.primaryColor.tw.color}
+            onClick={() => {
+              eventBatchForm.reset();
+              setIsBatchModalOpen(true);
+            }}
+          >
+            Novo<span className="hidden lg:inline-block">Lote</span>
+          </Button>
+        }
         columns={(columnHelper) => [
+          columnHelper.accessor("name", {
+            id: "name",
+            header: "Nome do Lote",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            enableColumnFilter: false,
+            cell: (info) => info.getValue() || "Sem nome",
+          }),
           columnHelper.accessor("dateStart", {
             id: "date",
             header: "Período de Inscrição",
             enableSorting: true,
             enableGlobalFilter: true,
+            enableColumnFilter: false,
             cell: (info) => (
               <span
                 className="cursor-pointer underline"
@@ -278,18 +289,12 @@ export default function EventBatches({
               </span>
             ),
           }),
-          columnHelper.accessor("name", {
-            id: "name",
-            header: "Nome do Lote",
-            enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) => info.getValue() || "Sem nome",
-          }),
           columnHelper.accessor("_count.EventRegistration", {
             id: "registrations",
             header: "Inscrições",
             enableSorting: false,
             enableGlobalFilter: false,
+            enableColumnFilter: false,
             cell: (info) =>
               `${info.getValue()}/${info.row.original.maxRegistrations}`,
           }),
@@ -299,6 +304,7 @@ export default function EventBatches({
             header: "Por Modalidade",
             enableSorting: false,
             enableGlobalFilter: false,
+            enableColumnFilter: false,
             cell: (info) =>
               info.getValue() ? (
                 <Button
@@ -318,6 +324,7 @@ export default function EventBatches({
             header: "Por Categoria",
             enableSorting: false,
             enableGlobalFilter: false,
+            enableColumnFilter: false,
             cell: (info) =>
               info.getValue() ? (
                 <Button
@@ -336,6 +343,7 @@ export default function EventBatches({
             header: "Status",
             enableSorting: false,
             enableGlobalFilter: false,
+            enableColumnFilter: false,
             cell: (info) =>
               info.getValue() ? (
                 <Badge color="fuchsia">Protegido</Badge>
@@ -347,6 +355,7 @@ export default function EventBatches({
           columnHelper.accessor("id", {
             id: "batch_id",
             enableSorting: false,
+            enableColumnFilter: false,
             header: "Opções",
             cell: (info) => (
               <Dropdown>
