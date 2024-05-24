@@ -27,6 +27,7 @@ export default function UsersPanelPageTable({
     <>
       {user && <UserModal user={user} isOpen={isOpen} setIsOpen={setIsOpen} />}
       <Table
+        search={false}
         columns={(columnHelper) => [
           columnHelper.accessor("fullName", {
             id: "name",
@@ -61,8 +62,15 @@ export default function UsersPanelPageTable({
             header: "Confirmado",
             enableSorting: true,
             enableGlobalFilter: true,
+            meta: {
+              filterVariant: "select",
+              selectOptions: [
+                { value: "true", label: "Sim" },
+                { value: "false", label: "Não" },
+              ],
+            },
             cell: (info) =>
-              info.getValue() ? (
+              info.getValue() === "true" ? (
                 <CheckCircleIcon className="size-5 text-green-600" />
               ) : (
                 <XCircleIcon className="size-5 text-red-600" />
@@ -71,7 +79,8 @@ export default function UsersPanelPageTable({
           columnHelper.accessor("id", {
             id: "options",
             header: "Opções",
-            enableSorting: true,
+            enableColumnFilter: false,
+            enableSorting: false,
             enableGlobalFilter: true,
             cell: (info) => (
               <Button plain onClick={() => handleUser(info.getValue())}>
@@ -80,7 +89,10 @@ export default function UsersPanelPageTable({
             ),
           }),
         ]}
-        data={users}
+        data={users.map((user) => ({
+          ...user,
+          confirmed: user.confirmed ? "true" : "false",
+        }))}
       />
     </>
   );

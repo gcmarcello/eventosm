@@ -32,6 +32,7 @@ import {
 } from "odinkit/client";
 import { useMemo } from "react";
 import { z } from "odinkit";
+import { RTE } from "@/app/(frontend)/painel/_shared/RichText";
 
 export default function GeralForm({
   eventGroup,
@@ -211,19 +212,19 @@ export default function GeralForm({
           <div className="col-span-4">
             <Field name="description">
               <Label>Descrição do Grupo de Eventos</Label>
-              <RichTextEditor />
+              <RTE />
             </Field>
           </div>
           <div className="col-span-4">
             <Field name="rules">
               <Label>Regulamento do Grupo de Eventos</Label>
-              <RichTextEditor />
+              <RTE />
             </Field>
           </div>
           <div className="col-span-4">
             <Field name="details">
               <Label>Detalhes do Grupo de Eventos</Label>
-              <RichTextEditor />
+              <RTE />
             </Field>
           </div>
         </FieldGroup>

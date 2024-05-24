@@ -28,6 +28,7 @@ import { z } from "odinkit";
 import { useFieldArray } from "react-hook-form";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { usePanel } from "../../../../_shared/components/PanelStore";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 
 const schema = upsertEventAddonDto.omit({ image: true }).merge(
   z.object({
@@ -116,13 +117,12 @@ export default function AddonModal({
     <Form hform={form} onSubmit={(data) => trigger(data)}>
       <Dialog size="4xl" open={isOpen} onClose={setIsOpen}>
         <DialogTitle>
-          {form.getValues("id") ? "Editar" : "Criar"} Kit
+          {form.getValues("id") ? "Editar" : "Criar"} Kit - {addon?.name}
         </DialogTitle>
-        <DialogDescription>{addon?.name}</DialogDescription>
-        <DialogBody>
+        <DialogBody className="mt-4">
           <Fieldset>
             <div className="grid grid-cols-2 gap-6">
-              <div className="col-span-2 lg:col-span-1">
+              <div className="col-span-2 space-y-4  lg:col-span-1">
                 <FieldGroup>
                   <Field name="name">
                     <Label>Nome</Label>
@@ -140,9 +140,41 @@ export default function AddonModal({
                     <ErrorMessage />
                   </Field>
                 </FieldGroup>
+                <FieldGroup className="col-span-2 lg:col-span-1">
+                  {fields.map((field, index) => (
+                    <Field key={field.id} name={`options.${index}.name`}>
+                      <Label>Opção {index + 1}</Label>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="grow">
+                          <Input />
+                          <ErrorMessage />
+                        </div>
+                        <Button
+                          plain
+                          className={"mb-1 mt-[11px]"}
+                          onClick={() => remove(index)}
+                        >
+                          <div>
+                            <XCircleIcon className="size-6 text-red-600" />
+                          </div>
+                        </Button>
+                      </div>
+                    </Field>
+                  ))}
+
+                  <div className="mt-3 flex justify-end">
+                    <Button
+                      className="flex grow gap-2 "
+                      onClick={() => append({ name: "" })}
+                    >
+                      <PlusIcon className="size-5" />
+                      Adicionar Opção
+                    </Button>
+                  </div>
+                </FieldGroup>
               </div>
 
-              <div className="col-span-2 lg:col-span-1">
+              <div className="col-span-2 space-y-4  lg:col-span-1">
                 <FieldGroup>
                   <Field name="image">
                     <Label>Imagem do Kit</Label>
@@ -185,34 +217,29 @@ export default function AddonModal({
                           }
                         />
                       </FileInput>
-                      <div className="my-3">
-                        <FileImagePreview
-                          className="max-w-32"
-                          defaultValue={addon?.image || ""}
-                        />
-                      </div>
                     </div>
                   </Field>
                 </FieldGroup>
+                {addon?.image && (
+                  <FieldGroup className="col-span-2 flex items-center justify-center lg:col-span-1">
+                    <img
+                      className="max-h-56"
+                      src={
+                        form.watch("image")
+                          ? URL.createObjectURL(form.watch("image")![0])
+                          : addon?.image
+                            ? addon?.image
+                            : ""
+                      }
+                      alt={addon?.name + " imagem"}
+                    />
+                  </FieldGroup>
+                )}
               </div>
-              <FieldGroup className="col-span-2 lg:col-span-1">
-                <For each={fields}>
-                  {(field, index) => (
-                    <Field name={`options.${index}.name`}>
-                      <Label>Opção {index + 1}</Label>
-                      <Input />
-                    </Field>
-                  )}
-                </For>
-              </FieldGroup>
             </div>
           </Fieldset>
         </DialogBody>
-        <DialogActions className="lg:justify-between">
-          <Button className="flex gap-2 " onClick={() => append({ name: "" })}>
-            <PlusIcon className="size-5" />
-            Adicionar Opção
-          </Button>
+        <DialogActions>
           <div className="flex justify-between gap-2">
             <Button plain onClick={() => setIsOpen(false)}>
               Cancelar

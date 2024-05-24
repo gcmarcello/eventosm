@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const env = z.object({
   HOST: z.string(),
+  NEXT_PUBLIC_SITE_URL: z.string(),
+  NEXT_PUBLIC_BUCKET_URL: z.string(),
   DATABASE_URL: z.string(),
   SECOND_HOST: z.string(),
   DIRECT_URL: z.string(),

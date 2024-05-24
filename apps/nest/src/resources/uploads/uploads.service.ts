@@ -65,6 +65,9 @@ export class UploadsService {
       ".png": "image/png",
       ".gif": "image/gif",
       ".webp": "image/webp",
+      ".xls": "application/vnd.ms-excel",
+      ".xlsx":
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       ".svg": "image/svg+xml",
       ".pdf": "application/pdf",
       ".txt": "text/plain",

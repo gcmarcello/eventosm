@@ -5,15 +5,17 @@ import { DocumentLink } from "./DocumentLink";
 import { deleteUser } from "@/app/api/users/repository";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {
-  Dropdown,
-  DropdownButton,
-  DropdownMenu,
-  DropdownItem,
-  DropdownSeparator,
   useAction,
   showToast,
+  Dropdown,
+  DropdownButton,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSeparator,
 } from "odinkit/client";
-import { deleteUserDocument } from "@/app/api/users/action";
+import { deleteUserDocument, getUserDocument } from "@/app/api/users/action";
+import { useRouter } from "next/navigation";
+import { EyeIcon } from "@heroicons/react/24/outline";
 
 const fileTypes = {
   disability: "Laudo PCD",
@@ -28,6 +30,8 @@ export function DocumentsTable({
 }: {
   userDocuments: UserDocument[];
 }) {
+  const router = useRouter();
+
   const { data: deleteData, trigger: deleteTrigger } = useAction({
     action: deleteUserDocument,
     onSuccess: (data) =>
@@ -39,8 +43,16 @@ export function DocumentsTable({
     onError: (error) =>
       showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
+
+  const { data, trigger } = useAction({
+    action: getUserDocument,
+    onSuccess: (data) => window.open(data.data, "_blank"),
+    onError: (error) =>
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
+  });
   return (
     <Table
+      search={false}
       data={userDocuments}
       columns={(columnHelper) => [
         columnHelper.accessor("name", {
@@ -53,6 +65,17 @@ export function DocumentsTable({
         columnHelper.accessor("type", {
           id: "type",
           header: "Tipo",
+          meta: {
+            filterVariant: "select",
+            selectOptions: [
+              { value: "disability", label: "Laudo PCD" },
+              { value: "minorAuthorization", label: "Autorização de Menor" },
+              {
+                value: "physicalAptitude",
+                label: "Atestado de Aptidão Física",
+              },
+            ],
+          },
           enableSorting: true,
           enableGlobalFilter: true,
           cell: (info) => fileTypes[info.getValue() as keyof typeof fileTypes],
@@ -62,6 +85,7 @@ export function DocumentsTable({
           header: "",
           enableSorting: false,
           enableGlobalFilter: false,
+          enableColumnFilter: false,
           cell: (info) => (
             <Dropdown>
               <DropdownButton plain>
@@ -69,15 +93,17 @@ export function DocumentsTable({
                 <ChevronDownIcon className="size-4" />
               </DropdownButton>
               <DropdownMenu>
-                <DropdownItem>
-                  <DocumentLink document={info.row.original} />
+                <DropdownItem
+                  onClick={() => trigger({ id: info.row.original.id })}
+                >
+                  <EyeIcon /> Ver
                 </DropdownItem>
                 <DropdownSeparator />
                 <DropdownItem
                   onClick={() => deleteTrigger({ id: info.getValue() })}
                   className={"font-semibold text-red-600"}
                 >
-                  Excluir
+                  <div></div>Excluir
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

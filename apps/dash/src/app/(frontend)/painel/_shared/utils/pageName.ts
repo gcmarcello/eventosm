@@ -19,6 +19,10 @@ export function getPageName(url: string, mobile: boolean = false): string {
     return "Detalhes do Evento";
   }
 
+  if (pageName === "/painel/usuarios") {
+    return "Usuários";
+  }
+
   if (mobile) {
     switch (pageName) {
       case "/painel/eventos/novo":
