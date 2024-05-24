@@ -29,27 +29,9 @@
       "title": "To do",
       "cards": [
         {
-          "id": "9789a2d4-2c1f-430b-8afa-fa511143cdbf",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Remover modalidade",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "7333252f-2e02-4ffe-9e01-e992f309173c",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
           "title": "Remover Categoria",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Upload de arquivos no tinymce",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -74,36 +56,18 @@
           "comments": []
         },
         {
-          "id": "e55c2ab2-98e5-4856-83f5-2c6435ef38cd",
+          "id": "c7551f18-70eb-4d92-9bd8-830a7c87e20a",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Pagina de Eventos",
+          "title": "Refatorar Multistep Form",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "aac65a85-8f93-4ea0-9a62-02218522b535",
+          "id": "8fbaa34f-9adf-4035-b4ba-68e3d5ca3c10",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Modal do kit",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "05122da0-f7ea-4297-babf-564081390c43",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Padding cadastro sem login",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "b11cafb0-4477-4776-8c9f-0d8482f2221d",
-          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Busca nas tabelas",
+          "title": "Login mais longo",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -114,12 +78,31 @@
     {
       "id": "b3345057-2ade-4c51-b359-446bcfd7648b",
       "title": "On going",
-      "cards": []
+      "cards": [
+        {
+          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
+          "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
+          "title": "Upload de arquivos no tinymce",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        }
+      ]
     },
     {
       "id": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
       "title": "Done",
       "cards": [
+        {
+          "id": "9789a2d4-2c1f-430b-8afa-fa511143cdbf",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Remover modalidade",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
         {
           "id": "b6d4ac8f-69c5-44f3-9e4d-67b190d5f18e",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
@@ -322,6 +305,15 @@
           "id": "5c9c0e9d-9049-49f7-aece-3b10360efc47",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Mudar url do primeiro step (novo grupo de eventos)",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
+        },
+        {
+          "id": "eb33f2ba-33aa-4c8d-af23-4060bd171f3d",
+          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
+          "title": "Bug de ultima pagina com filtros (tabela)",
           "description": "",
           "labels": [],
           "checkboxes": [],

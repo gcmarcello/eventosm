@@ -5,7 +5,12 @@ import {
   upsertEventModalityCategoriesDto,
   upsertEventModalityDto,
 } from "@/app/api/events/dto";
-import { Button, showToast, useAction } from "odinkit/client";
+import {
+  Button,
+  DropdownSeparator,
+  showToast,
+  useAction,
+} from "odinkit/client";
 import { useForm } from "odinkit/client";
 import {
   EventGroupWithEvents,
@@ -34,8 +39,13 @@ export default function EventModalities() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [activeModality, setActiveModality] = useState("");
 
-  const { setModalVisibility, modalityForm, modalities, handleModalOpen } =
-    useContext(ModalityPageContext);
+  const {
+    setModalVisibility,
+    modalityForm,
+    modalities,
+    handleModalOpen,
+    handleRemovalModalOpen,
+  } = useContext(ModalityPageContext);
 
   const categoryForm = useForm({
     mode: "onChange",
@@ -123,9 +133,15 @@ export default function EventModalities() {
             enableColumnFilter: false,
             cell: (info) => (
               <Button
+                outline
                 onClick={() => handleOpenCategoryModal(info.row.original.id)}
               >
-                {`${info.getValue().length} Categorias`}
+                <div className="flex items-end gap-1 lg:items-center">
+                  {`${info.getValue().length} Categorias`}{" "}
+                  <span className="text-sm font-medium underline hover:no-underline">
+                    (editar)
+                  </span>
+                </div>
               </Button>
             ),
           }),
@@ -146,6 +162,14 @@ export default function EventModalities() {
                     }}
                   >
                     Editar
+                  </DropdownItem>
+                  <DropdownSeparator />
+                  <DropdownItem
+                    onClick={() => {
+                      handleModalOpen(info.row.original);
+                    }}
+                  >
+                    <span className="text-red-600">Remover</span>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

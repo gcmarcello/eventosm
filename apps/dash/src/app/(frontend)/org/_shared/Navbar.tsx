@@ -1,20 +1,19 @@
 "use client";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { For } from "odinkit";
-import { Button, showToast, useAction, useForm } from "odinkit/client";
+import { Button } from "odinkit/client";
 import { Logo } from "odinkit";
 import { chooseTextColor } from "@/utils/colors";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-import { login, logout } from "@/app/api/auth/action";
-import { usePathname, useRouter } from "next/navigation";
+import { logout } from "@/app/api/auth/action";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { loginDto } from "@/app/api/auth/dto";
 import { Organization } from "@prisma/client";
 
 const navigation = [
@@ -45,27 +44,13 @@ export function CompanyNavbar({
     { name: "Configurações", href: "/perfil/configurações" },
     { name: "Sair", onClick: () => logout(pathName) },
   ];
-  const colors = organization.options.colors;
-  const form = useForm({
-    schema: loginDto,
-    mode: "onChange",
-    defaultValues: {
-      redirect: "/",
-    },
-  });
+  if (user?.role === "admin")
+    userNavigation.splice(3, 0, {
+      name: "Administrativo",
+      href: process.env.NEXT_PUBLIC_SITE_URL + "/painel",
+    });
 
-  /* const { trigger: loginTrigger, isMutating: isLoading } = useAction({
-    action: login,
-    redirect: true,
-    onError: (error) => {
-      form.resetField("password");
-      showToast({ message: error.message, variant: "error", title: "Erro" });
-      form.setError("root.serverError", {
-        type: "400",
-        message: (error as string) || "Erro inesperado",
-      });
-    },
-  }); */
+  const colors = organization.options.colors;
 
   return (
     <>

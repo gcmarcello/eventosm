@@ -1,16 +1,12 @@
 "use client";
 import { Event, Organization } from "@prisma/client";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { For, Link } from "odinkit";
-
-const steps = [
-  { name: "geral", title: "Geral", disabled: false },
-  { name: "modalidades", title: "Modalidades", disabled: false },
-  { name: "kits", title: "Kits", disabled: false },
-  { name: "lotes", title: "Lotes", disabled: false },
-  { name: "inscritos", title: "Inscritos", disabled: false },
-];
+import { Form, Label, Select, useForm } from "odinkit/client";
+import { tabControl } from "../../../_shared/types/formTab";
+import { useMemo } from "react";
+import { TabNavigation } from "../../../_shared/components/TabNavigation";
 
 export function EventNavbar({
   organization,
@@ -19,40 +15,49 @@ export function EventNavbar({
   organization: Organization;
   event: Event;
 }) {
-  const pathname = usePathname().split("/");
-  const color = organization.options.colors.primaryColor.hex;
+  const tabs = useMemo(
+    () => [
+      {
+        name: "geral",
+        title: "Geral",
+        disabled: false,
+        href: `/painel/eventos/${event.id}/geral`,
+      },
+      {
+        name: "modalidades",
+        title: "Modalidades",
+        disabled: false,
+        href: `/painel/eventos/${event.id}/modalidades`,
+      },
+      {
+        name: "kits",
+        title: "Kits",
+        disabled: false,
+        href: `/painel/eventos/${event.id}/kits`,
+      },
+      {
+        name: "lotes",
+        title: "Lotes",
+        disabled: false,
+        href: `/painel/eventos/${event.id}/lotes`,
+      },
+      {
+        name: "inscritos",
+        title: "Inscritos",
+        disabled: false,
+        href: `/painel/eventos/${event.id}/inscritos`,
+      },
+    ],
+    []
+  );
+
   return (
-    <For each={steps}>
-      {(step, index) => {
-        const selected = pathname.includes(step.name ?? "");
-        return (
-          <Link
-            href={`/painel/eventos/${event.id}/${step.name}`}
-            style={{
-              borderColor: selected ? color : "gray",
-              color: selected ? color : "gray",
-            }}
-            className={clsx(
-              "grow cursor-pointer border-t-4 px-3 py-4 text-sm font-medium duration-200 *:ring-0 hover:bg-zinc-50 focus:ring-0",
-              step.disabled && "cursor-not-allowed opacity-50",
-              index === 0
-                ? "me-2 ms-1 lg:ms-0"
-                : index === steps.length - 1
-                  ? "me-1 ms-2 lg:me-0"
-                  : "mx-2"
-            )}
-          >
-            <div className="flex flex-col items-start">
-              <div className="whitespace-nowrap text-nowrap">
-                Passo {index + 1}
-              </div>
-              <div className="whitespace-nowrap text-nowrap text-sm font-medium text-black">
-                {step.title}
-              </div>
-            </div>
-          </Link>
-        );
-      }}
-    </For>
+    <>
+      <TabNavigation
+        tabs={tabs}
+        organization={organization}
+        title={event.name}
+      />
+    </>
   );
 }

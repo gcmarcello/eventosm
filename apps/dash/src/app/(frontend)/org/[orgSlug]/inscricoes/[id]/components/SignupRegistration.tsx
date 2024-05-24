@@ -112,7 +112,7 @@ export default function SignupRegistration({
         </DialogActions>
       </Dialog>
 
-      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96  lg:mb-0 lg:mt-10">
+      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96 lg:my-10">
         {showSessionScreen ? (
           <SessionScreen
             event={event}

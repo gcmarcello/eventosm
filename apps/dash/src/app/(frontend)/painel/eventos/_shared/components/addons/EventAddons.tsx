@@ -26,9 +26,6 @@ export default function EventAddons({
 }) {
   const [isAddonModalOpen, setIsAddonModalOpen] = useState(false);
   const [selectedAddon, setSelectedAddon] = useState<EventAddon | null>(null);
-  const {
-    colors: { primaryColor, secondaryColor },
-  } = usePanel();
 
   function handleAddonModal(addon: EventAddon | null) {
     setSelectedAddon(addon);
@@ -44,36 +41,36 @@ export default function EventAddons({
         eventId={eventId}
         addon={selectedAddon}
       />
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          color={primaryColor?.tw.color}
-          onClick={() => handleAddonModal(null)}
-        >
-          Novo Kit
-        </Button>
-      </div>
+
       <Table
         striped
         data={addons}
+        link={
+          <Button type="button" onClick={() => handleAddonModal(null)}>
+            Novo <span className="hidden lg:inline-block">Kit</span>
+          </Button>
+        }
         columns={(columnHelper) => [
           columnHelper.accessor("name", {
             id: "name",
             header: "Nome",
             enableSorting: true,
             enableGlobalFilter: true,
+            enableColumnFilter: false,
             cell: (info) => info.getValue(),
           }),
           columnHelper.accessor("price", {
             id: "price",
             header: "Preço",
-
+            enableColumnFilter: false,
             cell: (info) => formatPrice(info.getValue()),
           }),
           columnHelper.accessor("id", {
             id: "id",
             header: "Opções",
             enableSorting: false,
+            enableColumnFilter: false,
+            enableGlobalFilter: false,
             cell: (info) => (
               <Dropdown>
                 <DropdownButton plain>

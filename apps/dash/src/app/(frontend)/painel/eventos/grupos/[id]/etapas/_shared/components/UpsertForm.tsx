@@ -51,6 +51,7 @@ import { EventGroupWithEvents } from "prisma/types/Events";
 import { OrganizationWithDomain } from "prisma/types/Organization";
 import { upsertEvent } from "@/app/api/events/action";
 import { uploadFiles } from "@/app/api/uploads/action";
+import { RTE } from "@/app/(frontend)/painel/_shared/RichText";
 
 const schema = upsertEventDto
   .omit({ imageUrl: true })
@@ -254,7 +255,7 @@ export function UpsertForm({
         <FieldGroup className="col-span-2">
           <Field className="col-span-2 lg:col-span-2" name="description">
             <Label>Descrição da Etapa</Label>
-            <RichTextEditor />
+            <RTE />
             <ErrorMessage />
             <Description>ID: {form.getValues("id")}</Description>
           </Field>
