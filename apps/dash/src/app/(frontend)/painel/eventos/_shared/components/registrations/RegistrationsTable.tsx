@@ -29,6 +29,7 @@ export function RegistrationsTable({
               : Number(registration.code),
             Documento: registration.user?.document,
             Nome: registration.user?.fullName,
+            Email: registration.user?.email,
             Cidade: registration.user?.info?.city?.name,
             Status: (() => {
               switch (registration.status) {
