@@ -29,18 +29,18 @@
       "title": "To do",
       "cards": [
         {
-          "id": "f71cfea7-a94e-4029-a863-444798bfe180",
+          "id": "7333252f-2e02-4ffe-9e01-e992f309173c",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Confirmacao antes de revisar",
+          "title": "Remover Categoria",
           "description": "",
           "labels": [],
           "checkboxes": [],
           "comments": []
         },
         {
-          "id": "7333252f-2e02-4ffe-9e01-e992f309173c",
+          "id": "f71cfea7-a94e-4029-a863-444798bfe180",
           "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
-          "title": "Remover Categoria",
+          "title": "Confirmacao antes de revisar",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -63,6 +63,15 @@
           "labels": [],
           "checkboxes": [],
           "comments": []
+        },
+        {
+          "id": "8fbaa34f-9adf-4035-b4ba-68e3d5ca3c10",
+          "listId": "8a38fd0e-81c0-4275-8608-fdf4037255b2",
+          "title": "Login mais longo",
+          "description": "",
+          "labels": [],
+          "checkboxes": [],
+          "comments": []
         }
       ]
     },
@@ -71,9 +80,9 @@
       "title": "On going",
       "cards": [
         {
-          "id": "b11cafb0-4477-4776-8c9f-0d8482f2221d",
+          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
           "listId": "b3345057-2ade-4c51-b359-446bcfd7648b",
-          "title": "Busca nas tabelas",
+          "title": "Upload de arquivos no tinymce",
           "description": "",
           "labels": [],
           "checkboxes": [],
@@ -86,54 +95,9 @@
       "title": "Done",
       "cards": [
         {
-          "id": "e55c2ab2-98e5-4856-83f5-2c6435ef38cd",
-          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
-          "title": "Pagina de Eventos",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "aac65a85-8f93-4ea0-9a62-02218522b535",
-          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
-          "title": "Modal do kit",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "52406bca-b348-4a0d-b81a-f909406fd599",
-          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
-          "title": "Upload de arquivos no tinymce",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
           "id": "9789a2d4-2c1f-430b-8afa-fa511143cdbf",
           "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
           "title": "Remover modalidade",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "05122da0-f7ea-4297-babf-564081390c43",
-          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
-          "title": "Padding cadastro sem login",
-          "description": "",
-          "labels": [],
-          "checkboxes": [],
-          "comments": []
-        },
-        {
-          "id": "2a744096-7e91-44df-8e13-788982f4ac66",
-          "listId": "46e7fa5a-a8e4-423d-9ed8-60107b09e73f",
-          "title": "Botao de adm para cada site",
           "description": "",
           "labels": [],
           "checkboxes": [],
