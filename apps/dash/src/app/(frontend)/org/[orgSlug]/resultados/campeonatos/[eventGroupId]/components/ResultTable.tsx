@@ -179,7 +179,9 @@ export function ResultsTable({
                   results.filter(
                     (r) =>
                       r.Registration.modalityId ===
-                      info.row.original.Registration.modalityId
+                        info.row.original.Registration.modalityId &&
+                      r.Registration.category?.gender ===
+                        info.row.original.Registration.category?.gender
                   ),
                   info.row.original
                 )
