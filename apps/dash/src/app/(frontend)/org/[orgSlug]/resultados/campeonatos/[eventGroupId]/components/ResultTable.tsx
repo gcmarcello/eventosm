@@ -123,9 +123,21 @@ export function ResultsTable({
     return Array.from(unique.values()).sort((a, b) => a.id.localeCompare(b.id));
   }, [results]);
 
+  const uniqueGenders = useMemo(() => {
+    const genderArray = [
+      { id: "female", name: "Feminino" },
+      { id: "male", name: "Masculino" },
+    ];
+    if (results.some((r) => r.Registration.category?.gender === "unisex")) {
+      genderArray.push({ id: "unisex", name: "Unissex" });
+    }
+    return genderArray;
+  }, []);
+
   const modalityForm = useForm({
     schema: z.object({
       modality: z.string().nullable(),
+      gender: z.string().nullable(),
     }),
     defaultValues: {
       modality: results[results.length - 1]?.Registration.modalityId,
@@ -142,10 +154,17 @@ export function ResultsTable({
           <Label>Modalidade</Label>
           <Select data={uniqueModalities} displayValueKey="name" />
         </Field>
+        <Field name="gender">
+          <Label>Sexo</Label>
+          <Select data={uniqueGenders} displayValueKey="name" />
+        </Field>
       </Form>
       <Table
         data={results.filter(
-          (r) => r.Registration.modalityId === modalityForm.watch("modality")
+          (r) =>
+            r.Registration.modalityId === modalityForm.watch("modality") &&
+            modalityForm.watch("gender") &&
+            modalityForm.watch("gender") === r.Registration.category?.gender
         )}
         search={false}
         columns={(columnHelper) => [
