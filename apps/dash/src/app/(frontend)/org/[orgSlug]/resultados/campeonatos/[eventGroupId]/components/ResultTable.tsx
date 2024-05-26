@@ -160,11 +160,11 @@ export function ResultsTable({
         </Field>
       </Form>
       <Table
-        data={results.filter(
-          (r) =>
-            r.Registration.modalityId === modalityForm.watch("modality") &&
-            modalityForm.watch("gender") &&
-            modalityForm.watch("gender") === r.Registration.category?.gender
+        data={results.filter((r) =>
+          r.Registration.modalityId === modalityForm.watch("modality") &&
+          modalityForm.watch("gender")
+            ? modalityForm.watch("gender") === r.Registration.category?.gender
+            : true
         )}
         search={false}
         columns={(columnHelper) => [
