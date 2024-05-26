@@ -137,7 +137,7 @@ export function ResultsTable({
   const modalityForm = useForm({
     schema: z.object({
       modality: z.string().nullable(),
-      gender: z.string().nullable(),
+      gender: z.string().optional().optional(),
     }),
     defaultValues: {
       modality: results[results.length - 1]?.Registration.modalityId,
