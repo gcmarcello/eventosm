@@ -5,7 +5,10 @@ import {
   UpdateRegistrationDto,
 } from "./dto";
 import { EventRegistrationBatchesWithCategories } from "prisma/types/Registrations";
-import { EventRegistrationStatus } from "@prisma/client";
+import { EventRegistrationStatus, Organization } from "@prisma/client";
+import { sendEmail } from "../emails/service";
+import { getServerEnv } from "../env";
+import { chooseTextColor } from "@/utils/colors";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {
@@ -96,8 +99,12 @@ export async function connectRegistrationToTeam(
 }
 
 export async function updateEventGroupRegistration(
-  data: UpdateRegistrationDto
+  data: UpdateRegistrationDto & {
+    organization: Organization;
+    userSession: UserSession;
+  }
 ) {
+  // Query that finds a registration by its ID and includes the event group registrations so it can used to check if the code is already in use
   const findRegistration = await prisma.eventRegistration.findUnique({
     where: { id: data.registrationId },
     include: {
@@ -128,8 +135,43 @@ export async function updateEventGroupRegistration(
       code: data.code,
       justifiedAbsences: data.justifiedAbsences,
       unjustifiedAbsences: data.unjustifiedAbsences,
+      additionalInfo: data.additionalInfo,
     },
   });
+
+  if (
+    updatedRegistration.status === "suspended" &&
+    findRegistration.status !== "suspended"
+  ) {
+    const customDomain = await prisma.orgCustomDomain.findFirst({
+      where: { organizationId: data.organization?.id },
+    });
+    const url = customDomain
+      ? "https://" + customDomain.domain
+      : process.env.NEXT_PUBLIC_SITE_URL;
+    await sendEmail([
+      {
+        template: "registration_suspended",
+        setup: {
+          from: getServerEnv("SENDGRID_EMAIL")!,
+          subject: `Inscrição Suspensa/Eliminação - ${findRegistration.eventGroup?.name}`,
+          to: findRegistration.user.email,
+        },
+        templateParameters: {
+          headerTextColor: chooseTextColor(
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5"
+          ),
+          eventName: findRegistration.eventGroup?.name,
+          mainColor:
+            data.organization?.options.colors.primaryColor.hex || "#4F46E5",
+          orgName: data.organization?.name || "EventoSM",
+          name: findRegistration.user.fullName.split(" ")[0] as string,
+          siteLink: `${url}`,
+          suspensionReason: data.additionalInfo?.suspensionReason,
+        },
+      },
+    ]);
+  }
 
   return {
     eventGroup: findRegistration.eventGroup,

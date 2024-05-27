@@ -27,6 +27,10 @@ declare global {
       };
     };
 
+    type additionalInfo = {
+      suspensionReason?: string;
+    };
+
     type EventOptions = {
       accountlessRegistration?: boolean;
       multipleRegistrations?: boolean;

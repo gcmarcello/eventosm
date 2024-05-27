@@ -118,7 +118,7 @@ async function updateEventStatusToReview(data: {
         where: {
           id: r.id,
         },
-        data: rest,
+        data: { ...rest, additionalInfo: { ...rest.additionalInfo } },
       });
     }),
 
@@ -255,6 +255,7 @@ async function updateEventStatusToFinished(data: {
           orgName: data.organization?.name || "EventoSM",
           name: r.user.fullName.split(" ")[0] as string,
           siteLink: `${url}`,
+          suspensionReason: "Você excedeu o limite de ausências.",
         },
       }))
     );
@@ -267,7 +268,7 @@ async function updateEventStatusToFinished(data: {
         where: {
           id: r.id,
         },
-        data: rest,
+        data: { ...rest, additionalInfo: { ...rest.additionalInfo } },
       });
     }),
 

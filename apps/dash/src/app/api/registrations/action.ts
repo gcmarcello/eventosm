@@ -81,7 +81,7 @@ export async function updateRegistration(request: UpdateRegistrationDto) {
       .then(OrganizationMiddleware);
 
     const updatedRegistration =
-      await service.updateEventGroupRegistration(request);
+      await service.updateEventGroupRegistration(parsedRequest);
     revalidatePath(
       `/painel/eventos/grupos/${updatedRegistration.eventGroup?.id}/inscritos`
     );

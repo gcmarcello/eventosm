@@ -4,6 +4,7 @@ export function registration_suspended({
   name,
   siteLink,
   eventName,
+  suspensionReason,
 }: {
   mainColor: string;
   headerTextColor: string;
@@ -11,6 +12,7 @@ export function registration_suspended({
   name: string;
   siteLink: string;
   eventName: string;
+  suspensionReason?: string;
 }) {
   return `<!doctype html>
     <html lang="pt-br">
@@ -71,6 +73,7 @@ export function registration_suspended({
             <p>
               Sua inscrição no ${eventName} foi suspensa e você no momento se encontra eliminado. Isso pode ter sido causado por um descumprimento de regras do campeonato, ausências não justificadas ou por alguma outra razão.
             </p>
+            ${suspensionReason && `<p><strong>Motivo da suspensão:</strong> ${suspensionReason}</p>`}
             <p>
               Se você sente que isso foi um erro, entre em contato com a organização do evento.
             </p>
