@@ -142,6 +142,12 @@ export type ConnectRegistrationToTeamDto = z.infer<
   typeof connectRegistrationToTeamDto
 >;
 
+export const registrationAdditionalInfoDto = z
+  .object({
+    suspensionReason: z.string().optional(),
+  })
+  .optional();
+
 export const updateRegistrationDto = z.object({
   registrationId: z.string().uuid(),
   categoryId: z.string().uuid(),
@@ -150,6 +156,7 @@ export const updateRegistrationDto = z.object({
   justifiedAbsences: z.number().optional(),
   unjustifiedAbsences: z.number().optional(),
   code: z.string(),
+  additionalInfo: registrationAdditionalInfoDto,
 });
 
 export type UpdateRegistrationDto = z.infer<typeof updateRegistrationDto>;

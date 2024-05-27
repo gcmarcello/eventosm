@@ -6,6 +6,14 @@
 
 */
 -- DropForeignKey
+ALTER TABLE "public"."EventRegistration" DROP CONSTRAINT "EventRegistration_orderId_fkey";
+
+-- AlterTable
+ALTER TABLE "public"."EventAbsences" ADD COLUMN     "comment" TEXT;
+
+-- AlterTable
+ALTER TABLE "public"."EventRegistration" DROP COLUMN "orderId",
+ADD COLUMN     "additionalInfo" JSONB;
 
 -- DropTable
 DROP TABLE "public"."Order";
