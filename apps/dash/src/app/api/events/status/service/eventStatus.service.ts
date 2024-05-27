@@ -104,7 +104,11 @@ async function updateEventStatusToReview(data: {
           siteLink: `${url}`,
         },
       }));
-    await sendEmail(emailArray);
+    try {
+      await sendEmail(emailArray);
+    } catch (error) {
+      throw "Erro ao enviar e-mail de justificativas." + error;
+    }
   }
 
   await prisma.$transaction([

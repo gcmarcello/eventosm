@@ -21,7 +21,7 @@ export function EventGroupNavbar({
         name: "etapas",
         title: "Etapas",
         disabled: false,
-        href: `/painel/eventos/grupos/${eventGroup.id}/geral`,
+        href: `/painel/eventos/grupos/${eventGroup.id}/etapas`,
       },
       {
         name: "modalidades",
