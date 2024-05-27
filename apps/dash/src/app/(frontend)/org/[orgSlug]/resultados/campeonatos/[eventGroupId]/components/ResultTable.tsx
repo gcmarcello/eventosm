@@ -149,17 +149,18 @@ export function ResultsTable({
 
   return (
     <>
-      <Form className="my-4 mb-2" hform={modalityForm}>
-        <Field name="modality">
+      <Form className="my-4 mb-2 flex gap-2" hform={modalityForm}>
+        <Field name="modality" className={"grow"}>
           <Label>Modalidade</Label>
           <Select data={uniqueModalities} displayValueKey="name" />
         </Field>
-        <Field name="gender">
+        <Field name="gender" className={"grow"}>
           <Label>Sexo</Label>
           <Select data={uniqueGenders} displayValueKey="name" />
         </Field>
       </Form>
       <Table
+        dense
         data={results.filter((r) =>
           r.Registration.modalityId === modalityForm.watch("modality") &&
           modalityForm.watch("gender")
@@ -189,7 +190,7 @@ export function ResultsTable({
           }),
           columnHelper.accessor("catPosition", {
             id: "catposition",
-            header: "Pos. Cat.",
+            header: "Cat.",
             enableColumnFilter: false,
             enableSorting: true,
             cell: (info) =>
@@ -202,19 +203,20 @@ export function ResultsTable({
                 info.row.original
               ),
           }),
-          columnHelper.accessor("Registration.code", {
-            id: "number",
-            header: "Num.",
-            enableSorting: true,
-            enableGlobalFilter: true,
-            cell: (info) => Number(info.getValue()),
-          }),
+
           columnHelper.accessor("Registration.user.fullName", {
             id: "name",
             header: "Nome",
             enableSorting: true,
             enableGlobalFilter: true,
             cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("Registration.code", {
+            id: "number",
+            header: "Num.",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => Number(info.getValue()),
           }),
           columnHelper.accessor("Registration.category.name", {
             id: "category",

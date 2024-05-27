@@ -30,7 +30,9 @@ import {
   Input,
   Label,
   RadioField,
+  RichTextEditor,
   Select,
+  Textarea,
   showToast,
   useAction,
   useForm,
@@ -38,7 +40,10 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { ModalitiesWithCategories } from "prisma/types/Modalities";
-import { updateRegistrationDto } from "@/app/api/registrations/dto";
+import {
+  UpdateRegistrationDto,
+  updateRegistrationDto,
+} from "@/app/api/registrations/dto";
 import { determineCategoryAvailability } from "@/app/(frontend)/org/[orgSlug]/inscricoes/utils/categories";
 import Image from "next/image";
 import {
@@ -65,7 +70,7 @@ export default function RegistrationsContainer({
     setIsOpen(true);
   }
 
-  const form = useForm({
+  const form = useForm<UpdateRegistrationDto>({
     schema: updateRegistrationDto,
   });
 
@@ -125,6 +130,10 @@ export default function RegistrationsContainer({
         selectedRegistration?.unjustifiedAbsences ?? 0
       );
       form.setValue("code", selectedRegistration?.code!);
+      form.setValue(
+        "additionalInfo.suspensionReason",
+        selectedRegistration?.additionalInfo?.suspensionReason
+      );
     }
   }, [selectedRegistration]);
 
@@ -226,6 +235,12 @@ export default function RegistrationsContainer({
                     <RegistrationStatusDropdown />
                   </div>
                 </div>
+                {form.watch("status") === "suspended" && (
+                  <Field name="additionalInfo.suspensionReason">
+                    <Label>Motivo da Suspensão</Label>
+                    <Textarea />
+                  </Field>
+                )}
                 <Description>ID: {selectedRegistration?.id}</Description>
               </FieldGroup>
             </Fieldset>

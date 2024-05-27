@@ -17,7 +17,11 @@ export default async function OrganizationEventsPage({
     where: { Organization: { slug: orgSlug }, status: "published" },
   });
   const events = await readEvents({
-    where: { Organization: { slug: orgSlug }, status: "published" },
+    where: {
+      Organization: { slug: orgSlug },
+      status: "published",
+      eventGroupId: null,
+    },
   });
   const organization = await prisma.organization.findUnique({
     where: { slug: orgSlug },

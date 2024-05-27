@@ -540,11 +540,11 @@ model EventRegistration {
   addonId             String?                 @db.Uuid
   addonOption         String?
   status              EventRegistrationStatus @default(pending)
-  //  order               Order?                  @relation(fields: [orderId], references: [id])
-  //  orderId             String?                 @db.Uuid
   qrCode              String
   justifiedAbsences   Int                     @default(0) @db.Integer
   unjustifiedAbsences Int                     @default(0) @db.Integer
+  /// [additionalInfo]
+  additionalInfo      Json?                   @db.JsonB
   createdAt           DateTime                @default(now())
   updatedAt           DateTime?               @updatedAt
   EventCheckIn        EventCheckIn[]
@@ -620,6 +620,7 @@ model EventAbsences {
   registrationId   String             @db.Uuid
   justificationUrl String?
   status           EventAbsenceStatus @default(pending)
+  comment          String?
   createdAt        DateTime           @default(now())
   updatedAt        DateTime?          @updatedAt
 

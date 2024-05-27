@@ -27,7 +27,7 @@ export default async function EventResultCard({
     >
       <Link href={`/resultados/${event.id}`}>
         <img
-          className="h-auto w-full rounded-t"
+          className="hidden h-auto w-full rounded-t lg:block"
           src={event.imageUrl || ""}
           alt=""
         />

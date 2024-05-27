@@ -65,7 +65,12 @@ export default function RegistrationStatusDropdown() {
           .map((status) => {
             if (status !== form.watch("status"))
               return (
-                <DropdownItem onClick={() => form.setValue("status", status)}>
+                <DropdownItem
+                  onClick={() => {
+                    form.setValue("status", status);
+                    form.setValue("additionalInfo.suspensionReason", undefined);
+                  }}
+                >
                   <span>{handleStatusName(status)}</span>
                 </DropdownItem>
               );
