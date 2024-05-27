@@ -43,9 +43,9 @@ export function EventGroupResults() {
 
   return !eventGroupResultsData?.position ||
     !eventGroupResultsData?.results.length ? null : (
-    <div className="flex flex-col items-center justify-center space-y-2 py-4 lg:flex-row lg:divide-x">
+    <div className="flex flex-col gap-2 pt-4 lg:flex-row lg:divide-x">
       <div className="pe-2">
-        <div className="text-center">
+        <div>
           <Heading>Posição Geral</Heading>
         </div>
         <div
@@ -55,11 +55,11 @@ export function EventGroupResults() {
           )}
         >
           <div className="flex size-28 items-center justify-center rounded-full bg-white text-4xl font-semibold text-gray-800">
-            {eventGroupResultsData?.position}
+            #{eventGroupResultsData?.position}
           </div>
         </div>
       </div>
-      <div className="ps-2">
+      <div className="lg:ps-4">
         <Heading>Etapas</Heading>
         <EventGroupUserResultList results={eventGroupResultsData.results} />
       </div>

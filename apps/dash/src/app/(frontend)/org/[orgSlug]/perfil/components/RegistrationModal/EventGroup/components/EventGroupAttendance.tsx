@@ -155,11 +155,11 @@ export function EventGroupAttendance({
 
             return (
               <>
-                <div className="flex justify-between px-4 py-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium leading-6 text-gray-900">
+                <div className="grid grid-cols-5 px-1 py-3 sm:gap-4 sm:px-0">
+                  <dt className="... col-span-3 truncate text-sm font-medium leading-6 text-gray-900">
                     {event.name}
                   </dt>
-                  <dd className="mt-1 flex justify-end text-sm leading-6 text-gray-700 sm:mt-0">
+                  <dd className="col-span-2 mt-1 flex justify-end text-sm leading-6 text-gray-700 sm:mt-0">
                     {event.status === "published" && !eventCheckin ? (
                       <Badge className="my-auto">Aberto</Badge>
                     ) : (
