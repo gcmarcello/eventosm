@@ -92,64 +92,66 @@ export function EventsPageContainer({
           />
         </div>
       ) : null}
-      <div className="pt-4">
-        <h3 className="text-3xl font-semibold leading-6 text-gray-900">
-          Eventos
-        </h3>
-        <Table
-          data={events}
-          disableMobileFilters={true}
-          search={false}
-          pagination={false}
-          columns={(columnHelper) => [
-            columnHelper.accessor("name", {
-              id: "name",
-              header: "Nome",
-              enableSorting: true,
-              enableGlobalFilter: true,
-              cell: (info) => (
-                <Link
-                  className="underline hover:no-underline"
-                  href={`/eventos/${info.row.original.slug}`}
-                >
-                  {info.getValue()}
-                </Link>
-              ),
-            }),
-            columnHelper.accessor("status", {
-              id: "status",
-              header: "Status",
-              meta: {
-                filterVariant: "select",
-                selectOptions: [{ value: "published", label: "Ativo" }],
-              },
-              enableSorting: true,
-              enableGlobalFilter: false,
-              cell: (info) => {
-                switch (info.getValue()) {
-                  case "draft":
-                    return <Badge color="amber">Pendente</Badge>;
-                  case "published":
-                    return <Badge color="green">Ativo</Badge>;
-                  case "finished":
-                    return <Badge color="zinc">Finalizado</Badge>;
-                }
-              },
-            }),
+      {events.length > 0 ? (
+        <div className="pt-4">
+          <h3 className="text-3xl font-semibold leading-6 text-gray-900">
+            Eventos
+          </h3>
+          <Table
+            data={events}
+            disableMobileFilters={true}
+            search={false}
+            pagination={false}
+            columns={(columnHelper) => [
+              columnHelper.accessor("name", {
+                id: "name",
+                header: "Nome",
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => (
+                  <Link
+                    className="underline hover:no-underline"
+                    href={`/eventos/${info.row.original.slug}`}
+                  >
+                    {info.getValue()}
+                  </Link>
+                ),
+              }),
+              columnHelper.accessor("status", {
+                id: "status",
+                header: "Status",
+                meta: {
+                  filterVariant: "select",
+                  selectOptions: [{ value: "published", label: "Ativo" }],
+                },
+                enableSorting: true,
+                enableGlobalFilter: false,
+                cell: (info) => {
+                  switch (info.getValue()) {
+                    case "draft":
+                      return <Badge color="amber">Pendente</Badge>;
+                    case "published":
+                      return <Badge color="green">Ativo</Badge>;
+                    case "finished":
+                      return <Badge color="zinc">Finalizado</Badge>;
+                  }
+                },
+              }),
 
-            columnHelper.accessor("dateStart", {
-              id: "startsAt",
-              header: "Início",
-              enableSorting: true,
-              enableGlobalFilter: false,
-              enableColumnFilter: false,
-              cell: (info) => {
-                return <Date date={info.getValue()} format="DD/MM/YYYY" />;
-              },
-            }),
-          ]}
-        />
-      </div>
+              columnHelper.accessor("dateStart", {
+                id: "startsAt",
+                header: "Início",
+                enableSorting: true,
+                enableGlobalFilter: false,
+                enableColumnFilter: false,
+                cell: (info) => {
+                  return <Date date={info.getValue()} format="DD/MM/YYYY" />;
+                },
+              }),
+            ]}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
