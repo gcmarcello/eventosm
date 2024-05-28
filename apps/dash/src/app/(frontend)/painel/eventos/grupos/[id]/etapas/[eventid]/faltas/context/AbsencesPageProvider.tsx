@@ -7,7 +7,7 @@ import {
   EventGroup,
   EventModality,
 } from "@prisma/client";
-import { AbsencesPageContext } from "./AbsencesPage.ctx";
+import { AbsenceWithUser, AbsencesPageContext } from "./AbsencesPage.ctx";
 import { upsertEventModalityDto } from "@/app/api/events/dto";
 import { showToast, useAction, useForm } from "odinkit/client";
 import { upsertEventModality } from "@/app/api/events/action";
@@ -30,9 +30,8 @@ export function AbsencesPageProvider({
   children: React.ReactNode;
 }) {
   const [modalVisibility, setModalVisibility] = useState(false);
-  const [selectedAbsence, setSelectedAbsence] = useState<EventAbsences | null>(
-    null
-  );
+  const [selectedAbsence, setSelectedAbsence] =
+    useState<AbsenceWithUser | null>(null);
 
   const form = useForm({
     mode: "onChange",
@@ -96,7 +95,7 @@ export function AbsencesPageProvider({
       showToast({ message: error.message, variant: "error", title: "Erro!" }),
   });
 
-  function handleModalOpen(absence: EventAbsences) {
+  function handleModalOpen(absence: AbsenceWithUser) {
     setSelectedAbsence(absence);
     setModalVisibility(true);
   }
