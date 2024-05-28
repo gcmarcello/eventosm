@@ -4,6 +4,7 @@ export function justification_denied({
   name,
   siteLink,
   eventName,
+  reason,
 }: {
   mainColor: string;
   headerTextColor: string;
@@ -11,6 +12,7 @@ export function justification_denied({
   name: string;
   siteLink: string;
   eventName: string;
+  reason?: string;
 }) {
   return `<!doctype html>
     <html lang="pt-br">
@@ -71,6 +73,7 @@ export function justification_denied({
             <p>
               Sua justificativa de ausência no ${eventName} foi reprovada. Por favor, acesse o painel de inscrições para enviar outra ou entre em contato com o organizador do evento.
             </p>
+            ${reason && `<p><strong>Motivo:</strong> ${reason}</p>`}
             <p style="text-align: center">
               <a href="${siteLink}" class="button">Acesse o seu perfil</a>
             </p>

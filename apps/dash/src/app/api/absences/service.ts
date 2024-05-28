@@ -56,7 +56,8 @@ export async function changeAbsenceStatus(
           data.organization?.options.colors.primaryColor.hex || "#4F46E5",
         orgName: data.organization?.name || "EventoSM",
         name: currentStatus.registration.user.fullName.split(" ")[0] as string,
-        siteLink: `${url}/confirmar/${currentStatus.registration.user.id}`,
+        siteLink: `${url}/perfil`,
+        reason: data.comment,
       },
     },
   ]);
@@ -67,6 +68,7 @@ export async function changeAbsenceStatus(
       status: data.status,
       justificationUrl:
         data.status === "denied" ? null : currentStatus.justificationUrl,
+      comment: data.comment,
       registration: {
         update: {
           unjustifiedAbsences: {
