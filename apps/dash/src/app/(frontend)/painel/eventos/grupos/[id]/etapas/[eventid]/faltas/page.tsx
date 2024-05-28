@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { UpsertForm } from "../../_shared/components/UpsertForm";
-import { AbsencesForm } from "./components/Form";
+import { AbsencesForm } from "./components/AbsenceContainer";
 import { readSubeventReviewData } from "@/app/api/events/service";
+import { AbsencesPageProvider } from "./context/AbsencesPageProvider";
 
 export default async function Faltas({
   params,
@@ -32,11 +33,13 @@ export default async function Faltas({
   if (!eventReview) return redirect("/painel/eventos");
 
   return (
-    <AbsencesForm
-      event={event}
-      eventGroup={eventGroup}
-      organization={organization}
-      eventReview={eventReview}
-    />
+    <AbsencesPageProvider event={event} eventGroup={eventGroup}>
+      <AbsencesForm
+        event={event}
+        eventGroup={eventGroup}
+        organization={organization}
+        eventReview={eventReview}
+      />
+    </AbsencesPageProvider>
   );
 }
