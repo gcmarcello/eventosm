@@ -26,8 +26,9 @@ export type CreateAbsenceJustificationDto<E extends ZodDtoEnv> = ZodDto<
 >;
 
 export const updateAbsenceStatusDto = z.object({
-  absenceId: z.string(),
+  absenceId: z.string().uuid(),
   status: z.nativeEnum(EventAbsenceStatus),
+  comment: z.string().optional(),
 });
 
 export type UpdateAbsenceStatusDto = z.infer<typeof updateAbsenceStatusDto>;

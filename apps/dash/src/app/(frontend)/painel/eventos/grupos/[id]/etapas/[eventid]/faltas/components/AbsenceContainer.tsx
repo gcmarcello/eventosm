@@ -17,8 +17,10 @@ import {
   formatPhone,
 } from "odinkit";
 import { useAction, showToast, Button } from "odinkit/client";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { sortAbsences } from "../utils/sorting";
+import { DenyJustificationAlert } from "./DenyJustificationAlert";
+import { AbsencesPageContext } from "../context/AbsencesPage.ctx";
 
 export function AbsencesForm({
   event,
@@ -32,63 +34,21 @@ export function AbsencesForm({
   eventReview: ExtractSuccessResponse<typeof readSubeventReviewData>;
 }) {
   const {
-    data: absenceStatus,
-    trigger: triggerAbsenceStatus,
-    isMutating: isAbsenceStatusMutating,
-  } = useAction({
-    action: changeAbsenceStatus,
-    onSuccess: () => {
-      showToast({
-        message: "Status da ausência atualizado com sucesso!",
-        variant: "success",
-        title: "Sucesso!",
-      });
-    },
-    onError: (error) => {
-      showToast({
-        message: error.message,
-        title: "Erro!",
-        variant: "error",
-      });
-    },
-  });
-
-  const { data, trigger } = useAction({
-    action: readAbsenceJustification,
-    onSuccess: (data) => window.open(data.data, "_blank"),
-    onError: (error) =>
-      showToast({ message: error.message, variant: "error", title: "Erro!" }),
-  });
-
-  useEffect(() => {
-    readSubeventReviewData({
-      eventId: event.id,
-    });
-  }, []);
-
-  const {
-    data: eventStatusData,
-    trigger: eventStatusTrigger,
-    isMutating,
-  } = useAction({
-    action: updateEventStatus,
-    onSuccess: () =>
-      showToast({
-        message: "Status do evento atualizado com sucesso!",
-        variant: "success",
-        title: "Sucesso!",
-      }),
-    onError: (error) =>
-      showToast({
-        message: error.message,
-        variant: "error",
-        title: "Erro!",
-      }),
-  });
+    modalVisibility,
+    selectedAbsence,
+    setSelectedAbsence,
+    handleModalOpen,
+    triggerReadAbsenceJustificationData,
+    triggerAbsenceStatus,
+    isAbsenceStatusMutating,
+    eventStatusTrigger,
+    isEventStatusMutating,
+  } = useContext(AbsencesPageContext);
 
   return (
     <>
       <div className="">
+        <DenyJustificationAlert />
         <div className="mb-3 items-center gap-3 lg:flex">
           <Heading>Ausências - {event.name}</Heading>
           <Link
@@ -116,7 +76,14 @@ export function AbsencesForm({
               id: "status",
               header: "Status da Ausência",
               enableSorting: true,
-              meta: { filterVariant: "select" },
+              meta: {
+                filterVariant: "select",
+                selectOptions: [
+                  { value: "approved", label: "Aprovado" },
+                  { value: "denied", label: "Rejeitado" },
+                  { value: "pending", label: "Pendente" },
+                ],
+              },
               cell: (info) => {
                 switch (info.getValue()) {
                   case "pending":
@@ -152,7 +119,11 @@ export function AbsencesForm({
                   <Badge
                     color="blue"
                     className="cursor-pointer underline hover:no-underline"
-                    onClick={() => trigger({ id: info.row.original.id })}
+                    onClick={() =>
+                      triggerReadAbsenceJustificationData({
+                        id: info.row.original.id,
+                      })
+                    }
                   >
                     Ver Atestado
                   </Badge>
@@ -175,10 +146,7 @@ export function AbsencesForm({
                     <XMarkIcon
                       onClick={() => {
                         if (isAbsenceStatusMutating) return;
-                        triggerAbsenceStatus({
-                          absenceId: info.getValue(),
-                          status: "denied",
-                        });
+                        handleModalOpen(info.row.original);
                       }}
                       className={clsx(
                         "size-5 cursor-pointer  duration-200 hover:text-gray-800",
@@ -209,7 +177,7 @@ export function AbsencesForm({
         />
         <div className="mt-4 flex justify-end">
           <Button
-            loading={isMutating}
+            loading={isEventStatusMutating}
             onClick={() =>
               eventStatusTrigger({
                 status: "finished",
