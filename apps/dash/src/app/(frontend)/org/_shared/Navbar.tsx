@@ -4,7 +4,6 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { For } from "odinkit";
-import { Button } from "odinkit/client";
 import { Logo } from "odinkit";
 import { chooseTextColor } from "@/utils/colors";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
@@ -15,6 +14,7 @@ import { logout } from "@/app/api/auth/action";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Organization } from "@prisma/client";
+import { Button } from "odinkit/client";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
