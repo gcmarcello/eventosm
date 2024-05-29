@@ -1,8 +1,9 @@
 import { validateRecoveryToken } from "@/app/api/auth/recovery/service";
-import { Alertbox, Link } from "odinkit";
+import { Alertbox } from "odinkit";
 import { CreateNewPasswordForm } from "./components/RecoveryContainer";
 import { createToken } from "@/app/api/auth/service";
 import { redirect } from "next/navigation";
+import { Link } from "odinkit/client";
 
 export default async function PasswordRecoveryPage({
   params,

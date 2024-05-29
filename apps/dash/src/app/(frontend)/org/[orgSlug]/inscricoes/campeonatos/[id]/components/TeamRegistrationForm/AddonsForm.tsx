@@ -13,13 +13,9 @@ import {
   ChevronDownIcon,
   ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
-import { EventRegistrationBatch, Organization } from "@prisma/client";
+import { Organization } from "@prisma/client";
 import {
-  Alertbox,
   For,
-  Link,
-  List,
-  LoadingSpinner,
   TableBody,
   TableCell,
   TableHead,
@@ -27,26 +23,10 @@ import {
   TableMock,
   TableRow,
   Text,
-  formatCEP,
-  formatCPF,
-  formatPhone,
-  normalize,
-  option,
-  sheetToJson,
 } from "odinkit";
 import {
-  FileInput,
-  showToast,
-  FileDropArea,
   useFormContext,
-  Input,
   Select,
-  Label,
-  Description,
-  Switch,
-  ErrorMessage,
-  Button,
-  useAction,
   Dropdown,
   DropdownButton,
   DropdownHeading,
@@ -54,10 +34,9 @@ import {
   DropdownMenu,
   DropdownSection,
 } from "odinkit/client";
-import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { EventGroupWithInfo } from "prisma/types/Events";
+import { useMemo } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
-import { filterCategories } from "../../../../utils/categories";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";

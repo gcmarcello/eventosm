@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
-import { For, Title } from "odinkit";
-import PhotoAlbum from "react-photo-album";
 import { GalleryContainer } from "../components/GalleryContainer";
 
 export default async function GalleryPage({

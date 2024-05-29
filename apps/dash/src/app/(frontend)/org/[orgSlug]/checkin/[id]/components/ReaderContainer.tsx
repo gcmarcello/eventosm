@@ -6,7 +6,7 @@ import {
   QrCodeIcon,
 } from "@heroicons/react/24/outline";
 import { Event, EventGroup, Organization } from "@prisma/client";
-import { For, SubmitButton, Text, Title } from "odinkit";
+import { For, Heading, SubmitButton, Text } from "odinkit";
 import {
   Button,
   Description,
@@ -84,14 +84,14 @@ export default function ReaderContainer({
             backgroundColor: organization.options.colors.secondaryColor.hex,
           }}
         >
-          <Title
+          <Heading
             style={{
               color: organization.options.colors.primaryColor.hex,
             }}
             className=" w-full text-slate-100"
           >
             Check-in - {event.name}
-          </Title>
+          </Heading>
         </div>
         {data && (
           <div className="flex h-[calc(100dvh-96px-4rem)] flex-col items-stretch bg-zinc-100 py-4">

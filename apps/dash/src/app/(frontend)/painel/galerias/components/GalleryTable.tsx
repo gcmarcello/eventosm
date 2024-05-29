@@ -1,13 +1,14 @@
 "use client";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Gallery, Organization } from "@prisma/client";
-import { Link, Table } from "odinkit";
+import { Table } from "odinkit";
 import {
   Dropdown,
   DropdownButton,
   DropdownMenu,
   DropdownItem,
   Button,
+  Link,
 } from "odinkit/client";
 
 export function GalleryTable({

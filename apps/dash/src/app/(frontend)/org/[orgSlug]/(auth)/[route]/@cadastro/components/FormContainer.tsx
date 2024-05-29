@@ -28,8 +28,8 @@ import {
   ButtonSpinner,
   Container,
   For,
+  Heading,
   SubmitButton,
-  Title,
 } from "odinkit";
 import { Transition } from "@headlessui/react";
 import { Organization, State } from "@prisma/client";
@@ -114,7 +114,7 @@ export default function FormContainer({
 
   return (
     <Container className="mx-4 mb-16 mt-4 lg:col-start-2 lg:mb-10 lg:px-12 lg:pt-10">
-      <Title className="my-4">Cadastro de Atleta</Title>
+      <Heading className="my-4">Cadastro de Atleta</Heading>
       <MultistepForm
         onSubmit={(data) => signUpTrigger(data)}
         hform={form}

@@ -21,8 +21,7 @@ import {
   EllipsisVerticalIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { Badge, date } from "odinkit";
-import { Table } from "odinkit";
+import { Table, date } from "odinkit";
 import {
   Button,
   Dropdown,
@@ -33,8 +32,9 @@ import {
   showToast,
   useAction,
   Form,
-  DropdownSeparator,
+  DropdownDivider,
   Date,
+  Badge,
 } from "odinkit/client";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
 import { ModalityControlModal } from "../modalities/ModalityControlModal";
@@ -370,7 +370,7 @@ export default function EventBatches({
                   >
                     Editar
                   </DropdownItem>
-                  <DropdownSeparator />
+                  <DropdownDivider />
                   <DropdownItem
                     onClick={async () => {
                       await navigator.clipboard.writeText(

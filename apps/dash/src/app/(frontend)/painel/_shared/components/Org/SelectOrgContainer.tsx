@@ -7,8 +7,8 @@ import { changeActiveOrganization } from "@/app/api/orgs/action";
 import { BottomNavigation } from "../../../../_shared/components/BottomNavigation";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { Avatar, Container, Text } from "odinkit";
-import { Button, showToast, useAction } from "odinkit/client";
+import { Container, Text } from "odinkit";
+import { Avatar, Button, showToast, useAction } from "odinkit/client";
 
 export default function SelectOrgContainer({
   organizations,

@@ -1,5 +1,5 @@
 "use client";
-import { Alertbox, Link, Text, cpfValidator } from "odinkit";
+import { Alertbox, Text, cpfValidator } from "odinkit";
 import {
   Description,
   ErrorMessage,
@@ -7,6 +7,7 @@ import {
   Fieldset,
   Label,
   Legend,
+  Link,
   useAction,
   useFormContext,
 } from "odinkit/client";

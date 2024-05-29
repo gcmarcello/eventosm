@@ -1,11 +1,6 @@
-import { Title } from "odinkit";
-import NewsCard from "../../_shared/NewsCard";
-import clsx from "clsx";
-import { Menu, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
 import { Date } from "odinkit/client";
-import Image from "next/image";
+
+import { Heading } from "odinkit";
 
 export default async function NewsPage({
   params,
@@ -20,7 +15,7 @@ export default async function NewsPage({
   return (
     <div className="bg-slate-200">
       <div className="rounded-b-md bg-white px-4 pt-8 lg:mx-64 lg:px-16">
-        <Title>Notícias</Title>
+        <Heading>Notícias</Heading>
         <ul role="list" className="divide-y divide-gray-100 lg:py-4">
           {news.map((n) => (
             <li

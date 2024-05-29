@@ -17,7 +17,6 @@ import { EventRegistrationBatch, Organization } from "@prisma/client";
 import {
   Alertbox,
   For,
-  Link,
   List,
   LoadingSpinner,
   TableBody,

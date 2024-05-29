@@ -1,7 +1,8 @@
 import { readEventResults } from "@/app/api/results/service";
 import { ResultsTable } from "../campeonatos/[eventGroupId]/components/ResultTable";
-import { Link, Title } from "odinkit";
 import { notFound } from "next/navigation";
+import { Heading } from "odinkit";
+import { Link } from "odinkit/client";
 
 export default async function EventResultPage({
   params,
@@ -19,7 +20,7 @@ export default async function EventResultPage({
   return (
     <div className="mt-8 px-4 pb-20 lg:px-32">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-end">
-        <Title>Resultados - {event?.name}</Title>
+        <Heading>Resultados - {event?.name}</Heading>
         {event.eventGroupId ? (
           <Link
             className="text-sm underline"

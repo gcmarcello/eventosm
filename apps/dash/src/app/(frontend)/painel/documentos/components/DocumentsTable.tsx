@@ -3,8 +3,9 @@ import { DocumentLink } from "@/app/(frontend)/org/[orgSlug]/perfil/documentos/c
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { News, Organization, OrganizationDocument } from "@prisma/client";
 import dayjs from "dayjs";
-import { Badge, Table } from "odinkit";
+import { Table } from "odinkit";
 import {
+  Badge,
   Button,
   Date,
   Dropdown,

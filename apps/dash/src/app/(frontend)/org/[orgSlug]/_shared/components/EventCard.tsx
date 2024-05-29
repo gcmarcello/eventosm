@@ -10,13 +10,14 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 import Image from "next/image";
-import { Badge, For, Link, date } from "odinkit";
+import { For, date } from "odinkit";
 import {
   EventGroupWithEvents,
   EventGroupWithInfo,
   EventWithRegistrationCount,
 } from "prisma/types/Events";
 import { useEffect } from "react";
+import { Badge, Link } from "odinkit/client";
 
 export default async function EventCard({
   event,

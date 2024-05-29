@@ -9,7 +9,7 @@ import {
 import { Button } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithInfo } from "prisma/types/Events";
-import { Link, date } from "odinkit";
+import { date } from "odinkit";
 import {
   QrCodeIcon,
   UserCircleIcon,

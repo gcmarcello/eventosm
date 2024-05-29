@@ -2,8 +2,8 @@
 import { Event, Organization } from "@prisma/client";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
-import { For, Link } from "odinkit";
-import { Form, Label, Select, useForm } from "odinkit/client";
+import { For } from "odinkit";
+import { Form, Label, Link, Select, useForm } from "odinkit/client";
 import { useMemo } from "react";
 import { tabControl } from "../types/formTab";
 

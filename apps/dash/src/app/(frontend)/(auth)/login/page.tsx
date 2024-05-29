@@ -1,8 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginDto, loginDto } from "@/app/api/auth/dto";
-
+import { loginDto } from "@/app/api/auth/dto";
 import { login } from "@/app/api/auth/action";
 import {
   Button,
@@ -116,11 +114,7 @@ export default function LoginPage() {
                 </div>
 
                 <div className="flex">
-                  <SubmitButton
-                    type="submit"
-                    className={"w-full"}
-                    color="indigo"
-                  >
+                  <SubmitButton className={"w-full"} color="indigo">
                     Login
                   </SubmitButton>
                 </div>

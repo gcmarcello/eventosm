@@ -12,9 +12,7 @@ import {
   TabItem,
   For,
   date,
-  Badge,
   Table,
-  Link,
   Alertbox,
 } from "odinkit";
 import {
@@ -23,7 +21,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownLabel,
-  DropdownSeparator,
+  DropdownDivider,
   DropdownDescription,
   Button,
   Date,
@@ -35,6 +33,8 @@ import {
   Input,
   Label,
   DisclosureAccordion,
+  Badge,
+  Link,
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";

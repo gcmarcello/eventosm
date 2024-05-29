@@ -6,7 +6,6 @@ import { EventGroup, Organization } from "@prisma/client";
 import {
   For,
   Heading,
-  Link,
   SubmitButton,
   Table,
   TableMock,

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
-import { Link, Text, date } from "odinkit";
+import { Text, date } from "odinkit";
 import {
   FacebookShareButton,
   TwitterShareButton,

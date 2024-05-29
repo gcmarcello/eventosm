@@ -2,10 +2,9 @@ import { EventCheckIn } from "@prisma/client";
 import CheckinTable from "./components/CheckinTable";
 import { redirect } from "next/navigation";
 import SubeventHeading from "../components/SubeventHeading";
-import { Button } from "odinkit/client";
+import { Button, Link } from "odinkit/client";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { isDev } from "@/utils/settings";
-import { Link } from "odinkit";
 import CopyToClipboard from "@/app/(frontend)/_shared/components/CopyToClipboard";
 
 export type CheckinWithInfo = EventCheckIn & {

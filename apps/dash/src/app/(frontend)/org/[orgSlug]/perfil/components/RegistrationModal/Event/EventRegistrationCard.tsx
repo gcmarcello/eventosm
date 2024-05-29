@@ -2,10 +2,10 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import Image from "next/image";
-import { Badge } from "odinkit";
 
 import { useContext, useState } from "react";
 import { EventRegistrationModalContext } from "../context/RegistrationModal.ctx";
+import { Badge } from "odinkit/client";
 
 export default function EventRegistrationCard() {
   const { registration, visibility, setVisibility } = useContext(

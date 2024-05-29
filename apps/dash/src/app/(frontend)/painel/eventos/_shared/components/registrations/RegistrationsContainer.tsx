@@ -1,36 +1,20 @@
 "use client";
 import { SubmitButton, date } from "odinkit";
-import { Badge, Table, formatPhone } from "odinkit";
-import {
-  Field as HeadlessRadioField,
-  Radio as HeadlessRadio,
-  RadioGroup as HeadlessRadioGroup,
-  type FieldProps as HeadlessFieldProps,
-  type RadioGroupProps as HeadlessRadioGroupProps,
-  type RadioProps as HeadlessRadioProps,
-} from "@headlessui/react";
+
 import {
   Button,
-  Date,
   Description,
   Dialog,
   DialogActions,
   DialogBody,
   DialogDescription,
   DialogTitle,
-  Dropdown,
-  DropdownButton,
-  DropdownItem,
-  DropdownMenu,
-  DropdownSeparator,
   ErrorMessage,
   FieldGroup,
   Fieldset,
   Form,
   Input,
   Label,
-  RadioField,
-  RichTextEditor,
   Select,
   Textarea,
   showToast,
@@ -38,7 +22,6 @@ import {
   useForm,
 } from "odinkit/client";
 import { useEffect, useMemo, useState } from "react";
-import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { ModalitiesWithCategories } from "prisma/types/Modalities";
 import {
   UpdateRegistrationDto,

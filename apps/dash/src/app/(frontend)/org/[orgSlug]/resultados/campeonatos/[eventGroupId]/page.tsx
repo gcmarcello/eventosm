@@ -1,13 +1,4 @@
-import {
-  For,
-  Heading,
-  Link,
-  LoadingSpinner,
-  Table,
-  Text,
-  Title,
-  z,
-} from "odinkit";
+import { For, Heading, LoadingSpinner, Table, Text, z } from "odinkit";
 
 import { useEffect, useMemo, useState } from "react";
 import { ResultsTable } from "./components/ResultTable";
@@ -16,6 +7,7 @@ import EventResultCard from "./components/EventResultCard";
 import dayjs from "dayjs";
 import OrgFooter from "@/app/(frontend)/org/_shared/OrgFooter";
 import { OrgPageContainer } from "../../../_shared/components/OrgPageContainer";
+import { Link } from "odinkit/client";
 
 export default async function EventGroupResultsPage({
   params,
@@ -49,7 +41,7 @@ export default async function EventGroupResultsPage({
         organization={eventGroup.Organization}
         className="grow bg-white px-4 pb-16 pt-4 lg:px-16 lg:pb-8 lg:pt-8 "
       >
-        <Title>Classificação Geral - {eventGroup.name}</Title>
+        <Heading>Classificação Geral - {eventGroup.name}</Heading>
         <div className="mt-2 flex flex-row gap-2 lg:mt-auto lg:items-end">
           <Link
             href={`/campeonatos/${eventGroup.slug}`}

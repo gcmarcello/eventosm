@@ -7,7 +7,7 @@ import {
   DropdownButton,
   DropdownMenu,
   DropdownItem,
-  DropdownSeparator,
+  DropdownDivider,
 } from "odinkit/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
 import { parseEventStatus } from "../../../_shared/utils/eventStatus";
@@ -59,7 +59,7 @@ export function EventPublishingButton({ event }: { event: Event }) {
           {event.status === "draft" ? "Publicar" : "Despublicar"}
         </DropdownItem>
 
-        <DropdownSeparator />
+        <DropdownDivider />
         <DropdownItem>
           <span className={"text-red-600"}>Cancelar</span>
         </DropdownItem>

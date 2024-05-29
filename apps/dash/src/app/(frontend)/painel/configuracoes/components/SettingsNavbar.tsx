@@ -2,7 +2,8 @@
 import { Organization } from "@prisma/client";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { For, Link } from "odinkit";
+import { For } from "odinkit";
+import { Link } from "odinkit/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
 
 const steps = [

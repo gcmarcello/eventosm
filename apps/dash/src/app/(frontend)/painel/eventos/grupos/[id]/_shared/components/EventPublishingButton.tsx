@@ -6,9 +6,9 @@ import { ExtractSuccessResponse } from "odinkit";
 import {
   Dropdown,
   DropdownButton,
+  DropdownDivider,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
   showToast,
   useAction,
 } from "odinkit/client";
@@ -63,7 +63,7 @@ export function EventPublishingButton({
           {eventGroup.status === "draft" ? "Publicar" : "Despublicar"}
         </DropdownItem>
 
-        <DropdownSeparator />
+        <DropdownDivider />
         <DropdownItem>
           <span className={"text-red-600"}>Cancelar</span>
         </DropdownItem>

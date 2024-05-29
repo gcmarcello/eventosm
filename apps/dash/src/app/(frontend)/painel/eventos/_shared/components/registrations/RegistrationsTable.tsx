@@ -1,8 +1,9 @@
 "use client";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import dayjs from "dayjs";
-import { Badge, Table, date } from "odinkit";
+import { Table, date } from "odinkit";
 import {
+  Badge,
   Date,
   Dropdown,
   DropdownButton,

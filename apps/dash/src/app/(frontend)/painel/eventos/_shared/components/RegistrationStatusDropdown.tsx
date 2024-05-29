@@ -5,9 +5,9 @@ import { EventRegistrationStatus } from "@prisma/client";
 import {
   Dropdown,
   DropdownButton,
+  DropdownDivider,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
   useFormContext,
 } from "odinkit/client";
 import clsx from "clsx";
@@ -59,7 +59,7 @@ export default function RegistrationStatusDropdown() {
         <DropdownItem disabled>
           {handleStatusName(form.watch("status"))}
         </DropdownItem>
-        <DropdownSeparator />
+        <DropdownDivider />
         {Object.values(EventRegistrationStatus)
           .sort()
           .map((status) => {

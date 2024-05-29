@@ -3,7 +3,7 @@ import { chooseTextColor } from "@/utils/colors";
 import { isProd } from "@/utils/settings";
 import { Color, Organization } from "@prisma/client";
 import dayjs from "dayjs";
-import { Link } from "odinkit";
+import { Link } from "odinkit/client";
 
 export default function OrgFooter({
   organization,

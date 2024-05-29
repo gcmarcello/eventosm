@@ -2,11 +2,11 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import Image from "next/image";
-import { Badge } from "odinkit";
 
 import { EventGroupRegistrationWithInfo } from "prisma/types/Registrations";
 import { useContext } from "react";
 import { EventGroupRegistrationModalContext } from "../context/RegistrationModal.ctx";
+import { Badge } from "odinkit/client";
 
 export default function EventGroupRegistrationCard() {
   const { registration, visibility, setVisibility } = useContext(

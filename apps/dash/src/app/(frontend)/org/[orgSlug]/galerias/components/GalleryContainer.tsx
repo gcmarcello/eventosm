@@ -1,7 +1,6 @@
 "use client";
 
 import { Gallery, GalleryPhoto, Organization } from "@prisma/client";
-import { Title } from "odinkit";
 import { useMemo, useRef, useState } from "react";
 import PhotoAlbum from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
@@ -9,6 +8,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Link from "next/link";
+import { Heading } from "odinkit";
 
 export function GalleryContainer({
   gallery,
@@ -41,7 +41,7 @@ export function GalleryContainer({
     <>
       <div className="xxl:mx-40 rounded-md bg-white px-10 py-4">
         <div className="flex items-end gap-2">
-          <Title>{gallery.name}</Title>
+          <Heading>{gallery.name}</Heading>
           {(gallery.eventGroupId || gallery.eventId) && (
             <Link
               style={{ color: organization.options.colors.primaryColor.hex }}

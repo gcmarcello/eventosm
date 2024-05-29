@@ -18,7 +18,6 @@ import clsx from "clsx";
 import {
   Alertbox,
   For,
-  Link,
   SubmitButton,
   TableBody,
   TableCell,
@@ -49,6 +48,7 @@ import {
   Form,
   Input,
   Label,
+  Link,
   MultistepForm,
   Select,
   Switch,

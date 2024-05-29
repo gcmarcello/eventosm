@@ -6,8 +6,8 @@ import {
   EventRegistration,
 } from "@prisma/client";
 import { set } from "lodash";
-import { Badge, For, LoadingSpinner } from "odinkit";
-import { useAction } from "odinkit/client";
+import { For, LoadingSpinner } from "odinkit";
+import { Badge, useAction } from "odinkit/client";
 import { EventGroupEventCheckinsAndAbsences } from "prisma/types/Events";
 import { useEffect, useState } from "react";
 import AbsenceJustificationModal from "../../AbsenceJustificationModal";

@@ -20,13 +20,6 @@ import {
   TicketIcon,
 } from "@heroicons/react/20/solid";
 import {
-  Avatar,
-  Dropdown,
-  DropdownButton,
-  DropdownDivider,
-  DropdownItem,
-  DropdownLabel,
-  DropdownMenu,
   Navbar,
   NavbarDivider,
   NavbarItem,
@@ -45,6 +38,15 @@ import {
   SidebarSpacer,
 } from "odinkit";
 import { DashboardLayout } from "./components/DashboardLayout";
+import {
+  Avatar,
+  Dropdown,
+  DropdownButton,
+  DropdownDivider,
+  DropdownItem,
+  DropdownLabel,
+  DropdownMenu,
+} from "odinkit/client";
 
 const navItems = [
   { label: "Home", url: "/painel/" },

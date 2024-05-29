@@ -1,14 +1,6 @@
 import dayjs from "dayjs";
 import { notFound } from "next/navigation";
-import {
-  BiFileEarmarkPdf,
-  For,
-  Heading,
-  TabItem,
-  Table,
-  Text,
-  Title,
-} from "odinkit";
+import { BiFileEarmarkPdf, For, Heading, TabItem, Table, Text } from "odinkit";
 import { DisclosureAccordion } from "odinkit/client";
 import PublicOrgDocumentsTable from "./components/PublicOrgDocumentsTable";
 import OrgFooter from "../../_shared/OrgFooter";
@@ -37,7 +29,7 @@ export default async function InstitutionalPage({
     <>
       <div className="pb-20">
         <div className="mx-auto max-w-7xl rounded-b-md bg-white px-4  pt-8 lg:gap-x-8 lg:px-8">
-          <Title>Institucional e Transparência</Title>
+          <Heading>Institucional e Transparência</Heading>
           <div className="my-2 space-y-2 text-sm">
             <Text>
               Bem-vindo à página Institucional e de Transparência da{" "}

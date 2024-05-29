@@ -7,8 +7,9 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import { Link, date } from "odinkit";
+import { date } from "odinkit";
 import clsx from "clsx";
+import { Link } from "odinkit/client";
 
 export default async function EventResultCard({
   event,

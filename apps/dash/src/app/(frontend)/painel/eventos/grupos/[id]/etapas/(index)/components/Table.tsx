@@ -3,7 +3,7 @@ import { isDev } from "@/utils/settings";
 import { EllipsisVerticalIcon, LinkIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup } from "@prisma/client";
 import Image from "next/image";
-import { Table, Badge } from "odinkit";
+import { Table } from "odinkit";
 import {
   useAction,
   showToast,
@@ -15,9 +15,10 @@ import {
   DropdownLabel,
   DropdownMenu,
   DropdownSection,
-  DropdownSeparator,
   Date,
   Button,
+  Badge,
+  DropdownDivider,
 } from "odinkit/client";
 import { useState } from "react";
 import { OrganizationWithDomain } from "prisma/types/Organization";
@@ -178,7 +179,7 @@ export function SubeventsTable({
 
                   {info.row.original.status != "finished" && (
                     <>
-                      <DropdownSeparator />
+                      <DropdownDivider />
 
                       <DropdownSection>
                         <DropdownHeading>Realização</DropdownHeading>

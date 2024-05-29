@@ -8,15 +8,8 @@ import { updateEventStatus } from "@/app/api/events/status/action";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Organization } from "@prisma/client";
 import clsx from "clsx";
-import {
-  Heading,
-  Table,
-  Badge,
-  ExtractSuccessResponse,
-  Link,
-  formatPhone,
-} from "odinkit";
-import { useAction, showToast, Button } from "odinkit/client";
+import { Heading, Table, ExtractSuccessResponse, formatPhone } from "odinkit";
+import { useAction, showToast, Button, Badge, Link } from "odinkit/client";
 import { useContext, useEffect } from "react";
 import { sortAbsences } from "../utils/sorting";
 import { DenyJustificationAlert } from "./DenyJustificationAlert";

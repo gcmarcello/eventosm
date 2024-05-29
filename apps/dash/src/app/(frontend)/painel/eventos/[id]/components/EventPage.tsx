@@ -22,7 +22,7 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
+  DropdownDivider,
 } from "odinkit/client";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
@@ -141,7 +141,7 @@ export default function UpdateEventPage({
             {event.status === "draft" ? "Publicar" : "Despublicar"}
           </DropdownItem>
 
-          <DropdownSeparator />
+          <DropdownDivider />
           <DropdownItem>
             <span className={"text-red-600"}>Cancelar</span>
           </DropdownItem>

@@ -12,6 +12,7 @@ import {
   TrophyIcon,
 } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Dialog,
   DialogActions,
@@ -22,12 +23,9 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  Input,
-  Label,
 } from "odinkit/client";
-import { Badge, Table } from "odinkit";
+import { Table } from "odinkit";
 import { useState } from "react";
-import { Field } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 

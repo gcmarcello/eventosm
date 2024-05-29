@@ -19,6 +19,7 @@ import {
   FileInput,
   Form,
   Label,
+  Link,
   RichTextEditor,
   UseFormReturn,
   showToast,
@@ -36,7 +37,6 @@ import { usePanel } from "@/app/(frontend)/painel/_shared/components/PanelStore"
 import {
   FileImagePreview,
   Heading,
-  Link,
   SubmitButton,
   Tabs,
   Text,
