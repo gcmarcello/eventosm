@@ -24,7 +24,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "odinkit/client";
-import { Table } from "odinkit";
+import { Divider, Heading, Table } from "odinkit";
 import { useState } from "react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -101,12 +101,13 @@ export default function EventsContainer({
       </div>
       <div className="flex flex-col gap-4">
         <div>
-          <div className="font-semibold">Campeonatos</div>
+          <Heading className="mb-4">Eventos</Heading>
+
           <Table
             striped
             pagination={true}
             className="my-2"
-            data={eventGroups}
+            data={[...eventGroups, ...events]}
             columns={(columnHelper) => [
               columnHelper.accessor("name", {
                 id: "name",
@@ -132,6 +133,21 @@ export default function EventsContainer({
                   </Link>
                 ),
               }),
+              columnHelper.accessor("options", {
+                id: "type",
+                header: "Tipo",
+                enableColumnFilter: false,
+                enableSorting: true,
+                enableGlobalFilter: true,
+                cell: (info) => {
+                  if ("eventGroupId" in info.row.original) {
+                    return <Badge color="orange">Evento</Badge>;
+                  } else {
+                    return <Badge color="purple">Campeonato</Badge>;
+                  }
+                },
+              }),
+
               columnHelper.accessor("status", {
                 id: "status",
                 header: "Status",
@@ -147,15 +163,6 @@ export default function EventsContainer({
                   }
                 },
               }),
-              columnHelper.accessor("Event", {
-                id: "events",
-                header: "Etapas",
-                enableSorting: true,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => info.getValue()?.length || 0,
-              }),
-
               columnHelper.accessor("id", {
                 id: "id",
                 enableColumnFilter: false,
@@ -169,83 +176,6 @@ export default function EventsContainer({
                       <DropdownItem
                         href={`/painel/eventos/grupos/${info.getValue()}`}
                       >
-                        Editar
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                ),
-              }),
-            ]}
-          />
-        </div>
-
-        <div>
-          <div className="font-semibold">Eventos</div>
-          <Table
-            striped
-            search={true}
-            className="my-2"
-            data={events}
-            columns={(columnHelper) => [
-              columnHelper.accessor("name", {
-                id: "name",
-                header: "Nome",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                enableColumnFilter: false,
-                cell: (info) => (
-                  <Link
-                    className="flex items-center gap-3 underline"
-                    href={`/painel/eventos/${info.row.original.id}/geral`}
-                  >
-                    {info.row.original.imageUrl && (
-                      <Image
-                        width={56}
-                        height={56}
-                        className="rounded-full"
-                        src={info.row.original.imageUrl}
-                        alt={`event-${info.row.original.slug}`}
-                      />
-                    )}
-                    {info.getValue()}
-                  </Link>
-                ),
-              }),
-              columnHelper.accessor("status", {
-                id: "status",
-                header: "Status",
-                enableSorting: true,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => {
-                  switch (info.getValue()) {
-                    case "draft":
-                      return <Badge color="amber">Pendente</Badge>;
-                    case "published":
-                      return <Badge color="green">Publicado</Badge>;
-                  }
-                },
-              }),
-              columnHelper.accessor("_count.EventRegistration", {
-                id: "registrations",
-                header: "Inscrições Ativas",
-                enableSorting: true,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => info.getValue(),
-              }),
-              columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => (
-                  <Dropdown>
-                    <DropdownButton plain>
-                      <EllipsisVerticalIcon className="text-zinc-500" />
-                    </DropdownButton>
-                    <DropdownMenu>
-                      <DropdownItem href={`/painel/eventos/${info.getValue()}`}>
                         Editar
                       </DropdownItem>
                     </DropdownMenu>

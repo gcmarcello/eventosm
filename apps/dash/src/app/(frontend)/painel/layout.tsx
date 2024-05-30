@@ -41,23 +41,5 @@ export default async function PanelLayout({
   if (!activeOrg || !organization)
     return <SelectOrgContainer organizations={organizations} />;
 
-  return (
-    <>
-      <PanelSidebarsLayout
-        user={data?.request.userSession}
-        organization={organization}
-      />
-      <PanelStore
-        value={{
-          colors: {
-            primaryColor: organization?.options?.colors.primaryColor,
-            secondaryColor: organization?.options?.colors.secondaryColor,
-          },
-        }}
-      />
-      <div className={clsx("px-3 py-4 lg:ml-64 lg:p-8 lg:pb-20 lg:pt-5")}>
-        {children}
-      </div>
-    </>
-  );
+  return <>{children}</>;
 }
