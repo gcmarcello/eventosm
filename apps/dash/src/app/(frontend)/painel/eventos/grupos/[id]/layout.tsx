@@ -9,6 +9,9 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { Button } from "odinkit/client";
 import { EventGroupNavbar } from "./_shared/components/EventGroupNavbar";
 import EventPublishing from "./_shared/components/EventPublishing";
+import { DashboardLayout } from "../../../_shared/components/DashboardLayout";
+import { EventSidebar } from "../../_shared/EventSidebar";
+import { EventGroupSidebar } from "../../_shared/EventGroupSidebar";
 
 export default async function EventGroupPanelLayout({
   children,
@@ -27,52 +30,11 @@ export default async function EventGroupPanelLayout({
 
   if (!eventGroup) return redirect("/painel/eventos");
 
-  const modalities = await readEventModalities({
-    where: { eventGroupId: eventGroup.id },
-  });
-
-  const batches = await readRegistrationBatches({
-    where: { eventGroupId: eventGroup.id },
-  });
-
-  const canPublish = !(
-    modalities.length === 0 ||
-    modalities.every(
-      (modality) => !modality.modalityCategory.length || !batches.length
-    ) ||
-    eventGroup.Event.length === 0
-  );
-
   return (
     <>
-      <div className="flex max-w-full overflow-x-scroll lg:overflow-x-auto">
-        {" "}
-        <EventGroupNavbar
-          eventGroup={eventGroup}
-          organization={request.organization}
-        />
-      </div>
-
-      <div className="pb-20 lg:pb-8">{children}</div>
-
-      <BottomNavigation className="flex flex-row-reverse justify-between gap-3 p-3 px-3">
-        <EventPublishing
-          eventGroup={eventGroup}
-          batches={batches}
-          modalities={modalities}
-          canPublish={canPublish}
-        />
-        {params.step === "geral" && (
-          <Button
-            className={"block lg:hidden"}
-            type="submit"
-            form="generalEventGroupForm"
-            color={request.organization.options.colors.primaryColor.tw.color}
-          >
-            Salvar
-          </Button>
-        )}
-      </BottomNavigation>
+      <DashboardLayout sidebar={<EventGroupSidebar eventGroup={eventGroup} />}>
+        {children}
+      </DashboardLayout>
     </>
   );
 }

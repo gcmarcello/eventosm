@@ -15,7 +15,7 @@ import {
   DropdownLabel,
   DropdownMenu,
   DropdownSection,
-  DropdownSeparator,
+  DropdownDivider,
   Date,
   Button,
 } from "odinkit/client";
@@ -74,7 +74,6 @@ export function SubeventsTable({
       <div className="flex justify-end">
         <Button
           type="button"
-          color={organization.options.colors.primaryColor.tw.color}
           href={`/painel/eventos/grupos/${eventGroup.id}/etapas/criar`}
         >
           Nova Etapa
@@ -178,7 +177,7 @@ export function SubeventsTable({
 
                   {info.row.original.status != "finished" && (
                     <>
-                      <DropdownSeparator />
+                      <DropdownDivider />
 
                       <DropdownSection>
                         <DropdownHeading>Realização</DropdownHeading>

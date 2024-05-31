@@ -22,7 +22,7 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
+  DropdownDivider,
   ErrorMessage,
   FieldGroup,
   Fieldset,

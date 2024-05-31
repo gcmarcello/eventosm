@@ -33,7 +33,7 @@ import {
   showToast,
   useAction,
   Form,
-  DropdownSeparator,
+  DropdownDivider,
   Date,
 } from "odinkit/client";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
@@ -370,7 +370,7 @@ export default function EventBatches({
                   >
                     Editar
                   </DropdownItem>
-                  <DropdownSeparator />
+                  <DropdownDivider />
                   <DropdownItem
                     onClick={async () => {
                       await navigator.clipboard.writeText(

@@ -5,12 +5,7 @@ import {
   upsertEventModalityCategoriesDto,
   upsertEventModalityDto,
 } from "@/app/api/events/dto";
-import {
-  Button,
-  DropdownSeparator,
-  showToast,
-  useAction,
-} from "odinkit/client";
+import { Button, DropdownDivider, showToast, useAction } from "odinkit/client";
 import { useForm } from "odinkit/client";
 import {
   EventGroupWithEvents,
@@ -163,7 +158,7 @@ export default function EventModalities() {
                   >
                     Editar
                   </DropdownItem>
-                  <DropdownSeparator />
+                  <DropdownDivider />
                   <DropdownItem
                     onClick={() => {
                       handleModalOpen(info.row.original);

@@ -7,7 +7,7 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
+  DropdownDivider,
   useFormContext,
 } from "odinkit/client";
 import clsx from "clsx";
@@ -59,7 +59,7 @@ export default function RegistrationStatusDropdown() {
         <DropdownItem disabled>
           {handleStatusName(form.watch("status"))}
         </DropdownItem>
-        <DropdownSeparator />
+        <DropdownDivider />
         {Object.values(EventRegistrationStatus)
           .sort()
           .map((status) => {

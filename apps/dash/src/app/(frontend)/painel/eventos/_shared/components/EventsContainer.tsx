@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { Event, EventGroup, Organization } from "@prisma/client";
 import {
@@ -25,11 +24,11 @@ import {
   Input,
   Label,
 } from "odinkit/client";
-import { Badge, Table } from "odinkit";
-import { useState } from "react";
+import { Badge, Divider, Heading, Table } from "odinkit";
 import { Field } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function EventsContainer({
   events,
@@ -46,13 +45,6 @@ export default function EventsContainer({
   return (
     <>
       <div className="flex items-center justify-end">
-        <Button
-          color={colors.primaryColor.tw.color || "indigo"}
-          onClick={() => setShowNewEventModal(true)}
-        >
-          Novo Evento
-        </Button>
-
         <Dialog open={showNewEventModal} onClose={setShowNewEventModal}>
           <DialogTitle>Novo Evento</DialogTitle>
           <DialogDescription>
@@ -69,7 +61,7 @@ export default function EventsContainer({
                       !colors.primaryColor?.hex && "text-indigo-600"
                     )}
                   />
-                  <div>Grupo de Eventos</div>
+                  <div>Campeonatos</div>
                   <div className="text-xs font-normal text-gray-500">
                     Campeonatos, Séries de Eventos, e etc.
                   </div>
@@ -103,19 +95,29 @@ export default function EventsContainer({
       </div>
       <div className="flex flex-col gap-4">
         <div>
-          <div className="font-semibold">Campeonatos</div>
+          <div className="flex items-center justify-between">
+            <Heading>Seus Eventos</Heading>
+            <Button onClick={() => setShowNewEventModal(true)}>
+              Novo Evento
+            </Button>
+          </div>
+
+          <Divider className="my-6" />
           <Table
             striped
+            search={false}
             pagination={true}
             className="my-2"
-            data={eventGroups}
+            data={[
+              ...eventGroups.map((eg) => ({ ...eg, type: "tournament" })),
+              ...events.map((e) => ({ ...e, type: "event" })),
+            ]}
             columns={(columnHelper) => [
               columnHelper.accessor("name", {
                 id: "name",
                 header: "Nome",
-                enableColumnFilter: false,
+                enableColumnFilter: true,
                 enableSorting: true,
-                enableGlobalFilter: true,
                 cell: (info) => (
                   <Link
                     className="flex items-center gap-3 underline"
@@ -138,24 +140,43 @@ export default function EventsContainer({
                 id: "status",
                 header: "Status",
                 enableSorting: true,
-                enableColumnFilter: false,
+                enableColumnFilter: true,
                 enableGlobalFilter: false,
+                meta: {
+                  filterVariant: "select",
+                  selectOptions: [
+                    { label: "Publicado", value: "published" },
+                    { label: "Rascunho", value: "draft" },
+                  ],
+                },
                 cell: (info) => {
                   switch (info.getValue()) {
                     case "draft":
-                      return <Badge color="amber">Pendente</Badge>;
+                      return <Badge color="amber">Rascunho</Badge>;
                     case "published":
                       return <Badge color="green">Publicado</Badge>;
                   }
                 },
               }),
-              columnHelper.accessor("Event", {
-                id: "events",
-                header: "Etapas",
+              columnHelper.accessor("type", {
+                id: "type",
+                header: "Tipo",
                 enableSorting: true,
-                enableColumnFilter: false,
+                enableColumnFilter: true,
                 enableGlobalFilter: false,
-                cell: (info) => info.getValue()?.length || 0,
+                meta: {
+                  filterVariant: "select",
+                  selectOptions: [
+                    { label: "Campeonato", value: "tournament" },
+                    { label: "Evento", value: "event" },
+                  ],
+                },
+                cell: (info) =>
+                  info.getValue() === "tournament" ? (
+                    <Badge color="purple">Campeonato</Badge>
+                  ) : (
+                    <Badge color="orange">Evento</Badge>
+                  ),
               }),
 
               columnHelper.accessor("id", {
@@ -171,83 +192,6 @@ export default function EventsContainer({
                       <DropdownItem
                         href={`/painel/eventos/grupos/${info.getValue()}`}
                       >
-                        Editar
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                ),
-              }),
-            ]}
-          />
-        </div>
-
-        <div>
-          <div className="font-semibold">Eventos</div>
-          <Table
-            striped
-            search={true}
-            className="my-2"
-            data={events}
-            columns={(columnHelper) => [
-              columnHelper.accessor("name", {
-                id: "name",
-                header: "Nome",
-                enableSorting: true,
-                enableGlobalFilter: true,
-                enableColumnFilter: false,
-                cell: (info) => (
-                  <Link
-                    className="flex items-center gap-3 underline"
-                    href={`/painel/eventos/${info.row.original.id}/geral`}
-                  >
-                    {info.row.original.imageUrl && (
-                      <Image
-                        width={56}
-                        height={56}
-                        className="rounded-full"
-                        src={info.row.original.imageUrl}
-                        alt={`event-${info.row.original.slug}`}
-                      />
-                    )}
-                    {info.getValue()}
-                  </Link>
-                ),
-              }),
-              columnHelper.accessor("status", {
-                id: "status",
-                header: "Status",
-                enableSorting: true,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => {
-                  switch (info.getValue()) {
-                    case "draft":
-                      return <Badge color="amber">Pendente</Badge>;
-                    case "published":
-                      return <Badge color="green">Publicado</Badge>;
-                  }
-                },
-              }),
-              columnHelper.accessor("_count.EventRegistration", {
-                id: "registrations",
-                header: "Inscrições Ativas",
-                enableSorting: true,
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => info.getValue(),
-              }),
-              columnHelper.accessor("id", {
-                id: "id",
-                header: "",
-                enableColumnFilter: false,
-                enableGlobalFilter: false,
-                cell: (info) => (
-                  <Dropdown>
-                    <DropdownButton plain>
-                      <EllipsisVerticalIcon className="text-zinc-500" />
-                    </DropdownButton>
-                    <DropdownMenu>
-                      <DropdownItem href={`/painel/eventos/${info.getValue()}`}>
                         Editar
                       </DropdownItem>
                     </DropdownMenu>

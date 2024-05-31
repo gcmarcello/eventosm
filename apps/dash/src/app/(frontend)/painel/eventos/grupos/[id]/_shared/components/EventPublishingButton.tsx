@@ -8,7 +8,7 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
+  DropdownDivider,
   showToast,
   useAction,
 } from "odinkit/client";
@@ -63,7 +63,7 @@ export function EventPublishingButton({
           {eventGroup.status === "draft" ? "Publicar" : "Despublicar"}
         </DropdownItem>
 
-        <DropdownSeparator />
+        <DropdownDivider />
         <DropdownItem>
           <span className={"text-red-600"}>Cancelar</span>
         </DropdownItem>

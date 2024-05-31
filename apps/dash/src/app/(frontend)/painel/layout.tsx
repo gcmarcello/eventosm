@@ -43,10 +43,6 @@ export default async function PanelLayout({
 
   return (
     <>
-      <PanelSidebarsLayout
-        user={data?.request.userSession}
-        organization={organization}
-      />
       <PanelStore
         value={{
           colors: {
@@ -55,9 +51,7 @@ export default async function PanelLayout({
           },
         }}
       />
-      <div className={clsx("px-3 py-4 lg:ml-64 lg:p-8 lg:pb-20 lg:pt-5")}>
-        {children}
-      </div>
+      {children}
     </>
   );
 }

@@ -23,7 +23,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownLabel,
-  DropdownSeparator,
+  DropdownDivider,
   DropdownDescription,
   Button,
   DisclosureAccordion,

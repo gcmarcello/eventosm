@@ -114,22 +114,6 @@ export function UpsertForm({
 
   const { data, trigger } = useAction({
     action: upsertEvent,
-    prepare: async (data: Schema) => {
-      const { image, ...rest } = data;
-
-      if (!image)
-        return {
-          ...rest,
-          imageUrl: eventGroup.imageUrl ?? undefined,
-        };
-
-      const uploadedFiles = await uploadFiles(
-        [{ name: "image", file: image ? image[0] : [] }],
-        "/events/"
-      );
-
-      return { ...rest, imageUrl: uploadedFiles?.image?.url };
-    },
     onSuccess: () => {
       showToast({
         message: "Etapa salva com sucesso!",
@@ -167,7 +151,26 @@ export function UpsertForm({
   });
 
   return (
-    <Form hform={form} onSubmit={trigger} className="pb-20 pt-4 lg:pb-4">
+    <Form
+      hform={form}
+      onSubmit={async (data) => {
+        const { image, ...rest } = data;
+
+        if (!image)
+          return trigger({
+            ...rest,
+            imageUrl: eventGroup.imageUrl ?? undefined,
+          });
+
+        const uploadedFiles = await uploadFiles(
+          [{ name: "image", file: image ? image[0] : [] }],
+          "/events/"
+        );
+
+        return trigger({ ...rest, imageUrl: uploadedFiles?.image?.url });
+      }}
+      className="pb-20 pt-4 lg:pb-4"
+    >
       <div className="flex w-full justify-between">
         <div className="mb-3 items-center gap-3 lg:flex">
           <Heading>Resultados - {subevent?.name}</Heading>
@@ -261,12 +264,7 @@ export function UpsertForm({
           </Field>
         </FieldGroup>
         <div className="col-span-2 flex  justify-end">
-          <SubmitButton
-            className={"w-full"}
-            color={organization.options.colors.primaryColor.tw.color}
-          >
-            Salvar
-          </SubmitButton>
+          <SubmitButton className={"w-full"}>Salvar</SubmitButton>
         </div>
       </Fieldset>
     </Form>

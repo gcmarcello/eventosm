@@ -11,7 +11,7 @@ import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
-  DropdownSeparator,
+  DropdownDivider,
 } from "odinkit/client";
 import { deleteUserDocument, getUserDocument } from "@/app/api/users/action";
 import { useRouter } from "next/navigation";
@@ -98,7 +98,7 @@ export function DocumentsTable({
                 >
                   <EyeIcon /> Ver
                 </DropdownItem>
-                <DropdownSeparator />
+                <DropdownDivider />
                 <DropdownItem
                   onClick={() => deleteTrigger({ id: info.getValue() })}
                   className={"font-semibold text-red-600"}
