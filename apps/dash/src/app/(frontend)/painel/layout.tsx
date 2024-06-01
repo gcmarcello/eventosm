@@ -56,6 +56,7 @@ export default async function PanelLayout({
       />
       <div className="px-4 lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
         <DashboardNavbar
+          user={data.request.userSession}
           organizations={organizations}
           activeOrgId={organization?.id}
         />

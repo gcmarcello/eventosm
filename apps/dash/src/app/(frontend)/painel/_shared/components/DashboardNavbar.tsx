@@ -1,4 +1,7 @@
 "use client";
+import { logout } from "@/app/api/auth/action";
+import { changeActiveOrganization } from "@/app/api/orgs/action";
+import { UserSession } from "@/middleware/functions/userSession.middleware";
 import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
@@ -12,9 +15,11 @@ import {
   CalendarIcon,
   NewspaperIcon,
   PhotoIcon,
+  UserCircleIcon,
 } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import {
   Navbar,
   NavbarItem,
@@ -42,6 +47,8 @@ import {
   DropdownDivider,
   DropdownHeading,
   DropdownSection,
+  useAction,
+  showToast,
 } from "odinkit/client";
 import { useState } from "react";
 
@@ -58,6 +65,26 @@ function TeamDropdownMenu({
 }: {
   organizations: Organization[];
 }) {
+  const router = useRouter();
+  const { trigger: changeOrgTrigger, isMutating: isOrgChanging } = useAction({
+    action: changeActiveOrganization,
+    redirect: true,
+    onSuccess: () => {
+      showToast({
+        title: "Sucesso!",
+        message: "Organização alterada com sucesso.",
+        variant: "success",
+      });
+      router.refresh();
+    },
+    onError: () =>
+      showToast({
+        title: "Erro!",
+        message: "Não foi possível trocar de organização.",
+        variant: "error",
+      }),
+  });
+
   return (
     <DropdownMenu
       className="min-w-80 lg:min-w-64"
@@ -72,7 +99,7 @@ function TeamDropdownMenu({
         <DropdownHeading>Suas Organizações</DropdownHeading>
         <For each={organizations}>
           {(org) => (
-            <DropdownItem>
+            <DropdownItem onClick={() => changeOrgTrigger(org.id)}>
               <Avatar src={org.options.images?.logo} />
               <DropdownLabel>{org.name}</DropdownLabel>
             </DropdownItem>
@@ -91,13 +118,26 @@ function TeamDropdownMenu({
 
 export function DashboardNavbar({
   organizations,
+  user,
   activeOrgId,
 }: {
   organizations: Organization[];
   activeOrgId: string;
+  user: UserSession;
 }) {
   const [showSidebar, setShowSidebar] = useState(false);
   const activeOrg = organizations.find((org) => org.id === activeOrgId);
+
+  const { trigger: logoutTrigger, isMutating: isLoggingOut } = useAction({
+    action: logout,
+    redirect: true,
+    onError: () =>
+      showToast({
+        title: "Erro!",
+        message: "Não foi possível efetuar o logout.",
+        variant: "error",
+      }),
+  });
 
   return (
     <>
@@ -168,28 +208,24 @@ export function DashboardNavbar({
           </NavbarItem>
           <Dropdown>
             <DropdownButton as={NavbarItem}>
-              <Avatar src="/profile-photo.jpg" square />
+              <UserCircleIcon /> {user.fullName.split(" ")[0]}
             </DropdownButton>
             <DropdownMenu className="min-w-64" anchor={{ to: "bottom end" }}>
               <DropdownItem href="/my-profile">
                 <UserIcon />
-                <DropdownLabel>My profile</DropdownLabel>
-              </DropdownItem>
-              <DropdownItem href="/settings">
-                <Cog8ToothIcon />
-                <DropdownLabel>Settings</DropdownLabel>
+                <DropdownLabel>Meu Perfil</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
               <DropdownItem href="/privacy-policy">
                 <ShieldCheckIcon />
-                <DropdownLabel>Privacy policy</DropdownLabel>
+                <DropdownLabel>Política de Privacidade</DropdownLabel>
               </DropdownItem>
               <DropdownItem href="/share-feedback">
                 <LightBulbIcon />
-                <DropdownLabel>Share feedback</DropdownLabel>
+                <DropdownLabel>Enviar Feedback</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
-              <DropdownItem href="/logout">
+              <DropdownItem onClick={() => logoutTrigger()}>
                 <ArrowRightStartOnRectangleIcon />
                 <DropdownLabel>Sign out</DropdownLabel>
               </DropdownItem>
