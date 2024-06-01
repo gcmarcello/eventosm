@@ -24,7 +24,6 @@ export default function DocumentSection({
   organization: Organization;
   eventId?: string;
 }) {
-  console.log(eventId);
   const form = useFormContext<SignupDto>();
   const Field = useMemo(() => form.createField(), []);
   const {
