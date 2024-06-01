@@ -71,10 +71,9 @@ export default function GeneralInfoSection({
       onSubmit={(data) => {
         updateTrigger(data);
       }}
-      className="space-y-3 pb-20 lg:pb-10"
     >
-      <Fieldset className="divide-y rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4">
-        <FieldGroup className="grid grid-cols-2 gap-x-4 gap-y-4 ">
+      <Fieldset>
+        <FieldGroup>
           <FieldGroup className="col-span-2">
             <Legend className="col-span-2 lg:col-span-1">
               Detalhes Gerais
@@ -131,6 +130,7 @@ export default function GeneralInfoSection({
           <div className="mb-4">
             <Legend>Mídias sociais</Legend>
             <Text>Links das mídias sociais da organização.</Text>
+            <Text>Utilize o link completo, com "https://"</Text>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-4 ">
             <Field
@@ -191,8 +191,6 @@ export default function GeneralInfoSection({
               <ErrorMessage />
             </Field>
           </div>
-
-          <Text>Utilize o link completo, com "https://"</Text>
         </FieldGroup>
       </Fieldset>
       <SubmitButton>Salvar</SubmitButton>

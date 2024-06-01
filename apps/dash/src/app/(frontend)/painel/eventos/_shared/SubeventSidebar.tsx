@@ -1,5 +1,10 @@
 "use client";
 import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
+import {
   ChevronDownIcon,
   Cog8ToothIcon,
   PlusIcon,
@@ -17,14 +22,13 @@ import {
   ShieldCheckIcon,
   LightBulbIcon,
   ArrowRightStartOnRectangleIcon,
-  AdjustmentsHorizontalIcon,
   CalendarDaysIcon,
-  ClipboardDocumentIcon,
-  ShoppingBagIcon,
   UserGroupIcon,
+  ShoppingBagIcon,
+  ClipboardDocumentIcon,
 } from "@heroicons/react/20/solid";
-import { Event } from "@prisma/client";
-import { usePathname } from "next/navigation";
+import { AnimatePresence, easeOut, motion } from "framer-motion";
+import { useParams, usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarHeader,
@@ -36,10 +40,8 @@ import {
   SidebarHeading,
   SidebarSpacer,
   SidebarFooter,
-  NavbarItem,
-  NavbarLabel,
-  MobileSidebar,
   For,
+  SidebarDivider,
 } from "odinkit";
 import {
   Dropdown,
@@ -49,50 +51,75 @@ import {
   DropdownLabel,
   DropdownDivider,
 } from "odinkit/client";
-import { EventWithInfo } from "prisma/types/Events";
+import { EventGroupWithEvents, EventWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const navigation = [
-  { name: "Configurações Gerais", href: "geral", icon: HomeIcon },
-  { name: "Pagamento", href: "pagamento", icon: HomeIcon },
-  { name: "Etapas", href: "etapas", icon: CalendarDaysIcon },
-  {
-    name: "Modalidades e Categorias",
-    href: "modalidades",
-    icon: UserGroupIcon,
-  },
-  { name: "Kits", href: "kits", icon: ShoppingBagIcon },
-  { name: "Lotes de Inscrição", href: "lotes", icon: TicketIcon },
-  { name: "Inscrições", href: "inscritos", icon: ClipboardDocumentIcon },
-  { name: "Suporte", href: "support", icon: QuestionMarkCircleIcon },
-];
-
-export function EventSidebar({ event }: { event: Event }) {
-  const [showSidebar, setShowSidebar] = useState(false);
+export function SubeventSidebar({
+  eventGroup,
+}: {
+  eventGroup: EventGroupWithEvents;
+}) {
+  const params = useParams();
   const pathname = usePathname();
   const currentPage = useMemo(() => pathname.split("/").pop(), [pathname]);
-  const sidebar = useMemo(
-    () => (
+  return (
+    <div className="sticky top-0 hidden lg:block">
       <Sidebar>
         <SidebarHeader>
           <SidebarSection className="max-lg:hidden">
             <SidebarItem>
-              <div className="max-w-[250px]">{event.name}</div>
+              <SidebarLabel>{eventGroup.name}</SidebarLabel>
             </SidebarItem>
           </SidebarSection>
         </SidebarHeader>
         <SidebarBody>
           <SidebarSection>
-            <SidebarHeading>Configurações Gerais</SidebarHeading>
-            <For each={navigation}>
-              {(item) => (
-                <SidebarItem
-                  current={currentPage === item.href}
-                  href={`/painel/eventos/grupos/${event.id}` + "/" + item.href}
-                >
-                  <HomeIcon />
-                  <SidebarLabel>{item.name}</SidebarLabel>
-                </SidebarItem>
+            <SidebarItem
+              current={currentPage === "geral"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/geral`}
+            >
+              <HomeIcon />
+              <SidebarLabel>Voltar ao Campeonato</SidebarLabel>
+            </SidebarItem>
+            <SidebarDivider />
+            <SidebarHeading>Etapas</SidebarHeading>
+
+            <For each={eventGroup.Event}>
+              {(event) => (
+                <>
+                  <SidebarItem
+                    key={event.id}
+                    current={params.eventId === event.id}
+                    href={`/painel/eventos/etapas/${eventGroup.id}/${event.id}/editar`}
+                  >
+                    <SidebarLabel>{event.name}</SidebarLabel>
+                  </SidebarItem>
+                  {params.eventId === event.id && (
+                    <>
+                      <SidebarItem
+                        key={event.id}
+                        className="ms-2"
+                        href={`/painel/eventos/etapas/${eventGroup.id}/${event.id}/checkins`}
+                      >
+                        <SidebarLabel>Check-ins</SidebarLabel>
+                      </SidebarItem>
+                      <SidebarItem
+                        key={event.id}
+                        className="ms-2"
+                        href={`/painel/eventos/etapas/${eventGroup.id}/${event.id}/faltas`}
+                      >
+                        <SidebarLabel>Faltas</SidebarLabel>
+                      </SidebarItem>
+                      <SidebarItem
+                        key={event.id}
+                        className="ms-2"
+                        href={`/painel/eventos/etapas/${eventGroup.id}/${event.id}/resultados`}
+                      >
+                        <SidebarLabel>Resultados</SidebarLabel>
+                      </SidebarItem>
+                    </>
+                  )}
+                </>
               )}
             </For>
           </SidebarSection>
@@ -103,6 +130,10 @@ export function EventSidebar({ event }: { event: Event }) {
               <QuestionMarkCircleIcon />
               <SidebarLabel>Suporte</SidebarLabel>
             </SidebarItem>
+            {/* <SidebarItem href="/changelog">
+            <SparklesIcon />
+            <SidebarLabel>Changelog</SidebarLabel>
+          </SidebarItem> */}
           </SidebarSection>
         </SidebarBody>
         <SidebarFooter className="max-lg:hidden">
@@ -153,34 +184,6 @@ export function EventSidebar({ event }: { event: Event }) {
           </Dropdown>
         </SidebarFooter>
       </Sidebar>
-    ),
-    []
-  );
-  return (
-    <>
-      <div className="sticky top-0 hidden lg:block">{sidebar}</div>
-      <header className="flex items-center justify-end bg-zinc-200 px-4 lg:hidden dark:bg-zinc-500">
-        <div className="py-2.5 lg:hidden">
-          <NavbarItem
-            onClick={() => setShowSidebar(true)}
-            aria-label="Open navigation"
-          >
-            <div className="flex w-full items-center gap-2">
-              <NavbarLabel>Configurações do Evento</NavbarLabel>
-              <span className="">
-                <AdjustmentsHorizontalIcon className="size-5 text-zinc-500 dark:text-white" />
-              </span>
-            </div>
-          </NavbarItem>
-        </div>
-      </header>
-      <MobileSidebar
-        open={showSidebar}
-        close={() => setShowSidebar(false)}
-        direction="right"
-      >
-        {sidebar}
-      </MobileSidebar>
-    </>
+    </div>
   );
 }

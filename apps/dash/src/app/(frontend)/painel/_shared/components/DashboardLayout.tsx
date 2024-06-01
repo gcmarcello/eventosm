@@ -38,7 +38,7 @@ import { DashboardNavbar } from "./DashboardNavbar";
 export function DashboardLayout({
   children,
   sidebar,
-  navbar = <DashboardNavbar />,
+  navbar,
 }: {
   children?: React.ReactNode;
   sidebar?: React.ReactNode;

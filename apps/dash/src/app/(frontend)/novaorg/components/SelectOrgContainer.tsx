@@ -4,7 +4,6 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { Organization } from "@prisma/client";
 import { changeActiveOrganization } from "@/app/api/orgs/action";
 
-import { BottomNavigation } from "../../../../_shared/components/BottomNavigation";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { Avatar, Container, Text } from "odinkit";
@@ -55,14 +54,6 @@ export default function SelectOrgContainer({
               </div>
             </Container>
           </Link>
-
-          <BottomNavigation className="lg:hidden">
-            <div className="flex justify-end p-2">
-              <Button href="/novaorg" color="indigo">
-                Criar Nova
-              </Button>
-            </div>
-          </BottomNavigation>
         </div>
       </div>
     </div>

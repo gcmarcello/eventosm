@@ -176,12 +176,9 @@ export function UpsertForm({
           <Heading>Resultados - {subevent?.name}</Heading>
           <Link
             className="text-sm"
-            style={{
-              color: organization.options.colors.primaryColor.hex,
-            }}
-            href={`/painel/eventos/grupos/${eventGroup.id}/etapas`}
+            href={`/painel/eventos/etapas/${eventGroup.id}`}
           >
-            Voltar à lista de etapas
+            <Text>Voltar à lista de etapas</Text>
           </Link>
         </div>
       </div>

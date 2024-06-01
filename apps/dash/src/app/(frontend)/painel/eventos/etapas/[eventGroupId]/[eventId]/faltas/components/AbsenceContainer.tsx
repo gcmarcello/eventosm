@@ -175,21 +175,6 @@ export function AbsencesForm({
             }),
           ]}
         />
-        <div className="mt-4 flex justify-end">
-          <Button
-            loading={isEventStatusMutating}
-            onClick={() =>
-              eventStatusTrigger({
-                status: "finished",
-                eventId: event.id,
-                eventGroupId: eventGroup.id,
-              })
-            }
-            color={organization.options.colors.primaryColor.tw.color}
-          >
-            Finalizar Evento
-          </Button>
-        </div>
       </div>
     </>
   );

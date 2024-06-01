@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { UpsertForm } from "../../_shared/components/UpsertForm";
+import { notFound, redirect } from "next/navigation";
 import { AbsencesForm } from "./components/AbsenceContainer";
 import { readSubeventReviewData } from "@/app/api/events/service";
 import { AbsencesPageProvider } from "./context/AbsencesPageProvider";
@@ -7,15 +6,17 @@ import { AbsencesPageProvider } from "./context/AbsencesPageProvider";
 export default async function Faltas({
   params,
 }: {
-  params: { id: string; eventid: string };
+  params: { eventId: string };
 }) {
-  const eventGroup = await prisma.eventGroup.findUnique({
-    where: { id: params.id },
-    include: { Event: { orderBy: { dateStart: "asc" } } },
+  const event = await prisma.event.findUnique({
+    where: { id: params.eventId },
   });
 
-  const event = await prisma.event.findUnique({
-    where: { id: params.eventid },
+  if (!event || !event.eventGroupId) return notFound();
+
+  const eventGroup = await prisma.eventGroup.findUnique({
+    where: { id: event.eventGroupId },
+    include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
   const organization = await prisma.organization.findUnique({

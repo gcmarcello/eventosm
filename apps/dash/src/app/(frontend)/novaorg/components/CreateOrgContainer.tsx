@@ -1,6 +1,6 @@
 "use client";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Container, Text } from "odinkit";
+import { Container, Heading, Text } from "odinkit";
 import { Button } from "odinkit/client";
 import { useState } from "react";
 import NewOrganizationForm from "./NewOrganizationForm";
@@ -19,9 +19,7 @@ export default function CreateOrgContainer(props: CreateOrgContainerProps) {
         <div className="col-span-full lg:col-span-2 lg:col-start-3">
           <Container className="mx-4 mt-4 lg:col-start-2 lg:mb-10">
             <div className="flex flex-col gap-6 px-8 py-6">
-              <span className="text-base/6 font-semibold text-zinc-700 data-[disabled]:opacity-50 sm:text-sm/6 ">
-                Bem vindo ao painel do EventoSM.
-              </span>
+              <Heading>Bem vindo ao painel do EventoSM.</Heading>
               <Text>
                 Parece que você ainda não possui nenhuma organização conectada
                 ao seu perfil.
@@ -36,11 +34,9 @@ export default function CreateOrgContainer(props: CreateOrgContainerProps) {
                 fotos, vídeos, notícias, calendário de eventos, e muito mais!)
               </Text>
 
-              <Button onClick={() => setScreen("form")} color="red">
-                <div className="flex gap-2">
-                  <PlusIcon />
-                  Criar Organização
-                </div>
+              <Button onClick={() => setScreen("form")} color="purple">
+                <PlusIcon />
+                Iniciar
               </Button>
             </div>
           </Container>

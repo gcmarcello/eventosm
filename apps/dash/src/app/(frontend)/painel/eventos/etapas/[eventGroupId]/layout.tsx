@@ -7,13 +7,11 @@ import { readRegistrationBatches } from "@/app/api/batches/service";
 import { readEventGroups, readEventModalities } from "@/app/api/events/service";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import { Button } from "odinkit/client";
-import { EventGroupNavbar } from "./_shared/components/EventGroupNavbar";
-import EventPublishing from "./_shared/components/EventPublishing";
-import { DashboardLayout } from "../../../_shared/components/DashboardLayout";
-import { EventSidebar } from "../../_shared/EventSidebar";
 import { EventGroupSidebar } from "../../_shared/EventGroupSidebar";
+import { DashboardLayout } from "@/app/(frontend)/painel/_shared/components/DashboardLayout";
+import { SubeventSidebar } from "../../_shared/SubeventSidebar";
 
-export default async function EventGroupPanelLayout({
+export default async function SubeventLayout({
   children,
   params,
 }: {
@@ -31,7 +29,7 @@ export default async function EventGroupPanelLayout({
   if (!eventGroup) return redirect("/painel/eventos");
 
   return (
-    <DashboardLayout sidebar={<EventGroupSidebar eventGroup={eventGroup} />}>
+    <DashboardLayout sidebar={<SubeventSidebar eventGroup={eventGroup} />}>
       {children}
     </DashboardLayout>
   );

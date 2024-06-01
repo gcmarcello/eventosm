@@ -9,6 +9,8 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { Button } from "odinkit/client";
 import { EventNavbar } from "./components/EventNavbar";
 import EventPublishing from "./components/EventPublishing";
+import { DashboardLayout } from "../../_shared/components/DashboardLayout";
+import { EventSidebar } from "../_shared/EventSidebar";
 
 export default async function EventGroupPanelLayout({
   children,
@@ -41,22 +43,8 @@ export default async function EventGroupPanelLayout({
   );
 
   return (
-    <>
-      <div className="flex max-w-full overflow-x-scroll lg:overflow-x-auto">
-        {" "}
-        <EventNavbar event={event} organization={request.organization} />
-      </div>
-
-      <div className="pb-20 lg:pb-8">{children}</div>
-
-      <BottomNavigation className="flex flex-row-reverse justify-between gap-3 p-3 px-3">
-        <EventPublishing
-          event={event}
-          batches={batches}
-          modalities={modalities}
-          canPublish={canPublish}
-        />
-      </BottomNavigation>
-    </>
+    <DashboardLayout sidebar={<EventSidebar event={event} />}>
+      {children}
+    </DashboardLayout>
   );
 }

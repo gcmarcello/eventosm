@@ -71,14 +71,6 @@ export function SubeventsTable({
         />
       )}
 
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          href={`/painel/eventos/grupos/${eventGroup.id}/etapas/criar`}
-        >
-          Nova Etapa
-        </Button>
-      </div>
       <Table
         data={eventGroup.Event}
         search={false}
@@ -140,7 +132,7 @@ export function SubeventsTable({
                   <DropdownSection>
                     <DropdownHeading>Ações</DropdownHeading>
                     <DropdownItem
-                      href={`/painel/eventos/grupos/${eventGroup.id}/etapas/${info.row.original.id}/editar`}
+                      href={`/painel/eventos/etapas/${eventGroup.id}/${info.row.original.id}/editar`}
                     >
                       <DropdownLabel>Editar</DropdownLabel>
                     </DropdownItem>

@@ -4,10 +4,10 @@ import { UpsertForm } from "../_shared/components/UpsertForm";
 export default async function CriarEtapa({
   params,
 }: {
-  params: { id: string };
+  params: { eventGroupId: string };
 }) {
   const eventGroup = await prisma.eventGroup.findUnique({
-    where: { id: params.id },
+    where: { id: params.eventGroupId },
     include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
