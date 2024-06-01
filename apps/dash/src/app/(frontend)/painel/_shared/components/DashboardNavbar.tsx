@@ -59,7 +59,10 @@ function TeamDropdownMenu({
   organizations: Organization[];
 }) {
   return (
-    <DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
+    <DropdownMenu
+      className="min-w-80 lg:min-w-64"
+      anchor={{ to: "bottom start" }}
+    >
       <DropdownItem href="/painel/configuracoes/geral">
         <Cog8ToothIcon />
         <DropdownLabel>Configurações</DropdownLabel>
@@ -78,7 +81,7 @@ function TeamDropdownMenu({
       </DropdownSection>
 
       <DropdownDivider />
-      <DropdownItem href="/teams/create">
+      <DropdownItem href="/novaorg">
         <PlusIcon />
         <DropdownLabel>Criar nova&hellip;</DropdownLabel>
       </DropdownItem>
@@ -129,6 +132,7 @@ export function DashboardNavbar({
       </MobileSidebar>
       <Navbar>
         <NavbarItem
+          className="block lg:hidden"
           onClick={() => setShowSidebar(true)}
           aria-label="Open navigation"
         >
@@ -166,7 +170,7 @@ export function DashboardNavbar({
             <DropdownButton as={NavbarItem}>
               <Avatar src="/profile-photo.jpg" square />
             </DropdownButton>
-            <DropdownMenu className="min-w-64" anchor="bottom end">
+            <DropdownMenu className="min-w-64" anchor={{ to: "bottom end" }}>
               <DropdownItem href="/my-profile">
                 <UserIcon />
                 <DropdownLabel>My profile</DropdownLabel>

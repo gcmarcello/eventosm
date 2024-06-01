@@ -19,11 +19,7 @@ export default function CreateOrgContainer(props: CreateOrgContainerProps) {
         <div className="col-span-full lg:col-span-2 lg:col-start-3">
           <Container className="mx-4 mt-4 lg:col-start-2 lg:mb-10">
             <div className="flex flex-col gap-6 px-8 py-6">
-              <Heading>Bem vindo ao painel do EventoSM.</Heading>
-              <Text>
-                Parece que você ainda não possui nenhuma organização conectada
-                ao seu perfil.
-              </Text>
+              <Heading>Criar uma nova organização</Heading>
               <Text>
                 Para criar um evento, você precisa primeiro criar uma
                 organização.

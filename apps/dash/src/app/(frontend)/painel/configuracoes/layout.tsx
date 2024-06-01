@@ -1,5 +1,5 @@
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { SettingsNavbar } from "./components/SettingsNavbar";
+import { OrgSettingsSidebar } from "./components/SettingsNavbar";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import { DashboardLayout } from "../_shared/components/DashboardLayout";
@@ -18,7 +18,11 @@ export default async function Layout({
         <SettingsNavbar organization={request.organization} />
       </div> */}
 
-      <DashboardLayout>{children}</DashboardLayout>
+      <DashboardLayout
+        sidebar={<OrgSettingsSidebar organization={request.organization} />}
+      >
+        {children}
+      </DashboardLayout>
     </>
   );
 }

@@ -8,7 +8,7 @@ import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import YoutubeIcon from "node_modules/odinkit/src/icons/YoutubeIcon";
-import { SubmitButton, Text, formatPhone } from "odinkit";
+import { Divider, Heading, SubmitButton, Text, formatPhone } from "odinkit";
 import {
   FieldGroup,
   ErrorMessage,
@@ -72,16 +72,19 @@ export default function GeneralInfoSection({
         updateTrigger(data);
       }}
     >
+      <div className="flex items-center justify-between">
+        <div>
+          <Heading>Detalhes Gerais</Heading>
+          <Text>Informações principais da organização.</Text>
+        </div>
+        <div>
+          <SubmitButton>Salvar</SubmitButton>
+        </div>
+      </div>
+
+      <Divider className="my-6 lg:my-8" />
       <Fieldset>
         <FieldGroup>
-          <FieldGroup className="col-span-2">
-            <Legend className="col-span-2 lg:col-span-1">
-              Detalhes Gerais
-            </Legend>
-            <Text className="col-span-2 lg:col-span-1">
-              Informações principais da organização.
-            </Text>
-          </FieldGroup>
           <Field className="col-span-2 lg:col-span-1" name="name">
             <Label>Nome da Organização</Label>
             <Input />
@@ -193,7 +196,6 @@ export default function GeneralInfoSection({
           </div>
         </FieldGroup>
       </Fieldset>
-      <SubmitButton>Salvar</SubmitButton>
     </Form>
   );
 }

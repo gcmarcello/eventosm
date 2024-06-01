@@ -26,7 +26,7 @@ export async function createOrganization(request: UpsertOrganizationDto) {
   }
 
   return ActionResponse.success({
-    redirect: `/painel`,
+    redirect: `/painel/configuracoes/geral`,
   });
 }
 
