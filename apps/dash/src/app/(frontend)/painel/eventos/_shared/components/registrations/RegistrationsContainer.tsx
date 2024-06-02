@@ -224,7 +224,9 @@ export default function RegistrationsContainer({
                   <div className="flex grow flex-col justify-evenly gap-2 lg:gap-0">
                     <Button
                       className={"w-full"}
-                      loading={isResendingEmailConfirmation}
+                      loading={
+                        isResendingEmailConfirmation ? "true" : undefined
+                      }
                       onClick={() =>
                         selectedRegistration &&
                         resendConfirmationTrigger(selectedRegistration.id)
