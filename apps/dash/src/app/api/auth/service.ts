@@ -195,5 +195,12 @@ export async function login(request: LoginDto) {
     }
   }
 
-  return createToken({ id: potentialUser.id });
+  const ownedOrg = await prisma.organization.findFirst({
+    where: { ownerId: potentialUser.id },
+  });
+
+  return {
+    token: await createToken({ id: potentialUser.id }),
+    organization: ownedOrg,
+  };
 }
