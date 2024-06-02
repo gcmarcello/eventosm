@@ -52,6 +52,7 @@ import {
   showToast,
 } from "odinkit/client";
 import { useState } from "react";
+import { LoadingOverlay } from "./LoadingOverlay";
 
 const navItems = [
   { label: "Home", url: "/painel", icon: HomeIcon },
@@ -141,11 +142,7 @@ export function DashboardNavbar({
   });
 
   if (isLoggingOut) {
-    return (
-      <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-zinc-950 bg-opacity-75">
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingOverlay />;
   }
 
   return (
