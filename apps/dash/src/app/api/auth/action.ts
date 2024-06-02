@@ -55,7 +55,7 @@ export async function logout(pathName?: string) {
     return ActionResponse.error(error);
   }
   return ActionResponse.success({
-    redirect: "/",
+    redirect: pathName || "/",
   });
 }
 

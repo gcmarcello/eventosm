@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import clsx from "clsx";
+import { DashboardLayout } from "../../painel/_shared/components/DashboardLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,9 +15,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <div className="lg:h-screen">{children}</div>
-    </>
-  );
+  return <div className="h-screen">{children}</div>;
 }

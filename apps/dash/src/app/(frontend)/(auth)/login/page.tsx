@@ -46,7 +46,7 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="grid min-h-full flex-1 grid-cols-8">
+    <div className="grid min-h-full flex-1 grid-cols-8 dark:bg-zinc-900  lg:dark:bg-zinc-950">
       <div className="col-span-8 flex flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:flex-none lg:px-16 lg:py-12 xl:col-span-3 xl:px-16">
         <div className="mx-auto w-full ">
           <div>
@@ -55,7 +55,7 @@ export default function LoginPage() {
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
               alt="Your Company"
             />
-            <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
               Login EventoSM
             </h2>
             <p className="mt-2 text-sm leading-6 text-gray-500">

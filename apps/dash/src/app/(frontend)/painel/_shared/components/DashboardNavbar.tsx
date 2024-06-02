@@ -37,6 +37,7 @@ import {
   SidebarItem,
   SidebarLabel,
   SidebarSection,
+  LoadingSpinner,
 } from "odinkit";
 import {
   Dropdown,
@@ -139,6 +140,14 @@ export function DashboardNavbar({
       }),
   });
 
+  if (isLoggingOut) {
+    return (
+      <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-zinc-950 bg-opacity-75">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <>
       <MobileSidebar open={showSidebar} close={() => setShowSidebar(false)}>
@@ -225,7 +234,7 @@ export function DashboardNavbar({
                 <DropdownLabel>Enviar Feedback</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
-              <DropdownItem onClick={() => logoutTrigger()}>
+              <DropdownItem onClick={() => logoutTrigger("/login")}>
                 <ArrowRightStartOnRectangleIcon />
                 <DropdownLabel>Sign out</DropdownLabel>
               </DropdownItem>
