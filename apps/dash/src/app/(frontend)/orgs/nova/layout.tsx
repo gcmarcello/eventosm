@@ -1,4 +1,4 @@
-import { DashboardLayout } from "../painel/_shared/components/DashboardLayout";
+import { DashboardLayout } from "../../painel/_shared/components/DashboardLayout";
 
 export default function NewOrganizationPage({
   children,
