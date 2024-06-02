@@ -9,6 +9,8 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import { redirect } from "next/navigation";
 import { PanelStore } from "./_shared/components/PanelStore";
 import { DashboardNavbar } from "./_shared/components/DashboardNavbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,12 +39,13 @@ export default async function PanelLayout({
     where: { ownerId: data.request.userSession.id },
   });
 
+  if (!organizations.length) return redirect("/orgs/nova");
+
   const activeOrg = cookies().get("activeOrg")?.value;
 
-  const organization =
-    organizations?.find((org) => org.id === activeOrg) || organizations[0];
+  const organization = organizations?.find((org) => org.id === activeOrg);
 
-  if (!organization) return redirect("/novaorg");
+  if (!organization) return redirect("/orgs/nova");
 
   return (
     <>
@@ -62,7 +65,7 @@ export default async function PanelLayout({
         />
       </div>
 
-      {children}
+      <Suspense fallback={<Loading />}>{children}</Suspense>
     </>
   );
 }
