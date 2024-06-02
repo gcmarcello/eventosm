@@ -19,7 +19,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Organization } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Navbar,
   NavbarItem,
@@ -55,11 +55,31 @@ import { useState } from "react";
 import { LoadingOverlay } from "./LoadingOverlay";
 
 const navItems = [
-  { label: "Home", url: "/painel", icon: HomeIcon },
-  { label: "Eventos", url: "/painel/eventos", icon: CalendarIcon },
-  { label: "Notícias", url: "/painel/notícias", icon: NewspaperIcon },
-  { label: "Usuários", url: "/painel/usuários", icon: UserIcon },
-  { label: "Galerias", url: "/painel/galerias", icon: PhotoIcon },
+  { label: "Home", url: "/painel", id: "painel", icon: HomeIcon },
+  {
+    label: "Eventos",
+    url: "/painel/eventos",
+    id: "eventos",
+    icon: CalendarIcon,
+  },
+  {
+    label: "Notícias",
+    url: "/painel/noticias",
+    id: "noticias",
+    icon: NewspaperIcon,
+  },
+  {
+    label: "Usuários",
+    url: "/painel/usuarios",
+    id: "usuarios",
+    icon: UserIcon,
+  },
+  {
+    label: "Galerias",
+    url: "/painel/galerias",
+    id: "galerias",
+    icon: PhotoIcon,
+  },
 ];
 
 function TeamDropdownMenu({
@@ -86,6 +106,10 @@ function TeamDropdownMenu({
         variant: "error",
       }),
   });
+
+  if (isOrgChanging) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <DropdownMenu
@@ -129,6 +153,8 @@ export function DashboardNavbar({
 }) {
   const [showSidebar, setShowSidebar] = useState(false);
   const activeOrg = organizations.find((org) => org.id === activeOrgId);
+  const pathname = usePathname();
+  const currentPage = pathname.split("/").pop();
 
   const { trigger: logoutTrigger, isMutating: isLoggingOut } = useAction({
     action: logout,
@@ -198,8 +224,8 @@ export function DashboardNavbar({
         </Dropdown>
         <NavbarDivider className="max-lg:hidden" />
         <NavbarSection className="max-lg:hidden">
-          {navItems.map(({ label, url }) => (
-            <NavbarItem key={label} href={url}>
+          {navItems.map(({ label, url, id }) => (
+            <NavbarItem current={id === currentPage} key={label} href={url}>
               {label}
             </NavbarItem>
           ))}
