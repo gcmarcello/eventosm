@@ -1,18 +1,22 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { UpsertForm } from "../../_shared/components/UpsertForm";
 
 export default async function EditarEtapa({
   params,
 }: {
-  params: { id: string; eventid: string };
+  params: { eventId: string };
 }) {
-  const eventGroup = await prisma.eventGroup.findUnique({
-    where: { id: params.id },
-    include: { Event: { orderBy: { dateStart: "asc" } } },
+  const event = await prisma.event.findUnique({
+    where: { id: params.eventId },
   });
 
-  const event = await prisma.event.findUnique({
-    where: { id: params.eventid },
+  console.log(event);
+
+  if (!event || !event.eventGroupId) return notFound();
+
+  const eventGroup = await prisma.eventGroup.findUnique({
+    where: { id: event.eventGroupId },
+    include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
   const organization = await prisma.organization.findUnique({

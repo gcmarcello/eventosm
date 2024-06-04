@@ -1,42 +1,51 @@
 "use client";
-
 import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
+import {
+  ChevronDownIcon,
+  Cog8ToothIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  InboxIcon,
   HomeIcon,
-  CalendarDaysIcon,
-  UserGroupIcon,
-  ShoppingBagIcon,
+  Square2StackIcon,
   TicketIcon,
-  ClipboardDocumentIcon,
+  Cog6ToothIcon,
+  MegaphoneIcon,
   QuestionMarkCircleIcon,
+  SparklesIcon,
   ChevronUpIcon,
   UserIcon,
-  Cog8ToothIcon,
   ShieldCheckIcon,
   LightBulbIcon,
   ArrowRightStartOnRectangleIcon,
+  CalendarDaysIcon,
+  UserGroupIcon,
+  ShoppingBagIcon,
+  ClipboardDocumentIcon,
   AdjustmentsHorizontalIcon,
-  SwatchIcon,
-  Cog6ToothIcon,
-  UserCircleIcon,
-  IdentificationIcon,
-  SparklesIcon,
 } from "@heroicons/react/20/solid";
-import { Organization } from "@prisma/client";
-import { usePathname } from "next/navigation";
+import { AnimatePresence, easeOut, motion } from "framer-motion";
+import { useParams, usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarHeader,
-  SidebarSection,
   SidebarItem,
+  Avatar,
+  SidebarLabel,
+  SidebarSection,
   SidebarBody,
   SidebarHeading,
-  SidebarLabel,
   SidebarSpacer,
   SidebarFooter,
-  Avatar,
+  For,
+  SidebarDivider,
+  MobileSidebar,
   NavbarItem,
   NavbarLabel,
-  MobileSidebar,
 } from "odinkit";
 import {
   Dropdown,
@@ -47,12 +56,12 @@ import {
   DropdownDivider,
 } from "odinkit/client";
 import { EventGroupWithEvents } from "prisma/types/Events";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-export function OrgSettingsSidebar({
-  organization,
+export function EventGroupSidebar({
+  eventGroup,
 }: {
-  organization: Organization;
+  eventGroup: EventGroupWithEvents;
 }) {
   const pathname = usePathname();
   const currentPage = useMemo(() => pathname.split("/").pop(), [pathname]);
@@ -63,7 +72,7 @@ export function OrgSettingsSidebar({
         <SidebarHeader>
           <SidebarSection className="max-lg:hidden">
             <SidebarItem>
-              <div className="max-w-[250px]">Configurações da Organização</div>
+              <div className="max-w-[250px]">{eventGroup.name}</div>
             </SidebarItem>
           </SidebarSection>
         </SidebarHeader>
@@ -72,25 +81,55 @@ export function OrgSettingsSidebar({
             <SidebarHeading>Configurações Gerais</SidebarHeading>
             <SidebarItem
               current={currentPage === "geral"}
-              href={`/painel/configuracoes/geral`}
+              href={`/painel/eventos/grupos/${eventGroup.id}/geral`}
             >
-              <UserCircleIcon />
-              <SidebarLabel>Perfil</SidebarLabel>
+              <HomeIcon />
+              <SidebarLabel>Informações do Evento</SidebarLabel>
             </SidebarItem>
             <SidebarItem
-              current={currentPage === "personalizacao"}
-              href={`/painel/configuracoes/personalizacao`}
+              current={currentPage === "pagamento"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/pagamento`}
             >
-              <SwatchIcon />
-              <SidebarLabel>Personalização</SidebarLabel>
+              <HomeIcon />
+              <SidebarLabel>Pagamento</SidebarLabel>
             </SidebarItem>
             <SidebarItem
-              current={currentPage === "permissoes"}
-              href={`/painel/configuracaoes/permissoes`}
-              disabled
+              current={currentPage === "etapas"}
+              href={`/painel/eventos/etapas/${eventGroup.id}`}
             >
-              <IdentificationIcon />
-              <SidebarLabel>Permissões</SidebarLabel>
+              <CalendarDaysIcon />
+              <SidebarLabel>Etapas</SidebarLabel>
+            </SidebarItem>
+          </SidebarSection>
+          <SidebarSection>
+            <SidebarHeading>Realização</SidebarHeading>
+            <SidebarItem
+              current={currentPage === "modalidades"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/modalidades`}
+            >
+              <UserGroupIcon />
+              <SidebarLabel>Modalidades e Categorias</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem
+              current={currentPage === "kits"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/kits`}
+            >
+              <ShoppingBagIcon />
+              <SidebarLabel>Kits</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem
+              current={currentPage === "lotes"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/lotes`}
+            >
+              <TicketIcon />
+              <SidebarLabel>Lotes de Inscrição</SidebarLabel>
+            </SidebarItem>
+            <SidebarItem
+              current={currentPage === "inscritos"}
+              href={`/painel/eventos/grupos/${eventGroup.id}/inscritos`}
+            >
+              <ClipboardDocumentIcon />
+              <SidebarLabel>Inscrições</SidebarLabel>
             </SidebarItem>
           </SidebarSection>
 
@@ -123,7 +162,7 @@ export function OrgSettingsSidebar({
             aria-label="Open navigation"
           >
             <div className="flex w-full items-center gap-2">
-              <NavbarLabel>Configurações da Organização</NavbarLabel>
+              <NavbarLabel>Configurações do Evento</NavbarLabel>
               <span className="">
                 <AdjustmentsHorizontalIcon className="size-5 text-zinc-500 dark:text-white" />
               </span>

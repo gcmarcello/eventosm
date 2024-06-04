@@ -1,6 +1,6 @@
 import { EventCheckIn } from "@prisma/client";
 import CheckinTable from "./components/CheckinTable";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import SubeventHeading from "../components/SubeventHeading";
 import { Button, Link } from "odinkit/client";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
@@ -19,10 +19,10 @@ export type CheckinWithInfo = EventCheckIn & {
 export default async function CheckinPage({
   params,
 }: {
-  params: { eventid: string; id: string };
+  params: { eventId: string };
 }) {
   const checkins = await prisma.eventCheckIn.findMany({
-    where: { eventId: params.eventid },
+    where: { eventId: params.eventId },
     include: {
       registration: {
         include: {
@@ -35,19 +35,21 @@ export default async function CheckinPage({
     },
   });
 
+  const event = await prisma.event.findUnique({
+    where: { id: params.eventId },
+  });
+
+  if (!event || !event.eventGroupId) return notFound();
+
   const eventGroup = await prisma.eventGroup.findUnique({
-    where: { id: params.id },
-    include: {
-      Event: {
-        where: {
-          id: params.eventid,
-        },
-      },
-    },
+    where: { id: event.eventGroupId },
+    include: { Event: { orderBy: { dateStart: "asc" } } },
   });
+
   const regCount = await prisma.eventRegistration.count({
-    where: { eventGroupId: params.id, status: "active" },
+    where: { eventGroupId: eventGroup?.id, status: "active" },
   });
+
   const organization = await prisma.organization.findUnique({
     where: { id: eventGroup?.organizationId },
     include: { OrgCustomDomain: true },
@@ -79,15 +81,13 @@ export default async function CheckinPage({
         <div className="flex items-center gap-3 font-semibold">
           <Link
             target="_blank"
-            href={`${isDev ? "http" : "https"}://${organization.OrgCustomDomain[0]?.domain}/checkin/${params.eventid}`}
+            href={`${isDev ? "http" : "https"}://${organization.OrgCustomDomain[0]?.domain}/checkin/${params.eventId}`}
           >
-            <Button color={organization.options.colors.primaryColor.tw.color}>
-              Realizar Check-ins
-            </Button>
+            <Button>Realizar Check-ins</Button>
           </Link>
 
           <CopyToClipboard
-            str={`${isDev ? "http" : "https"}://${organization?.OrgCustomDomain[0]?.domain}/checkin/${params.eventid}`}
+            str={`${isDev ? "http" : "https"}://${organization?.OrgCustomDomain[0]?.domain}/checkin/${params.eventId}`}
           >
             <div className="flex cursor-pointer gap-2 text-sm text-gray-600">
               <ClipboardDocumentIcon className="size-5" /> Copiar Link

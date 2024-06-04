@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import clsx from "clsx";
 import { PanelSidebarsLayout } from "./_shared/components/Sidebars/PanelSidebarsLayout";
@@ -8,14 +8,22 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import { readOrganizations } from "@/app/api/orgs/service";
 import { redirect } from "next/navigation";
 import { PanelStore } from "./_shared/components/PanelStore";
-import CreateOrgContainer from "./_shared/components/Org/CreateOrgContainer";
-import SelectOrgContainer from "./_shared/components/Org/SelectOrgContainer";
+import { DashboardNavbar } from "./_shared/components/DashboardNavbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "EventoSM",
   description: "Painel de Controle",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "#18181b" },
+  ],
 };
 
 export default async function PanelLayout({
@@ -31,15 +39,33 @@ export default async function PanelLayout({
     where: { ownerId: data.request.userSession.id },
   });
 
-  if (!organizations.length)
-    return <CreateOrgContainer user={data.request.userSession} />;
+  if (!organizations.length) return redirect("/orgs/nova");
 
   const activeOrg = cookies().get("activeOrg")?.value;
 
   const organization = organizations?.find((org) => org.id === activeOrg);
 
-  if (!activeOrg || !organization)
-    return <SelectOrgContainer organizations={organizations} />;
+  if (!organization) return redirect("/orgs/nova");
 
-  return <>{children}</>;
+  return (
+    <>
+      <PanelStore
+        value={{
+          colors: {
+            primaryColor: organization?.options?.colors.primaryColor,
+            secondaryColor: organization?.options?.colors.secondaryColor,
+          },
+        }}
+      />
+      <div className="px-4 lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
+        <DashboardNavbar
+          user={data.request.userSession}
+          organizations={organizations}
+          activeOrgId={organization?.id}
+        />
+      </div>
+
+      <Suspense fallback={<Loading />}>{children}</Suspense>
+    </>
+  );
 }

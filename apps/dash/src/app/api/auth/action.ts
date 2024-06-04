@@ -33,7 +33,13 @@ export async function login(request: LoginDto) {
 
   try {
     const login = await service.login(loginInfo);
-    cookies().set("token", login);
+    if (login.organization && !cookies().get("activeOrg")?.value) {
+      console.log("aqui");
+      cookies().set("activeOrg", login.organization.id, {
+        maxAge: 60 * 60 * 24 * 7,
+      });
+    }
+    cookies().set("token", login.token);
   } catch (error) {
     if ((error as User).fullName) {
       console.log("error");
@@ -55,7 +61,7 @@ export async function logout(pathName?: string) {
     return ActionResponse.error(error);
   }
   return ActionResponse.success({
-    redirect: "/",
+    redirect: pathName || "/",
   });
 }
 

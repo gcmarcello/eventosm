@@ -3,7 +3,7 @@ import { isDev } from "@/utils/settings";
 import { EllipsisVerticalIcon, LinkIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup } from "@prisma/client";
 import Image from "next/image";
-import { Table } from "odinkit";
+import { Badge, Table } from "odinkit";
 import {
   useAction,
   showToast,
@@ -17,7 +17,6 @@ import {
   DropdownSection,
   Date,
   Button,
-  Badge,
   DropdownDivider,
 } from "odinkit/client";
 import { useState } from "react";
@@ -72,15 +71,6 @@ export function SubeventsTable({
         />
       )}
 
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          color={organization.options.colors.primaryColor.tw.color}
-          href={`/painel/eventos/grupos/${eventGroup.id}/etapas/criar`}
-        >
-          Nova Etapa
-        </Button>
-      </div>
       <Table
         data={eventGroup.Event}
         search={false}
@@ -142,7 +132,7 @@ export function SubeventsTable({
                   <DropdownSection>
                     <DropdownHeading>Ações</DropdownHeading>
                     <DropdownItem
-                      href={`/painel/eventos/grupos/${eventGroup.id}/etapas/${info.row.original.id}/editar`}
+                      href={`/painel/eventos/etapas/${eventGroup.id}/${info.row.original.id}/editar`}
                     >
                       <DropdownLabel>Editar</DropdownLabel>
                     </DropdownItem>

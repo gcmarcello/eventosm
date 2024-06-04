@@ -90,6 +90,10 @@ export default function GeralForm({
       onSubmit={async (data) => {
         const { file, ...rest } = data;
 
+        if (!file) {
+          return await trigger(rest);
+        }
+
         const uploadedFiles = await uploadFiles(
           [{ name: "file", file: file ? file[0] : [] }],
           "events/groups/"

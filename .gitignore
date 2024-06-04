@@ -4,6 +4,9 @@ node_modules
 .pnp
 .pnp.js
 
+# NextJS Generated Assets
+apps/dash/public/assets
+
 # Local env files
 .env
 .env.local

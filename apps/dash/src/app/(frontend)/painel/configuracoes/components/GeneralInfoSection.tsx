@@ -8,7 +8,7 @@ import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import InstagramIcon from "node_modules/odinkit/src/icons/InstagramIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import YoutubeIcon from "node_modules/odinkit/src/icons/YoutubeIcon";
-import { SubmitButton, Text, formatPhone } from "odinkit";
+import { Divider, Heading, SubmitButton, Text, formatPhone } from "odinkit";
 import {
   FieldGroup,
   ErrorMessage,
@@ -71,18 +71,20 @@ export default function GeneralInfoSection({
       onSubmit={(data) => {
         updateTrigger(data);
       }}
-      className="space-y-3 pb-20 lg:pb-10"
     >
-      <Fieldset className="divide-y rounded-lg border bg-opacity-50 px-4 py-4 shadow-sm lg:pb-4">
-        <FieldGroup className="grid grid-cols-2 gap-x-4 gap-y-4 ">
-          <FieldGroup className="col-span-2">
-            <Legend className="col-span-2 lg:col-span-1">
-              Detalhes Gerais
-            </Legend>
-            <Text className="col-span-2 lg:col-span-1">
-              Informações principais da organização.
-            </Text>
-          </FieldGroup>
+      <div className="flex items-center justify-between">
+        <div>
+          <Heading>Detalhes Gerais</Heading>
+          <Text>Informações principais da organização.</Text>
+        </div>
+        <div>
+          <SubmitButton>Salvar</SubmitButton>
+        </div>
+      </div>
+
+      <Divider className="my-6 lg:my-8" />
+      <Fieldset>
+        <FieldGroup>
           <Field className="col-span-2 lg:col-span-1" name="name">
             <Label>Nome da Organização</Label>
             <Input />
@@ -131,6 +133,7 @@ export default function GeneralInfoSection({
           <div className="mb-4">
             <Legend>Mídias sociais</Legend>
             <Text>Links das mídias sociais da organização.</Text>
+            <Text>Utilize o link completo, com "https://"</Text>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-4 ">
             <Field
@@ -191,11 +194,8 @@ export default function GeneralInfoSection({
               <ErrorMessage />
             </Field>
           </div>
-
-          <Text>Utilize o link completo, com "https://"</Text>
         </FieldGroup>
       </Fieldset>
-      <SubmitButton>Salvar</SubmitButton>
     </Form>
   );
 }

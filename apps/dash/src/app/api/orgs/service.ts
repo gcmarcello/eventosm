@@ -7,7 +7,7 @@ import {
 } from "./dto";
 import { prisma } from "prisma/prisma";
 import { generateColorJson } from "../colors/service";
-import { normalizePhone } from "odinkit";
+import { normalizeDocument, normalizeEmail, normalizePhone } from "odinkit";
 import { Organization, OrganizationDocumentStatus } from "@prisma/client";
 import { getPreSignedURL } from "../uploads/service";
 
@@ -18,7 +18,7 @@ export async function createOrganization(
     where: { slug: request.slug },
   });
   if (existingSlug) {
-    throw "Já existe uma organização com este link";
+    throw "Já existe uma organização com este link.";
   }
   const id = crypto.randomUUID();
 
@@ -37,12 +37,12 @@ export async function createOrganization(
   const organization = await prisma.organization.create({
     data: {
       id,
-      email: request.email,
+      email: normalizeEmail(request.email),
       name: request.name,
-      abbreviation: request.abbreviation,
+      abbreviation: request.abbreviation.toUpperCase(),
       slug: request.slug || id,
-      phone: request.phone,
-      document: request?.document || null,
+      phone: normalizePhone(request.phone),
+      document: request?.document ? normalizeDocument(request.document) : null,
       owner: { connect: { id: request.userSession.id } },
       options: {
         colors: {
@@ -74,12 +74,12 @@ export async function updateOrganization(
   const updatedOrganization = await prisma.organization.update({
     where: { id: organization.id },
     data: {
-      email: data.email,
+      email: normalizeEmail(data.email),
       name: data.name,
       slug: data.slug,
-      abbreviation: data?.abbreviation,
+      abbreviation: data?.abbreviation.toUpperCase(),
       phone: normalizePhone(data.phone),
-      document: data?.document || null,
+      document: data?.document ? normalizeDocument(data.document) : null,
       options: {
         socialMedia: {
           facebook: data?.options?.socialMedia?.facebook || null,

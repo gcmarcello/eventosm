@@ -1,42 +1,45 @@
 "use client";
-
 import {
+  ChevronDownIcon,
+  Cog8ToothIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  InboxIcon,
   HomeIcon,
-  CalendarDaysIcon,
-  UserGroupIcon,
-  ShoppingBagIcon,
+  Square2StackIcon,
   TicketIcon,
-  ClipboardDocumentIcon,
+  Cog6ToothIcon,
+  MegaphoneIcon,
   QuestionMarkCircleIcon,
+  SparklesIcon,
   ChevronUpIcon,
   UserIcon,
-  Cog8ToothIcon,
   ShieldCheckIcon,
   LightBulbIcon,
   ArrowRightStartOnRectangleIcon,
   AdjustmentsHorizontalIcon,
-  SwatchIcon,
-  Cog6ToothIcon,
-  UserCircleIcon,
-  IdentificationIcon,
-  SparklesIcon,
+  CalendarDaysIcon,
+  ClipboardDocumentIcon,
+  ShoppingBagIcon,
+  UserGroupIcon,
 } from "@heroicons/react/20/solid";
-import { Organization } from "@prisma/client";
+import { Event } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarHeader,
-  SidebarSection,
   SidebarItem,
+  Avatar,
+  SidebarLabel,
+  SidebarSection,
   SidebarBody,
   SidebarHeading,
-  SidebarLabel,
   SidebarSpacer,
   SidebarFooter,
-  Avatar,
   NavbarItem,
   NavbarLabel,
   MobileSidebar,
+  For,
 } from "odinkit";
 import {
   Dropdown,
@@ -46,52 +49,52 @@ import {
   DropdownLabel,
   DropdownDivider,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
-import { useMemo, useState } from "react";
+import { EventWithInfo } from "prisma/types/Events";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-export function OrgSettingsSidebar({
-  organization,
-}: {
-  organization: Organization;
-}) {
+const navigation = [
+  { name: "Configurações Gerais", href: "geral", icon: HomeIcon },
+  { name: "Pagamento", href: "pagamento", icon: HomeIcon },
+  { name: "Etapas", href: "etapas", icon: CalendarDaysIcon },
+  {
+    name: "Modalidades e Categorias",
+    href: "modalidades",
+    icon: UserGroupIcon,
+  },
+  { name: "Kits", href: "kits", icon: ShoppingBagIcon },
+  { name: "Lotes de Inscrição", href: "lotes", icon: TicketIcon },
+  { name: "Inscrições", href: "inscritos", icon: ClipboardDocumentIcon },
+  { name: "Suporte", href: "support", icon: QuestionMarkCircleIcon },
+];
+
+export function EventSidebar({ event }: { event: Event }) {
+  const [showSidebar, setShowSidebar] = useState(false);
   const pathname = usePathname();
   const currentPage = useMemo(() => pathname.split("/").pop(), [pathname]);
-  const [showSidebar, setShowSidebar] = useState(false);
   const sidebar = useMemo(
     () => (
       <Sidebar>
         <SidebarHeader>
           <SidebarSection className="max-lg:hidden">
             <SidebarItem>
-              <div className="max-w-[250px]">Configurações da Organização</div>
+              <div className="max-w-[250px]">{event.name}</div>
             </SidebarItem>
           </SidebarSection>
         </SidebarHeader>
         <SidebarBody>
           <SidebarSection>
             <SidebarHeading>Configurações Gerais</SidebarHeading>
-            <SidebarItem
-              current={currentPage === "geral"}
-              href={`/painel/configuracoes/geral`}
-            >
-              <UserCircleIcon />
-              <SidebarLabel>Perfil</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem
-              current={currentPage === "personalizacao"}
-              href={`/painel/configuracoes/personalizacao`}
-            >
-              <SwatchIcon />
-              <SidebarLabel>Personalização</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem
-              current={currentPage === "permissoes"}
-              href={`/painel/configuracaoes/permissoes`}
-              disabled
-            >
-              <IdentificationIcon />
-              <SidebarLabel>Permissões</SidebarLabel>
-            </SidebarItem>
+            <For each={navigation}>
+              {(item) => (
+                <SidebarItem
+                  current={currentPage === item.href}
+                  href={`/painel/eventos/grupos/${event.id}` + "/" + item.href}
+                >
+                  <HomeIcon />
+                  <SidebarLabel>{item.name}</SidebarLabel>
+                </SidebarItem>
+              )}
+            </For>
           </SidebarSection>
 
           <SidebarSpacer />
@@ -112,10 +115,9 @@ export function OrgSettingsSidebar({
     ),
     [pathname]
   );
-
   return (
     <>
-      <div className="sticky top-0 hidden lg:block">{sidebar}</div>{" "}
+      <div className="sticky top-0 hidden lg:block">{sidebar}</div>
       <header className="flex items-center justify-end bg-zinc-200 px-4 lg:hidden dark:bg-zinc-500">
         <div className="py-2.5 lg:hidden">
           <NavbarItem
@@ -123,7 +125,7 @@ export function OrgSettingsSidebar({
             aria-label="Open navigation"
           >
             <div className="flex w-full items-center gap-2">
-              <NavbarLabel>Configurações da Organização</NavbarLabel>
+              <NavbarLabel>Configurações do Evento</NavbarLabel>
               <span className="">
                 <AdjustmentsHorizontalIcon className="size-5 text-zinc-500 dark:text-white" />
               </span>

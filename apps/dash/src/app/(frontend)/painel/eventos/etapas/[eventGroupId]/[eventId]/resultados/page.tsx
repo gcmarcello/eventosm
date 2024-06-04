@@ -5,11 +5,17 @@ import { cookies } from "next/headers";
 export default async function Resultados({
   params,
 }: {
-  params: { id: string; eventid: string };
+  params: { eventId: string };
 }) {
+  const event = await prisma.event.findUnique({
+    where: { id: params.eventId },
+  });
+
+  if (!event || !event.eventGroupId) return notFound();
+
   const eventGroup = await prisma.eventGroup.findUnique({
-    where: { id: params.id },
-    include: { Event: { where: { id: params.eventid } } },
+    where: { id: event.eventGroupId },
+    include: { Event: { orderBy: { dateStart: "asc" } } },
   });
 
   const activeOrg = cookies().get("activeOrg")?.value;
@@ -22,7 +28,7 @@ export default async function Resultados({
   if (!eventGroup || !organization) return notFound();
 
   const results = await prisma.eventResult.findMany({
-    where: { eventId: params.eventid },
+    where: { eventId: params.eventId },
     include: {
       Registration: {
         include: {
@@ -39,7 +45,7 @@ export default async function Resultados({
       <ResultsForm
         organization={organization}
         eventGroup={eventGroup}
-        eventId={params.eventid}
+        eventId={params.eventId}
         results={results}
       />
     </>

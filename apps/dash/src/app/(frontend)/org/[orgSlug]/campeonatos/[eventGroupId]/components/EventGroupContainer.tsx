@@ -21,6 +21,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownLabel,
+  DropdownDivider,
   DropdownDescription,
   Button,
   DisclosureAccordion,

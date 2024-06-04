@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Table } from "odinkit";
 import NewsTable from "./components/NewsTable";
 import { Button } from "odinkit/client";
+import { DashboardLayout } from "../_shared/components/DashboardLayout";
 
 export default async function NewsPage() {
   const activeOrg = cookies().get("activeOrg")?.value;
@@ -17,16 +18,18 @@ export default async function NewsPage() {
   });
 
   return (
-    <div>
-      <div className="mb-3 flex justify-end">
-        <Button
-          color={organization.options.colors.primaryColor.tw.color}
-          href="/painel/noticias/nova"
-        >
-          Nova notícia
-        </Button>
+    <DashboardLayout>
+      <div>
+        <div className="mb-3 flex justify-end">
+          <Button
+            color={organization.options.colors.primaryColor.tw.color}
+            href="/painel/noticias/nova"
+          >
+            Nova notícia
+          </Button>
+        </div>
+        <NewsTable news={news} />
       </div>
-      <NewsTable news={news} />
-    </div>
+    </DashboardLayout>
   );
 }

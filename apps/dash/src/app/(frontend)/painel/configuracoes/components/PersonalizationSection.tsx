@@ -9,7 +9,9 @@ import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { Organization } from "@prisma/client";
 import {
   BottomNavigation,
+  Divider,
   FileImagePreview,
+  Heading,
   SubmitButton,
   Text,
   z,
@@ -83,7 +85,7 @@ export default function PersonalizationSection({
     <>
       <Form
         hform={form}
-        className="space-y-4 pb-20 lg:pb-4"
+        className=""
         onSubmit={async (data) => {
           const { images, ...rest } = data;
           let hero;
@@ -121,8 +123,18 @@ export default function PersonalizationSection({
           });
         }}
       >
-        <Fieldset className="grid gap-x-4 gap-y-4 rounded-lg border bg-opacity-50 px-4  pt-4 shadow-sm lg:grid-cols-2 lg:pb-4">
-          <FieldGroup className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <Heading>Personalização</Heading>
+            <Text>Escolha as cores e imagens da organização.</Text>
+          </div>
+          <div>
+            <SubmitButton>Salvar</SubmitButton>
+          </div>
+        </div>
+        <Divider className="my-6 lg:my-8" />
+        <Fieldset>
+          <FieldGroup>
             <Field name="primaryColor">
               <Label>Cor Primária</Label>
               <ColorInput />
@@ -131,14 +143,14 @@ export default function PersonalizationSection({
               </Description>
             </Field>
             <Field name="secondaryColor">
-              <Label>Cor Primária</Label>
+              <Label>Cor Secundária</Label>
               <ColorInput />
               <Description className="flex gap-1">
                 Usada no rodapé dos menus da organização e botões públicos.
               </Description>
             </Field>
             <Field name="tertiaryColor">
-              <Label>Cor Primária</Label>
+              <Label>Cor Terciária</Label>
               <ColorInput />
               <Description className="flex gap-1">
                 Usada em botões e outras áreas.
@@ -279,9 +291,6 @@ export default function PersonalizationSection({
             </Field>
           </FieldGroup>
         </Fieldset>
-        <BottomNavigation className="flex justify-end p-2">
-          <SubmitButton>Salvar</SubmitButton>
-        </BottomNavigation>
       </Form>
     </>
   );

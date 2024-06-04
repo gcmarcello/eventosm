@@ -19,7 +19,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(frontend)/painel/eventos/grupos/(pages)/[id]/etapas/_shared/components/UpsertFormtsx",
     "prisma/script.js"
   ],
   "exclude": ["node_modules", ".next"]

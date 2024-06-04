@@ -4,7 +4,7 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import { readOrganizations } from "@/app/api/orgs/service";
 import EventsContainer from "./_shared/components/EventsContainer";
-import { DashboardLayout } from "../../dash/components/DashboardLayout";
+import { DashboardLayout } from "../_shared/components/DashboardLayout";
 
 export default async function EventosPanelPage() {
   const { request } = await UseMiddlewares()
@@ -26,12 +26,14 @@ export default async function EventosPanelPage() {
   });
 
   return (
-    <DashboardLayout>
-      <EventsContainer
-        events={events}
-        eventGroups={eventGroups}
-        organization={organization}
-      />
-    </DashboardLayout>
+    <>
+      <DashboardLayout>
+        <EventsContainer
+          events={events}
+          eventGroups={eventGroups}
+          organization={organization}
+        />
+      </DashboardLayout>
+    </>
   );
 }
