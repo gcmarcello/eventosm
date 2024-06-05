@@ -1,4 +1,5 @@
 import {
+  CategoryDocument,
   Event,
   EventAbsences,
   EventAddon,
@@ -26,6 +27,7 @@ export type EventModalityWithCategories = (EventModality & {
 }) & {
   modalityCategory: (ModalityCategory & {
     _count?: { EventRegistration?: number };
+    CategoryDocument?: CategoryDocument[];
   })[];
 };
 

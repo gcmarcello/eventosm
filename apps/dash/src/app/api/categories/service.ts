@@ -1,11 +1,14 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
-import { UpsertEventModalityCategoriesDto } from "../events/dto";
 import { TeamWithUsers } from "prisma/types/Teams";
 import { CategoryBatch, ModalityCategory, Organization } from "@prisma/client";
 import { readTeamSize } from "../teams/service";
 import dayjs from "dayjs";
 import { readUser } from "../users/service";
-import { ReadEventCategoryModalitiesDto } from "./dto";
+import {
+  ReadEventCategoryModalitiesDto,
+  UpsertCategoryDocumentsDto,
+  UpsertEventModalityCategoriesDto,
+} from "./dto";
 
 export async function readModalityCategories(
   request: ReadEventCategoryModalitiesDto
@@ -56,7 +59,7 @@ export async function upsertEventModalityCategories(
     })
   );
 
-  return { categories: newModalityCategories, eventId: modality.eventId };
+  return { categories: newModalityCategories, eventId: modality?.eventId };
 }
 
 export async function verifyCategoryEligibility({
@@ -115,4 +118,51 @@ export async function verifyCategoryEligibility({
     )
       throw `${member.fullName} não tem o gênero permitido para esta categoria`;
   }
+}
+
+export async function upsertCategoryDocuments(
+  request: UpsertCategoryDocumentsDto & {
+    userSession: UserSession;
+    organization: Organization;
+  }
+) {
+  const { userSession, organization, ...rest } = request;
+
+  if (rest.documents.some((document) => typeof document.template !== "string"))
+    throw "Erro no envio de documentos. Tente novamente.";
+
+  await prisma.$transaction(
+    rest.documents.map((document) => {
+      const documentId = document.id ?? crypto.randomUUID();
+      return prisma.categoryDocument.upsert({
+        where: { id: documentId },
+        update: {
+          ...document,
+          template: document.template as string,
+          id: documentId,
+        },
+        create: {
+          ...document,
+          template: document.template as string,
+          id: documentId,
+        },
+      });
+    })
+  );
+
+  const category = await prisma.modalityCategory.findUnique({
+    where: {
+      id: rest.documents[0]?.categoryId,
+    },
+    include: {
+      EventModality: {
+        include: {
+          event: true,
+          eventGroup: true,
+        },
+      },
+    },
+  });
+
+  return { category };
 }
