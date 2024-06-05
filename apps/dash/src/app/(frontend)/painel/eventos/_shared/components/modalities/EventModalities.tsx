@@ -1,24 +1,7 @@
 "use client";
-
-import {
-  UpsertEventModalityDto,
-  upsertEventModalityCategoriesDto,
-  upsertEventModalityDto,
-} from "@/app/api/events/dto";
-import {
-  Button,
-  DropdownSeparator,
-  showToast,
-  useAction,
-} from "odinkit/client";
+import { Button, DropdownSeparator } from "odinkit/client";
 import { useForm } from "odinkit/client";
-import {
-  EventGroupWithEvents,
-  EventModalityWithCategories,
-  EventWithRegistrationCount,
-} from "prisma/types/Events";
-import { useContext, useEffect, useState } from "react";
-import { upsertEventModality } from "@/app/api/events/action";
+import { useContext, useState } from "react";
 import { Table } from "odinkit";
 import {
   Dropdown,
@@ -27,89 +10,16 @@ import {
   DropdownMenu,
 } from "odinkit/client";
 import { EllipsisVerticalIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { upsertEventModalityCategories } from "@/app/api/categories/action";
 import ModalityModal from "./ModalityModal";
-import ModalityCategoryModal from "./ModalityCategoryModal";
-import { usePanel } from "../../../../_shared/components/PanelStore";
-import { Event, EventModality } from "@prisma/client";
-import { ModalityPageProvider } from "./context/ModalityPageProvider";
 import { ModalityPageContext } from "./context/ModalityPage.ctx";
+import { upsertEventModalityCategoriesDto } from "@/app/api/categories/dto";
 
 export default function EventModalities() {
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [activeModality, setActiveModality] = useState("");
-
-  const {
-    setModalVisibility,
-    modalityForm,
-    modalities,
-    handleModalOpen,
-    handleRemovalModalOpen,
-  } = useContext(ModalityPageContext);
-
-  const categoryForm = useForm({
-    mode: "onChange",
-    schema: upsertEventModalityCategoriesDto,
-    defaultValues: {},
-  });
-
-  const {
-    data: categoryData,
-    trigger: categoriesTrigger,
-    isMutating: modalityCategoryLoading,
-  } = useAction({
-    action: upsertEventModalityCategories,
-    redirect: false,
-    onSuccess: () => {
-      setIsCategoryModalOpen(false);
-      modalityForm.resetField("name");
-      showToast({
-        message: "Categorias atualizadas com sucesso!",
-        title: "Sucesso",
-        variant: "success",
-      });
-    },
-    onError: () =>
-      showToast({
-        message: "Erro ao atualizar categorias!",
-        title: "Erro",
-        variant: "error",
-      }),
-  });
-
-  const handleOpenCategoryModal = (modalityId: string) => {
-    setIsCategoryModalOpen(true);
-    setActiveModality(modalityId);
-    const categories = modalities.find(
-      (modality) => modality.id === modalityId
-    )?.modalityCategory;
-
-    if (categories?.length) {
-      categoryForm.setValue("categories", categories);
-    } else {
-      categoryForm.setValue("categories", [
-        {
-          name: "",
-          minAge: 0,
-          gender: null,
-          maxAge: 0,
-          eventModalityId: modalityId,
-        },
-      ]);
-    }
-  };
+  const { modalities, handleModalOpen } = useContext(ModalityPageContext);
 
   return (
     <>
       <ModalityModal />
-      <ModalityCategoryModal
-        modalState={{ isCategoryModalOpen, setIsCategoryModalOpen }}
-        categoryForm={categoryForm}
-        categoriesTrigger={categoriesTrigger}
-        activeModality={activeModality}
-        modalities={modalities}
-        isLoading={modalityCategoryLoading}
-      />
       <Table
         striped
         link={
@@ -134,7 +44,7 @@ export default function EventModalities() {
             cell: (info) => (
               <Button
                 outline
-                onClick={() => handleOpenCategoryModal(info.row.original.id)}
+                href={`/painel/eventos/grupos/${info.row.original.eventGroupId}/modalidades/${info.row.original.id}`}
               >
                 <div className="flex items-end gap-1 lg:items-center">
                   {`${info.getValue().length} Categorias`}{" "}

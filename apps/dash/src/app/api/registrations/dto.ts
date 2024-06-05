@@ -54,6 +54,14 @@ export type ExcelDataSchema = z.infer<typeof excelDataSchema>;
 export const registrationDto = z.object({
   modalityId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
+  documents: z
+    .array(
+      z.object({
+        documentId: z.string().uuid(),
+        file: z.string().or(z.array(z.any())),
+      })
+    )
+    .optional(),
   addon: z
     .object({
       id: z.string().uuid().optional(),

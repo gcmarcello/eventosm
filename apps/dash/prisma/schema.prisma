@@ -95,19 +95,21 @@ enum UserDocumentType {
   disability
   physicalAptitude
   minorAuthorization
+  others
 
   @@schema("public")
 }
 
 model UserDocument {
-  id        String           @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  user      User             @relation(fields: [userId], references: [id])
-  userId    String           @db.Uuid
-  type      UserDocumentType
-  name      String?
-  key       String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime?        @updatedAt
+  id                   String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  user                 User                   @relation(fields: [userId], references: [id])
+  userId               String                 @db.Uuid
+  type                 UserDocumentType
+  name                 String?
+  key                  String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime?              @updatedAt
+  RegistrationDocument RegistrationDocument[]
 
   @@schema("public")
 }
@@ -353,8 +355,40 @@ model ModalityCategory {
   teamSize          Int?                @default(1) @db.Integer
   CategoryBatch     CategoryBatch[]
   EventRegistration EventRegistration[]
+  options           Json?               @db.JsonB
   createdAt         DateTime            @default(now())
   updatedAt         DateTime?           @updatedAt
+  CategoryDocument  CategoryDocument[]
+
+  @@schema("public")
+}
+
+model CategoryDocument {
+  id                   String                 @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name                 String?
+  template             String?
+  Category             ModalityCategory       @relation(fields: [categoryId], references: [id])
+  type                 UserDocumentType
+  categoryId           String                 @db.Uuid
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime?              @updatedAt
+  RegistrationDocument RegistrationDocument[]
+
+  @@schema("public")
+}
+
+model RegistrationDocument {
+  id             String            @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  name           String?
+  file           String
+  Document       CategoryDocument  @relation(fields: [documentId], references: [id])
+  documentId     String            @db.Uuid
+  Registration   EventRegistration @relation(fields: [registrationId], references: [id])
+  registrationId String            @db.Uuid
+  UserDocument   UserDocument?     @relation(fields: [userDocumentId], references: [id])
+  userDocumentId String?           @db.Uuid
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime?         @updatedAt
 
   @@schema("public")
 }
@@ -518,38 +552,39 @@ enum EventRegistrationStatus {
 }
 
 model EventRegistration {
-  id                  String                  @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
-  code                String?                 @db.VarChar
-  user                User                    @relation(fields: [userId], references: [id])
-  userId              String                  @db.Uuid
-  event               Event?                  @relation(fields: [eventId], references: [id])
-  eventId             String?                 @db.Uuid
-  eventGroup          EventGroup?             @relation(fields: [eventGroupId], references: [id])
-  eventGroupId        String?                 @db.Uuid
-  modality            EventModality?          @relation(fields: [modalityId], references: [id])
-  modalityId          String?                 @db.Uuid
-  category            ModalityCategory        @relation(fields: [categoryId], references: [id])
-  categoryId          String                  @db.Uuid
-  batch               EventRegistrationBatch  @relation(fields: [batchId], references: [id])
-  batchId             String                  @db.Uuid
-  coupon              BatchCoupon?            @relation(fields: [couponId], references: [id])
-  couponId            String?                 @db.Uuid
-  team                Team?                   @relation(fields: [teamId], references: [id])
-  teamId              String?                 @db.Uuid
-  addon               EventAddon?             @relation(fields: [addonId], references: [id])
-  addonId             String?                 @db.Uuid
-  addonOption         String?
-  status              EventRegistrationStatus @default(pending)
-  qrCode              String
-  justifiedAbsences   Int                     @default(0) @db.Integer
-  unjustifiedAbsences Int                     @default(0) @db.Integer
+  id                   String                  @id @default(dbgenerated("extensions.uuid_generate_v4()")) @db.Uuid
+  code                 String?                 @db.VarChar
+  user                 User                    @relation(fields: [userId], references: [id])
+  userId               String                  @db.Uuid
+  event                Event?                  @relation(fields: [eventId], references: [id])
+  eventId              String?                 @db.Uuid
+  eventGroup           EventGroup?             @relation(fields: [eventGroupId], references: [id])
+  eventGroupId         String?                 @db.Uuid
+  modality             EventModality?          @relation(fields: [modalityId], references: [id])
+  modalityId           String?                 @db.Uuid
+  category             ModalityCategory        @relation(fields: [categoryId], references: [id])
+  categoryId           String                  @db.Uuid
+  batch                EventRegistrationBatch  @relation(fields: [batchId], references: [id])
+  batchId              String                  @db.Uuid
+  coupon               BatchCoupon?            @relation(fields: [couponId], references: [id])
+  couponId             String?                 @db.Uuid
+  team                 Team?                   @relation(fields: [teamId], references: [id])
+  teamId               String?                 @db.Uuid
+  addon                EventAddon?             @relation(fields: [addonId], references: [id])
+  addonId              String?                 @db.Uuid
+  addonOption          String?
+  status               EventRegistrationStatus @default(pending)
+  qrCode               String
+  justifiedAbsences    Int                     @default(0) @db.Integer
+  unjustifiedAbsences  Int                     @default(0) @db.Integer
   /// [additionalInfo]
-  additionalInfo      Json?                   @db.JsonB
-  createdAt           DateTime                @default(now())
-  updatedAt           DateTime?               @updatedAt
-  EventCheckIn        EventCheckIn[]
-  EventAbsences       EventAbsences[]
-  EventResults        EventResult[]
+  additionalInfo       Json?                   @db.JsonB
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime?               @updatedAt
+  EventCheckIn         EventCheckIn[]
+  EventAbsences        EventAbsences[]
+  EventResults         EventResult[]
+  RegistrationDocument RegistrationDocument[]
 
   @@schema("public")
 }

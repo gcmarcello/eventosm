@@ -13,6 +13,7 @@ import {
   BottomNavigation,
   ButtonSpinner,
   For,
+  Link,
   SubmitButton,
   Text,
   scrollToElement,
@@ -43,6 +44,10 @@ import {
   Radio,
   showToast,
   ErrorMessage,
+  useField,
+  FileInput,
+  FileDropArea,
+  Legend,
 } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
@@ -53,6 +58,9 @@ import { filterCategories } from "../../../utils/categories";
 import { eventGroupCreateRegistrationDto } from "@/app/api/registrations/eventGroups/eventGroup.dto";
 import { useSearchParams } from "next/navigation";
 import { createEventGroupIndividualRegistration } from "@/app/api/registrations/eventGroups/eventGroup.action";
+import { useFieldArray } from "react-hook-form";
+import { determineDocumentName } from "../../../utils/documentName";
+import { nestUpload } from "@/app/api/uploads/action";
 
 export default function IndividualTournamentRegistration({
   eventGroup,
@@ -121,6 +129,33 @@ export default function IndividualTournamentRegistration({
     form.resetField("registration.categoryId", { defaultValue: "" });
   }, [form.watch("registration.modalityId")]);
 
+  const categoryDocuments = useMemo(
+    () =>
+      eventGroup.EventModality.find(
+        (mod) => mod.id === form.watch("registration.modalityId")
+      )?.modalityCategory.find(
+        (cat) => cat.id === form.watch("registration.categoryId")
+      )?.CategoryDocument,
+    [form.watch("registration.categoryId")]
+  );
+
+  useEffect(() => {
+    if (categoryDocuments?.length) {
+      form.setValue(
+        "registration.documents",
+        categoryDocuments.map((doc) => ({
+          documentId: doc.id,
+          file: [],
+        }))
+      );
+    }
+  }, [categoryDocuments]);
+
+  const { fields } = useFieldArray({
+    name: "registration.documents",
+    control: form.control,
+  });
+
   return (
     <>
       <Dialog open={showRules} onClose={setShowRules}>
@@ -164,11 +199,47 @@ export default function IndividualTournamentRegistration({
         <div className="px-2">
           <MultistepForm
             hform={form}
-            onSubmit={(data) => trigger(data)}
+            onSubmit={async (data) => {
+              const documentArray = [];
+              if (!data.registration.documents) return trigger(data);
+
+              for (const document of data.registration.documents) {
+                if (document.file) {
+                  const response = await nestUpload({
+                    files: [
+                      {
+                        file: document.file[0] as File,
+                        name: document.documentId,
+                      },
+                    ],
+                    folder: "registrationDocuments/",
+                  });
+                  documentArray.push({
+                    ...document,
+                    file: response[0]!.key,
+                  });
+                }
+              }
+              return trigger({
+                ...data,
+                registration: {
+                  ...data.registration,
+                  documents: documentArray,
+                },
+              });
+            }}
             order={["general", "addon", "confirmation"]}
             steps={{
               general: {
                 fields: ["registration.modalityId", "registration.categoryId"],
+                refine: (data) => {
+                  if (categoryDocuments?.length) {
+                    return !!form
+                      .watch("registration.documents")
+                      ?.every((doc) => doc.file && doc.file.length > 0);
+                  }
+                  return true;
+                },
                 form: (
                   <Fieldset className={"grid grid-cols-2 lg:divide-x"}>
                     <FieldGroup className="col-span-2 lg:col-span-2 lg:pe-4">
@@ -218,6 +289,101 @@ export default function IndividualTournamentRegistration({
                             : "As categorias exibidas são apenas as disponíveis para você."}
                         </Description>
                       </Field>
+                      {categoryDocuments?.length ? (
+                        <Fieldset>
+                          <Legend>Documentos Necessários</Legend>
+                          <Text>
+                            Esta categoria requer o envio de documentos. Se
+                            disponível, faça o download do modelo e envie o
+                            arquivo preenchido.
+                          </Text>
+                          <FieldGroup>
+                            {fields.map((field, index) => {
+                              return (
+                                <Field
+                                  key={field.id}
+                                  name={`registration.documents.${index}.file`}
+                                >
+                                  <Label>
+                                    {categoryDocuments[index] &&
+                                      determineDocumentName(
+                                        categoryDocuments[index]!
+                                      )}
+                                  </Label>
+                                  {categoryDocuments[index]?.template && (
+                                    <>
+                                      <Link
+                                        target="_blank"
+                                        className="ms-1 text-sm  underline"
+                                        href={
+                                          process.env.NEXT_PUBLIC_BUCKET_URL +
+                                          "/templates/" +
+                                          categoryDocuments[index]?.template
+                                        }
+                                      >
+                                        (Download do Modelo)
+                                      </Link>
+                                    </>
+                                  )}
+                                  <FileInput
+                                    fileTypes={[
+                                      "png",
+                                      "jpg",
+                                      "jpeg",
+                                      "docx",
+                                      "pdf",
+                                    ]}
+                                    maxFiles={1}
+                                    maxSize={1}
+                                    onError={(error) => {
+                                      if (typeof error === "string") {
+                                        showToast({
+                                          message: error,
+                                          title: "Erro",
+                                          variant: "error",
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <FileDropArea
+                                      render={
+                                        form.watch(
+                                          `registration.documents.${index}.file`
+                                        )?.length &&
+                                        form.watch(
+                                          `registration.documents.${index}.file`
+                                        )?.[0] ? (
+                                          <>
+                                            <Text>
+                                              <span className="font-semibold">
+                                                Arquivo:
+                                              </span>{" "}
+                                              {form.watch(
+                                                `registration.documents.${index}.file`
+                                              )?.[0]?.name ?? ""}
+                                              <span
+                                                onClick={() => {
+                                                  form.resetField(
+                                                    `registration.documents.${index}.file`
+                                                  );
+                                                }}
+                                                className="cursor-pointer font-semibold text-emerald-600"
+                                              >
+                                                Trocar
+                                              </span>
+                                            </Text>
+                                          </>
+                                        ) : null
+                                      }
+                                    />
+                                  </FileInput>
+                                  <ErrorMessage />
+                                </Field>
+                              );
+                            })}
+                          </FieldGroup>
+                        </Fieldset>
+                      ) : null}
                       {teams?.length ? (
                         <Field name="teamId">
                           <Label>Se inscrever com equipe</Label>
