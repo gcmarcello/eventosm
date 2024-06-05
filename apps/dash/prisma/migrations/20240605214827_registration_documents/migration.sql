@@ -8,9 +8,6 @@
 -- AlterEnum
 ALTER TYPE "public"."UserDocumentType" ADD VALUE 'others';
 
--- DropForeignKey
-ALTER TABLE "public"."EventRegistration" DROP CONSTRAINT "EventRegistration_orderId_fkey";
-
 -- AlterTable
 ALTER TABLE "public"."ModalityCategory" ADD COLUMN     "options" JSONB;
 
