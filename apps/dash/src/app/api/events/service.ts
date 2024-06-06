@@ -10,7 +10,6 @@ import {
   UpsertEventDto,
   UpsertEventGroupDto,
   UpsertEventGroupRulesDto,
-  UpsertEventModalityCategoriesDto,
   UpsertEventModalityDto,
   UpsertEventTypeDto,
 } from "./dto";
@@ -158,7 +157,9 @@ export async function readEvents(request: ReadEventDto) {
       _count: {
         select: { EventRegistration: { where: { status: "active" } } },
       },
-      EventModality: { include: { modalityCategory: true } },
+      EventModality: {
+        include: { modalityCategory: { include: { CategoryDocument: true } } },
+      },
       EventRegistration: true,
       EventRegistrationBatch: {
         include: { _count: { select: { EventRegistration: true } } },
@@ -179,7 +180,9 @@ export async function readEventGroups(request: ReadEventGroupDto) {
       EventRegistration: {
         include: { user: true },
       },
-      EventModality: { include: { modalityCategory: true } },
+      EventModality: {
+        include: { modalityCategory: { include: { CategoryDocument: true } } },
+      },
       EventAddon: true,
       EventRegistrationBatch: {
         include: {

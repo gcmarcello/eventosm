@@ -40,12 +40,11 @@ export async function nestUpload<T extends string>({
   privateFile = false,
   progress,
 }: {
-  files: { name?: T; file: File }[];
+  files: { name?: T | null; file: File }[];
   folder?: string;
   privateFile?: boolean;
   progress?: (progress: number) => void;
-}) {
-  if (!files) return;
+}): Promise<{ key: string }[]> {
   let fileProgress = 0;
   let fileToUpload;
   let filesArray = [];
@@ -54,7 +53,7 @@ export async function nestUpload<T extends string>({
     const formData = new FormData();
     formData.append("file", file.file);
     fileToUpload = await fetch(
-      "http://localhost:5000" +
+      process.env.NEXT_PUBLIC_API_URL +
         "/uploads?" +
         (folder ? `folder=${folder}` : "") +
         `&private=${privateFile}`,

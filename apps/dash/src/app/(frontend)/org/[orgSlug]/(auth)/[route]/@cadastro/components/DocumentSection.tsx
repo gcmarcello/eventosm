@@ -53,7 +53,7 @@ export default function DocumentSection({
           <br className="lg:hidden" />{" "}
           <Link
             className="me-1 font-medium underline"
-            href={eventId ? "/login" : `/login?redirect=inscricoes/${eventId}`}
+            href={eventId ? `/login?redirect=inscricoes/${eventId}` : "/login"}
           >
             Clique aqui
           </Link>

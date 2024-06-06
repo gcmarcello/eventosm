@@ -128,7 +128,12 @@ export default function SignupRegistration({
                 order={["document", "user", "general", "addon", "confirmation"]}
                 steps={{
                   document: {
-                    form: <DocumentSection organization={organization} />,
+                    form: (
+                      <DocumentSection
+                        organization={organization}
+                        eventId={event.id}
+                      />
+                    ),
                     fields: [
                       form.getValues("foreigner")
                         ? "foreignDocument"
