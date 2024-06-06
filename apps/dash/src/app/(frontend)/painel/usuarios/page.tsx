@@ -2,6 +2,7 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import UsersPanelPageTable from "./components/UsersTable";
+import { DashboardLayout } from "../_shared/components/DashboardLayout";
 
 export default async function UsersPanelPage() {
   const { request: parsedRequest } = await UseMiddlewares()
@@ -32,8 +33,8 @@ export default async function UsersPanelPage() {
     },
   });
   return (
-    <div>
+    <DashboardLayout>
       <UsersPanelPageTable users={users} />
-    </div>
+    </DashboardLayout>
   );
 }

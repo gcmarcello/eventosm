@@ -21,7 +21,7 @@ import {
   EllipsisVerticalIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { Table, date } from "odinkit";
+import { Badge, Table, date } from "odinkit";
 import {
   Button,
   Dropdown,
@@ -34,7 +34,6 @@ import {
   Form,
   DropdownDivider,
   Date,
-  Badge,
 } from "odinkit/client";
 import { EventRegistrationBatch, Organization } from "@prisma/client";
 import { ModalityControlModal } from "../modalities/ModalityControlModal";

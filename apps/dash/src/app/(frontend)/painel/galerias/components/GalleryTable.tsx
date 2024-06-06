@@ -1,15 +1,15 @@
 "use client";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Event, EventGroup, Gallery, Organization } from "@prisma/client";
-import { Table } from "odinkit";
+import { Heading, Link, Table } from "odinkit";
 import {
   Dropdown,
   DropdownButton,
   DropdownMenu,
   DropdownItem,
   Button,
-  Link,
 } from "odinkit/client";
+import { PageHeading } from "../../_shared/components/PageHeading";
 
 export function GalleryTable({
   galleries,
@@ -22,66 +22,63 @@ export function GalleryTable({
   })[];
 }) {
   return (
-    <Table
-      data={galleries}
-      link={
-        <>
-          <Button
-            href="/painel/galerias/nova"
-            color={organization.options.colors.primaryColor.tw.color}
-          >
-            Nova
-          </Button>
-        </>
-      }
-      columns={(columnHelper) => [
-        columnHelper.accessor("name", {
-          id: "name",
-          header: "Nome",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => (
-            <Link
-              className="underline"
-              href={`/painel/galerias/${info.row.original.id}`}
-            >
-              {info.getValue()}
-            </Link>
-          ),
-        }),
-        columnHelper.accessor("Event.name", {
-          id: "event",
-          header: "Evento",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => info.getValue(),
-        }),
-        columnHelper.accessor("EventGroup.name", {
-          id: "eventGroup",
-          header: "Grupo de Evento",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => info.getValue(),
-        }),
-        columnHelper.accessor("id", {
-          id: "id",
-          header: "Opções",
-          enableSorting: true,
-          enableGlobalFilter: true,
-          cell: (info) => (
-            <Dropdown>
-              <DropdownButton plain>
-                <EllipsisVerticalIcon className="size-5 text-zinc-500" />
-              </DropdownButton>
-              <DropdownMenu>
-                <DropdownItem href={`/painel/galerias/${info.getValue()}`}>
-                  Editar
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          ),
-        }),
-      ]}
-    />
+    <>
+      <PageHeading>
+        <Heading>Usuários</Heading>
+        <Button href="/painel/galerias/nova">Nova Galeria</Button>
+      </PageHeading>
+      <Table
+        search={false}
+        data={galleries}
+        columns={(columnHelper) => [
+          columnHelper.accessor("name", {
+            id: "name",
+            header: "Nome",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => (
+              <Link
+                className="underline"
+                href={`/painel/galerias/${info.row.original.id}`}
+              >
+                {info.getValue()}
+              </Link>
+            ),
+          }),
+          columnHelper.accessor("Event.name", {
+            id: "event",
+            header: "Evento",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("EventGroup.name", {
+            id: "eventGroup",
+            header: "Grupo de Evento",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("id", {
+            id: "id",
+            header: "Opções",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => (
+              <Dropdown>
+                <DropdownButton plain>
+                  <EllipsisVerticalIcon className="size-5 text-zinc-500" />
+                </DropdownButton>
+                <DropdownMenu>
+                  <DropdownItem href={`/painel/galerias/${info.getValue()}`}>
+                    Editar
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            ),
+          }),
+        ]}
+      />
+    </>
   );
 }

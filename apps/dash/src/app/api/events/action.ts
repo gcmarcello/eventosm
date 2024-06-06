@@ -73,7 +73,7 @@ export async function upsertEventGroup(request: UpsertEventGroupDto) {
       message: "Evento criado com sucesso.",
     });
   } else {
-    revalidatePath(`/painel/eventos/${request.id}`);
+    revalidatePath(`/painel/eventos/grupos/${request.id}/geral`);
     return ActionResponse.success({
       data: newEvent,
       message: "Evento atualizado com sucesso.",

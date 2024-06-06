@@ -13,6 +13,9 @@ module.exports = {
         "2xl": "1536px",
         "3xl": "1920px",
       },
+      maxWidth: {
+        "8xl": "90rem",
+      },
       transitionDuration: {
         "2000": "2000ms",
       },

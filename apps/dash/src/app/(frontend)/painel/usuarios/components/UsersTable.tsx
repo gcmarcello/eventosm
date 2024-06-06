@@ -1,6 +1,6 @@
 "use client";
 import { User } from "@prisma/client";
-import { Table, date, formatCPF, formatPhone } from "odinkit";
+import { Divider, Heading, Table, date, formatCPF, formatPhone } from "odinkit";
 import UserModal from "./UserModal";
 import { useState } from "react";
 import { UserWithInfo } from "prisma/types/User";
@@ -26,6 +26,11 @@ export default function UsersPanelPageTable({
   return (
     <>
       {user && <UserModal user={user} isOpen={isOpen} setIsOpen={setIsOpen} />}
+      <div className="flex justify-between">
+        <Heading>Usuários</Heading>
+        <Button>Novo Usuário</Button>
+      </div>
+      <Divider className="my-6" />
       <Table
         search={false}
         columns={(columnHelper) => [

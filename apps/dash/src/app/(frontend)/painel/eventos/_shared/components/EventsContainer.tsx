@@ -11,7 +11,6 @@ import {
   TrophyIcon,
 } from "@heroicons/react/24/solid";
 import {
-  Badge,
   Button,
   Dialog,
   DialogActions,
@@ -20,14 +19,18 @@ import {
   DialogTitle,
   Dropdown,
   DropdownButton,
+  DropdownDescription,
   DropdownItem,
+  DropdownLabel,
   DropdownMenu,
 } from "odinkit/client";
-import { Badge, Divider, Heading, Table } from "odinkit";
+import { Badge, Divider, Heading, Table, Text } from "odinkit";
 import { Field } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
+import { PageHeading } from "../../../_shared/components/PageHeading";
+import { ChevronDownIcon, ListBulletIcon } from "@heroicons/react/20/solid";
 
 export default function EventsContainer({
   events,
@@ -43,65 +46,32 @@ export default function EventsContainer({
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Dialog open={showNewEventModal} onClose={setShowNewEventModal}>
-          <DialogTitle>Novo Evento</DialogTitle>
-          <DialogDescription>
-            Escolha o tipo de evento que deseja criar.
-          </DialogDescription>
-          <DialogBody className="grid grid-cols-2 justify-center gap-3">
-            <Link href={"/painel/eventos/grupos/novo"}>
-              <Button color="white">
-                <div className="flex flex-col items-center">
-                  <TrophyIcon
-                    style={{ color: colors.primaryColor?.hex || "" }}
-                    className={clsx(
-                      "h-16 w-16",
-                      !colors.primaryColor?.hex && "text-indigo-600"
-                    )}
-                  />
-                  <div>Campeonatos</div>
-                  <div className="text-xs font-normal text-gray-500">
-                    Campeonatos, Séries de Eventos, e etc.
-                  </div>
-                </div>
-              </Button>
-            </Link>
-            <Link href={"/painel/eventos/novo"}>
-              <Button color="white">
-                <div className="flex flex-col items-center">
-                  <TicketIcon
-                    style={{ color: colors.primaryColor?.hex || "" }}
-                    className={clsx(
-                      "h-16 w-16",
-                      !colors.primaryColor?.hex && "text-indigo-600"
-                    )}
-                  />
-                  <div>Evento Único</div>
-                  <div className="text-xs font-normal text-gray-500">
-                    Avulsos, que não tem etapas ou múltiplas datas.
-                  </div>
-                </div>
-              </Button>
-            </Link>
-          </DialogBody>
-          <DialogActions>
-            <Button plain onClick={() => setShowNewEventModal(false)}>
-              Voltar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-      <div>
-        <div className="flex items-center justify-between">
-          <Heading>Seus Eventos</Heading>
-          <Button onClick={() => setShowNewEventModal(true)}>
+      <PageHeading>
+        <Heading>Seus Eventos</Heading>
+        <Dropdown>
+          <DropdownButton className={"mt-4"}>
             Novo Evento
-          </Button>
-        </div>
-
-        <Divider className="my-6" />
-      </div>
+            <ChevronDownIcon className="size-5" />
+          </DropdownButton>
+          <DropdownMenu>
+            {" "}
+            <DropdownItem href={"/painel/eventos/novo"} target="_blank">
+              <TrophyIcon className={clsx("size-16")} />
+              <DropdownLabel>Evento Único</DropdownLabel>
+              <DropdownDescription className="hidden lg:block">
+                Avulsos, que não tem etapas ou múltiplas datas.
+              </DropdownDescription>
+            </DropdownItem>
+            <DropdownItem href={"/painel/eventos/grupos/novo"} target="_blank">
+              <ListBulletIcon className={clsx("size-16")} />
+              <DropdownLabel>Campeonato</DropdownLabel>
+              <DropdownDescription className="hidden lg:block">
+                Grupos de eventos com mais de uma etapa.
+              </DropdownDescription>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </PageHeading>
       <Table
         striped
         search={false}
@@ -135,7 +105,7 @@ export default function EventsContainer({
                     alt={`event-${info.row.original.slug}`}
                   />
                 )}
-                <span className="... max-w-[200px] truncate">
+                <span className="... max-w-[200px] truncate lg:max-w-max">
                   {info.getValue()}
                 </span>
               </Link>

@@ -66,20 +66,13 @@ export function GalleryForm({
       action: readEventGroupFulltext,
     });
 
-  function resetComboboxes() {
-    form.setValue("eventId", null);
+  const Field = useMemo(() => form.createField(), [connectMode]);
+
+  function changeConnectionType(mode: "eventId" | "eventGroupId") {
+    setConnectMode(mode);
     form.setValue("eventGroupId", null);
-    setSelectedEvent(null);
-    setDisableComboboxes(false);
+    form.setValue("eventId", null);
   }
-
-  function handleDisableComboboxes() {
-    setTimeout(() => {
-      setDisableComboboxes(true);
-    }, 200);
-  }
-
-  const Field = useMemo(() => form.createField(), []);
 
   return (
     <>
@@ -100,69 +93,48 @@ export function GalleryForm({
 
                 <div className="flex items-center gap-3">
                   <div className="flex-grow">
-                    {form.watch("eventGroupId") || form.watch("eventId") ? (
-                      <div className="flex gap-2">
-                        {selectedEvent && (
-                          <div className="flex-grow">
-                            <Input disabled value={selectedEvent?.name} />
-                          </div>
-                        )}
-                        <Button
-                          className={"mb-1 mt-auto"}
-                          onClick={() => resetComboboxes()}
-                        >
-                          Limpar
-                        </Button>
-                      </div>
-                    ) : (
-                      <div>
-                        <Combobox
-                          data={
-                            connectMode === "eventId"
-                              ? fulltextEvents
-                              : fulltextEventGroups
-                          }
-                          disabled={disableComboboxes}
-                          displayValueKey="name"
-                          setData={(query) => {
-                            if (query) {
-                              (connectMode === "eventId"
-                                ? fulltextSearchEvents
-                                : fulltextSearchEventGroups)({
-                                where: {
-                                  organizationId: organization.id,
-                                  name: query,
-                                },
-                              });
-                            }
-                          }}
-                          onChange={(item) => {
-                            if (!item) return;
-                            setSelectedEvent(item ?? null);
-                            handleDisableComboboxes();
-                          }}
-                        >
-                          {(item) => <div>{item.name}</div>}
-                        </Combobox>
-                        <Description
-                          onClick={() => {
-                            if (connectMode === "eventId") {
-                              setConnectMode("eventGroupId");
-                            } else {
-                              setConnectMode("eventId");
-                            }
-                          }}
-                        >
-                          Procure por um{" "}
-                          <span className="cursor-pointer underline">
-                            {connectMode === "eventId"
-                              ? "campeonato"
-                              : "evento"}
-                          </span>
-                          .
-                        </Description>
-                      </div>
-                    )}
+                    <Combobox
+                      data={
+                        connectMode === "eventId"
+                          ? fulltextEvents
+                          : fulltextEventGroups
+                      }
+                      disabled={disableComboboxes}
+                      displayValueKey="name"
+                      setData={(query) => {
+                        if (query) {
+                          (connectMode === "eventId"
+                            ? fulltextSearchEvents
+                            : fulltextSearchEventGroups)({
+                            where: {
+                              organizationId: organization.id,
+                              name: query,
+                            },
+                          });
+                        }
+                      }}
+                      onChange={(item) => {
+                        if (!item) return;
+                        setSelectedEvent(item ?? null);
+                      }}
+                    >
+                      {(item: any) => <div>{item.name}</div>}
+                    </Combobox>
+                    <Description
+                      onClick={() => {
+                        if (connectMode === "eventId") {
+                          changeConnectionType("eventGroupId");
+                        } else {
+                          changeConnectionType("eventId");
+                        }
+                      }}
+                    >
+                      Procure por um{" "}
+                      <span className="cursor-pointer underline">
+                        {connectMode === "eventId" ? "campeonato" : "evento"}
+                      </span>
+                      .
+                    </Description>
                   </div>
                 </div>
               </Field>

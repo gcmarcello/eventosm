@@ -27,6 +27,8 @@ import {
   ShoppingBagIcon,
   ClipboardDocumentIcon,
   AdjustmentsHorizontalIcon,
+  BanknotesIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/20/solid";
 import { AnimatePresence, easeOut, motion } from "framer-motion";
 import { useParams, usePathname } from "next/navigation";
@@ -90,7 +92,7 @@ export function EventGroupSidebar({
               current={currentPage === "pagamento"}
               href={`/painel/eventos/grupos/${eventGroup.id}/pagamento`}
             >
-              <HomeIcon />
+              <CurrencyDollarIcon />
               <SidebarLabel>Pagamento</SidebarLabel>
             </SidebarItem>
             <SidebarItem
@@ -149,7 +151,7 @@ export function EventGroupSidebar({
         </SidebarFooter>
       </Sidebar>
     ),
-    [pathname]
+    [pathname, eventGroup]
   );
 
   return (

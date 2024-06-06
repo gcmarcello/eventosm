@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { GalleryForm } from "../shared/GalleryForm";
 import { GalleryContainer } from "../shared/GalleryContainer";
+import { DashboardLayout } from "../../_shared/components/DashboardLayout";
 
 export default async function GalleriesPage() {
   const activeOrg = cookies().get("activeOrg")?.value;
@@ -13,9 +14,11 @@ export default async function GalleriesPage() {
   if (!organization) return notFound();
   return (
     <>
-      <GalleryContainer>
-        <GalleryForm organization={organization} />
-      </GalleryContainer>
+      <DashboardLayout>
+        <GalleryContainer>
+          <GalleryForm organization={organization} />
+        </GalleryContainer>
+      </DashboardLayout>
     </>
   );
 }

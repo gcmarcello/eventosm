@@ -97,7 +97,7 @@ function TeamDropdownMenu({
         message: "Organização alterada com sucesso.",
         variant: "success",
       });
-      router.refresh();
+      router.push("/painel");
     },
     onError: () =>
       showToast({
@@ -154,7 +154,7 @@ export function DashboardNavbar({
   const [showSidebar, setShowSidebar] = useState(false);
   const activeOrg = organizations.find((org) => org.id === activeOrgId);
   const pathname = usePathname();
-  const currentPage = pathname.split("/").pop();
+  const currentPage = pathname.split("/")[2] ?? "painel";
 
   const { trigger: logoutTrigger, isMutating: isLoggingOut } = useAction({
     action: logout,
