@@ -7,6 +7,7 @@ import {
   Container,
   ExtractSuccessResponse,
   FileImagePreview,
+  Heading,
   SubmitButton,
   Text,
 } from "odinkit";
@@ -33,6 +34,7 @@ import {
 import { useMemo } from "react";
 import { z } from "odinkit";
 import { RTE } from "@/app/(frontend)/painel/_shared/RichText";
+import { PageHeading } from "@/app/(frontend)/painel/_shared/components/PageHeading";
 
 export default function GeralForm({
   eventGroup,
@@ -103,9 +105,9 @@ export default function GeralForm({
       }}
     >
       <Fieldset>
-        <div className="flex justify-between">
+        <PageHeading>
           <div>
-            <Legend>Informações Gerais</Legend>
+            <Heading>Informações Gerais</Heading>
             <Text>
               Informações gerais sobre o grupo de eventos. Você pode alterar
               essas informações a qualquer momento.
@@ -118,7 +120,8 @@ export default function GeralForm({
           >
             Salvar
           </SubmitButton>
-        </div>
+        </PageHeading>
+
         <FieldGroup className="grid grid-cols-2 gap-3 lg:divide-x ">
           <div className="col-span-2 space-y-3 px-2 lg:col-span-1">
             <Field name="name">

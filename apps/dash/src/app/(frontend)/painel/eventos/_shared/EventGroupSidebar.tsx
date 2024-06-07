@@ -1,27 +1,11 @@
 "use client";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
+
 import {
   ChevronDownIcon,
-  Cog8ToothIcon,
-  PlusIcon,
-  MagnifyingGlassIcon,
-  InboxIcon,
   HomeIcon,
-  Square2StackIcon,
   TicketIcon,
-  Cog6ToothIcon,
-  MegaphoneIcon,
   QuestionMarkCircleIcon,
   SparklesIcon,
-  ChevronUpIcon,
-  UserIcon,
-  ShieldCheckIcon,
-  LightBulbIcon,
-  ArrowRightStartOnRectangleIcon,
   CalendarDaysIcon,
   UserGroupIcon,
   ShoppingBagIcon,
@@ -29,9 +13,9 @@ import {
   AdjustmentsHorizontalIcon,
   BanknotesIcon,
   CurrencyDollarIcon,
+  XMarkIcon,
 } from "@heroicons/react/20/solid";
-import { AnimatePresence, easeOut, motion } from "framer-motion";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarHeader,
@@ -48,6 +32,8 @@ import {
   MobileSidebar,
   NavbarItem,
   NavbarLabel,
+  Alertbox,
+  Text,
 } from "odinkit";
 import {
   Dropdown,
@@ -57,13 +43,16 @@ import {
   DropdownLabel,
   DropdownDivider,
 } from "odinkit/client";
-import { EventGroupWithEvents } from "prisma/types/Events";
+import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
 import { useEffect, useMemo, useRef, useState } from "react";
+import EventGroupPublishingDropdown from "../grupos/[id]/_shared/components/EventGroupPublishingDropdown";
+import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
+import { EventGroupPublishingChecklist } from "../grupos/[id]/_shared/components/EventGroupPublishingChecklist";
 
 export function EventGroupSidebar({
   eventGroup,
 }: {
-  eventGroup: EventGroupWithEvents;
+  eventGroup: EventGroupWithInfo;
 }) {
   const pathname = usePathname();
   const currentPage = useMemo(() => pathname.split("/").pop(), [pathname]);
@@ -134,19 +123,12 @@ export function EventGroupSidebar({
               <SidebarLabel>Inscrições</SidebarLabel>
             </SidebarItem>
           </SidebarSection>
-
-          <SidebarSpacer />
         </SidebarBody>
-        <SidebarFooter className="max-lg:hidden">
+        <SidebarFooter>
           <SidebarSection>
-            <SidebarItem href="/support">
-              <QuestionMarkCircleIcon />
-              <SidebarLabel>Suporte</SidebarLabel>
-            </SidebarItem>
-            <SidebarItem href="/changelog">
-              <SparklesIcon />
-              <SidebarLabel>Changelog</SidebarLabel>
-            </SidebarItem>
+            <SidebarHeading>Status do Campeonato</SidebarHeading>
+            <EventGroupPublishingDropdown eventGroup={eventGroup} />
+            <EventGroupPublishingChecklist eventGroup={eventGroup} />
           </SidebarSection>
         </SidebarFooter>
       </Sidebar>
@@ -156,9 +138,8 @@ export function EventGroupSidebar({
 
   return (
     <>
-      <div className="sticky top-0 hidden lg:block">{sidebar}</div>{" "}
-      <header className="flex items-center justify-end bg-zinc-200 px-4 lg:hidden dark:bg-zinc-500">
-        <div className="py-2.5 lg:hidden">
+      <div className="sticky top-0 z-10 lg:hidden">
+        <header className="flex items-center justify-end bg-zinc-200 px-4 py-2.5 lg:hidden dark:bg-zinc-500">
           <NavbarItem
             onClick={() => setShowSidebar(true)}
             aria-label="Open navigation"
@@ -170,8 +151,9 @@ export function EventGroupSidebar({
               </span>
             </div>
           </NavbarItem>
-        </div>
-      </header>
+        </header>
+      </div>
+      <div className="sticky top-0 hidden lg:block">{sidebar}</div>{" "}
       <MobileSidebar
         open={showSidebar}
         close={() => setShowSidebar(false)}

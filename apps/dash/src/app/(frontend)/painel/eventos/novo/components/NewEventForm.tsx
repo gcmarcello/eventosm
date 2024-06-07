@@ -35,6 +35,7 @@ import EventInfo from "./EventInfo";
 import SportInfo from "./SportInfo";
 import { Organization } from "@prisma/client";
 import { RTE } from "../../../_shared/RichText";
+import { SubmitContainer } from "../../_shared/components/SubmitContainer";
 
 export default function NewEventForm({
   organization,
@@ -200,12 +201,7 @@ export default function NewEventForm({
         </FieldGroup>
       </Fieldset>
 
-      <div className="sticky bottom-0 z-50 space-y-2 bg-white dark:bg-zinc-900">
-        <Divider />
-        <div className="flex justify-end">
-          <SubmitButton>Criar</SubmitButton>
-        </div>
-      </div>
+      <SubmitContainer />
     </Form>
   );
 }

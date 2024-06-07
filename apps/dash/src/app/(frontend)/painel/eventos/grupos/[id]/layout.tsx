@@ -1,15 +1,8 @@
-import { readOrganizations } from "@/app/api/orgs/service";
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { redirect } from "next/navigation";
-import { Alertbox, BottomNavigation, For, Link, Text } from "odinkit";
-import { readRegistrationBatches } from "@/app/api/batches/service";
-import { readEventGroups, readEventModalities } from "@/app/api/events/service";
+import { readEventGroups } from "@/app/api/events/service";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
-import { Button } from "odinkit/client";
-import { EventGroupNavbar } from "./_shared/components/EventGroupNavbar";
-import EventPublishing from "./_shared/components/EventPublishing";
-import { EventSidebar } from "../../_shared/EventSidebar";
 import { EventGroupSidebar } from "../../_shared/EventGroupSidebar";
 import { DashboardLayout } from "../../../_shared/components/DashboardLayout";
 

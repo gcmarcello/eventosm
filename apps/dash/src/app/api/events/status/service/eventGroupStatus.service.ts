@@ -14,6 +14,26 @@ async function updateEventGroupStatusToDraft(data: { eventGroupId: string }) {
 async function updateEventGroupStatusToPublished(data: {
   eventGroupId: string;
 }) {
+  const eventGroup = await prisma.eventGroup.findUnique({
+    where: { id: data.eventGroupId },
+    include: {
+      Event: true,
+      EventModality: { include: { modalityCategory: true } },
+      EventRegistrationBatch: true,
+    },
+  });
+  if (!eventGroup) throw "Grupo de eventos não encontrado.";
+  if (eventGroup.Event.length === 0)
+    throw "O grupo de eventos não possui etapas cadastradas.";
+  if (eventGroup.EventModality.length === 0)
+    throw "O grupo de eventos não possui modalidades cadastradas.";
+  if (
+    eventGroup.EventModality.every(
+      (modality) => !modality.modalityCategory?.length
+    )
+  )
+    throw "Nenhuma modalidade tem uma categoria cadastrada.";
+
   return await prisma.eventGroup.update({
     where: {
       id: data.eventGroupId,
@@ -27,7 +47,7 @@ async function updateEventGroupStatusToReview(data: {
   userSession: UserSession;
   organization: Organization;
 }) {
-  return await prisma.event.update({
+  return await prisma.eventGroup.update({
     where: {
       id: data.eventGroupId,
     },
