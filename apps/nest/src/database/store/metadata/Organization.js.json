@@ -1,0 +1,93 @@
+{
+  "data": {
+    "_id": 9000,
+    "properties": {
+      "name": {
+        "name": "name",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "email": {
+        "name": "email",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "phone": {
+        "name": "phone",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string",
+        "optional": true
+      },
+      "document": {
+        "name": "document",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string",
+        "optional": true
+      },
+      "slug": {
+        "name": "slug",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "abbreviation": {
+        "name": "abbreviation",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string",
+        "optional": true
+      },
+      "options": {
+        "name": "options",
+        "kind": "scalar",
+        "type": "jsonb",
+        "nullable": true,
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "{ images?: { bg?: string | undefined; hero?: string | undefined; logo?: string | undefined; } | undefined; socialMedia?: { facebook?: string | undefined; instagram?: string | undefined; twitter?: string | undefined; youtube?: string | undefined; } | undefined; colors: OrganizationColors; pages?: { documents?: boolean | undefined; } | undefined; }",
+        "optional": true
+      }
+    },
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "Organization",
+    "path": "./dist/resources/organizations/entities/organization.entity.js",
+    "name": "Organization",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "collection": "organization"
+  },
+  "origin": "./dist/resources/organizations/entities/organization.entity.js",
+  "hash": "96a3007223c90ac19c02fb436e39fc35",
+  "version": "6.2.9"
+}

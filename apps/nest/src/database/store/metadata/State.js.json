@@ -1,0 +1,67 @@
+{
+  "data": {
+    "_id": 2000,
+    "properties": {
+      "id": {
+        "name": "id",
+        "kind": "scalar",
+        "primary": true,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "uf": {
+        "name": "uf",
+        "kind": "scalar",
+        "unique": true,
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "name": {
+        "name": "name",
+        "kind": "scalar",
+        "unique": true,
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "city": {
+        "name": "city",
+        "kind": "1:m",
+        "cascade": [
+          "persist"
+        ],
+        "type": "City",
+        "array": false,
+        "runtimeType": "City"
+      }
+    },
+    "primaryKeys": [
+      "id"
+    ],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "State",
+    "path": "./dist/resources/geo/entites/state.entity.js",
+    "schema": "geo",
+    "name": "State",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "useCache": true,
+    "compositePK": false,
+    "simplePK": true,
+    "collection": "state"
+  },
+  "origin": "./dist/resources/geo/entites/state.entity.js",
+  "hash": "90ac31c00dddd1bc2d303115b348b456",
+  "version": "6.2.9"
+}

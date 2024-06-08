@@ -1,0 +1,104 @@
+{
+  "data": {
+    "_id": 5000,
+    "properties": {
+      "fullName": {
+        "name": "fullName",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "email": {
+        "name": "email",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "document": {
+        "name": "document",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "phone": {
+        "name": "phone",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "password": {
+        "name": "password",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "confirmed": {
+        "name": "confirmed",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "boolean",
+        "array": false,
+        "runtimeType": "boolean"
+      },
+      "info": {
+        "name": "info",
+        "kind": "1:1",
+        "cascade": [
+          "persist"
+        ],
+        "owner": true,
+        "unique": true,
+        "type": "UserInfo",
+        "array": false,
+        "runtimeType": "{ id: string; } & import(\"/workspaces/eventosm/node_modules/.pnpm/@mikro-orm+core@6.2.9/node_modules/@mikro-orm/core/index\").Reference<UserInfo & object>",
+        "optional": true,
+        "ref": true
+      },
+      "documents": {
+        "name": "documents",
+        "kind": "1:m",
+        "cascade": [
+          "persist"
+        ],
+        "type": "UserDocument",
+        "array": true,
+        "runtimeType": "UserDocument",
+        "optional": true
+      }
+    },
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "User",
+    "path": "./dist/resources/users/entities/user.entity.js",
+    "name": "User",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "collection": "user"
+  },
+  "origin": "./dist/resources/users/entities/user.entity.js",
+  "hash": "1f8ab649583da873970b4ce0304bbe66",
+  "version": "6.2.9"
+}

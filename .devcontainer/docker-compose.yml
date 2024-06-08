@@ -37,6 +37,20 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
+  db2:
+    image: postgres:latest
+    volumes:
+      - postgres-data2:/var/lib/postgresql/data2
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 1213:1213
+    command: -p 1213
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
   cache:
     image: redis:latest
     command: /bin/sh -c "redis-server --requirepass 1234"
@@ -61,3 +75,4 @@ services:
 
 volumes:
   postgres-data:
+  postgres-data2:

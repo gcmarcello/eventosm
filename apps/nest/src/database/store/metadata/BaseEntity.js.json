@@ -1,0 +1,55 @@
+{
+  "data": {
+    "_id": 0,
+    "properties": {
+      "id": {
+        "name": "id",
+        "kind": "scalar",
+        "primary": true,
+        "type": "uuid",
+        "defaultRaw": "gen_random_uuid()",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "createdAt": {
+        "name": "createdAt",
+        "kind": "scalar",
+        "default": "now()",
+        "type": "timestamp without time zone",
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "Date"
+      },
+      "updatedAt": {
+        "name": "updatedAt",
+        "kind": "scalar",
+        "type": "timestamp without time zone",
+        "default": "now()",
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "Date"
+      }
+    },
+    "primaryKeys": [
+      "id"
+    ],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "BaseEntity",
+    "path": "./dist/database/baseEntity.js",
+    "abstract": true,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "useCache": true,
+    "compositePK": false,
+    "simplePK": true
+  },
+  "origin": "./dist/database/baseEntity.js",
+  "hash": "6aed5ba4da774fe143e3c589d8d96da5",
+  "version": "6.2.9"
+}
