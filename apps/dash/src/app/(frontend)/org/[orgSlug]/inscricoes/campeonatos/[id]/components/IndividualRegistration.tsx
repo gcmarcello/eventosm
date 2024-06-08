@@ -103,14 +103,25 @@ export default function IndividualTournamentRegistration({
     },
   });
 
-  const categories = useMemo(
-    () =>
-      filterCategories(
+  const categories = useMemo(() => {
+    if (batch.categoryControl) {
+      const categoryBatch = batch.CategoryBatch;
+      return filterCategories(
+        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory).filter(
+          (cat) =>
+            categoryBatch.find(
+              (cb) => cb.categoryId === cat.id && cb.maxRegistrations
+            )
+        ),
+        userInfo
+      );
+    } else {
+      return filterCategories(
         eventGroup.EventModality.flatMap((mod) => mod.modalityCategory),
         userInfo
-      ),
-    [eventGroup, form.watch("registration.modalityId")]
-  );
+      );
+    }
+  }, [eventGroup, form.watch("registration.modalityId")]);
 
   const modalities = useMemo(() => eventGroup.EventModality, [eventGroup]);
 
@@ -266,28 +277,29 @@ export default function IndividualTournamentRegistration({
                       )}
                       <Field name="registration.categoryId">
                         <Label>Selecionar Categoria</Label>
-                        <Select
-                          disabled={
-                            form.watch("registration.modalityId") === undefined
-                          }
-                          data={filterCategories(
-                            eventGroup.EventModality.find(
-                              (mod) =>
-                                mod.id === form.watch("registration.modalityId")
-                            )?.modalityCategory || [],
-                            {
-                              birthDate: userInfo.birthDate,
-                              gender: userInfo.gender,
-                            }
-                          )}
-                          valueKey="id"
-                          displayValueKey="name"
-                        />
-                        <Description>
-                          {form.watch("registration.modalityId") === undefined
-                            ? "Escolha uma modalidade para liberar as categorias"
-                            : "As categorias exibidas são apenas as disponíveis para você."}
-                        </Description>
+                        {categories.length ? (
+                          <>
+                            <Select
+                              disabled={
+                                form.watch("registration.modalityId") ===
+                                undefined
+                              }
+                              data={categories}
+                              valueKey="id"
+                              displayValueKey="name"
+                            />
+                            <Description>
+                              {form.watch("registration.modalityId") ===
+                              undefined
+                                ? "Escolha uma modalidade para liberar as categorias"
+                                : "As categorias exibidas são apenas as disponíveis para você."}
+                            </Description>
+                          </>
+                        ) : (
+                          <Text>
+                            Não existe nenhuma categoria disponível para você.
+                          </Text>
+                        )}
                       </Field>
                       {categoryDocuments?.length ? (
                         <Fieldset>
