@@ -12,11 +12,16 @@ import {
   EventGroupCreateMultipleRegistrationsDto,
   EventGroupCreateRegistrationDto,
 } from "../eventGroups/eventGroup.dto";
-import { BatchCoupon, EventRegistrationStatus } from "@prisma/client";
+import {
+  BatchCoupon,
+  EventRegistrationStatus,
+  RegistrationDocument,
+} from "@prisma/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { RegistrationDto } from "../dto";
 import { readRegistrationPrice } from "../service";
 import { formatCPF } from "odinkit";
+import { upsertRegistrationDocument } from "../documents/service";
 
 export async function createEventGroupRegistration(
   request: EventGroupCreateRegistrationDto & { userSession: UserSession }
@@ -24,7 +29,7 @@ export async function createEventGroupRegistration(
   const {
     userSession,
     acceptedTerms,
-    registration: { addon, ...registrationInfo },
+    registration: { addon, documents, ...registrationInfo },
   } = request;
 
   const registrationId = crypto.randomUUID();
@@ -55,6 +60,12 @@ export async function createEventGroupRegistration(
     batchId: request.batchId && batch.id,
     eventGroupId: request.eventGroupId!,
   });
+
+  await verifyRegistrationDocuments(
+    registrationInfo.categoryId,
+    registrationId,
+    documents
+  );
 
   const eventRegistrations = await prisma.eventRegistration.count({
     where: { eventGroupId: request.eventGroupId },
@@ -90,6 +101,12 @@ export async function createEventGroupRegistration(
       addonOption: addon?.option,
     },
   });
+
+  if (documents?.length) {
+    await upsertRegistrationDocument(
+      documents?.map((doc) => ({ ...doc, registrationId }))
+    );
+  }
 
   if (!createRegistration) throw "Erro ao criar inscrição.";
 
@@ -547,4 +564,40 @@ async function verifyEventGroupAvailableSlots({
       }
     }
   }
+}
+
+async function verifyRegistrationDocuments(
+  id: string,
+  registrationId: string,
+  documents?: Omit<
+    RegistrationDocument,
+    | "id"
+    | "name"
+    | "createdAt"
+    | "updatedAt"
+    | "userDocumentId"
+    | "registrationId"
+    | "file"
+  >[]
+) {
+  const category = await prisma.modalityCategory.findUnique({
+    where: { id },
+    select: { CategoryDocument: true },
+  });
+
+  if (!category) throw "Categoria não encontrada.";
+
+  if (!category.CategoryDocument.length && documents?.length)
+    throw "Documentos não permitidos para esta categoria.";
+
+  if (!documents) throw "Documentos não informados.";
+
+  if (!category.CategoryDocument.length) return;
+
+  for (const document of category?.CategoryDocument) {
+    if (!documents.find((d) => d.documentId === document.id))
+      throw `Documento ${document.name || document.type} não encontrado.`;
+  }
+
+  return documents;
 }

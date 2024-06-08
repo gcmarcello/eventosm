@@ -7,7 +7,6 @@ import {
   ReadEventTypeDto,
   UpsertEventDto,
   UpsertEventGroupDto,
-  UpsertEventModalityCategoriesDto,
   UpsertEventModalityDto,
 } from "./dto";
 import * as service from "./service";
@@ -19,6 +18,7 @@ import { ActionResponse } from "odinkit";
 import { UpdateEventStatusDto } from "./status/dto";
 import { useHeaders } from "../_shared/utils/useHeaders";
 import { Event } from "@prisma/client";
+import { UpsertEventModalityCategoriesDto } from "../categories/dto";
 
 export async function readEventGroups(request: ReadEventGroupDto) {
   try {
