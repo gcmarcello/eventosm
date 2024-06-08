@@ -538,29 +538,43 @@ async function verifyEventGroupAvailableSlots({
   if (batch.categoryControl) {
     const categoryBatchArray = batch.CategoryBatch;
     const categoryArray = categoryBatchArray.map((cb) => cb.category);
+    const registrationsCategories = registrations.map(
+      (r) => r.categoryId as string
+    );
 
-    for (const category of categoryBatchArray) {
-      const categoryName = categoryArray.find(
-        (c) => c.id === category.categoryId
-      )?.name;
-      const categoryExistingRegistrations =
-        await prisma.eventRegistration.count({
-          where: {
-            eventGroupId,
-            categoryId: category.categoryId,
-            status: { not: { in: ["cancelled", "suspended"] } },
+    const categoriesWithExistingRegistrations =
+      await prisma.modalityCategory.findMany({
+        where: { id: { in: registrationsCategories } },
+        include: {
+          _count: {
+            select: {
+              EventRegistration: {
+                where: {
+                  batchId: batch.id,
+                  status: { not: { in: ["cancelled", "suspended"] } },
+                },
+              },
+            },
           },
-        });
+        },
+      });
+
+    for (const category of categoriesWithExistingRegistrations) {
+      const categoryName = categoryArray.find(
+        (c) => c.id === category.id
+      )?.name;
+
       const count =
-        registrations.filter((r) => r.categoryId === category.categoryId)
-          .length + categoryExistingRegistrations;
+        registrations.filter((r) => r.categoryId === category.id).length +
+        category._count.EventRegistration;
+
       const maxRegistrations = categoryBatchArray.find(
-        (c) => c.categoryId === category.categoryId
+        (c) => c.categoryId === category.id
       )?.maxRegistrations;
 
-      if (maxRegistrations) {
+      if (maxRegistrations || maxRegistrations === 0) {
         if (count > maxRegistrations)
-          throw `Limite de inscrições na categoria ${categoryName} excedido. ${Math.max(0, maxRegistrations - categoryExistingRegistrations)} restantes.`;
+          throw `Limite de inscrições na categoria ${categoryName} excedido.`;
       }
     }
   }
