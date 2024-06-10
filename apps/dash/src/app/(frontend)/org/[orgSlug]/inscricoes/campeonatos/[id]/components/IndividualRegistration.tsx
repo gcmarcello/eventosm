@@ -110,7 +110,10 @@ export default function IndividualTournamentRegistration({
         eventGroup.EventModality.flatMap((mod) => mod.modalityCategory).filter(
           (cat) =>
             categoryBatch.find(
-              (cb) => cb.categoryId === cat.id && cb.maxRegistrations
+              (cb) =>
+                cb.categoryId === cat.id &&
+                cb.maxRegistrations &&
+                cb.modalityId === form.watch("registration.modalityId")
             )
         ),
         userInfo
@@ -185,7 +188,7 @@ export default function IndividualTournamentRegistration({
         </DialogActions>
       </Dialog>
 
-      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96  lg:mb-0 lg:mt-10">
+      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96  lg:my-10">
         <div className="flex items-center justify-between gap-3 p-2 ">
           <div>
             <div className="mt-4 text-xl font-medium lg:mt-0">
