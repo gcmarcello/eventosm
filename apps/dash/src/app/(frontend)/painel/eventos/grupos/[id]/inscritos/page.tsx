@@ -25,6 +25,7 @@ export default async function RegistrationsPage({
       EventCheckIn: true,
       addon: true,
       coupon: true,
+      RegistrationDocument: true,
     },
   });
 
