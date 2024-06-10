@@ -16,7 +16,7 @@ export class QrCodeProcessor {
     return await this.qrCodeService
       .generateQrCode(job.data)
       .then((file) =>
-        this.backBlaze.uploadFile(file, `qr-codes/${job.data}.png`)
+        this.backBlaze.uploadFile(file as any, `qr-codes/${job.data}.png`)
       )
       .catch(console.log);
   }

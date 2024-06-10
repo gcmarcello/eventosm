@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { UserService } from "./resources/users/user.service";
 
@@ -8,9 +8,4 @@ export class AppController {
     private readonly appService: AppService,
     private readonly userService: UserService
   ) {}
-
-  @Get()
-  async getHello() {
-    return console.log(await this.userService.findAll());
-  }
 }

@@ -1,35 +1,29 @@
-import { Args, Info, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { User } from "./entities/user.entity";
-import { EntityManager } from "@mikro-orm/core";
-import { SqlEntityRepository } from "@mikro-orm/postgresql";
-import { GraphQLResolveInfo, Query } from "@/libs/graphQL/decorators";
+import { Query } from "@/libs/graphQL/decorators";
+import { UserService } from "./user.service";
+import { CreateUserDto, ReadUserDto } from "./dto/user.dto";
+import { UseGuards } from "@nestjs/common";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Resolver(() => User)
 export class UserResolver {
-  userRepo: SqlEntityRepository<User>;
+  constructor(private userService: UserService) {}
 
-  constructor(private em: EntityManager) {
-    this.userRepo = this.em.getRepository(User);
+  @UseGuards(AuthGuard)
+  @Query(() => User, { nullable: true })
+  public async getUser(@Args("data") data: ReadUserDto) {
+    return await this.userService.findOne(data);
   }
 
-  @Query(() => User)
-  public async getUser(
-    @Args("id") id: string,
-    @Info() info: GraphQLResolveInfo
-  ) {
-    const user = await this.userRepo.findOne(id, {
-      populate: info.relations,
-    });
-
-    return user;
+  @UseGuards(AuthGuard)
+  @Query(() => [User], { nullable: true })
+  public async getUsers(@Args("data") data: ReadUserDto) {
+    return await this.userService.findMany(data);
   }
 
-  @Query(() => [User])
-  public async getAllUsers(@Info() info: GraphQLResolveInfo) {
-    const users = await this.userRepo.findAll({
-      populate: info.relations,
-    });
-
-    return users;
+  @Mutation(() => User)
+  public async createUser(@Args("data") data: CreateUserDto) {
+    return await this.userService.create(data);
   }
 }

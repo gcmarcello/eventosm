@@ -305,6 +305,9 @@ importers:
       axios:
         specifier: ^1.6.2
         version: 1.6.5
+      bcrypt:
+        specifier: ^5.0.1
+        version: 5.1.1
       bull:
         specifier: 4.12.2
         version: 4.12.2
@@ -314,6 +317,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       email-templates:
         specifier: workspace:*
         version: link:../../packages/email-templates

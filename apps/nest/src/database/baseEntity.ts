@@ -10,7 +10,7 @@ export abstract class BaseEntity {
 
   @Field(() => Date, { nullable: true })
   @Property({ default: "now()", type: "timestamp without time zone" })
-  createdAt: Date;
+  createdAt?: Date;
 
   @Field(() => Date, { nullable: true })
   @Property({
@@ -18,5 +18,5 @@ export abstract class BaseEntity {
     type: "timestamp without time zone",
     default: "now()",
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 }

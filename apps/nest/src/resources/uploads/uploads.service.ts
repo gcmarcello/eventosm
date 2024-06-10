@@ -14,15 +14,19 @@ export class UploadsService {
     this.bucketName = this.configService.get("AWS_BUCKET_NAME") || "";
     this.privateBucketName =
       this.configService.get("AWS_PRIVATE_BUCKET_NAME") || "";
-    this.region = this.configService.get("AWS_REGION");
+    this.region = this.configService.get("AWS_REGION") || "";
+
+    const accessKeyId = this.configService.get("AWS_ACCESS_KEY_ID");
+
+    if (!accessKeyId) throw "AWS_ACCESS_KEY_ID não configurado";
 
     this.s3 = new S3Client({
       endpoint: `https://s3.${this.region}.backblazeb2.com`,
       credentials: {
-        accessKeyId: this.configService.get("AWS_ACCESS_KEY_ID"),
+        accessKeyId: accessKeyId,
         secretAccessKey: this.configService.get("AWS_SECRET_ACCESS_KEY"),
       },
-    });
+    } as any);
     this.s3Private = new S3Client({
       endpoint: `https://s3.${this.region}.backblazeb2.com`,
       credentials: {

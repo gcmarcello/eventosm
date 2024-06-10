@@ -3,12 +3,12 @@ import { createEnum } from "@/database/createEnum";
 import { Enum } from "@/database/decorators";
 import { City } from "@/resources/geo/entites/city.entity";
 import { State } from "@/resources/geo/entites/state.entity";
-import { Entity, OneToOne, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, Property } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
 
-enum Gender {
-  male,
-  female,
+export enum Gender {
+  male = "male",
+  female = "female",
 }
 
 export const gender = createEnum(Gender, "Gender");
@@ -17,10 +17,10 @@ export const gender = createEnum(Gender, "Gender");
 @Entity()
 export class UserInfo extends BaseEntity {
   @Field({ nullable: true })
-  @Property()
+  @Property({ type: "date", nullable: true })
   birthDate: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Gender, { nullable: true })
   @Enum(gender)
   gender: Gender;
 
@@ -38,17 +38,19 @@ export class UserInfo extends BaseEntity {
 
   @Field({ nullable: true })
   @Property()
-  complement: string;
+  complement?: string;
 
   @Field({ nullable: true })
   @Property()
-  support: boolean;
+  support?: string;
 
   @Field({ nullable: true })
-  @OneToOne()
-  state: State;
+  @ManyToOne(() => State, {
+    nullable: true,
+  })
+  state?: State;
 
   @Field({ nullable: true })
-  @OneToOne()
-  city: City;
+  @ManyToOne(() => City, { nullable: true })
+  city?: City;
 }

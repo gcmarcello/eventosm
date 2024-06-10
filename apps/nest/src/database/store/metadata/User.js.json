@@ -47,6 +47,21 @@
         "array": false,
         "runtimeType": "string"
       },
+      "role": {
+        "name": "role",
+        "kind": "scalar",
+        "enum": true,
+        "items": [
+          "admin",
+          "user"
+        ],
+        "fieldNames": [
+          "Role"
+        ],
+        "type": "Role",
+        "array": false,
+        "runtimeType": "Role"
+      },
       "confirmed": {
         "name": "confirmed",
         "kind": "scalar",
@@ -99,6 +114,6 @@
     "collection": "user"
   },
   "origin": "./dist/resources/users/entities/user.entity.js",
-  "hash": "1f8ab649583da873970b4ce0304bbe66",
+  "hash": "189c98feb8eb7b02bbd9116c5c09cf1f",
   "version": "6.2.9"
 }

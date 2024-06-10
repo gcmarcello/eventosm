@@ -5,9 +5,10 @@
       "birthDate": {
         "name": "birthDate",
         "kind": "scalar",
+        "type": "date",
+        "nullable": true,
         "getter": false,
         "setter": false,
-        "type": "Date",
         "array": false,
         "runtimeType": "Date"
       },
@@ -16,8 +17,8 @@
         "kind": "scalar",
         "enum": true,
         "items": [
-          0,
-          1
+          "male",
+          "female"
         ],
         "nativeEnumName": "Gender",
         "type": "Gender",
@@ -58,40 +59,44 @@
         "setter": false,
         "type": "string",
         "array": false,
-        "runtimeType": "string"
+        "runtimeType": "string",
+        "optional": true
       },
       "support": {
         "name": "support",
         "kind": "scalar",
         "getter": false,
         "setter": false,
-        "type": "boolean",
+        "type": "string",
         "array": false,
-        "runtimeType": "boolean"
+        "runtimeType": "string",
+        "optional": true
       },
       "state": {
         "name": "state",
-        "kind": "1:1",
+        "kind": "m:1",
         "cascade": [
           "persist"
         ],
+        "nullable": true,
         "owner": true,
-        "unique": true,
         "type": "State",
         "array": false,
-        "runtimeType": "State"
+        "runtimeType": "State",
+        "optional": true
       },
       "city": {
         "name": "city",
-        "kind": "1:1",
+        "kind": "m:1",
         "cascade": [
           "persist"
         ],
+        "nullable": true,
         "owner": true,
-        "unique": true,
         "type": "City",
         "array": false,
-        "runtimeType": "City"
+        "runtimeType": "City",
+        "optional": true
       }
     },
     "primaryKeys": [],
@@ -111,6 +116,6 @@
     "collection": "user_info"
   },
   "origin": "./dist/resources/users/entities/userInfo.entity.js",
-  "hash": "33e1e709e46ddb7d844dfe2d47456a39",
+  "hash": "9e6210591cd0c73ab015342f0536abc1",
   "version": "6.2.9"
 }

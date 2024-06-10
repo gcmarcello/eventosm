@@ -1,8 +1,23 @@
 import { BaseEntity } from "@/database/baseEntity";
-import { Entity, OneToMany, OneToOne, Property, Ref } from "@mikro-orm/core";
+import {
+  Entity,
+  Enum,
+  OneToMany,
+  OneToOne,
+  Property,
+  Ref,
+} from "@mikro-orm/core";
 import { UserDocument } from "./userDocument.entity";
 import { UserInfo } from "./userInfo.entity";
 import { Field, ObjectType } from "@nestjs/graphql";
+import { createEnum } from "@/database/createEnum";
+
+export enum Role {
+  admin = "admin",
+  user = "user",
+}
+
+export const role = createEnum(Role, "Role");
 
 @ObjectType()
 @Entity()
@@ -23,9 +38,12 @@ export class User extends BaseEntity {
   @Property()
   phone: string;
 
-  @Field({ nullable: true })
   @Property()
   password: string;
+
+  @Field(() => Role, { nullable: true })
+  @Enum(role)
+  role: Role;
 
   @Field({ nullable: true })
   @Property()

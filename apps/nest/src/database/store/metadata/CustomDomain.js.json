@@ -1,0 +1,25 @@
+{
+  "data": {
+    "_id": 12000,
+    "properties": {},
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "CustomDomain",
+    "path": "./dist/resources/organizations/entities/customDomain.entity.js",
+    "schema": "organizations",
+    "name": "CustomDomain",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "collection": "custom_domain"
+  },
+  "origin": "./dist/resources/organizations/entities/customDomain.entity.js",
+  "hash": "bfab5b3fc7352006773b35793eb47318",
+  "version": "6.2.9"
+}

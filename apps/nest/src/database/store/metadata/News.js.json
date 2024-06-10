@@ -1,0 +1,77 @@
+{
+  "data": {
+    "_id": 10000,
+    "properties": {
+      "title": {
+        "name": "title",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "subtitle": {
+        "name": "subtitle",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "content": {
+        "name": "content",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "imageUrl": {
+        "name": "imageUrl",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "slug": {
+        "name": "slug",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "status": {
+        "name": "status",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "NewsStatus",
+        "array": false,
+        "runtimeType": "NewsStatus"
+      }
+    },
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "News",
+    "path": "./dist/resources/news/entities/news.entities.js",
+    "abstract": true,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true
+  },
+  "origin": "./dist/resources/news/entities/news.entities.js",
+  "hash": "fa29832a66a0b5f303430ea06fe9884f",
+  "version": "6.2.9"
+}

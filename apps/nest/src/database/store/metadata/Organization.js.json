@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 9000,
+    "_id": 17000,
     "properties": {
       "name": {
         "name": "name",
@@ -67,7 +67,17 @@
         "getter": false,
         "setter": false,
         "array": false,
-        "runtimeType": "{ images?: { bg?: string | undefined; hero?: string | undefined; logo?: string | undefined; } | undefined; socialMedia?: { facebook?: string | undefined; instagram?: string | undefined; twitter?: string | undefined; youtube?: string | undefined; } | undefined; colors: OrganizationColors; pages?: { documents?: boolean | undefined; } | undefined; }",
+        "runtimeType": "OrganizationOptions"
+      },
+      "customDomain": {
+        "name": "customDomain",
+        "kind": "1:m",
+        "cascade": [
+          "persist"
+        ],
+        "type": "OrganizationCustomDomain",
+        "array": false,
+        "runtimeType": "OrganizationCustomDomain",
         "optional": true
       }
     },
@@ -78,6 +88,7 @@
     "uniques": [],
     "className": "Organization",
     "path": "./dist/resources/organizations/entities/organization.entity.js",
+    "schema": "organizations",
     "name": "Organization",
     "abstract": false,
     "internal": true,
@@ -88,6 +99,6 @@
     "collection": "organization"
   },
   "origin": "./dist/resources/organizations/entities/organization.entity.js",
-  "hash": "96a3007223c90ac19c02fb436e39fc35",
+  "hash": "b762d179db2a8fad3a0c3c2951baf20c",
   "version": "6.2.9"
 }

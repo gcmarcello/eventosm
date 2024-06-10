@@ -36,14 +36,19 @@ type UserInfo {
   createdAt: DateTime
   updatedAt: DateTime
   birthDate: DateTime
-  gender: Float
+  gender: Gender
   zipCode: String
   address: String
   number: String
   complement: String
-  support: Boolean
+  support: String
   state: State
   city: City
+}
+
+enum Gender {
+  male
+  female
 }
 
 type User {
@@ -54,13 +59,51 @@ type User {
   email: String
   document: String
   phone: String
-  password: String
+  role: Role
   confirmed: Boolean
   info: UserInfo
   documents: [UserDocument!]
 }
 
+enum Role {
+  admin
+  user
+}
+
 type Query {
-  getUser(id: String!): User!
-  getAllUsers: [User!]!
+  getUser(data: ReadUserDto!): User
+  getUsers(data: ReadUserDto!): [User!]
+}
+
+input ReadUserDto {
+  fullName: String
+  email: String
+  document: String
+  phone: String
+  info: UserInfoDto
+}
+
+input UserInfoDto {
+  birthDate: String
+  gender: String
+  address: String
+  number: String
+  complement: String
+  city: String
+  state: String
+  zipCode: String
+}
+
+type Mutation {
+  createUser(data: CreateUserDto!): User!
+}
+
+input CreateUserDto {
+  fullName: String!
+  email: String!
+  document: String!
+  phone: String!
+  password: String!
+  info: UserInfoDto!
+  acceptTerms: Boolean
 }
