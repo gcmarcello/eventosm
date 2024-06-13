@@ -16,6 +16,7 @@ import {
 import { Gender } from "../entities/userInfo.entity";
 import { Type } from "class-transformer";
 import { Field, InputType } from "@nestjs/graphql";
+import { Role } from "../entities/user.entity";
 
 @ValidatorConstraint({ async: false })
 class IsValidBirthDate implements ValidatorConstraintInterface {
@@ -87,9 +88,15 @@ class UserInfoDto {
 export class CreateUserDto {
   @IsString()
   @MinLength(3)
+  @MaxLength(20)
+  @Field()
+  firstName: string;
+
+  @IsString()
+  @MinLength(3)
   @MaxLength(100)
   @Field()
-  fullName: string;
+  lastName: string;
 
   @IsEmail({}, { message: "Email inválido" })
   @Field()
@@ -124,6 +131,10 @@ export class CreateUserDto {
 export class ReadUserDto {
   @IsOptional()
   @Field({ nullable: true })
+  id?: string;
+
+  @IsOptional()
+  @Field({ nullable: true })
   fullName?: string;
 
   @IsOptional()
@@ -137,6 +148,10 @@ export class ReadUserDto {
   @IsOptional()
   @Field({ nullable: true })
   phone?: string;
+
+  @IsOptional()
+  @Field({ nullable: true })
+  role?: Role;
 
   @IsOptional()
   @Field({ nullable: true })

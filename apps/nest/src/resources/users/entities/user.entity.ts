@@ -11,6 +11,7 @@ import { UserDocument } from "./userDocument.entity";
 import { UserInfo } from "./userInfo.entity";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { createEnum } from "@/database/createEnum";
+import { Organization } from "@/resources/organizations/entities/organization.entity";
 
 export enum Role {
   admin = "admin",
@@ -24,7 +25,16 @@ export const role = createEnum(Role, "Role");
 export class User extends BaseEntity {
   @Field({ nullable: true })
   @Property()
-  fullName: string;
+  firstName: string;
+
+  @Field({ nullable: true })
+  @Property()
+  lastName: string;
+
+  @Property({ name: "fullName" })
+  getFullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
 
   @Field({ nullable: true })
   @Property()
@@ -56,4 +66,8 @@ export class User extends BaseEntity {
   @Field(() => [UserDocument], { nullable: true })
   @OneToMany(() => UserDocument, (document) => document.user)
   documents?: UserDocument[];
+
+  @Field(() => [Organization], { nullable: true })
+  @OneToMany(() => Organization, (organization) => organization.owner)
+  organizations: Organization;
 }

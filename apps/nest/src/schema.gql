@@ -55,7 +55,8 @@ type User {
   id: String
   createdAt: DateTime
   updatedAt: DateTime
-  fullName: String
+  firstName: String
+  lastName: String
   email: String
   document: String
   phone: String
@@ -76,10 +77,12 @@ type Query {
 }
 
 input ReadUserDto {
+  id: String
   fullName: String
   email: String
   document: String
   phone: String
+  role: String
   info: UserInfoDto
 }
 
@@ -99,7 +102,8 @@ type Mutation {
 }
 
 input CreateUserDto {
-  fullName: String!
+  firstName: String!
+  lastName: String!
   email: String!
   document: String!
   phone: String!

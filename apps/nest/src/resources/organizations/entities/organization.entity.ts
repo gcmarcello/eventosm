@@ -1,9 +1,10 @@
 import { BaseEntity } from "@/database/baseEntity";
-import { Entity, OneToMany, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
 import { Color } from "./color.entity";
 import { organizationsSchema } from "@/database/constants";
 import { Field } from "@nestjs/graphql";
 import { OrganizationCustomDomain } from "./organizationCustomDomain.entity";
+import { User } from "@/resources/users/entities/user.entity";
 
 export type OrganizationColors = {
   primaryColor: Color;
@@ -36,6 +37,10 @@ export class Organization extends BaseEntity {
   name: string;
 
   @Field({ nullable: true })
+  @Property({ type: "text" })
+  description: string;
+
+  @Field({ nullable: true })
   @Property()
   email: string;
 
@@ -51,10 +56,6 @@ export class Organization extends BaseEntity {
   @Property()
   slug: string;
 
-  @Field({ nullable: true })
-  @Property()
-  abbreviation?: string;
-
   @Field(() => OrganizationOptions, { nullable: true })
   @Property({ type: "jsonb", nullable: true })
   options: OrganizationOptions;
@@ -65,4 +66,8 @@ export class Organization extends BaseEntity {
     (customDomain) => customDomain.organization
   )
   customDomain?: OrganizationCustomDomain;
+
+  @Field(() => User)
+  @ManyToOne()
+  owner: User;
 }

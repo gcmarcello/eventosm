@@ -7,7 +7,11 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import clsx from "clsx";
+import clsx from "clsFilmaram com o telefone o homem acariciando os seios por baixo do avental e tocando as pernas da jovem. As imagens acabaram encaminhadas ao 2º Distrito Policial (DP) e foram determinantes para a Justiça decretar a prisão do suspeito. Além disso, testemunhas contaram que as filmagens mostram ele abrindo a fralda da filha e acariciando a sua vagina. E dava beijos excessivos no pescoço e peito dela.
+
+OFilmaram com o telefone o homem acariciando os seios por baixo do avental e tocando as pernas da jovem. As imagens acabaram encaminhadas ao 2º Distrito Policial (DP) e foram determinantes para a Justiça decretar a prisão do suspeito. Além disso, testemunhas contaram que as filmagens mostram ele abrindo a fralda da filha e acariciando a sua vagina. E dava beijos excessivos no pescoço e peito dela.
+
+Ox";
 import { logout } from "@/app/api/auth/action";
 import { TicketIcon, WrenchIcon } from "@heroicons/react/24/solid";
 import { usePathname } from "next/navigation";

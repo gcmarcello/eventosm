@@ -14,6 +14,10 @@ import { UsersModule } from "./resources/users/users.module";
 import { join } from "path";
 import { AuthModule } from "./resources/auth/auth.module";
 import { AuthService } from "./resources/auth/auth.service";
+import { SqlEntityRepository } from "@mikro-orm/postgresql";
+import { JwtService } from "@nestjs/jwt";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { ResponseTimeInterceptor } from "./app.interceptor";
 
 @Module({
   imports: [
@@ -31,6 +35,16 @@ import { AuthService } from "./resources/auth/auth.service";
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, AuthService],
+  providers: [
+    AppService,
+    UserService,
+    AuthService,
+    SqlEntityRepository,
+    JwtService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseTimeInterceptor,
+    },
+  ],
 })
 export class AppModule {}

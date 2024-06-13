@@ -3,11 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { Role, User } from "./entities/user.entity";
 import { CreateUserDto, ReadUserDto } from "./dto/user.dto";
 import { UserInfo } from "./entities/userInfo.entity";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { hashInfo } from "@/utils/bCrypt";
-
-dayjs.extend(customParseFormat);
 
 @Injectable()
 export class UserService {
@@ -26,14 +21,10 @@ export class UserService {
   async create(dto: CreateUserDto) {
     const { info, ...general } = dto;
 
-    const userInfo = this.em.create(UserInfo, {
-      ...info,
-      birthDate: dayjs(info.birthDate, "DD/MM/YYYY").toDate(),
-    });
+    const userInfo = this.em.create(UserInfo, info);
 
     const user = this.em.create(User, {
       ...general,
-      password: await hashInfo(general.password),
       info: userInfo,
       confirmed: false,
       role: Role.user,

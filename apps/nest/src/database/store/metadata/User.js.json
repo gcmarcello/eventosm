@@ -2,14 +2,33 @@
   "data": {
     "_id": 5000,
     "properties": {
-      "fullName": {
-        "name": "fullName",
+      "firstName": {
+        "name": "firstName",
         "kind": "scalar",
         "getter": false,
         "setter": false,
         "type": "string",
         "array": false,
         "runtimeType": "string"
+      },
+      "lastName": {
+        "name": "lastName",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "fullName": {
+        "name": "fullName",
+        "kind": "scalar",
+        "getter": true,
+        "setter": false,
+        "persist": false,
+        "type": "method",
+        "getterName": "getFullName",
+        "runtimeType": "method"
       },
       "email": {
         "name": "email",
@@ -114,6 +133,6 @@
     "collection": "user"
   },
   "origin": "./dist/resources/users/entities/user.entity.js",
-  "hash": "189c98feb8eb7b02bbd9116c5c09cf1f",
+  "hash": "450baf339d890934c793a16406b9bd62",
   "version": "6.2.9"
 }
