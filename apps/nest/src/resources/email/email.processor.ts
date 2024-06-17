@@ -23,7 +23,7 @@ export class EmailProcessor {
             name: "EventoSM",
           },
           mailSettings: {
-            sandboxMode: { enable: false },
+            sandboxMode: { enable: this.settingsService.isDevelopment },
           },
         })
         .then(() => console.log("Mail Sent"));
