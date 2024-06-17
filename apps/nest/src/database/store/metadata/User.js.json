@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 5000,
+    "_id": 7000,
     "properties": {
       "firstName": {
         "name": "firstName",
@@ -114,6 +114,17 @@
         "array": true,
         "runtimeType": "UserDocument",
         "optional": true
+      },
+      "organizations": {
+        "name": "organizations",
+        "kind": "1:m",
+        "cascade": [
+          "persist"
+        ],
+        "type": "Organization",
+        "array": false,
+        "runtimeType": "Organization",
+        "optional": true
       }
     },
     "primaryKeys": [],
@@ -133,6 +144,6 @@
     "collection": "user"
   },
   "origin": "./dist/resources/users/entities/user.entity.js",
-  "hash": "450baf339d890934c793a16406b9bd62",
+  "hash": "0ba87c632ae01c05c904a72ff4be940d",
   "version": "6.2.9"
 }

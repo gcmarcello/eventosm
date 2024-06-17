@@ -51,6 +51,29 @@ enum Gender {
   female
 }
 
+type OrganizationCustomDomain {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  domain: String
+  organization: Organization
+}
+
+type Organization {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  description: String
+  email: String
+  phone: String
+  document: String
+  slug: String
+  options: String
+  customDomain: [OrganizationCustomDomain!]
+  owner: User!
+}
+
 type User {
   id: String
   createdAt: DateTime
@@ -64,6 +87,7 @@ type User {
   confirmed: Boolean
   info: UserInfo
   documents: [UserDocument!]
+  organizations: [Organization!]
 }
 
 enum Role {
@@ -72,8 +96,17 @@ enum Role {
 }
 
 type Query {
+  findAllOrganizations: [Organization!]
+  findOrganizations(data: ReadOrganizationDto!): [Organization!]
+  findOrganization(id: String!): Organization
   getUser(data: ReadUserDto!): User
   getUsers(data: ReadUserDto!): [User!]
+}
+
+input ReadOrganizationDto {
+  id: String!
+  ownerId: String!
+  slug: String!
 }
 
 input ReadUserDto {
@@ -98,7 +131,30 @@ input UserInfoDto {
 }
 
 type Mutation {
+  createOrganization(data: CreateOrganizationDto!): Organization!
+  updateOrganization(data: UpdateOrganizationDto!): Organization!
   createUser(data: CreateUserDto!): User!
+}
+
+input CreateOrganizationDto {
+  owner: String!
+  name: String!
+  description: String
+  email: String
+  phone: String
+  document: String
+  slug: String!
+}
+
+input UpdateOrganizationDto {
+  owner: String!
+  name: String!
+  description: String
+  email: String
+  phone: String
+  document: String
+  slug: String!
+  id: String!
 }
 
 input CreateUserDto {

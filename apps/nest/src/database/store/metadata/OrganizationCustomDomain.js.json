@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 16000,
+    "_id": 5000,
     "properties": {
       "domain": {
         "name": "domain",
@@ -42,6 +42,6 @@
     "collection": "organization_custom_domain"
   },
   "origin": "./dist/resources/organizations/entities/organizationCustomDomain.entity.js",
-  "hash": "e6e2012f7b7719051248d173456a99aa",
+  "hash": "89b1199b91dca48c1a4068946f5f2cfc",
   "version": "6.2.9"
 }

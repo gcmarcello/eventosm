@@ -69,5 +69,5 @@ export class User extends BaseEntity {
 
   @Field(() => [Organization], { nullable: true })
   @OneToMany(() => Organization, (organization) => organization.owner)
-  organizations: Organization;
+  organizations?: Organization;
 }

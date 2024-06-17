@@ -2,7 +2,7 @@ import { BaseEntity } from "@/database/baseEntity";
 import { Entity, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
 import { Color } from "./color.entity";
 import { organizationsSchema } from "@/database/constants";
-import { Field } from "@nestjs/graphql";
+import { Field, ObjectType } from "@nestjs/graphql";
 import { OrganizationCustomDomain } from "./organizationCustomDomain.entity";
 import { User } from "@/resources/users/entities/user.entity";
 
@@ -29,7 +29,7 @@ export class OrganizationOptions {
     documents?: boolean;
   };
 }
-
+@ObjectType()
 @Entity(organizationsSchema)
 export class Organization extends BaseEntity {
   @Field({ nullable: true })
@@ -38,11 +38,11 @@ export class Organization extends BaseEntity {
 
   @Field({ nullable: true })
   @Property({ type: "text" })
-  description: string;
+  description?: string;
 
   @Field({ nullable: true })
   @Property()
-  email: string;
+  email?: string;
 
   @Field({ nullable: true })
   @Property()
@@ -56,9 +56,9 @@ export class Organization extends BaseEntity {
   @Property()
   slug: string;
 
-  @Field(() => OrganizationOptions, { nullable: true })
+  @Field(() => String, { nullable: true })
   @Property({ type: "jsonb", nullable: true })
-  options: OrganizationOptions;
+  options?: OrganizationOptions;
 
   @Field(() => [OrganizationCustomDomain], { nullable: true })
   @OneToMany(

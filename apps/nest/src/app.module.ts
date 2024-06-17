@@ -14,10 +14,11 @@ import { UsersModule } from "./resources/users/users.module";
 import { join } from "path";
 import { AuthModule } from "./resources/auth/auth.module";
 import { AuthService } from "./resources/auth/auth.service";
-import { SqlEntityRepository } from "@mikro-orm/postgresql";
 import { JwtService } from "@nestjs/jwt";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { ResponseTimeInterceptor } from "./app.interceptor";
+import { OrganizationModule } from "./resources/organizations/organization.module";
+import { OrganizationService } from "./resources/organizations/organization.service";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ResponseTimeInterceptor } from "./app.interceptor";
     DatabaseModule,
     BullModule,
     SettingsModule,
+    OrganizationModule,
     QrCodeModule,
     EmailModule,
     UploadsModule,
@@ -39,7 +41,7 @@ import { ResponseTimeInterceptor } from "./app.interceptor";
     AppService,
     UserService,
     AuthService,
-    SqlEntityRepository,
+    OrganizationService,
     JwtService,
     {
       provide: APP_INTERCEPTOR,

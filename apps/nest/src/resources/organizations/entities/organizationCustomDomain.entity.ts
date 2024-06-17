@@ -1,9 +1,10 @@
 import { BaseEntity } from "@/database/baseEntity";
 import { organizationsSchema } from "@/database/constants";
 import { Entity, ManyToOne, Property } from "@mikro-orm/core";
-import { Field } from "@nestjs/graphql";
+import { Field, ObjectType } from "@nestjs/graphql";
 import { Organization } from "./organization.entity";
 
+@ObjectType()
 @Entity(organizationsSchema)
 export class OrganizationCustomDomain extends BaseEntity {
   @Field({ nullable: true })
