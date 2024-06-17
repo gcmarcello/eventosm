@@ -100,7 +100,7 @@ export async function readEventGroupResults(eventGroupId: string) {
   if (!rules) throw "Regras do campeonato não encontradas.";
 
   const allResults = await prisma.eventResult.findMany({
-    where: { Event: { EventGroup: { id: eventGroupId } } },
+    where: { Event: { EventGroup: { id: eventGroupId } }, status: "active" },
     include: {
       Registration: {
         include: {
@@ -172,7 +172,7 @@ export async function readEventGroupResults(eventGroupId: string) {
           .map((result) => Number(result.score))
           .filter((score) => !isNaN(score))
           .sort((a, b) => a - b);
-        const numResults = Math.min(validResults.length, rules.discard || 0);
+        const numResults = Math.max(validResults.length, rules.discard || 0);
 
         totalScore =
           validResults.reduce((acc, curr) => acc + curr, 0) / numResults;
