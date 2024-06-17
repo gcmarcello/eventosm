@@ -1,5 +1,5 @@
 "use client";
-import { SubmitButton, date } from "odinkit";
+import { For, Link, SubmitButton, date } from "odinkit";
 
 import {
   Button,
@@ -41,6 +41,7 @@ import {
 import RegistrationStatusDropdown from "../RegistrationStatusDropdown";
 import { EventRegistrationWithInfo } from "prisma/types/Registrations";
 import { RegistrationsTable } from "./RegistrationsTable";
+import { readAbsenceJustification } from "@/app/api/absences/action";
 
 export default function RegistrationsContainer({
   registrations,
@@ -125,6 +126,16 @@ export default function RegistrationsContainer({
     }
   }, [selectedRegistration]);
 
+  const {
+    data: absenceJustificationData,
+    trigger: triggerReadAbsenceJustificationData,
+  } = useAction({
+    action: readAbsenceJustification,
+    onSuccess: (data) => window.open(data.data, "_blank"),
+    onError: (error) =>
+      showToast({ message: error.message, variant: "error", title: "Erro!" }),
+  });
+
   const Field = useMemo(() => form.createField(), [form]);
 
   return (
@@ -179,6 +190,29 @@ export default function RegistrationsContainer({
                     destacadas.
                   </Description>
                 </Field>
+                {selectedRegistration?.RegistrationDocument?.length ? (
+                  <>
+                    <div
+                      data-slot="label"
+                      className="select-none text-base/6 font-medium text-zinc-950 data-[disabled]:opacity-50 sm:text-sm/6"
+                    >
+                      Documentos
+                    </div>
+                    <For each={selectedRegistration?.RegistrationDocument}>
+                      {(doc) => (
+                        <Link
+                          href={
+                            process.env.NEXT_PUBLIC_BUCKET_URL +
+                            "/registrationDocuments/" +
+                            doc.file
+                          }
+                        >
+                          {doc.file}
+                        </Link>
+                      )}
+                    </For>
+                  </>
+                ) : null}
                 <Field name="code">
                   <Label>Número</Label>
                   <Input />

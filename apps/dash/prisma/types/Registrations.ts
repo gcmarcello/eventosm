@@ -9,8 +9,10 @@ import {
   EventRegistration,
   EventRegistrationBatch,
   ModalityCategory,
+  RegistrationDocument,
   Team,
   User,
+  UserDocument,
   UserInfo,
 } from "@prisma/client";
 import { EventGroupWithEvents } from "./Events";
@@ -39,6 +41,7 @@ export type EventRegistrationWithInfo = EventRegistration & {
   team?: Team | null;
   addon?: EventAddon | null;
   coupon?: BatchCoupon | null;
+  RegistrationDocument?: RegistrationDocument[];
 };
 
 export type EventGroupRegistrationWithInfo = Omit<
