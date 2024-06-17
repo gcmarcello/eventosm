@@ -10,6 +10,7 @@ import {
 import { OrganizationService } from "./organization.service";
 import { OrganizationGuard } from "./organization.guard";
 import { OrganizationPermissions, Permissions } from "./permissions.decorator";
+import { User } from "../auth/decorators/user.decorator";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Organization)
@@ -33,14 +34,17 @@ export class OrganizationResolver {
 
   @UseGuards(OrganizationGuard)
   @Mutation(() => Organization)
-  public async createOrganization(@Args("data") data: CreateOrganizationDto) {
-    return await this.organizationService.create(data);
+  public async createOrganization(
+    @Args("data") data: CreateOrganizationDto,
+    @User() user: string
+  ) {
+    return await this.organizationService.create(user, data);
   }
 
   @Permissions([OrganizationPermissions.UpdateOrganization])
   @UseGuards(OrganizationGuard)
   @Mutation(() => Organization)
   public async updateOrganization(@Args("data") data: UpdateOrganizationDto) {
-    return await this.organizationService.create(data);
+    return await this.organizationService.update(data);
   }
 }

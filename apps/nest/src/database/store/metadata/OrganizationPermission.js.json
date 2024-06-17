@@ -1,0 +1,53 @@
+{
+  "data": {
+    "_id": 6000,
+    "properties": {
+      "permission": {
+        "name": "permission",
+        "kind": "scalar",
+        "enum": true,
+        "items": [
+          "organization:create",
+          "organization:update",
+          "organization:delete",
+          "organization:read-private",
+          "event:create",
+          "event:update",
+          "event:delete",
+          "event:read-private",
+          "tournament:create",
+          "tournament:update",
+          "tournament:delete",
+          "tournaments:read-private",
+          "news:create",
+          "news:update",
+          "news:delete",
+          "news:read-private"
+        ],
+        "nativeEnumName": "OrganizationPermissions",
+        "type": "OrganizationPermissions",
+        "array": false,
+        "runtimeType": "OrganizationPermissions"
+      }
+    },
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "OrganizationPermission",
+    "path": "./dist/resources/organizations/entities/organizationPermission.entity.js",
+    "schema": "organizations",
+    "name": "OrganizationPermission",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "collection": "organization_permission"
+  },
+  "origin": "./dist/resources/organizations/entities/organizationPermission.entity.js",
+  "hash": "1decb49d414a05fa82a50a6950396c91",
+  "version": "6.2.9"
+}

@@ -5,6 +5,7 @@ import { organizationsSchema } from "@/database/constants";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { OrganizationCustomDomain } from "./organizationCustomDomain.entity";
 import { User } from "@/resources/users/entities/user.entity";
+import { OrganizationRole } from "./organizationRole.entity";
 
 export type OrganizationColors = {
   primaryColor: Color;
@@ -66,6 +67,9 @@ export class Organization extends BaseEntity {
     (customDomain) => customDomain.organization
   )
   customDomain?: OrganizationCustomDomain;
+
+  @OneToMany(() => OrganizationRole, (role) => role.organization)
+  roles?: OrganizationRole[];
 
   @Field(() => User)
   @ManyToOne()

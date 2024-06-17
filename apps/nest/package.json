@@ -104,6 +104,12 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/database/db.config.ts"
+    ]
+  },
   "engines": {
     "node": ">=16"
   }

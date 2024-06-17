@@ -8,6 +8,7 @@ export class CreateOrganizationDto {
   name: string;
 
   @MinLength(3)
+  @IsOptional()
   @Field({ nullable: true })
   description?: string;
 
@@ -32,6 +33,7 @@ export class UpdateOrganizationDto extends CreateOrganizationDto {
   @Field()
   id: string;
 }
+
 @InputType()
 export class ReadOrganizationDto {
   @IsOptional()

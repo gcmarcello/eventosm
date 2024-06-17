@@ -1,0 +1,68 @@
+{
+  "data": {
+    "_id": 4000,
+    "properties": {
+      "id": {
+        "name": "id",
+        "kind": "scalar",
+        "primary": true,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "uf": {
+        "name": "uf",
+        "kind": "scalar",
+        "unique": true,
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "name": {
+        "name": "name",
+        "kind": "scalar",
+        "unique": true,
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "state": {
+        "name": "state",
+        "kind": "m:1",
+        "cascade": [
+          "persist"
+        ],
+        "owner": true,
+        "type": "State",
+        "array": false,
+        "runtimeType": "State"
+      }
+    },
+    "primaryKeys": [
+      "id"
+    ],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "City",
+    "path": "./src/resources/geo/entites/city.entity.ts",
+    "schema": "geo",
+    "name": "City",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "useCache": true,
+    "compositePK": false,
+    "simplePK": true,
+    "collection": "city"
+  },
+  "origin": "./src/resources/geo/entites/city.entity.ts",
+  "hash": "048e54a66b7d4657f6ab150753bea23e",
+  "version": "6.2.9"
+}

@@ -29,8 +29,12 @@ export class OrganizationService {
     return await this.organizationRepo.findOne(id);
   }
 
-  async create(dto: CreateOrganizationDto) {
-    const organization = this.organizationRepo.create(dto);
+  async create(userId: string, dto: CreateOrganizationDto) {
+    console.log(userId);
+    const organization = this.organizationRepo.create({
+      ...dto,
+      owner: userId,
+    });
 
     await this.em.flush();
     return organization;

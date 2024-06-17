@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  NotFoundException,
+} from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { JwtService } from "@nestjs/jwt";
 import { RequestWithSession } from "../auth/auth.guard";
@@ -21,20 +27,32 @@ export class OrganizationGuard implements CanActivate {
     private organizationService: OrganizationService,
     private reflector: Reflector
   ) {}
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const permissions = this.reflector.get(Permissions, context.getHandler());
+  async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    const permissions = this.reflector.get(Permissions, ctx.getHandler());
+
+    const context = GqlExecutionContext.create(ctx);
+
+    const request: RequestWithSession = context.getContext().req;
 
     if (!permissions || !permissions.length) {
       return true;
     }
 
-    const request: RequestWithSession =
-      GqlExecutionContext.create(context).getContext().req;
+    const user = request.user;
 
-    console.log(request.user);
+    const orgId = context.getArgs().data.id;
 
-    console.log(permissions);
+    console.log(orgId);
 
-    return true;
+    if (!orgId) throw new NotFoundException("Organização não encontrada.");
+
+    const organization = await this.organizationService.findOne(orgId);
+
+    if (!organization)
+      throw new NotFoundException("Organização não encontrada.");
+
+    if (organization.owner.id === user?.id) return true;
+
+    throw new ForbiddenException("Você não possui permissão para fazer isto.");
   }
 }

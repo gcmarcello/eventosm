@@ -1,0 +1,57 @@
+{
+  "data": {
+    "_id": 0,
+    "properties": {
+      "id": {
+        "name": "id",
+        "kind": "scalar",
+        "primary": true,
+        "type": "uuid",
+        "defaultRaw": "gen_random_uuid()",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "createdAt": {
+        "name": "createdAt",
+        "kind": "scalar",
+        "default": "now()",
+        "type": "timestamp without time zone",
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "Date",
+        "optional": true
+      },
+      "updatedAt": {
+        "name": "updatedAt",
+        "kind": "scalar",
+        "type": "timestamp without time zone",
+        "default": "now()",
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "Date",
+        "optional": true
+      }
+    },
+    "primaryKeys": [
+      "id"
+    ],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "BaseEntity",
+    "path": "./src/database/baseEntity.ts",
+    "abstract": true,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "useCache": true,
+    "compositePK": false,
+    "simplePK": true
+  },
+  "origin": "./src/database/baseEntity.ts",
+  "hash": "381f3c0c851e32a0caf1ddd106c3ba3f",
+  "version": "6.2.9"
+}

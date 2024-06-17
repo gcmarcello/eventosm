@@ -1,0 +1,67 @@
+{
+  "data": {
+    "_id": 9000,
+    "properties": {
+      "id": {
+        "name": "id",
+        "kind": "scalar",
+        "primary": true,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "tw": {
+        "name": "tw",
+        "kind": "scalar",
+        "type": "jsonb",
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "{ id: string; color: ColorId; shade: string; }",
+        "optional": true
+      },
+      "hex": {
+        "name": "hex",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string",
+        "optional": true
+      },
+      "rgb": {
+        "name": "rgb",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string",
+        "optional": true
+      }
+    },
+    "primaryKeys": [
+      "id"
+    ],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "Color",
+    "path": "./src/resources/organizations/entities/color.entity.ts",
+    "schema": "colors",
+    "name": "Color",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "useCache": true,
+    "compositePK": false,
+    "simplePK": true,
+    "collection": "color"
+  },
+  "origin": "./src/resources/organizations/entities/color.entity.ts",
+  "hash": "ee8d3a622ef7159ecf41abc35977c2fc",
+  "version": "6.2.9"
+}

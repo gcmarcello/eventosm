@@ -1,0 +1,59 @@
+{
+  "data": {
+    "_id": 16000,
+    "properties": {
+      "name": {
+        "name": "name",
+        "kind": "scalar",
+        "getter": false,
+        "setter": false,
+        "type": "string",
+        "array": false,
+        "runtimeType": "string"
+      },
+      "organization": {
+        "name": "organization",
+        "kind": "m:1",
+        "cascade": [
+          "persist"
+        ],
+        "nullable": true,
+        "owner": true,
+        "type": "Organization",
+        "array": false,
+        "runtimeType": "Organization"
+      },
+      "permissions": {
+        "name": "permissions",
+        "kind": "m:n",
+        "cascade": [
+          "persist"
+        ],
+        "fixedOrder": false,
+        "owner": true,
+        "type": "OrganizationPermission",
+        "array": false,
+        "runtimeType": "[OrganizationRole]"
+      }
+    },
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [],
+    "className": "OrganizationRole",
+    "path": "./src/resources/organizations/entities/organizationRole.entity.ts",
+    "schema": "organizations",
+    "name": "OrganizationRole",
+    "abstract": false,
+    "internal": true,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "collection": "organization_role"
+  },
+  "origin": "./src/resources/organizations/entities/organizationRole.entity.ts",
+  "hash": "95beeb74ce0acb3c2d773c42e589ed2d",
+  "version": "6.2.9"
+}

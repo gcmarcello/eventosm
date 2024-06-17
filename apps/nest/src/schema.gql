@@ -59,6 +59,14 @@ type OrganizationCustomDomain {
   organization: Organization
 }
 
+type OrganizationRole {
+  id: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  name: String
+  permissions: [OrganizationRole!]
+}
+
 type Organization {
   id: String
   createdAt: DateTime
@@ -137,7 +145,6 @@ type Mutation {
 }
 
 input CreateOrganizationDto {
-  owner: String!
   name: String!
   description: String
   email: String
@@ -147,7 +154,6 @@ input CreateOrganizationDto {
 }
 
 input UpdateOrganizationDto {
-  owner: String!
   name: String!
   description: String
   email: String
