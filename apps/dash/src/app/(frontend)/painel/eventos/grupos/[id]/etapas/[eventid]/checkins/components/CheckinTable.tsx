@@ -1,5 +1,5 @@
 "use client";
-import { Table } from "odinkit";
+import { Table, formatPhone } from "odinkit";
 import { CheckinWithInfo } from "../page";
 import { Date } from "odinkit/client";
 
@@ -19,6 +19,13 @@ export default function CheckinTable({
             enableSorting: true,
             enableGlobalFilter: true,
             cell: (info) => info.getValue(),
+          }),
+          columnHelper.accessor("registration.user.phone", {
+            id: "phone",
+            header: "Telefone",
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: (info) => formatPhone(info.getValue()),
           }),
           columnHelper.accessor("createdAt", {
             id: "createdAt",
