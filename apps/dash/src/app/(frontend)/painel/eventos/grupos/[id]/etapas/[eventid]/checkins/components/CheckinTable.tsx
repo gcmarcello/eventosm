@@ -30,7 +30,7 @@ export default function CheckinTable({
           columnHelper.accessor("createdAt", {
             id: "createdAt",
             header: "Realizado em",
-            enableSorting: false,
+            enableSorting: true,
             enableGlobalFilter: false,
             cell: (info) => (
               <Date date={info.getValue()} format="DD/MM/YYYY HH:mm" />
