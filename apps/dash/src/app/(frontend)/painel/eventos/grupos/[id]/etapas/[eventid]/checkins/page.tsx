@@ -10,7 +10,7 @@ import CopyToClipboard from "@/app/(frontend)/_shared/components/CopyToClipboard
 
 export type CheckinWithInfo = EventCheckIn & {
   registration: {
-    user: { fullName: string };
+    user: { fullName: string; phone: string };
     team: { name: string } | null;
     category: { name: string } | null;
     modality: { name: string } | null;
@@ -27,7 +27,7 @@ export default async function CheckinPage({
     include: {
       registration: {
         include: {
-          user: { select: { fullName: true } },
+          user: { select: { fullName: true, phone: true } },
           team: { select: { name: true } },
           category: { select: { name: true } },
           modality: { select: { name: true } },
