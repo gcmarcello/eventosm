@@ -14,6 +14,8 @@ export type CheckinWithInfo = EventCheckIn & {
     team: { name: string } | null;
     category: { name: string } | null;
     modality: { name: string } | null;
+    addonOption: string | null;
+    addon: { name: string } | null;
   };
 };
 
@@ -26,11 +28,13 @@ export default async function CheckinPage({
     where: { eventId: params.eventid },
     include: {
       registration: {
-        include: {
+        select: {
+          addonOption: true,
           user: { select: { fullName: true, phone: true } },
           team: { select: { name: true } },
           category: { select: { name: true } },
           modality: { select: { name: true } },
+          addon: { select: { name: true } },
         },
       },
     },

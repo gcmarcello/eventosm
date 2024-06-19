@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default async function PanelPage() {
-  return "xd";
+  return redirect("/painel/eventos");
 }
