@@ -18,7 +18,7 @@ import { JwtService } from "@nestjs/jwt";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { ResponseTimeInterceptor } from "./app.interceptor";
 import { OrganizationModule } from "./resources/organizations/organization.module";
-import { OrganizationService } from "./resources/organizations/organization.service";
+import { OrganizationService } from "./resources/organizations/services/organization.service";
 
 @Module({
   imports: [

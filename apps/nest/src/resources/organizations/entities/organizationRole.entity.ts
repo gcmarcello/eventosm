@@ -4,6 +4,7 @@ import { organizationsSchema } from "@/database/constants";
 import { BaseEntity } from "@/database/baseEntity";
 import { OrganizationPermission } from "./organizationPermission.entity";
 import { Organization } from "./organization.entity";
+import { User } from "@/resources/users/entities/user.entity";
 
 @ObjectType()
 @Entity(organizationsSchema)
@@ -17,5 +18,8 @@ export class OrganizationRole extends BaseEntity {
 
   @Field(() => [OrganizationRole], { nullable: true })
   @ManyToMany(() => OrganizationPermission)
-  permissions: [OrganizationRole];
+  permissions?: OrganizationPermission[];
+
+  @ManyToMany(() => User)
+  users?: User[];
 }

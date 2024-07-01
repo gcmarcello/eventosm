@@ -3,8 +3,8 @@ import {
   CreateOrganizationDto,
   ReadOrganizationDto,
   UpdateOrganizationDto,
-} from "./dto/organization.dto";
-import { Organization } from "./entities/organization.entity";
+} from "../dto/organization.dto";
+import { Organization } from "../entities/organization.entity";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 
@@ -30,7 +30,6 @@ export class OrganizationService {
   }
 
   async create(userId: string, dto: CreateOrganizationDto) {
-    console.log(userId);
     const organization = this.organizationRepo.create({
       ...dto,
       owner: userId,

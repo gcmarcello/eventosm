@@ -12,6 +12,7 @@ import { SettingsService } from "@/resources/settings/settings.service";
 import dbConfig from "./db.config";
 import { User } from "@/resources/users/entities/user.entity";
 import { Organization } from "@/resources/organizations/entities/organization.entity";
+import { OrganizationRole } from "@/resources/organizations/entities/organizationRole.entity";
 
 @Module({
   controllers: [],
@@ -19,7 +20,7 @@ import { Organization } from "@/resources/organizations/entities/organization.en
   imports: [
     MikroOrmModule.forRoot(dbConfig),
     MikroOrmModule.forFeature({
-      entities: [User, Organization],
+      entities: [User, Organization, OrganizationRole],
     }),
   ],
   exports: [MikroOrmModule],

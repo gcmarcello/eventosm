@@ -32,8 +32,22 @@
         "fixedOrder": false,
         "owner": true,
         "type": "OrganizationPermission",
-        "array": false,
-        "runtimeType": "[OrganizationRole]"
+        "array": true,
+        "runtimeType": "OrganizationPermission",
+        "optional": true
+      },
+      "users": {
+        "name": "users",
+        "kind": "m:n",
+        "cascade": [
+          "persist"
+        ],
+        "fixedOrder": false,
+        "owner": true,
+        "type": "User",
+        "array": true,
+        "runtimeType": "User",
+        "optional": true
       }
     },
     "primaryKeys": [],
@@ -54,6 +68,6 @@
     "collection": "organization_role"
   },
   "origin": "./dist/resources/organizations/entities/organizationRole.entity.js",
-  "hash": "b939bc7585cfeca54f48beb174e9cab6",
+  "hash": "cb7f615bdc78493bd5fdd6a21c83c2ed",
   "version": "6.2.9"
 }

@@ -7,10 +7,11 @@ import {
   ReadOrganizationDto,
   UpdateOrganizationDto,
 } from "./dto/organization.dto";
-import { OrganizationService } from "./organization.service";
+import { OrganizationService } from "./services/organization.service";
 import { OrganizationGuard } from "./organization.guard";
-import { OrganizationPermissions, Permissions } from "./permissions.decorator";
+import { Permissions } from "./permissions.decorator";
 import { User } from "../auth/decorators/user.decorator";
+import { OrganizationPermissions } from "./entities/organizationPermission.entity";
 
 @UseGuards(AuthGuard)
 @Resolver(() => Organization)

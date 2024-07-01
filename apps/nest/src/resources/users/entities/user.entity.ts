@@ -2,6 +2,7 @@ import { BaseEntity } from "@/database/baseEntity";
 import {
   Entity,
   Enum,
+  ManyToMany,
   OneToMany,
   OneToOne,
   Property,
@@ -12,6 +13,7 @@ import { UserInfo } from "./userInfo.entity";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { createEnum } from "@/database/createEnum";
 import { Organization } from "@/resources/organizations/entities/organization.entity";
+import { OrganizationRole } from "@/resources/organizations/entities/organizationRole.entity";
 
 export enum Role {
   admin = "admin",
@@ -65,9 +67,15 @@ export class User extends BaseEntity {
 
   @Field(() => [UserDocument], { nullable: true })
   @OneToMany(() => UserDocument, (document) => document.user)
-  documents?: UserDocument[];
+  documents?: [UserDocument];
 
   @Field(() => [Organization], { nullable: true })
   @OneToMany(() => Organization, (organization) => organization.owner)
-  organizations?: Organization;
+  organizations?: [Organization];
+
+  @ManyToMany(
+    () => OrganizationRole,
+    (organizationRole) => organizationRole.users
+  )
+  organizationRoles?: OrganizationRole;
 }
