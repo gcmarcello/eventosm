@@ -14,12 +14,15 @@ export default async function OrganizationEventsPage({
   params: { orgSlug: string };
 }) {
   const eventGroups = await readEventGroups({
-    where: { Organization: { slug: orgSlug }, status: "published" },
+    where: {
+      Organization: { slug: orgSlug },
+      status: { in: ["published", "finished"] },
+    },
   });
   const events = await readEvents({
     where: {
       Organization: { slug: orgSlug },
-      status: "published",
+      status: { in: ["published", "finished"] },
       eventGroupId: null,
     },
   });

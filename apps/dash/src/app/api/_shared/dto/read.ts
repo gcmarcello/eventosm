@@ -10,8 +10,7 @@ const paginationDto = z.object({
 
 export type Pagination = z.infer<typeof paginationDto>;
 
-//zod 3.23 update broke this type
-export const readDto = <W extends ZodTypeAny>(where: any) =>
+export const readDto = <W extends ZodTypeAny>(where: W) =>
   z.object({
     pagination: paginationDto.optional(),
     where: where.optional(),

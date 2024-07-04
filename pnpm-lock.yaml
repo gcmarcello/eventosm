@@ -246,8 +246,8 @@ importers:
         specifier: ^3.18.0
         version: 3.18.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
-        specifier: 3.23.8
-        version: 3.23.8
+        specifier: 3.21.0
+        version: 3.21.0
       zustand:
         specifier: ^4.4.7
         version: 4.4.7(@types/react@18.2.21)(react@18.2.0)
@@ -6826,9 +6826,6 @@ packages:
 
   zod@3.21.0:
     resolution: {integrity: sha512-UYdykTcVxB6lfdyLzAqLyyYAlOcpoluECvjsdoaqfQmz9p+3LRaIqYcNiL/J2kFYp66fBM8wwBvIGVEjq7KtZw==}
-
-  zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
   zustand@4.4.7:
     resolution: {integrity: sha512-QFJWJMdlETcI69paJwhSMJz7PPWjVP8Sjhclxmxmxv/RYI7ZOvR5BHX+ktH0we9gTWQMxcne8q1OY8xxz604gw==}
@@ -15180,8 +15177,6 @@ snapshots:
       zod: 3.21.0
 
   zod@3.21.0: {}
-
-  zod@3.23.8: {}
 
   zustand@4.4.7(@types/react@18.2.21)(react@18.2.0):
     dependencies:
