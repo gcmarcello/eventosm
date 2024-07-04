@@ -13,17 +13,51 @@ export default async function OrganizationEventsPage({
 }: {
   params: { orgSlug: string };
 }) {
-  const eventGroups = await readEventGroups({
+  const eventGroups = await prisma.eventGroup.findMany({
     where: {
       Organization: { slug: orgSlug },
       status: { in: ["published", "finished"] },
     },
+    include: {
+      Event: { orderBy: { dateStart: "asc" } },
+      EventGroupRules: true,
+      EventRegistration: {
+        include: { user: true },
+      },
+      EventModality: {
+        include: { modalityCategory: { include: { CategoryDocument: true } } },
+      },
+      EventAddon: true,
+      EventRegistrationBatch: {
+        include: {
+          _count: {
+            select: {
+              EventRegistration: { where: { status: { not: "cancelled" } } },
+            },
+          },
+        },
+      },
+      Gallery: true,
+    },
   });
-  const events = await readEvents({
+  const events = await prisma.event.findMany({
     where: {
       Organization: { slug: orgSlug },
       status: { in: ["published", "finished"] },
       eventGroupId: null,
+    },
+    include: {
+      _count: {
+        select: { EventRegistration: { where: { status: "active" } } },
+      },
+      EventModality: {
+        include: { modalityCategory: { include: { CategoryDocument: true } } },
+      },
+      EventRegistration: true,
+      EventRegistrationBatch: {
+        include: { _count: { select: { EventRegistration: true } } },
+      },
+      Gallery: true,
     },
   });
   const organization = await prisma.organization.findUnique({
