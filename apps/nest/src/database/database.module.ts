@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { MikroORM } from "@mikro-orm/core";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-import { SettingsService } from "@/resources/settings/settings.service";
+import { SettingsService } from "@/settings/settings.service";
 import dbConfig from "./db.config";
 import { User } from "@/resources/users/entities/user.entity";
 import { Organization } from "@/resources/organizations/entities/organization.entity";

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { BullModule as _BullModule } from "@nestjs/bull";
-import { SettingsService } from "../settings/settings.service";
+import { SettingsService } from "../../settings/settings.service";
 
 @Module({
   imports: [

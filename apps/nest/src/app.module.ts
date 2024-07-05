@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { EmailModule } from "./resources/email/email.module";
-import { SettingsModule } from "./resources/settings/settings.module";
-import { BullModule } from "./resources/bull/bull.module";
+import { EmailModule } from "./infrastructure/email/email.module";
+import { SettingsModule } from "./settings/settings.module";
+import { BullModule } from "./infrastructure/bull/bull.module";
 import { QrCodeModule } from "./resources/qrcode/qrcode.module";
-import { UploadsModule } from "./resources/uploads/uploads.module";
+import { UploadsModule } from "./infrastructure/uploads/uploads.module";
 import { DatabaseModule } from "./database/database.module";
 import { UserService } from "./resources/users/user.service";
 import { GraphQLModule } from "@nestjs/graphql";

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { BullModule } from "../bull/bull.module";
+import { BullModule } from "../../infrastructure/bull/bull.module";
 import { QrCodeController } from "./qrcode.controller";
 import { QrCodeService } from "./qrcode.service";
 import { BackblazeService } from "./bb";

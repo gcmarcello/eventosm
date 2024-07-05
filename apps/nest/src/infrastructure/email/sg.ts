@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { MailService } from "@sendgrid/mail";
-import { SettingsService } from "../settings/settings.service";
+import { SettingsService } from "../../settings/settings.service";
 
 @Injectable()
 export class SendgridMailService extends MailService {

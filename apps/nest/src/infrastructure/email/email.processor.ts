@@ -3,7 +3,7 @@ import { Job } from "bull";
 import { SendgridMailService } from "./sg";
 
 import { MailDataRequired } from "@sendgrid/mail";
-import { SettingsService } from "../settings/settings.service";
+import { SettingsService } from "../../settings/settings.service";
 
 @Processor("email")
 export class EmailProcessor {

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { SettingsService } from "../settings/settings.service";
+import { SettingsService } from "../../settings/settings.service";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 @Injectable()
