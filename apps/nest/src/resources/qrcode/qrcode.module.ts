@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { BullModule } from "../../infrastructure/bull/bull.module";
 import { QrCodeController } from "./qrcode.controller";
 import { QrCodeService } from "./qrcode.service";
-import { BackblazeService } from "./bb";
 import { QrCodeProcessor } from "./qrcode.processor";
+import { UploadsService } from "@/infrastructure/uploads/uploads.service";
 
 @Module({
   imports: [
@@ -16,6 +16,6 @@ import { QrCodeProcessor } from "./qrcode.processor";
     }),
   ],
   controllers: [QrCodeController],
-  providers: [BackblazeService, QrCodeProcessor, QrCodeService],
+  providers: [UploadsService, QrCodeProcessor, QrCodeService],
 })
 export class QrCodeModule {}

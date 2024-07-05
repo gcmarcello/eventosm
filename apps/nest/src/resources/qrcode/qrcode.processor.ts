@@ -1,12 +1,12 @@
 import { Processor, Process, OnQueueActive, InjectQueue } from "@nestjs/bull";
 import { Job, Queue } from "bull";
-import { BackblazeService } from "./bb";
 import { QrCodeService } from "./qrcode.service";
+import { UploadsService } from "@/infrastructure/uploads/uploads.service";
 
 @Processor("qrCode")
 export class QrCodeProcessor {
   constructor(
-    private backBlaze: BackblazeService,
+    private uploadService: UploadsService,
     private qrCodeService: QrCodeService,
     @InjectQueue("qrCode") private qrCodeQueue: Queue
   ) {}
@@ -16,7 +16,7 @@ export class QrCodeProcessor {
     return await this.qrCodeService
       .generateQrCode(job.data)
       .then((file) =>
-        this.backBlaze.uploadFile(file as any, `qr-codes/${job.data}.png`)
+        this.uploadService.uploadFile(file as any, `qr-codes/${job.data}.png`)
       )
       .catch(console.log);
   }
