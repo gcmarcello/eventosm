@@ -46,6 +46,15 @@ export const upsertEventDto = z.object({
     .object({
       accountlessRegistration: z.boolean().optional(),
       multipleRegistrations: z.boolean().optional(),
+      registrationMode: z
+        .enum(["team", "individual"], {
+          invalid_type_error:
+            "Você deve escolher entre inscrição individual ou por equipes.",
+          description: "Modo de inscrição",
+        })
+        .optional(),
+      teamSize: z.number().optional(),
+      requiredCategories: z.array(z.string()).optional(),
     })
     .optional(),
 });

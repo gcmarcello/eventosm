@@ -53,6 +53,10 @@ export default function EventGeneralInfo({
       options: {
         accountlessRegistration: event.options?.accountlessRegistration,
         multipleRegistrations: event.options?.multipleRegistrations,
+        registrationMode:
+          event.options?.rules?.registrationMode ?? "individual",
+        teamSize: event.options?.rules?.teamSize,
+        requiredCategories: event.options?.rules?.requiredCategories,
       },
     },
   });
@@ -107,108 +111,146 @@ export default function EventGeneralInfo({
       <div className="flex justify-end">
         <SubmitButton>Salvar</SubmitButton>
       </div>
-      <Fieldset className="grid grid-cols-2 gap-x-4 gap-y-4">
-        <FieldGroup className="col-span-2 lg:col-span-1">
-          <Field className="col-span-2 lg:col-span-1" name="name">
-            <Label>Nome do Evento</Label>
-            <Input placeholder="10 KM da Rua 3" />
-            <ErrorMessage />
-          </Field>
-          <Field className="col-span-2 lg:col-span-1" name="location">
-            <Label>Local</Label>
-            <Input placeholder="Rua 3" />
-            <ErrorMessage />
-          </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field className="col-span-2 lg:col-span-1" name="dateStart">
-              <Label>Início do Evento</Label>
-              <Input mask={"99/99/9999"} placeholder="01/01/2024" />
-              <ErrorMessage />
-            </Field>
-            <Field className="col-span-2 lg:col-span-1" name="dateEnd">
-              <Label>Término do Evento</Label>
-              <Input mask={"99/99/9999"} placeholder="02/01/2024" />
-              <ErrorMessage />
-            </Field>
-          </div>
-
-          <Field className="col-span-2 lg:col-span-1" name="slug">
-            <Label>Link do Evento</Label>
-            <Input />
-            <ErrorMessage />
-            <Description className="flex gap-1">
-              Letras minúsculas, números e hífens.
-            </Description>
-            <Text className="text-wrap italic">
-              {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
-              {form.watch("slug")}
-            </Text>
-          </Field>
-        </FieldGroup>
-
-        <FieldGroup className="col-span-2 lg:col-span-1">
+      <Fieldset className="grid gap-x-4 lg:grid-cols-2 ">
+        <div className="space-y-3">
           <Heading>Opções do Evento</Heading>
-          <Field enableAsterisk={false} name="options.accountlessRegistration">
-            <Checkbox />
-            <Label className={"ms-3"}>Inscrição sem conta</Label>
-
-            <ErrorMessage />
-            <Description>
-              O sistema criará uma conta no ato da inscrição, porém o usuário só
-              terá acesso ao site depois de confirmá-la.
-            </Description>
-          </Field>
-          <Field enableAsterisk={false} name="options.multipleRegistrations">
-            <Checkbox />
-            <Label className={"ms-3"}>Múltiplas inscrições por usuário</Label>
-
-            <ErrorMessage />
-            <Description>
-              Permite que um usuário faça inscrições em mais de uma categoria.
-            </Description>
-          </Field>
-          <Field name="image">
-            <Label>Capa do Evento</Label>
-            <div className="my-3 flex justify-center ">
-              <FileImagePreview defaultValue={event.imageUrl || ""} />
+          <FieldGroup className="col-span-2 lg:col-span-1">
+            <Field className="col-span-2 lg:col-span-1" name="name">
+              <Label>Nome do Evento</Label>
+              <Input placeholder="10 KM da Rua 3" />
+              <ErrorMessage />
+            </Field>
+            <Field className="col-span-2 lg:col-span-1" name="location">
+              <Label>Local</Label>
+              <Input placeholder="Rua 3" />
+              <ErrorMessage />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field className="col-span-2 lg:col-span-1" name="dateStart">
+                <Label>Início do Evento</Label>
+                <Input mask={"99/99/9999"} placeholder="01/01/2024" />
+                <ErrorMessage />
+              </Field>
+              <Field className="col-span-2 lg:col-span-1" name="dateEnd">
+                <Label>Término do Evento</Label>
+                <Input mask={"99/99/9999"} placeholder="02/01/2024" />
+                <ErrorMessage />
+              </Field>
             </div>
-            <FileInput
-              fileTypes={["png", "jpg", "jpeg"]}
-              maxFiles={1}
-              maxSize={1}
-              onError={(error) => {
-                if (typeof error === "string") {
-                  showToast({
-                    message: error,
-                    title: "Erro",
-                    variant: "error",
-                  });
-                }
-              }}
-            >
-              <FileDropArea
-                render={
-                  form.watch("image")?.length ? (
-                    <>
-                      <Text>
-                        <span className="font-semibold">Arquivo:</span>{" "}
-                        {form.watch("image")?.[0].name}{" "}
-                        <span
-                          onClick={() => {
-                            form.resetField("image");
-                          }}
-                          className="cursor-pointer font-semibold text-emerald-600"
-                        >
-                          Trocar
-                        </span>
-                      </Text>
-                    </>
-                  ) : null
-                }
+
+            <Field className="col-span-2 lg:col-span-1" name="slug">
+              <Label>Link do Evento</Label>
+              <Input />
+              <ErrorMessage />
+              <Description className="flex gap-1">
+                Letras minúsculas, números e hífens.
+              </Description>
+              <Text className="text-wrap italic">
+                {process.env.NEXT_PUBLIC_SITE_URL?.split("//")[1]}/org/
+                {form.watch("slug")}
+              </Text>
+            </Field>
+          </FieldGroup>
+        </div>
+
+        <div className="space-y-3">
+          {" "}
+          <Heading>Opções do Evento</Heading>
+          <FieldGroup className="col-span-2 lg:col-span-1">
+            <Field enableAsterisk={false} name="options.registrationMode">
+              <Label>Tipo de Inscrição</Label>
+              <Select
+                data={[
+                  { id: "team", label: "Equipe" },
+                  {
+                    id: "individual",
+                    label: "Individual",
+                  },
+                ]}
+                displayValueKey="label"
               />
-            </FileInput>
-          </Field>
-        </FieldGroup>
+
+              <ErrorMessage />
+              <Description>
+                {form.watch("options.registrationMode") === "team" &&
+                  "O evento é disputado por equipes."}
+                {form.watch("options.registrationMode") === "individual" &&
+                  "O evento é disputado por atletas individualmente."}
+              </Description>
+            </Field>
+            {form.watch("options.registrationMode") === "team" && (
+              <Field name="options.teamSize">
+                <Label>Tamanho da Equipe</Label>
+                <Input inputMode="tel" type="number" />
+                <ErrorMessage />
+              </Field>
+            )}
+            <Field
+              enableAsterisk={false}
+              name="options.accountlessRegistration"
+            >
+              <Checkbox />
+              <Label className={"ms-3"}>Inscrição sem conta</Label>
+
+              <ErrorMessage />
+              <Description>
+                O sistema criará uma conta no ato da inscrição, porém o usuário
+                só terá acesso ao site depois de confirmá-la.
+              </Description>
+            </Field>
+            <Field enableAsterisk={false} name="options.multipleRegistrations">
+              <Checkbox />
+              <Label className={"ms-3"}>Múltiplas inscrições por usuário</Label>
+
+              <ErrorMessage />
+              <Description>
+                Permite que um usuário faça inscrições em mais de uma categoria.
+              </Description>
+            </Field>
+
+            <Field name="image">
+              <Label>Capa do Evento</Label>
+              <div className="my-3 flex justify-center ">
+                <FileImagePreview defaultValue={event.imageUrl || ""} />
+              </div>
+              <FileInput
+                fileTypes={["png", "jpg", "jpeg"]}
+                maxFiles={1}
+                maxSize={1}
+                onError={(error) => {
+                  if (typeof error === "string") {
+                    showToast({
+                      message: error,
+                      title: "Erro",
+                      variant: "error",
+                    });
+                  }
+                }}
+              >
+                <FileDropArea
+                  render={
+                    form.watch("image")?.length ? (
+                      <>
+                        <Text>
+                          <span className="font-semibold">Arquivo:</span>{" "}
+                          {form.watch("image")?.[0].name}{" "}
+                          <span
+                            onClick={() => {
+                              form.resetField("image");
+                            }}
+                            className="cursor-pointer font-semibold text-emerald-600"
+                          >
+                            Trocar
+                          </span>
+                        </Text>
+                      </>
+                    ) : null
+                  }
+                />
+              </FileInput>
+            </Field>
+          </FieldGroup>
+        </div>
         <Field className="col-span-2" name="description">
           <Label>Descrição do Evento</Label>
           <RTE />

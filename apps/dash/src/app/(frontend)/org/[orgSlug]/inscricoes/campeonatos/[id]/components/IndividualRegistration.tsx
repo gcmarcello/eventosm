@@ -51,7 +51,7 @@ import {
 } from "odinkit/client";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";
 import { EventGroupWithEvents, EventGroupWithInfo } from "prisma/types/Events";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { calculatePrice } from "../../../utils/price";
 import { filterCategories } from "../../../utils/categories";
@@ -106,6 +106,7 @@ export default function IndividualTournamentRegistration({
   const categories = useMemo(() => {
     if (batch.categoryControl) {
       const categoryBatch = batch.CategoryBatch;
+
       return filterCategories(
         eventGroup.EventModality.flatMap((mod) => mod.modalityCategory).filter(
           (cat) =>
@@ -120,7 +121,9 @@ export default function IndividualTournamentRegistration({
       );
     } else {
       return filterCategories(
-        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory),
+        eventGroup.EventModality.flatMap((mod) => mod.modalityCategory).filter(
+          (cat) => cat.eventModalityId === form.watch("registration.modalityId")
+        ),
         userInfo
       );
     }
@@ -162,6 +165,8 @@ export default function IndividualTournamentRegistration({
           file: [],
         }))
       );
+    } else {
+      form.resetField("registration.documents");
     }
   }, [categoryDocuments]);
 
@@ -188,7 +193,7 @@ export default function IndividualTournamentRegistration({
         </DialogActions>
       </Dialog>
 
-      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-96  lg:my-10">
+      <div className="mx-4 mb-20 mt-3 rounded-md border border-slate-200  px-2 pb-3 lg:mx-36 lg:my-10  xl:mx-96">
         <div className="flex items-center justify-between gap-3 p-2 ">
           <div>
             <div className="mt-4 text-xl font-medium lg:mt-0">
@@ -215,7 +220,9 @@ export default function IndividualTournamentRegistration({
             hform={form}
             onSubmit={async (data) => {
               const documentArray = [];
-              if (!data.registration.documents) return trigger(data);
+              if (!data.registration.documents) {
+                return trigger(data);
+              }
 
               for (const document of data.registration.documents) {
                 if (document.file) {
@@ -280,7 +287,8 @@ export default function IndividualTournamentRegistration({
                       )}
                       <Field name="registration.categoryId">
                         <Label>Selecionar Categoria</Label>
-                        {categories.length ? (
+                        {categories.length ||
+                        !form.watch("registration.modalityId") ? (
                           <>
                             <Select
                               disabled={
@@ -659,19 +667,11 @@ export default function IndividualTournamentRegistration({
                 <>
                   <div className={clsx("space-y-2 lg:mb-4")}>
                     <For each={order}>
-                      {(step) => (
-                        <Transition
-                          show={step === order[currentStep]}
-                          enter="ease-out duration-200"
-                          enterFrom="opacity-0 scale-95"
-                          enterTo="opacity-100 scale-100"
-                          leave="ease-in duration-200"
-                          leaveFrom="opacity-0 scale-100"
-                          leaveTo="opacity-0 scale-95"
-                        >
-                          {steps[step].form}
-                        </Transition>
-                      )}
+                      {(step) => {
+                        if (step === order[currentStep])
+                          return steps[step].form;
+                        return <></>;
+                      }}
                     </For>
                   </div>
                   <div className="hidden flex-row-reverse justify-between lg:flex">
