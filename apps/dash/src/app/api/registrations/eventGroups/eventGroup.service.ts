@@ -604,9 +604,9 @@ async function verifyRegistrationDocuments(
   if (!category.CategoryDocument.length && documents?.length)
     throw "Documentos não permitidos para esta categoria.";
 
-  if (!documents) throw "Documentos não informados.";
-
   if (!category.CategoryDocument.length) return;
+
+  if (!documents) throw "Documentos não informados.";
 
   for (const document of category?.CategoryDocument) {
     if (!documents.find((d) => d.documentId === document.id))

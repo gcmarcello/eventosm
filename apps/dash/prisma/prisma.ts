@@ -34,6 +34,11 @@ declare global {
     type EventOptions = {
       accountlessRegistration?: boolean;
       multipleRegistrations?: boolean;
+      rules?: {
+        registrationMode: "team" | "individual";
+        teamSize?: number;
+        requiredCategories?: string[];
+      };
     };
 
     type EventGroupOptions = {
