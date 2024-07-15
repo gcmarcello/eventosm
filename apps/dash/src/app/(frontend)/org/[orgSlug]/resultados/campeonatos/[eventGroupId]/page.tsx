@@ -79,7 +79,7 @@ export default async function EventGroupResultsPage({
             />
             <Text className="mt-2 text-xs lg:mt-1 lg:text-sm">
               {rules?.discard
-                ? `OBS: Devido ao descarte dos ${rules.discard} piores resultados, o ranking geral só exibirá os atletas que possuírem ao menos ${rules.discard} resultados ou que participaram de todas as etapas realizadas até aqui.`
+                ? `OBS: Devido ao descarte dos ${rules.discard} piores resultados, o ranking geral só exibirá os atletas que possuírem mais tempos do que o número de etapas realizadas menos o número de descartes. (Mínimo de ${rules.discard} resultados ou todas as realizadas até aqui.)`
                 : null}
             </Text>
           </div>
