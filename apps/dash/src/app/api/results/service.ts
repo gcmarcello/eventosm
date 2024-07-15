@@ -93,7 +93,7 @@ export async function readEventGroupResults(eventGroupId: string) {
   const rules = await prisma.eventGroupRules.findUnique({
     where: { eventGroupId },
     include: {
-      eventGroup: { include: { _count: { select: { Event: true } } } },
+      eventGroup: { include: { Event: true } },
     },
   });
 
@@ -126,10 +126,11 @@ export async function readEventGroupResults(eventGroupId: string) {
         (r) => r.Registration.id === p && r.score
       );
 
+
       if (
-        rules.discard &&
+        (rules.discard &&
         participantResults.length < rules.discard &&
-        participantResults.length !== events.length
+        participantResults.length !== events.length)  || (rules.discard && Math.max(events.length - rules.discard, 0) > participantResults.length)
       ) {
         return {
           ...details,
@@ -137,6 +138,8 @@ export async function readEventGroupResults(eventGroupId: string) {
           score: null,
         };
       }
+
+      
 
       let totalScore: number | null = 0;
 
