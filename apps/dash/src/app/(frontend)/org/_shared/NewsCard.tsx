@@ -1,6 +1,5 @@
 import { News } from "@prisma/client";
-import { For, Heading, date } from "odinkit";
-import { Link } from "odinkit/client";
+import { For, Heading, date, Link } from "odinkit";
 
 export default function NewsCard({ news }: { news?: News[] }) {
   return (

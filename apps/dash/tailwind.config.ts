@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        lime: {
+          250: "#b3d654",
+        },
+      },
       screens: {
         xs: "450px",
         xxl: "1440px",

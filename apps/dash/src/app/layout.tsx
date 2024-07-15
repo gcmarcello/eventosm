@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import MainNavbar from "./(frontend)/_shared/components/MainNavbar";
 import { Mocker } from "odinkit/client";
 import { isDev } from "@/app/api/env";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +26,7 @@ export default function RootLayout({
 
   return (
     <html data-theme={theme?.value} lang="pt-BR">
-      <body className={clsx(inter.className)}>
+      <body className={clsx(inter.className, "bg-zinc-50")}>
         {isDev && <Mocker />}
 
         <main>{children}</main>
