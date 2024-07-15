@@ -50,9 +50,6 @@ export function ResultsTable({
     EventGroupRules?: EventGroupRules | null;
   };
 }) {
-  const [calculatedResults, setCalculatedResults] = useState<
-    EventResultsWithPosition[] | EventGroupResultWithInfo[] | null
-  >(null);
 
   const handlePlaces = (position: number) => {
     switch (position) {
@@ -147,6 +144,7 @@ export function ResultsTable({
 
   const Field = useMemo(() => modalityForm.createField(), []);
 
+
   return (
     <>
       <Form className="my-4 mb-2 flex gap-2" hform={modalityForm}>
@@ -162,10 +160,11 @@ export function ResultsTable({
       <Table
         dense
         data={results.filter((r) =>
-          r.Registration.modalityId === modalityForm.watch("modality") &&
+          r.score &&
+          (r.Registration.modalityId === modalityForm.watch("modality") &&
           modalityForm.watch("gender")
             ? modalityForm.watch("gender") === r.Registration.category?.gender
-            : true
+            : true)
         )}
         search={false}
         columns={(columnHelper) => [
