@@ -26,7 +26,7 @@ export default async function EventPage({
           slug: params.id,
           Organization: { slug: params.orgSlug },
         },
-    include: { EventModality: true },
+    include: { EventModality: true, Gallery: true },
   });
   const organization = await prisma.organization.findUnique({
     where: { slug: params.orgSlug },
