@@ -42,6 +42,7 @@ import {
   Event,
   EventModality,
   EventRegistrationBatch,
+  Gallery,
   Organization,
 } from "@prisma/client";
 import { useRef, useState } from "react";
@@ -76,7 +77,7 @@ export default function EventContainer({
   registrationCount,
 }: {
   isUserRegistered: boolean;
-  event: Event & { EventModality: EventModality[] };
+  event: Event & { EventModality: EventModality[], Gallery?: Gallery[] };
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
   nextBatch: EventRegistrationBatch | null;
@@ -314,7 +315,11 @@ export default function EventContainer({
                 </Link>
 
                 <Link
-                  href="#"
+                  href={
+                    event.Gallery
+                      ? `/galerias/${event.Gallery[0]?.id}`
+                      : "#"
+                  }
                   className="text-sm hover:underline"
                   style={{
                     color:
