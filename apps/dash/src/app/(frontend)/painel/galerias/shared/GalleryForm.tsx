@@ -175,7 +175,7 @@ export function GalleryForm({
             <FileInput
               fileTypes={["png", "jpg", "jpeg"]}
               maxFiles={100}
-              maxSize={1}
+              maxSize={15}
               onError={(error) => {
                 if (typeof error === "string") {
                   showToast({
