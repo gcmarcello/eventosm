@@ -15,7 +15,6 @@ import {
 } from "class-validator";
 import { Gender } from "../entities/userInfo.entity";
 import { Type } from "class-transformer";
-import { Field, InputType } from "@nestjs/graphql";
 import { Role } from "../entities/user.entity";
 
 @ValidatorConstraint({ async: false })
@@ -79,45 +78,36 @@ export class CreateUserDto {
   @IsString()
   @MinLength(3)
   @MaxLength(20)
-  @Field()
   firstName: string;
 
   @IsString()
   @MinLength(3)
   @MaxLength(100)
-  @Field()
   lastName: string;
 
   @IsEmail({}, { message: "Email inválido" })
-  @Field()
   email: string;
 
   @Validate(IsCPF)
-  @Field()
   document: string;
 
   @MinLength(10, { message: "Telefone inválido" })
   @MaxLength(255)
-  @Field()
   phone: string;
 
   @IsString()
   @MinLength(6, { message: "A senha deve ter ao menos 6 caracteres" })
   @MaxLength(255)
-  @Field()
   password: string;
 
   @ValidateNested()
   @Type(() => UserInfoDto)
-  @Field()
   info: UserInfoDto;
 
   @IsBoolean()
-  @Field({ nullable: true })
   acceptTerms: boolean;
 }
 
-@InputType()
 export class ReadUserDto {
   @IsOptional()
   id?: string;

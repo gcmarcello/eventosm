@@ -8,10 +8,7 @@ import { QrCodeModule } from "./resources/qrcode/qrcode.module";
 import { UploadsModule } from "./infrastructure/uploads/uploads.module";
 import { DatabaseModule } from "./database/database.module";
 import { UserService } from "./resources/users/user.service";
-import { GraphQLModule } from "@nestjs/graphql";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { UsersModule } from "./resources/users/users.module";
-import { join } from "path";
 import { AuthModule } from "./resources/auth/auth.module";
 import { AuthService } from "./resources/auth/auth.service";
 import { JwtService } from "@nestjs/jwt";
@@ -30,10 +27,6 @@ import { OrganizationService } from "./resources/organizations/services/organiza
     QrCodeModule,
     EmailModule,
     UploadsModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), "src/schema.gql"),
-    }),
     UsersModule,
   ],
   controllers: [AppController],

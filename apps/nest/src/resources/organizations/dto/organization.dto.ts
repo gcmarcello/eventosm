@@ -29,11 +29,11 @@ export class UpdateOrganizationDto extends CreateOrganizationDto {
 
 export class ReadOrganizationDto {
   @IsOptional()
-  id: string;
+  id?: string;
 
   @IsOptional()
-  ownerId: string;
+  ownerId?: string;
 
   @IsOptional()
-  slug: string;
+  slug?: string;
 }

@@ -1,11 +1,9 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
 import { RequestWithSession } from "../auth.guard";
 
 export const User = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
-    const request: RequestWithSession =
-      GqlExecutionContext.create(ctx).getContext().req;
+    const request: RequestWithSession = ctx.switchToHttp().getRequest();
 
     const user = request.user;
 

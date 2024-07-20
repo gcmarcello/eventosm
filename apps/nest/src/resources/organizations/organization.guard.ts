@@ -5,7 +5,6 @@ import {
   ForbiddenException,
   NotFoundException,
 } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
 import { RequestWithSession } from "../auth/auth.guard";
 import { OrganizationService } from "./services/organization.service";
 import { Reflector } from "@nestjs/core";
@@ -33,9 +32,7 @@ export class OrganizationGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const permissions = this.reflector.get(Permissions, ctx.getHandler());
 
-    const context = GqlExecutionContext.create(ctx);
-
-    const request: RequestWithSession = context.getContext().req;
+    const request: RequestWithSession = ctx.switchToHttp().getRequest();
 
     if (!permissions || !permissions.length) {
       return true;
@@ -48,7 +45,7 @@ export class OrganizationGuard implements CanActivate {
         "Você não possui permissão para fazer isto."
       );
 
-    const orgId = context.getArgs().data.id;
+    const orgId = request.cookies.activeOrg;
 
     if (!orgId) throw new NotFoundException("Organização não encontrada.");
 

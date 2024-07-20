@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 9000,
+    "_id": 6000,
     "properties": {
       "firstName": {
         "name": "firstName",
@@ -70,14 +70,11 @@
         "name": "role",
         "kind": "scalar",
         "enum": true,
+        "type": "Role",
         "items": [
           "admin",
           "user"
         ],
-        "fieldNames": [
-          "Role"
-        ],
-        "type": "Role",
         "array": false,
         "runtimeType": "Role"
       },
@@ -156,6 +153,6 @@
     "collection": "user"
   },
   "origin": "./dist/resources/users/entities/user.entity.js",
-  "hash": "630e43c5581d98d749ccfc001f300254",
+  "hash": "94b61f9dfb2ff98c6a01288d6c89ea9a",
   "version": "6.2.9"
 }

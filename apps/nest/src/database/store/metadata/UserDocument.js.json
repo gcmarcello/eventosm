@@ -22,7 +22,6 @@
           2,
           3
         ],
-        "nativeEnumName": "UserDocumentType",
         "type": "UserDocumentType",
         "array": false,
         "runtimeType": "UserDocumentType"
@@ -65,6 +64,6 @@
     "collection": "user_document"
   },
   "origin": "./dist/resources/users/entities/userDocument.entity.js",
-  "hash": "167f14edad6406ed6a174c3268d971b1",
+  "hash": "c0b5a518a546a7baea68ad2ad097cf44",
   "version": "6.2.9"
 }

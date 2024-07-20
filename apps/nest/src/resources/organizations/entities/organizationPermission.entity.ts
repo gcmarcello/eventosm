@@ -1,7 +1,6 @@
 import { Entity } from "@mikro-orm/core";
 import { organizationsSchema } from "@/database/constants";
 import { BaseEntity } from "@/database/baseEntity";
-import { createEnum } from "@/database/createEnum";
 import { Enum } from "@/database/decorators";
 
 export enum OrganizationPermissions {
@@ -23,13 +22,8 @@ export enum OrganizationPermissions {
   ReadPrivateNews = "news:read-private",
 }
 
-export const organizationPermission = createEnum(
-  OrganizationPermissions,
-  "OrganizationPermissions"
-);
-
 @Entity(organizationsSchema)
 export class OrganizationPermission extends BaseEntity {
-  @Enum(organizationPermission)
+  @Enum(OrganizationPermissions)
   permission: OrganizationPermissions;
 }

@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 3000,
+    "_id": 8000,
     "properties": {
       "id": {
         "name": "id",
@@ -63,6 +63,6 @@
     "collection": "city"
   },
   "origin": "./dist/resources/geo/entites/city.entity.js",
-  "hash": "563629957dc7233525a1a666b7def7a3",
+  "hash": "efa03c7d86805a978db82f0fff4ba7e3",
   "version": "6.2.9"
 }

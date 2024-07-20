@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 10000,
+    "_id": 14000,
     "properties": {
       "title": {
         "name": "title",
@@ -72,6 +72,6 @@
     "useCache": true
   },
   "origin": "./dist/resources/news/entities/news.entities.js",
-  "hash": "fa29832a66a0b5f303430ea06fe9884f",
+  "hash": "e2b293de77cc73f3e1aef8ee6d832024",
   "version": "6.2.9"
 }
