@@ -8,8 +8,8 @@ import { UserInfo } from "./entities/userInfo.entity";
 export class UserService {
   constructor(private em: EntityManager) {}
 
-  async findOne(data: ReadUserDto) {
-    const user = await this.em.findOne(User, data);
+  async findOne(id: string) {
+    const user = await this.em.findOne(User, { id });
     return user;
   }
 

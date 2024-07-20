@@ -1,50 +1,39 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional, IsString, MinLength } from "class-validator";
-@InputType()
+import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
 export class CreateOrganizationDto {
   @IsString()
   @MinLength(3)
-  @Field()
   name: string;
 
   @MinLength(3)
   @IsOptional()
-  @Field({ nullable: true })
   description?: string;
 
-  @Field({ nullable: true })
+  @IsEmail()
   email?: string;
 
-  @Field({ nullable: true })
+  @MinLength(9)
   phone?: string;
 
-  @Field({ nullable: true })
+  @MinLength(11)
   document?: string;
 
   @IsString()
   @MinLength(3)
-  @Field()
   slug: string;
 }
-@InputType()
 export class UpdateOrganizationDto extends CreateOrganizationDto {
   @IsString()
   @MinLength(3)
-  @Field()
   id: string;
 }
 
-@InputType()
 export class ReadOrganizationDto {
   @IsOptional()
-  @Field()
   id: string;
 
   @IsOptional()
-  @Field()
   ownerId: string;
 
   @IsOptional()
-  @Field()
   slug: string;
 }

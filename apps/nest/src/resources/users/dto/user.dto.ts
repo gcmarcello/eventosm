@@ -40,51 +40,41 @@ class IsCPF implements ValidatorConstraintInterface {
   }
 }
 
-@InputType()
 class UserInfoDto {
   @Validate(IsValidBirthDate)
-  @Field({ nullable: true })
   birthDate: string;
 
   @IsEnum(Gender)
-  @Field({ nullable: true })
   gender: Gender;
 
   @IsString()
   @MinLength(3, { message: "Insira o endereço." })
   @MaxLength(255)
-  @Field({ nullable: true })
   address: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  @Field({ nullable: true })
   number: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  @Field({ nullable: true })
   complement?: string;
 
   @IsString()
   @MaxLength(10)
-  @Field({ nullable: true })
   city: string;
 
   @IsString()
   @MaxLength(10)
-  @Field({ nullable: true })
   state: string;
 
   @IsString()
   @MinLength(9, { message: "CEP inválido" })
-  @Field({ nullable: true })
   zipCode: string;
 }
 
-@InputType()
 export class CreateUserDto {
   @IsString()
   @MinLength(3)
@@ -130,30 +120,23 @@ export class CreateUserDto {
 @InputType()
 export class ReadUserDto {
   @IsOptional()
-  @Field({ nullable: true })
   id?: string;
 
   @IsOptional()
-  @Field({ nullable: true })
   fullName?: string;
 
   @IsOptional()
-  @Field({ nullable: true })
   email?: string;
 
   @IsOptional()
-  @Field({ nullable: true })
   document?: string;
 
   @IsOptional()
-  @Field({ nullable: true })
   phone?: string;
 
   @IsOptional()
-  @Field({ nullable: true })
   role?: Role;
 
   @IsOptional()
-  @Field({ nullable: true })
   info?: UserInfoDto;
 }

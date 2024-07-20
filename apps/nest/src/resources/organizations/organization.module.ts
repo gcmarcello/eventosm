@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { OrganizationService } from "./services/organization.service";
-import { OrganizationResolver } from "./organization.resolver";
+import { OrganizationResolver } from "./organization.controller";
 import { DatabaseModule } from "@/database/database.module";
 import { OrganizationRoleService } from "./services/role.service";
 
