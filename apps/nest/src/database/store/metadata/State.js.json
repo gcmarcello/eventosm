@@ -37,8 +37,9 @@
           "persist"
         ],
         "type": "City",
-        "array": false,
-        "runtimeType": "City"
+        "array": true,
+        "runtimeType": "City",
+        "optional": true
       }
     },
     "primaryKeys": [
@@ -62,6 +63,6 @@
     "collection": "state"
   },
   "origin": "./dist/resources/geo/entites/state.entity.js",
-  "hash": "8c9884245b770b8d98fc1c7288fa279a",
+  "hash": "56c692889157750392eab413b48dc80d",
   "version": "6.2.9"
 }

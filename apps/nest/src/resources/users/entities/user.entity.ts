@@ -12,11 +12,7 @@ import { UserDocument } from "./userDocument.entity";
 import { UserInfo } from "./userInfo.entity";
 import { Organization } from "@/resources/organizations/entities/organization.entity";
 import { OrganizationRole } from "@/resources/organizations/entities/organizationRole.entity";
-
-export enum Role {
-  admin = "admin",
-  user = "user",
-}
+import { Role } from "shared-types";
 
 @Entity()
 export class User extends BaseEntity {

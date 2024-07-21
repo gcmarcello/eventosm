@@ -16,6 +16,10 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { ResponseTimeInterceptor } from "./app.interceptor";
 import { OrganizationModule } from "./resources/organizations/organization.module";
 import { OrganizationService } from "./resources/organizations/services/organization.service";
+import { OrganizationController } from "./resources/organizations/organization.controller";
+import { UserController } from "./resources/users/user.controller";
+import { GeoModule } from "./resources/geo/geo.module";
+import { GeoService } from "./resources/geo/geo.service";
 
 @Module({
   imports: [
@@ -28,14 +32,16 @@ import { OrganizationService } from "./resources/organizations/services/organiza
     EmailModule,
     UploadsModule,
     UsersModule,
+    GeoModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, OrganizationController, UserController],
   providers: [
     AppService,
     UserService,
     AuthService,
     OrganizationService,
     JwtService,
+    GeoService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseTimeInterceptor,

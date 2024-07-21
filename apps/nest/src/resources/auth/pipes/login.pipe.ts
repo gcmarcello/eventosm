@@ -1,10 +1,6 @@
 import { PipeTransform, Injectable } from "@nestjs/common";
-import { LoginDto } from "../dto/login.dto";
 import { isEmail } from "class-validator";
-import {
-  normalizeDocument,
-  normalizeEmail,
-} from "@/utils/validators/normalizers";
+import { LoginDto, normalizeDocument, normalizeEmail } from "shared-types";
 
 @Injectable()
 export class LoginPipe implements PipeTransform {

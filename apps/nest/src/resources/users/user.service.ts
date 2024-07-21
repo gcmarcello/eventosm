@@ -1,12 +1,20 @@
 import { EntityManager } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
-import { Role, User } from "./entities/user.entity";
-import { CreateUserDto, ReadUserDto } from "./dto/user.dto";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { User } from "./entities/user.entity";
+import { CreateUserDto, ReadUserDto, Role } from "shared-types";
 import { UserInfo } from "./entities/userInfo.entity";
+import { GeoService } from "../geo/geo.service";
 
 @Injectable()
 export class UserService {
-  constructor(private em: EntityManager) {}
+  constructor(
+    private em: EntityManager,
+    private geoService: GeoService
+  ) {}
 
   async findOne(data: ReadUserDto) {
     const user = await this.em.findOne(User, data);
@@ -23,8 +31,33 @@ export class UserService {
     return user;
   }
 
-  async create(dto: CreateUserDto) {
-    const { info, ...general } = dto;
+  async create(data: CreateUserDto) {
+    const city = await this.geoService.findCityById(data.info.city);
+
+    if (!city) {
+      throw new NotFoundException("Cidade não encontrada");
+    }
+
+    const existingUser = await this.em.findOne(User, {
+      $or: [{ email: data.email }, { document: data.document }],
+    });
+
+    if (existingUser) {
+      if (existingUser.email === data.email) {
+        throw new ConflictException({
+          message: "Email já utilizado por outro usuário.",
+          field: "email",
+        });
+      }
+      if (existingUser.document === data.document) {
+        throw new ConflictException({
+          message: "Documento já utilizado por outro usuário.",
+          field: "document",
+        });
+      }
+    }
+
+    const { info, ...general } = data;
 
     const userInfo = this.em.create(UserInfo, info);
 
@@ -36,6 +69,6 @@ export class UserService {
     });
 
     await this.em.flush();
-    return user;
+    return { email: user.email, id: user.id, firstName: user.firstName };
   }
 }

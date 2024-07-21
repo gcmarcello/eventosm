@@ -42,6 +42,6 @@
     "collection": "organization_custom_domain"
   },
   "origin": "./src/resources/organizations/entities/organizationCustomDomain.entity.ts",
-  "hash": "c54839b03a1a870dbeec0a024d481821",
+  "hash": "a22135fc56b9309bc7fbf244ecc025a0",
   "version": "6.2.9"
 }

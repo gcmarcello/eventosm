@@ -1,0 +1,16 @@
+{
+  "extends": "@repo/config/ts/base.tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "CommonJS",
+    "preserveSymlinks": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

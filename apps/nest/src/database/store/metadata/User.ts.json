@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 14000,
+    "_id": 15000,
     "properties": {
       "firstName": {
         "name": "firstName",
@@ -70,14 +70,11 @@
         "name": "role",
         "kind": "scalar",
         "enum": true,
+        "type": "Role",
         "items": [
           "admin",
           "user"
         ],
-        "fieldNames": [
-          "Role"
-        ],
-        "type": "Role",
         "array": false,
         "runtimeType": "Role"
       },
@@ -111,8 +108,8 @@
           "persist"
         ],
         "type": "UserDocument",
-        "array": true,
-        "runtimeType": "UserDocument",
+        "array": false,
+        "runtimeType": "[UserDocument]",
         "optional": true
       },
       "organizations": {
@@ -123,7 +120,19 @@
         ],
         "type": "Organization",
         "array": false,
-        "runtimeType": "Organization",
+        "runtimeType": "[Organization]",
+        "optional": true
+      },
+      "organizationRoles": {
+        "name": "organizationRoles",
+        "kind": "m:n",
+        "cascade": [
+          "persist"
+        ],
+        "fixedOrder": false,
+        "type": "OrganizationRole",
+        "array": false,
+        "runtimeType": "OrganizationRole",
         "optional": true
       }
     },
@@ -144,6 +153,6 @@
     "collection": "user"
   },
   "origin": "./src/resources/users/entities/user.entity.ts",
-  "hash": "7bd517dc693fc2a5918053614c03e407",
+  "hash": "09ca3b94a32c43d7cf4b3c1ef1cc2463",
   "version": "6.2.9"
 }

@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { CreateOrganizationRoleDto } from "../dto/role.dto";
 import { OrganizationRole } from "../entities/organizationRole.entity";
+import { CreateOrganizationRoleDto } from "shared-types";
 
 @Injectable()
 export class OrganizationRoleService {

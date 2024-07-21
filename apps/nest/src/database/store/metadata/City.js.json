@@ -10,20 +10,9 @@
         "array": false,
         "runtimeType": "string"
       },
-      "uf": {
-        "name": "uf",
-        "kind": "scalar",
-        "unique": true,
-        "getter": false,
-        "setter": false,
-        "type": "string",
-        "array": false,
-        "runtimeType": "string"
-      },
       "name": {
         "name": "name",
         "kind": "scalar",
-        "unique": true,
         "getter": false,
         "setter": false,
         "type": "string",
@@ -63,6 +52,6 @@
     "collection": "city"
   },
   "origin": "./dist/resources/geo/entites/city.entity.js",
-  "hash": "efa03c7d86805a978db82f0fff4ba7e3",
+  "hash": "f7779e00034784cfb29b2a6bc06d2e11",
   "version": "6.2.9"
 }

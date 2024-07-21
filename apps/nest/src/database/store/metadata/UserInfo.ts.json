@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 13000,
+    "_id": 23000,
     "properties": {
       "birthDate": {
         "name": "birthDate",
@@ -20,7 +20,6 @@
           "male",
           "female"
         ],
-        "nativeEnumName": "Gender",
         "type": "Gender",
         "array": false,
         "runtimeType": "Gender"
@@ -116,6 +115,6 @@
     "collection": "user_info"
   },
   "origin": "./src/resources/users/entities/userInfo.entity.ts",
-  "hash": "84d4ce5c9c8cdeba5770293761be00c4",
+  "hash": "1fb4fa755bd56b3bd65bea66e7327876",
   "version": "6.2.9"
 }

@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AuthController } from "../auth.controller";
 import { AuthService } from "../auth.service";
 import { UserService } from "@/resources/users/user.service";
-import { Gender } from "@/resources/users/entities/userInfo.entity";
+import { Gender } from "shared-types";
 
 const newUserObj = {
   firstName: "Marcello",

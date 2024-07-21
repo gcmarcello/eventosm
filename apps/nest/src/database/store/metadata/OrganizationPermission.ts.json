@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 15000,
+    "_id": 13000,
     "properties": {
       "permission": {
         "name": "permission",
@@ -24,7 +24,6 @@
           "news:delete",
           "news:read-private"
         ],
-        "nativeEnumName": "OrganizationPermissions",
         "type": "OrganizationPermissions",
         "array": false,
         "runtimeType": "OrganizationPermissions"
@@ -48,6 +47,6 @@
     "collection": "organization_permission"
   },
   "origin": "./src/resources/organizations/entities/organizationPermission.entity.ts",
-  "hash": "297338c1b653e0f635dcf16f0dfa2a5c",
+  "hash": "cc51c8d5e2e36f147f319b2b79e13bc6",
   "version": "6.2.9"
 }

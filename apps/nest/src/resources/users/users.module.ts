@@ -4,8 +4,18 @@ import { AuthService } from "../auth/auth.service";
 import { AuthGuard } from "../auth/auth.guard";
 import { JwtService } from "@nestjs/jwt";
 import { UserController } from "./user.controller";
+import { GeoService } from "../geo/geo.service";
+import { GeoModule } from "../geo/geo.module";
 
 @Module({
-  providers: [UserController, UserService, AuthService, AuthGuard, JwtService],
+  imports: [GeoModule],
+  providers: [
+    UserController,
+    UserService,
+    AuthService,
+    AuthGuard,
+    JwtService,
+    GeoService,
+  ],
 })
 export class UsersModule {}

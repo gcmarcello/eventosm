@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   CreateOrganizationDto,
   ReadOrganizationDto,
   UpdateOrganizationDto,
-} from "../dto/organization.dto";
+} from "shared-types";
 import { Organization } from "../entities/organization.entity";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -41,7 +45,28 @@ export class OrganizationService {
 
   async update(dto: UpdateOrganizationDto) {
     const organization = await this.findOne(dto.id);
-    if (!organization) throw new NotFoundException("Organization not found");
+    if (!organization)
+      throw new NotFoundException("Organização não encontrada.");
+
+    const existingOrganization = await this.organizationRepo.findOne({
+      $or: [{ slug: dto.slug }, { document: dto.document }],
+      id: { $ne: dto.id },
+    });
+
+    if (existingOrganization) {
+      if (existingOrganization.slug === dto.slug) {
+        throw new ConflictException({
+          message: "Já existe uma organização com este slug.",
+          field: "slug",
+        });
+      }
+      if (existingOrganization.document === dto.document) {
+        throw new ConflictException({
+          message: "Já existe uma organização com este documento.",
+          field: "document",
+        });
+      }
+    }
 
     this.organizationRepo.assign(organization, dto);
     await this.em.flush();

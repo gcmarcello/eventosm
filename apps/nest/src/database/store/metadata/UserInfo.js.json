@@ -40,7 +40,8 @@
         "setter": false,
         "type": "string",
         "array": false,
-        "runtimeType": "string"
+        "runtimeType": "string",
+        "optional": true
       },
       "number": {
         "name": "number",
@@ -49,7 +50,8 @@
         "setter": false,
         "type": "string",
         "array": false,
-        "runtimeType": "string"
+        "runtimeType": "string",
+        "optional": true
       },
       "complement": {
         "name": "complement",
@@ -115,6 +117,6 @@
     "collection": "user_info"
   },
   "origin": "./dist/resources/users/entities/userInfo.entity.js",
-  "hash": "7dba074e967dd2aa020de9e63a61e52c",
+  "hash": "73921480bb60812d58580289c9c1b381",
   "version": "6.2.9"
 }

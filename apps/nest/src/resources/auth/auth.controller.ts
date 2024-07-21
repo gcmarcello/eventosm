@@ -1,10 +1,9 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { LoginDto } from "./dto/login.dto";
 import { LoginPipe } from "./pipes/login.pipe";
 import { UserPipe } from "../users/user.pipe";
-import { CreateUserDto } from "../users/dto/user.dto";
 import { UserService } from "../users/user.service";
+import { CreateUserDto, LoginDto } from "shared-types";
 
 @Controller("auth")
 export class AuthController {
@@ -20,6 +19,6 @@ export class AuthController {
 
   @Post("signup")
   async signup(@Body("", UserPipe) body: CreateUserDto) {
-    return await this.userService.create(body);
+    return await this.authService.signup(body);
   }
 }

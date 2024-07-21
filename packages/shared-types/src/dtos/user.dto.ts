@@ -1,5 +1,3 @@
-import { birthDateValidator } from "@/utils/validators/birthDate.validator";
-import { cpfValidator } from "@/utils/validators/cpf.validator";
 import {
   IsString,
   MinLength,
@@ -12,10 +10,23 @@ import {
   IsEnum,
   IsOptional,
   IsBoolean,
+  IsDefined,
+  IsStrongPassword,
 } from "class-validator";
-import { Gender } from "../entities/userInfo.entity";
 import { Type } from "class-transformer";
-import { Role } from "../entities/user.entity";
+import { PartialType } from "@nestjs/swagger";
+import { birthDateValidator } from "../validators/birthDate.validator";
+import { cpfValidator } from "../validators/cpf.validator";
+
+export enum Gender {
+  male = "male",
+  female = "female",
+}
+
+export enum Role {
+  admin = "admin",
+  user = "user",
+}
 
 @ValidatorConstraint({ async: false })
 class IsValidBirthDate implements ValidatorConstraintInterface {
@@ -49,12 +60,12 @@ class UserInfoDto {
   @IsString()
   @MinLength(3, { message: "Insira o endereço." })
   @MaxLength(255)
-  address: string;
+  address?: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  number: string;
+  number?: string;
 
   @IsOptional()
   @IsString()
@@ -75,12 +86,12 @@ class UserInfoDto {
 }
 
 export class CreateUserDto {
-  @IsString()
+  @IsString({ message: "Nome inválido" })
   @MinLength(3)
   @MaxLength(20)
   firstName: string;
 
-  @IsString()
+  @IsString({ message: "Sobrenome inválido" })
   @MinLength(3)
   @MaxLength(100)
   lastName: string;
@@ -95,12 +106,23 @@ export class CreateUserDto {
   @MaxLength(255)
   phone: string;
 
-  @IsString()
-  @MinLength(6, { message: "A senha deve ter ao menos 6 caracteres" })
-  @MaxLength(255)
+  @IsStrongPassword(
+    {
+      minLength: 8,
+      minSymbols: 1,
+      minNumbers: 1,
+      minUppercase: 1,
+      minLowercase: 1,
+    },
+    {
+      message:
+        "A senha precisa conter no mínimo: 8 caracteres, 1 símbolo, 1 letra maíuscula e 1 número.",
+    }
+  )
   password: string;
 
-  @ValidateNested()
+  @IsDefined()
+  @ValidateNested({ each: true })
   @Type(() => UserInfoDto)
   info: UserInfoDto;
 
@@ -129,4 +151,10 @@ export class ReadUserDto {
 
   @IsOptional()
   info?: UserInfoDto;
+}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsString()
+  @MinLength(3)
+  id: string;
 }

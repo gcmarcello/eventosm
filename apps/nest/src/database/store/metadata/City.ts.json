@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 4000,
+    "_id": 6000,
     "properties": {
       "id": {
         "name": "id",
@@ -10,20 +10,9 @@
         "array": false,
         "runtimeType": "string"
       },
-      "uf": {
-        "name": "uf",
-        "kind": "scalar",
-        "unique": true,
-        "getter": false,
-        "setter": false,
-        "type": "string",
-        "array": false,
-        "runtimeType": "string"
-      },
       "name": {
         "name": "name",
         "kind": "scalar",
-        "unique": true,
         "getter": false,
         "setter": false,
         "type": "string",
@@ -63,6 +52,6 @@
     "collection": "city"
   },
   "origin": "./src/resources/geo/entites/city.entity.ts",
-  "hash": "048e54a66b7d4657f6ab150753bea23e",
+  "hash": "4581c4da2d45e83460e47649d2c2bbda",
   "version": "6.2.9"
 }

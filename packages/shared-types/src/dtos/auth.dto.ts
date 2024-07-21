@@ -1,4 +1,5 @@
 import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
+import { CreateUserDto } from "./user.dto.js";
 
 export class LoginDto {
   @IsString()
@@ -13,3 +14,5 @@ export class LoginDto {
   @IsOptional()
   isEmail?: boolean;
 }
+
+export class SignupDto extends CreateUserDto {}

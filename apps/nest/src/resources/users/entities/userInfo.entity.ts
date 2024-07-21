@@ -3,11 +3,7 @@ import { Enum } from "@/database/decorators";
 import { City } from "@/resources/geo/entites/city.entity";
 import { State } from "@/resources/geo/entites/state.entity";
 import { Entity, ManyToOne, Property } from "@mikro-orm/core";
-
-export enum Gender {
-  male = "male",
-  female = "female",
-}
+import { Gender } from "shared-types";
 
 @Entity()
 export class UserInfo extends BaseEntity {
@@ -21,10 +17,10 @@ export class UserInfo extends BaseEntity {
   zipCode: string;
 
   @Property()
-  address: string;
+  address?: string;
 
   @Property()
-  number: string;
+  number?: string;
 
   @Property()
   complement?: string;

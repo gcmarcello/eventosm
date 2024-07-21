@@ -1,0 +1,26 @@
+{
+  "name": "shared-types",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index",
+  "scripts": {
+    "dev": "libuilder --watch ./libuilder.mjs & tsc",
+    "postinstall": "libuilder ./libuilder.mjs & tsc"
+  },
+  "type": "commonjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ferstack/libuilderjs": "4.2.0",
+    "class-validator": "^0.14.1",
+    "class-transformer": "^0.5.1",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "3.2.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/swagger": "7.3.0",
+    "rxjs": "^7.8.1",
+    "reflect-metadata": "^0.2.2",
+    "dayjs": "^1.11.10"
+  }
+}

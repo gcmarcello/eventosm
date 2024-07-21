@@ -11,8 +11,8 @@ import { Reflector } from "@nestjs/core";
 import { Permissions } from "./permissions.decorator";
 import { Organization } from "./entities/organization.entity";
 import { OrganizationRole } from "./entities/organizationRole.entity";
-import { OrganizationPermissions } from "./entities/organizationPermission.entity";
 import { EntityManager } from "@mikro-orm/postgresql";
+import { OrganizationPermissions } from "shared-types";
 
 export type JwtUserPayload = {
   id: string;
@@ -45,7 +45,7 @@ export class OrganizationGuard implements CanActivate {
         "Você não possui permissão para fazer isto."
       );
 
-    const orgId = request.cookies.activeOrg;
+    const orgId = request.body.id;
 
     if (!orgId) throw new NotFoundException("Organização não encontrada.");
 
@@ -79,10 +79,10 @@ export class OrganizationGuard implements CanActivate {
 
     const userPermissions = userRole?.permissions?.map((p) => p.permission);
 
-    if (!userPermissions)
-      throw new ForbiddenException("Você não tem permissão para fazer isto.");
-
-    if (!permissions.every((p) => userPermissions.includes(p)))
+    if (
+      !userPermissions ||
+      !permissions.every((p) => userPermissions.includes(p))
+    )
       throw new ForbiddenException("Você não tem permissão para fazer isto.");
 
     return true;

@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 16000,
+    "_id": 14000,
     "properties": {
       "name": {
         "name": "name",
@@ -32,8 +32,22 @@
         "fixedOrder": false,
         "owner": true,
         "type": "OrganizationPermission",
-        "array": false,
-        "runtimeType": "[OrganizationRole]"
+        "array": true,
+        "runtimeType": "OrganizationPermission",
+        "optional": true
+      },
+      "users": {
+        "name": "users",
+        "kind": "m:n",
+        "cascade": [
+          "persist"
+        ],
+        "fixedOrder": false,
+        "owner": true,
+        "type": "User",
+        "array": true,
+        "runtimeType": "User",
+        "optional": true
       }
     },
     "primaryKeys": [],
@@ -54,6 +68,6 @@
     "collection": "organization_role"
   },
   "origin": "./src/resources/organizations/entities/organizationRole.entity.ts",
-  "hash": "95beeb74ce0acb3c2d773c42e589ed2d",
+  "hash": "75222cfd053f54fb985ab0bb09fd55ea",
   "version": "6.2.9"
 }

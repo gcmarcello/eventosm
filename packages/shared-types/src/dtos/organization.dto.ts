@@ -9,12 +9,15 @@ export class CreateOrganizationDto {
   description?: string;
 
   @IsEmail()
+  @IsOptional()
   email?: string;
 
   @MinLength(9)
+  @IsOptional()
   phone?: string;
 
   @MinLength(11)
+  @IsOptional()
   document?: string;
 
   @IsString()

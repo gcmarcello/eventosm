@@ -1,13 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
-import { LoginDto } from "./dto/login.dto";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+
 import { UserService } from "../users/user.service";
 import { isEmail } from "class-validator";
 import { compareHash } from "@/utils/bCrypt";
 import { JwtService } from "@nestjs/jwt";
+import { SignupDto, LoginDto } from "shared-types";
 
 @Injectable()
 export class AuthService {
@@ -15,6 +12,10 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService
   ) {}
+
+  async signup(data: SignupDto) {
+    return await this.userService.create(data);
+  }
 
   async login(data: LoginDto) {
     const { identifier, password } = data;
@@ -24,10 +25,8 @@ export class AuthService {
       [isIdentifierEmail ? "email" : "document"]: identifier,
     });
 
-    if (!user) throw new NotFoundException("User not found");
-
-    if (!(await compareHash(password, user.password)))
-      throw new UnauthorizedException("Invalid password");
+    if (!user || !(await compareHash(password, user.password)))
+      throw new UnauthorizedException("Usuário ou senha incorretos");
 
     return await this.createToken({
       id: user.id,
