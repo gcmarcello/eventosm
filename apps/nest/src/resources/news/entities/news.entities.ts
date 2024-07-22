@@ -1,4 +1,4 @@
-import { BaseEntity } from "@/database/baseEntity";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
 import { Property } from "@mikro-orm/core";
 
 enum NewsStatus {

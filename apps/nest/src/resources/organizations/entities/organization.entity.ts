@@ -1,7 +1,7 @@
-import { BaseEntity } from "@/database/baseEntity";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
 import { Entity, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
 import { Color } from "./color.entity";
-import { organizationsSchema } from "@/database/constants";
+import { organizationsSchema } from "@/infrastructure/database/constants";
 import { OrganizationCustomDomain } from "./organizationCustomDomain.entity";
 import { User } from "@/resources/users/entities/user.entity";
 import { OrganizationRole } from "./organizationRole.entity";

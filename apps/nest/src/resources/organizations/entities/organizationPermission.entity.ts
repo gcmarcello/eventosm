@@ -1,7 +1,7 @@
 import { Entity } from "@mikro-orm/core";
-import { organizationsSchema } from "@/database/constants";
-import { BaseEntity } from "@/database/baseEntity";
-import { Enum } from "@/database/decorators";
+import { organizationsSchema } from "@/infrastructure/database/constants";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
+import { Enum } from "@/infrastructure/database/decorators";
 import { OrganizationPermissions } from "shared-types";
 
 @Entity(organizationsSchema)

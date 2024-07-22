@@ -1,4 +1,4 @@
-import { BaseEntity } from "@/database/baseEntity";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
 import {
   Entity,
   Enum,

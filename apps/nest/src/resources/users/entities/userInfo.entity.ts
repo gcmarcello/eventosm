@@ -1,5 +1,5 @@
-import { BaseEntity } from "@/database/baseEntity";
-import { Enum } from "@/database/decorators";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
+import { Enum } from "@/infrastructure/database/decorators";
 import { City } from "@/resources/geo/entites/city.entity";
 import { State } from "@/resources/geo/entites/state.entity";
 import { Entity, ManyToOne, Property } from "@mikro-orm/core";

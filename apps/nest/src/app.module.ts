@@ -6,7 +6,7 @@ import { SettingsModule } from "./settings/settings.module";
 import { BullModule } from "./infrastructure/bull/bull.module";
 import { QrCodeModule } from "./resources/qrcode/qrcode.module";
 import { UploadsModule } from "./infrastructure/uploads/uploads.module";
-import { DatabaseModule } from "./database/database.module";
+import { DatabaseModule } from "./infrastructure/database/database.module";
 import { UserService } from "./resources/users/user.service";
 import { UsersModule } from "./resources/users/users.module";
 import { AuthModule } from "./resources/auth/auth.module";

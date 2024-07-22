@@ -1,7 +1,7 @@
-import { Enum } from "@/database/decorators";
+import { Enum } from "@/infrastructure/database/decorators";
 import { Entity, ManyToOne, Property } from "@mikro-orm/core";
 import { User } from "./user.entity";
-import { BaseEntity } from "@/database/baseEntity";
+import { BaseEntity } from "@/infrastructure/database/baseEntity";
 
 enum UserDocumentType {
   disability,
