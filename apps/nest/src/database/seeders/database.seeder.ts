@@ -1,47 +1,21 @@
-import { City } from "@/resources/geo/entites/city.entity";
-import { State } from "@/resources/geo/entites/state.entity";
-import { OrganizationPermission } from "@/resources/organizations/entities/organizationPermission.entity";
-
 import { EntityManager } from "@mikro-orm/core";
+import { SchemaGenerator } from "@mikro-orm/postgresql";
 import { Seeder } from "@mikro-orm/seeder";
-import { OrganizationPermissions } from "shared-types";
+import { geoSeeder } from "./geo.seeder";
+import { orgPermissionsSeeder } from "./orgPermissions.seeder";
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    const permissions = Object.values(OrganizationPermissions);
+    const schemaGenerator = new SchemaGenerator(em);
 
-    for (const permission of permissions) {
-      const entity = em.create(OrganizationPermission, {
-        permission: permission,
-      });
-      em.persist(entity);
-    }
+    /* -- REFRESHES DATABASE -- */
+    if (process.env.NODE_ENV === "development")
+      await schemaGenerator.refreshDatabase();
+    /* ------------------------ */
 
-    const cities = await fetch(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-    ).then((res) => res.json());
+    await orgPermissionsSeeder(em);
 
-    const states = await fetch(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
-    ).then((res) => res.json());
-
-    for (const state of states) {
-      const entity = em.create(State, {
-        id: String(state.id),
-        uf: state.sigla,
-        name: state.nome,
-      });
-      em.persist(entity);
-    }
-
-    for (const city of cities) {
-      const entity = em.create(City, {
-        id: String(city.id),
-        name: city.nome,
-        state: String(city.microrregiao.mesorregiao.UF.id),
-      });
-      em.persist(entity);
-    }
+    await geoSeeder(em);
 
     await em.flush();
   }
