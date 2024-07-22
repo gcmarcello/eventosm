@@ -68,6 +68,6 @@
     "collection": "organization_role"
   },
   "origin": "./dist/resources/organizations/entities/organizationRole.entity.js",
-  "hash": "9d28f47ce2148744c1f806b2cf4b6640",
+  "hash": "d7950385e2eb104ea936ae6bcacc0565",
   "version": "6.2.9"
 }

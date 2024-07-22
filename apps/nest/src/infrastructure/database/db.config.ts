@@ -11,18 +11,18 @@ export default defineConfig({
   clientUrl: process.env.DATABASE_URL,
   metadataCache: {
     pretty: true,
-    options: { cacheDir: "./src/database/store/metadata" },
+    options: { cacheDir: "./src/infrastructure/database/store/metadata" },
   },
   seeder: {
-    path: "./dist/database/seeders",
-    pathTs: "./src/database/seeders",
+    path: "./dist/infrastructure/database/seeders",
+    pathTs: "./src/infrastructure/database/seeders",
     defaultSeeder: "DatabaseSeeder",
     glob: "*.seed!(*.d).{js,ts}",
     emit: "ts",
   },
   migrations: {
-    path: "./dist/database/store/migrations",
-    pathTs: "./src/database/store/migrations",
+    path: "./dist/infrastructure/database/store/migrations",
+    pathTs: "./src/infrastructure/database/store/migrations",
     tableName: "public.mikro_orm_migrations",
   },
   driver: PostgreSqlDriver,

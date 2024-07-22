@@ -47,6 +47,6 @@
     "collection": "organization_permission"
   },
   "origin": "./dist/resources/organizations/entities/organizationPermission.entity.js",
-  "hash": "2edc2e20fc09804d8273b921d051ea9e",
+  "hash": "a2f531bab9b220ba616d04ec9d47e3e5",
   "version": "6.2.9"
 }
