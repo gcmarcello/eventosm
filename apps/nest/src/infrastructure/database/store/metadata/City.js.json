@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 8000,
+    "_id": 9000,
     "properties": {
       "id": {
         "name": "id",
@@ -39,7 +39,7 @@
     "indexes": [],
     "uniques": [],
     "className": "City",
-    "path": "./dist/resources/geo/entites/city.entity.js",
+    "path": "../../packages/shared-types/dist/resources/geo/entities/city.entity.js",
     "schema": "geo",
     "name": "City",
     "abstract": false,
@@ -51,7 +51,7 @@
     "simplePK": true,
     "collection": "city"
   },
-  "origin": "./dist/resources/geo/entites/city.entity.js",
-  "hash": "f7779e00034784cfb29b2a6bc06d2e11",
+  "origin": "../../packages/shared-types/dist/resources/geo/entities/city.entity.js",
+  "hash": "67506d0134e331211d8d50c8a4c7ad7b",
   "version": "6.2.9"
 }

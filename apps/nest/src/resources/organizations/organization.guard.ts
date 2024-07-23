@@ -9,10 +9,12 @@ import { RequestWithSession } from "../auth/auth.guard";
 import { OrganizationService } from "./services/organization.service";
 import { Reflector } from "@nestjs/core";
 import { Permissions } from "./permissions.decorator";
-import { Organization } from "./entities/organization.entity";
-import { OrganizationRole } from "./entities/organizationRole.entity";
 import { EntityManager } from "@mikro-orm/postgresql";
-import { OrganizationPermissions } from "shared-types";
+import {
+  Organization,
+  OrganizationPermissions,
+  OrganizationRole,
+} from "shared-types";
 
 export type JwtUserPayload = {
   id: string;

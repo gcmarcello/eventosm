@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 0,
+    "_id": 13000,
     "properties": {
       "id": {
         "name": "id",
@@ -42,7 +42,7 @@
     "indexes": [],
     "uniques": [],
     "className": "BaseEntity",
-    "path": "./dist/database/baseEntity.js",
+    "path": "./dist/infrastructure/database/baseEntity.js",
     "abstract": true,
     "internal": true,
     "constructorParams": [],
@@ -51,7 +51,7 @@
     "compositePK": false,
     "simplePK": true
   },
-  "origin": "./dist/database/baseEntity.js",
-  "hash": "d83f43eb864ea0a47719d6bddbb5f14c",
+  "origin": "./dist/infrastructure/database/baseEntity.js",
+  "hash": "57b6f3d140dfa357e48346e29b716c72",
   "version": "6.2.9"
 }

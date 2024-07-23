@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 6000,
+    "_id": 4000,
     "properties": {
       "firstName": {
         "name": "firstName",
@@ -97,7 +97,7 @@
         "unique": true,
         "type": "UserInfo",
         "array": false,
-        "runtimeType": "{ id: string; } & import(\"/workspaces/eventosm/node_modules/.pnpm/@mikro-orm+core@6.2.9/node_modules/@mikro-orm/core/index\").Reference<UserInfo & object>",
+        "runtimeType": "{} & import(\"/workspaces/eventosm/node_modules/.pnpm/@mikro-orm+core@6.2.9/node_modules/@mikro-orm/core/index\").Reference<UserInfo & object>",
         "optional": true,
         "ref": true
       },
@@ -142,7 +142,7 @@
     "indexes": [],
     "uniques": [],
     "className": "User",
-    "path": "./dist/resources/users/entities/user.entity.js",
+    "path": "../../packages/shared-types/dist/resources/user/entities/user.entity.js",
     "name": "User",
     "abstract": false,
     "internal": true,
@@ -152,7 +152,7 @@
     "useCache": true,
     "collection": "user"
   },
-  "origin": "./dist/resources/users/entities/user.entity.js",
-  "hash": "7153c58fa1d316efa328e337bb0c9863",
+  "origin": "../../packages/shared-types/dist/resources/user/entities/user.entity.js",
+  "hash": "fc277d2a4ec337e009bbef483828eb87",
   "version": "6.2.9"
 }

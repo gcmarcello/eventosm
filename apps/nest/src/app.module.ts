@@ -20,6 +20,7 @@ import { OrganizationController } from "./resources/organizations/organization.c
 import { UserController } from "./resources/users/user.controller";
 import { GeoModule } from "./resources/geo/geo.module";
 import { GeoService } from "./resources/geo/geo.service";
+import { EventsModule } from './resources/events/events.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { GeoService } from "./resources/geo/geo.service";
     UploadsModule,
     UsersModule,
     GeoModule,
+    EventsModule,
   ],
   controllers: [AppController, OrganizationController, UserController],
   providers: [

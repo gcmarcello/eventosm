@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 4000,
+    "_id": 5000,
     "properties": {
       "name": {
         "name": "name",
@@ -56,7 +56,7 @@
     "indexes": [],
     "uniques": [],
     "className": "OrganizationRole",
-    "path": "./dist/resources/organizations/entities/organizationRole.entity.js",
+    "path": "../../packages/shared-types/dist/resources/organization/entities/organizationRole.entity.js",
     "schema": "organizations",
     "name": "OrganizationRole",
     "abstract": false,
@@ -67,7 +67,7 @@
     "useCache": true,
     "collection": "organization_role"
   },
-  "origin": "./dist/resources/organizations/entities/organizationRole.entity.js",
-  "hash": "d7950385e2eb104ea936ae6bcacc0565",
+  "origin": "../../packages/shared-types/dist/resources/organization/entities/organizationRole.entity.js",
+  "hash": "1ae0ec5da6e372e114121dd08a38c060",
   "version": "6.2.9"
 }

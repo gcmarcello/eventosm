@@ -5,10 +5,10 @@ import {
 } from "@nestjs/common";
 import {
   CreateOrganizationDto,
+  Organization,
   ReadOrganizationDto,
   UpdateOrganizationDto,
 } from "shared-types";
-import { Organization } from "../entities/organization.entity";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 
@@ -30,10 +30,20 @@ export class OrganizationService {
   }
 
   async findOne(id: string) {
-    return await this.organizationRepo.findOne(id);
+    return await this.organizationRepo.findOne({ id });
   }
 
   async create(userId: string, dto: CreateOrganizationDto) {
+    const existingOrganization = await this.organizationRepo.findOne({
+      $or: [{ slug: dto.slug }, { document: dto.document }],
+    });
+
+    if (existingOrganization)
+      throw new ConflictException({
+        message: "Já existe uma organização com este slug.",
+        field: "slug",
+      });
+
     const organization = this.organizationRepo.create({
       ...dto,
       owner: userId,

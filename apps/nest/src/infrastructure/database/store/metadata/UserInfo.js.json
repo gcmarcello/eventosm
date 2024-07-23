@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 9000,
+    "_id": 12000,
     "properties": {
       "birthDate": {
         "name": "birthDate",
@@ -16,11 +16,11 @@
         "name": "gender",
         "kind": "scalar",
         "enum": true,
+        "type": "Gender",
         "items": [
           "male",
           "female"
         ],
-        "type": "Gender",
         "array": false,
         "runtimeType": "Gender"
       },
@@ -106,7 +106,7 @@
     "indexes": [],
     "uniques": [],
     "className": "UserInfo",
-    "path": "./dist/resources/users/entities/userInfo.entity.js",
+    "path": "../../packages/shared-types/dist/resources/user/entities/userInfo.entity.js",
     "name": "UserInfo",
     "abstract": false,
     "internal": true,
@@ -116,7 +116,7 @@
     "useCache": true,
     "collection": "user_info"
   },
-  "origin": "./dist/resources/users/entities/userInfo.entity.js",
-  "hash": "66c128dd350213bc4bf34ecdab2367d0",
+  "origin": "../../packages/shared-types/dist/resources/user/entities/userInfo.entity.js",
+  "hash": "a37b3d0840d71dac9c01b33ca3358aa5",
   "version": "6.2.9"
 }

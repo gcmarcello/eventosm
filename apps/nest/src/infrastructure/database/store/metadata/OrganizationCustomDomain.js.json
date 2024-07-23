@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 2000,
+    "_id": 1000,
     "properties": {
       "domain": {
         "name": "domain",
@@ -30,7 +30,7 @@
     "indexes": [],
     "uniques": [],
     "className": "OrganizationCustomDomain",
-    "path": "./dist/resources/organizations/entities/organizationCustomDomain.entity.js",
+    "path": "../../packages/shared-types/dist/resources/organization/entities/organizationCustomDomain.entity.js",
     "schema": "organizations",
     "name": "OrganizationCustomDomain",
     "abstract": false,
@@ -41,7 +41,7 @@
     "useCache": true,
     "collection": "organization_custom_domain"
   },
-  "origin": "./dist/resources/organizations/entities/organizationCustomDomain.entity.js",
-  "hash": "019b486b66f8978fd29188fcccf862ab",
+  "origin": "../../packages/shared-types/dist/resources/organization/entities/organizationCustomDomain.entity.js",
+  "hash": "be52d454e9f7b8a1c0a56af8a3cefeb8",
   "version": "6.2.9"
 }

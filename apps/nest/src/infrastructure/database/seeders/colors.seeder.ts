@@ -1,6 +1,5 @@
-import { Color } from "@/resources/organizations/entities/color.entity";
 import { EntityManager } from "@mikro-orm/core";
-import { ColorId, twColor, twColorPalette, twShade } from "shared-types";
+import { Color, ColorId, twColor, twColorPalette, twShade } from "shared-types";
 
 export async function colorSeeder(em: EntityManager) {
   const colors: any[] = Object.entries(twColorPalette).flatMap(

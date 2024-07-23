@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 14000,
+    "_id": 10000,
     "properties": {
       "title": {
         "name": "title",
@@ -50,9 +50,13 @@
       "status": {
         "name": "status",
         "kind": "scalar",
-        "getter": false,
-        "setter": false,
+        "enum": true,
         "type": "NewsStatus",
+        "items": [
+          "draft",
+          "published",
+          "archived"
+        ],
         "array": false,
         "runtimeType": "NewsStatus"
       }
@@ -63,15 +67,17 @@
     "indexes": [],
     "uniques": [],
     "className": "News",
-    "path": "./dist/resources/news/entities/news.entities.js",
-    "abstract": true,
+    "path": "../../packages/shared-types/dist/resources/news/entities/news.entities.js",
+    "name": "News",
+    "abstract": false,
     "internal": true,
     "constructorParams": [],
     "toJsonParams": [],
     "extends": "BaseEntity",
-    "useCache": true
+    "useCache": true,
+    "collection": "news"
   },
-  "origin": "./dist/resources/news/entities/news.entities.js",
-  "hash": "a3fc05361e467cb74447ce0f275fd1a8",
+  "origin": "../../packages/shared-types/dist/resources/news/entities/news.entities.js",
+  "hash": "ed5dbea734c0536aa006122a6cf1b1f2",
   "version": "6.2.9"
 }

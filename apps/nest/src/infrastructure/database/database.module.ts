@@ -8,11 +8,9 @@ import {
 } from "@nestjs/common";
 import { MikroORM } from "@mikro-orm/core";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-import { SettingsService } from "@/settings/settings.service";
+import { SettingsService } from "../../settings/settings.service";
 import dbConfig from "./db.config";
-import { User } from "@/resources/users/entities/user.entity";
-import { Organization } from "@/resources/organizations/entities/organization.entity";
-import { OrganizationRole } from "@/resources/organizations/entities/organizationRole.entity";
+import { Entities } from "./entities";
 
 @Module({
   controllers: [],
@@ -20,7 +18,7 @@ import { OrganizationRole } from "@/resources/organizations/entities/organizatio
   imports: [
     MikroOrmModule.forRoot(dbConfig),
     MikroOrmModule.forFeature({
-      entities: [User, Organization, OrganizationRole],
+      entities: Entities,
     }),
   ],
   exports: [MikroOrmModule],

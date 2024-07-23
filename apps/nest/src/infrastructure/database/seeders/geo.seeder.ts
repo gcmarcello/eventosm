@@ -1,6 +1,5 @@
-import { City } from "@/resources/geo/entites/city.entity";
-import { State } from "@/resources/geo/entites/state.entity";
 import { EntityManager } from "@mikro-orm/core";
+import { City, State } from "shared-types";
 
 export async function geoSeeder(em: EntityManager) {
   const cities = await fetch(

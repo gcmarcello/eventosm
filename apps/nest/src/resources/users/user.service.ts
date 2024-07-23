@@ -4,9 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { User } from "./entities/user.entity";
-import { CreateUserDto, ReadUserDto, Role } from "shared-types";
-import { UserInfo } from "./entities/userInfo.entity";
+import { CreateUserDto, ReadUserDto, Role, User, UserInfo } from "shared-types";
 import { GeoService } from "../geo/geo.service";
 
 @Injectable()

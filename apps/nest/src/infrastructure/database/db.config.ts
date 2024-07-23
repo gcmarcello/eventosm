@@ -4,10 +4,10 @@ import { Migrator } from "@mikro-orm/migrations";
 import { SeedManager } from "@mikro-orm/seeder";
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import "dotenv/config";
+import { Entities } from "./entities";
 
 export default defineConfig({
-  entities: ["./dist/**/*.{entity,entities}.js"],
-  entitiesTs: ["./src/**/*.{entity,entities}.ts"],
+  entities: Entities,
   clientUrl: process.env.DATABASE_URL,
   metadataCache: {
     pretty: true,

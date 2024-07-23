@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 16000,
+    "_id": 4000,
     "properties": {
       "id": {
         "name": "id",
@@ -49,7 +49,7 @@
     "indexes": [],
     "uniques": [],
     "className": "Color",
-    "path": "./dist/resources/organizations/entities/color.entity.js",
+    "path": "../../packages/shared-types/dist/resources/organization/entities/color.entity.js",
     "schema": "colors",
     "name": "Color",
     "abstract": false,
@@ -61,7 +61,7 @@
     "simplePK": true,
     "collection": "color"
   },
-  "origin": "./dist/resources/organizations/entities/color.entity.js",
-  "hash": "90986ce98cdd5024e334a14fba5a0314",
+  "origin": "../../packages/shared-types/dist/resources/organization/entities/color.entity.js",
+  "hash": "0c7fbdfcde9bf3c46efa82bf6e211a63",
   "version": "6.2.9"
 }

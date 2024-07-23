@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 7000,
+    "_id": 8000,
     "properties": {
       "id": {
         "name": "id",
@@ -50,7 +50,7 @@
     "indexes": [],
     "uniques": [],
     "className": "State",
-    "path": "./dist/resources/geo/entites/state.entity.js",
+    "path": "../../packages/shared-types/dist/resources/geo/entities/state.entity.js",
     "schema": "geo",
     "name": "State",
     "abstract": false,
@@ -62,7 +62,7 @@
     "simplePK": true,
     "collection": "state"
   },
-  "origin": "./dist/resources/geo/entites/state.entity.js",
-  "hash": "56c692889157750392eab413b48dc80d",
+  "origin": "../../packages/shared-types/dist/resources/geo/entities/state.entity.js",
+  "hash": "7764f43787afbc1baf51c4b58d2334c2",
   "version": "6.2.9"
 }

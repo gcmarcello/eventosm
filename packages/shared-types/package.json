@@ -7,7 +7,6 @@
     "dev": "libuilder --watch ./libuilder.mjs & tsc",
     "postinstall": "libuilder ./libuilder.mjs & tsc"
   },
-  "type": "commonjs",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,5 +22,13 @@
     "rxjs": "^7.8.1",
     "reflect-metadata": "^0.2.2",
     "dayjs": "^1.11.10"
+  },
+  "peerDependencies": {
+    "@mikro-orm/cli": "^6.2",
+    "@mikro-orm/core": "6.2",
+    "@mikro-orm/migrations": "6.2",
+    "@mikro-orm/nestjs": "6.0.1",
+    "@mikro-orm/reflection": "6.2",
+    "@mikro-orm/seeder": "6.2"
   }
 }

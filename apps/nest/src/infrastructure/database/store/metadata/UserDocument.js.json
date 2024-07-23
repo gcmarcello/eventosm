@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 1000,
+    "_id": 3000,
     "properties": {
       "name": {
         "name": "name",
@@ -16,13 +16,13 @@
         "name": "type",
         "kind": "scalar",
         "enum": true,
+        "type": "UserDocumentType",
         "items": [
           0,
           1,
           2,
           3
         ],
-        "type": "UserDocumentType",
         "array": false,
         "runtimeType": "UserDocumentType"
       },
@@ -53,7 +53,7 @@
     "indexes": [],
     "uniques": [],
     "className": "UserDocument",
-    "path": "./dist/resources/users/entities/userDocument.entity.js",
+    "path": "../../packages/shared-types/dist/resources/user/entities/userDocument.entity.js",
     "name": "UserDocument",
     "abstract": false,
     "internal": true,
@@ -63,7 +63,7 @@
     "useCache": true,
     "collection": "user_document"
   },
-  "origin": "./dist/resources/users/entities/userDocument.entity.js",
-  "hash": "fac27374a94b407488297ad5aad42c0c",
+  "origin": "../../packages/shared-types/dist/resources/user/entities/userDocument.entity.js",
+  "hash": "40c1898d3418eed863dda1e0b4fbff0b",
   "version": "6.2.9"
 }

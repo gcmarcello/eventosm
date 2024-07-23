@@ -1,11 +1,12 @@
 {
   "data": {
-    "_id": 3000,
+    "_id": 2000,
     "properties": {
       "permission": {
         "name": "permission",
         "kind": "scalar",
         "enum": true,
+        "type": "OrganizationPermissions",
         "items": [
           "organization:create",
           "organization:update",
@@ -24,7 +25,6 @@
           "news:delete",
           "news:read-private"
         ],
-        "type": "OrganizationPermissions",
         "array": false,
         "runtimeType": "OrganizationPermissions"
       }
@@ -35,7 +35,7 @@
     "indexes": [],
     "uniques": [],
     "className": "OrganizationPermission",
-    "path": "./dist/resources/organizations/entities/organizationPermission.entity.js",
+    "path": "../../packages/shared-types/dist/resources/organization/entities/organizationPermission.entity.js",
     "schema": "organizations",
     "name": "OrganizationPermission",
     "abstract": false,
@@ -46,7 +46,7 @@
     "useCache": true,
     "collection": "organization_permission"
   },
-  "origin": "./dist/resources/organizations/entities/organizationPermission.entity.js",
-  "hash": "a2f531bab9b220ba616d04ec9d47e3e5",
+  "origin": "../../packages/shared-types/dist/resources/organization/entities/organizationPermission.entity.js",
+  "hash": "084eb7338387311aa6fc2fc36ea1d83c",
   "version": "6.2.9"
 }

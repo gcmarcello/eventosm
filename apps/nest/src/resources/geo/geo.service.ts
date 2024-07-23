@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { City } from "./entites/city.entity";
 import { EntityManager } from "@mikro-orm/postgresql";
-import { State } from "./entites/state.entity";
+import { City, State } from "shared-types";
 
 @Injectable()
 export class GeoService {

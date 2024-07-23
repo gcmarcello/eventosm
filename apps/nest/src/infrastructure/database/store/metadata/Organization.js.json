@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 5000,
+    "_id": 6000,
     "properties": {
       "name": {
         "name": "name",
@@ -103,6 +103,17 @@
         "type": "User",
         "array": false,
         "runtimeType": "User"
+      },
+      "events": {
+        "name": "events",
+        "kind": "1:m",
+        "cascade": [
+          "persist"
+        ],
+        "type": "Event",
+        "array": true,
+        "runtimeType": "Event",
+        "optional": true
       }
     },
     "primaryKeys": [],
@@ -111,7 +122,7 @@
     "indexes": [],
     "uniques": [],
     "className": "Organization",
-    "path": "./dist/resources/organizations/entities/organization.entity.js",
+    "path": "../../packages/shared-types/dist/resources/organization/entities/organization.entity.js",
     "schema": "organizations",
     "name": "Organization",
     "abstract": false,
@@ -122,7 +133,7 @@
     "useCache": true,
     "collection": "organization"
   },
-  "origin": "./dist/resources/organizations/entities/organization.entity.js",
-  "hash": "8661e1872ca3a2cb3a0a0b0499955605",
+  "origin": "../../packages/shared-types/dist/resources/organization/entities/organization.entity.js",
+  "hash": "340ce9373e240b1099438f6a87ebbcf0",
   "version": "6.2.9"
 }
