@@ -1,4 +1,4 @@
-import { BaseEntity } from "@/baseEntity";
+import { BaseEntity } from "../../../baseEntity";
 import { Entity, Property } from "@mikro-orm/core";
 
 @Entity()

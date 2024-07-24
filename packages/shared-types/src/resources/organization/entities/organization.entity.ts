@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
+import { Entity, Enum, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
 import { Color } from "./color.entity";
 import { OrganizationCustomDomain } from "./organizationCustomDomain.entity";
 import { OrganizationRole } from "./organizationRole.entity";
@@ -6,6 +6,7 @@ import { organizationsSchema } from "../../../dbConstants";
 import { User } from "../../user/entities/user.entity";
 import { Event } from "../../events/entities/event.entity";
 import { BaseEntity } from "../../../baseEntity";
+import { IsDefined, IsEnum, IsOptional } from "class-validator";
 
 export type OrganizationColors = {
   primaryColor: Color;
@@ -13,22 +14,38 @@ export type OrganizationColors = {
   tertiaryColor: Color;
 };
 
+export enum Timezones {
+  "America/Noronha" = "America/Noronha",
+  "America/Sao_Paulo" = "America/Sao_Paulo",
+  "America/Manaus" = "America/Manaus",
+  "America/Rio_Branco" = "America/Rio_Branco",
+}
+
 export class OrganizationOptions {
+  @IsOptional()
   images?: {
     bg?: string;
     hero?: string;
     logo?: string;
   };
+  @IsOptional()
   socialMedia?: {
     facebook?: string | null;
     instagram?: string | null;
     twitter?: string | null;
     youtube?: string | null;
   };
-  colors: OrganizationColors;
+  @IsOptional()
+  colors?: OrganizationColors;
+  @IsOptional()
   pages?: {
     documents?: boolean;
   };
+  @IsDefined()
+  @IsEnum(Timezones, {
+    message: "Fuso horário inválido. Por favor utilize o formato TZ.",
+  })
+  timezone: Timezones = Timezones["America/Sao_Paulo"];
 }
 
 @Entity(organizationsSchema)

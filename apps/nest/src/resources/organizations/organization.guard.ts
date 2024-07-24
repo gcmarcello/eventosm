@@ -47,7 +47,7 @@ export class OrganizationGuard implements CanActivate {
         "Você não possui permissão para fazer isto."
       );
 
-    const orgId = request.body.id;
+    const orgId = request.body.id ?? request.body.organization;
 
     if (!orgId) throw new NotFoundException("Organização não encontrada.");
 

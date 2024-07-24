@@ -44,13 +44,13 @@ export class UserService {
       if (existingUser.email === data.email) {
         throw new ConflictException({
           message: "Email já utilizado por outro usuário.",
-          field: "email",
+          property: "email",
         });
       }
       if (existingUser.document === data.document) {
         throw new ConflictException({
           message: "Documento já utilizado por outro usuário.",
-          field: "document",
+          property: "document",
         });
       }
     }

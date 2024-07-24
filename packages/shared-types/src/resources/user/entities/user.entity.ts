@@ -5,8 +5,8 @@ import {
   OneToMany,
   OneToOne,
   Property,
-  Ref,
 } from "@mikro-orm/core";
+import type { Ref } from "@mikro-orm/core";
 import { UserDocument } from "./userDocument.entity";
 import { UserInfo } from "./userInfo.entity";
 import { Role } from "../user.dto";

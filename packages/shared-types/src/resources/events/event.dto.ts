@@ -1,11 +1,13 @@
 import {
   IsDate,
+  IsDateString,
   IsObject,
   IsOptional,
   IsString,
   IsUUID,
   MinLength,
 } from "class-validator";
+import { EventOptions } from "./entities/event.entity";
 
 export class CreateEventDto {
   @IsUUID()
@@ -18,6 +20,10 @@ export class CreateEventDto {
   name: string;
 
   @IsString()
+  @IsOptional()
+  location?: string;
+
+  @IsString()
   @MinLength(3, {
     message: "O slug do evento precisa ter ao menos 3 caracteres.",
   })
@@ -27,13 +33,12 @@ export class CreateEventDto {
   @IsOptional()
   description?: string;
 
-  @IsDate()
-  dateStart: Date;
+  @IsDateString()
+  dateStart: string;
 
-  @IsDate()
-  dateEnd?: Date;
+  @IsDateString()
+  dateEnd?: string;
 
-  @IsString()
   @IsOptional()
-  location?: string;
+  options?: EventOptions;
 }

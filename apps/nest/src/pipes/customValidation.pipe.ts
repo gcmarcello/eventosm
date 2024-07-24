@@ -15,11 +15,37 @@ export class CustomValidationPipe extends ValidationPipe {
     });
   }
 
+  getChildrenErrors(
+    error: ValidationError,
+    parentProperty = ""
+  ): PropertyError[] {
+    const propertyPath = parentProperty
+      ? `${parentProperty}.${error.property}`
+      : error.property;
+    let accumulatedErrors: PropertyError[] = [];
+
+    if (error.constraints) {
+      accumulatedErrors.push({
+        property: propertyPath,
+        constraints: error.constraints,
+      });
+    }
+
+    if (error.children && error.children.length > 0) {
+      error.children.forEach((child) => {
+        accumulatedErrors = accumulatedErrors.concat(
+          this.getChildrenErrors(child, propertyPath)
+        );
+      });
+    }
+
+    return accumulatedErrors;
+  }
+
   private createException(errors: ValidationError[]) {
-    const formattedErrors: PropertyError[] = errors.map((error) => ({
-      property: error.property,
-      constraints: error.constraints,
-    }));
+    const formattedErrors: PropertyError[] = errors.flatMap((error) =>
+      this.getChildrenErrors(error)
+    );
 
     return new BadRequestException({
       message: "Validation failed",

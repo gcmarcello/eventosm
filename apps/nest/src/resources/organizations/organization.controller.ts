@@ -7,9 +7,9 @@ import {
   Put,
   Query,
   UseGuards,
+  UsePipes,
 } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
-
 import { OrganizationService } from "./services/organization.service";
 import { OrganizationGuard } from "./organization.guard";
 import { Permissions } from "./permissions.decorator";
@@ -20,8 +20,8 @@ import {
   ReadOrganizationDto,
   UpdateOrganizationDto,
 } from "shared-types";
+import { OrganizationPipe } from "./organization.pipe";
 
-@UseGuards(AuthGuard)
 @Controller("organization")
 export class OrganizationController {
   constructor(private organizationService: OrganizationService) {}
@@ -37,7 +37,8 @@ export class OrganizationController {
   }
 
   @Post()
-  @UseGuards(OrganizationGuard)
+  @UseGuards(AuthGuard, OrganizationGuard)
+  @UsePipes(OrganizationPipe)
   public async createOrganization(
     @Body() body: CreateOrganizationDto,
     @User() userId: string
@@ -47,7 +48,8 @@ export class OrganizationController {
 
   @Put()
   @Permissions([OrganizationPermissions.UpdateOrganization])
-  @UseGuards(OrganizationGuard)
+  @UseGuards(AuthGuard, OrganizationGuard)
+  @UsePipes(OrganizationPipe)
   public async updateOrganization(@Body() body: UpdateOrganizationDto) {
     return await this.organizationService.update(body);
   }

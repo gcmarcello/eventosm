@@ -1,4 +1,15 @@
-import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
+import {
+  IsDefined,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import { OrganizationOptions } from "./entities/organization.entity";
+import { Type } from "class-transformer";
+import { IsSlug } from "../../decorators/IsSlug.decorator";
 export class CreateOrganizationDto {
   @IsString()
   @MinLength(3)
@@ -7,6 +18,11 @@ export class CreateOrganizationDto {
   @MinLength(3)
   @IsOptional()
   description?: string;
+
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => OrganizationOptions)
+  options: OrganizationOptions;
 
   @IsEmail()
   @IsOptional()
@@ -20,8 +36,7 @@ export class CreateOrganizationDto {
   @IsOptional()
   document?: string;
 
-  @IsString()
-  @MinLength(3)
+  @IsSlug()
   slug: string;
 }
 export class UpdateOrganizationDto extends CreateOrganizationDto {

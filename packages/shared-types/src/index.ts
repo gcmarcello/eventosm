@@ -1,6 +1,7 @@
 export * from './baseEntity';
 export * from './constants/twColorPalette';
 export * from './dbConstants';
+export * from './decorators/IsSlug.decorator';
 export * from './resources/auth/auth.dto';
 export * from './resources/auth/entities/passwordRecovery.entity';
 export * from './resources/events/entities/event.entity';

@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 7000,
+    "_id": 8000,
     "properties": {
       "name": {
         "name": "name",
@@ -69,6 +69,32 @@
         "runtimeType": "Date",
         "optional": true
       },
+      "status": {
+        "name": "status",
+        "kind": "scalar",
+        "enum": true,
+        "default": "pending",
+        "type": "EventStatus",
+        "items": [
+          "pending",
+          "active",
+          "finished",
+          "cancelled"
+        ],
+        "array": false,
+        "runtimeType": "EventStatus"
+      },
+      "options": {
+        "name": "options",
+        "kind": "scalar",
+        "type": "jsonb",
+        "nullable": true,
+        "getter": false,
+        "setter": false,
+        "array": false,
+        "runtimeType": "EventOptions",
+        "optional": true
+      },
       "organization": {
         "name": "organization",
         "kind": "m:1",
@@ -99,6 +125,6 @@
     "collection": "event"
   },
   "origin": "../../packages/shared-types/dist/resources/events/entities/event.entity.js",
-  "hash": "fd3980f1d1af9704438c7a6ceb92d563",
+  "hash": "47887e2235288fdec81750cd640e6d09",
   "version": "6.2.9"
 }

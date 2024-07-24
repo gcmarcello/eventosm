@@ -41,7 +41,7 @@ export class OrganizationService {
     if (existingOrganization)
       throw new ConflictException({
         message: "Já existe uma organização com este slug.",
-        field: "slug",
+        property: "slug",
       });
 
     const organization = this.organizationRepo.create({
@@ -67,13 +67,13 @@ export class OrganizationService {
       if (existingOrganization.slug === dto.slug) {
         throw new ConflictException({
           message: "Já existe uma organização com este slug.",
-          field: "slug",
+          property: "slug",
         });
       }
       if (existingOrganization.document === dto.document) {
         throw new ConflictException({
           message: "Já existe uma organização com este documento.",
-          field: "document",
+          property: "document",
         });
       }
     }

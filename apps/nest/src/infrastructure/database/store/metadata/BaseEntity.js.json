@@ -1,6 +1,6 @@
 {
   "data": {
-    "_id": 13000,
+    "_id": 0,
     "properties": {
       "id": {
         "name": "id",
@@ -14,7 +14,7 @@
       "createdAt": {
         "name": "createdAt",
         "kind": "scalar",
-        "default": "now()",
+        "defaultRaw": "now()",
         "type": "timestamp without time zone",
         "getter": false,
         "setter": false,
@@ -26,7 +26,7 @@
         "name": "updatedAt",
         "kind": "scalar",
         "type": "timestamp without time zone",
-        "default": "now()",
+        "defaultRaw": "now()",
         "getter": false,
         "setter": false,
         "array": false,
@@ -42,7 +42,7 @@
     "indexes": [],
     "uniques": [],
     "className": "BaseEntity",
-    "path": "./dist/infrastructure/database/baseEntity.js",
+    "path": "../../packages/shared-types/dist/baseEntity.js",
     "abstract": true,
     "internal": true,
     "constructorParams": [],
@@ -51,7 +51,7 @@
     "compositePK": false,
     "simplePK": true
   },
-  "origin": "./dist/infrastructure/database/baseEntity.js",
-  "hash": "57b6f3d140dfa357e48346e29b716c72",
+  "origin": "../../packages/shared-types/dist/baseEntity.js",
+  "hash": "c98ccc03aaf88a45c063494d540e26d7",
   "version": "6.2.9"
 }

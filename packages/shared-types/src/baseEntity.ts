@@ -5,13 +5,13 @@ export class BaseEntity {
   @PrimaryKey(uuid)
   id!: string;
 
-  @Property({ default: "now()", type: "timestamp without time zone" })
+  @Property({ defaultRaw: "now()", type: "timestamp without time zone" })
   createdAt?: Date;
 
   @Property({
-    onUpdate: () => new Date(),
     type: "timestamp without time zone",
-    default: "now()",
+    onUpdate: () => new Date(),
+    defaultRaw: "now()",
   })
   updatedAt?: Date;
 }
