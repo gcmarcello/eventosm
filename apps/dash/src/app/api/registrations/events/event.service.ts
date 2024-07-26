@@ -165,6 +165,32 @@ export async function createEventMultipleRegistrations(
     : null;
   const selectedUsers = request.teamMembers.filter((m) => m.selected);
 
+  for (const modality of event?.EventModality || []) {
+    const mod = event?.options?.rules?.modalities?.find(
+      (m) => m.modId === modality.id
+    );
+    if (mod && mod.enableCategoryControl) {
+      if (selectedUsers.length !== mod.teamSize)
+        throw `A modalidade ${modality.name} requer ${mod.teamSize} atletas por equipe.`;
+      const categories = mod.requiredCategories;
+
+      if (categories?.length) {
+        for (const category of categories) {
+          const catInfo = modality.modalityCategory.find(
+            (cat) => cat.id === category.id
+          );
+          if (!catInfo)
+            throw `Categoria ${category.id} não encontrada na modalidade ${modality.name}.`;
+          const count = selectedUsers.filter(
+            (u) => u.categoryId === category.id
+          ).length;
+          if (count < category.number)
+            throw `A modalidade ${modality.name} requer ${category.number} atletas na categoria ${catInfo.name}.`;
+        }
+      }
+    }
+  }
+
   if (!selectedUsers.length) throw "Nenhum atleta selecionado.";
 
   if (!event) throw "Evento não encontrado.";

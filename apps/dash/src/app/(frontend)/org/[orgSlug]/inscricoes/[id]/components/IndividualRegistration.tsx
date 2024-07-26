@@ -472,19 +472,11 @@ export default function IndividualRegistration({
                 <>
                   <div className={clsx("space-y-2 lg:mb-4")}>
                     <For each={order}>
-                      {(step) => (
-                        <Transition
-                          show={step === order[currentStep]}
-                          enter="ease-out duration-200"
-                          enterFrom="opacity-0 scale-95"
-                          enterTo="opacity-100 scale-100"
-                          leave="ease-in duration-200"
-                          leaveFrom="opacity-0 scale-100"
-                          leaveTo="opacity-0 scale-95"
-                        >
-                          {steps[step].form}
-                        </Transition>
-                      )}
+                      {(step) => {
+                        if (step === order[currentStep])
+                          return steps[step].form;
+                        return <></>;
+                      }}
                     </For>
                   </div>
                   <div className="hidden flex-row-reverse justify-between lg:flex">

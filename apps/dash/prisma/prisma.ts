@@ -36,8 +36,14 @@ declare global {
       multipleRegistrations?: boolean;
       rules?: {
         registrationMode: "team" | "individual";
-        teamSize?: number;
-        requiredCategories?: string[];
+        modalities?: [
+          {
+            modId: string;
+            teamSize?: number;
+            enableCategoryControl?: boolean;
+            requiredCategories?: { id: string; number: number }[];
+          },
+        ];
       };
     };
 
