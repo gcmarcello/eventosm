@@ -100,7 +100,11 @@ export async function readEventGroupResults(eventGroupId: string) {
   if (!rules) throw "Regras do campeonato não encontradas.";
 
   const allResults = await prisma.eventResult.findMany({
-    where: { Event: { EventGroup: { id: eventGroupId } }, status: "active" },
+    where: {
+      Event: { EventGroup: { id: eventGroupId } },
+      status: "active",
+      Registration: { status: { not: "suspended" } },
+    },
     include: {
       Registration: {
         include: {
@@ -188,15 +192,6 @@ export async function readEventGroupResults(eventGroupId: string) {
             totalScore =
               validScores.reduce((acc, curr) => acc + curr, 0) /
               validScores.length;
-            if (p === "6272321e-1b49-45c2-bdac-c516672af6f6") {
-              console.log("resultados validos", validResults);
-              console.log("melhores resultados", validScores);
-              console.log(
-                "totalScore",
-                validScores.reduce((acc, curr) => acc + curr, 0) /
-                  validScores.length
-              );
-            }
           } else {
             // If there are fewer results than the number to discard, use all results
 
