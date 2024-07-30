@@ -7,7 +7,7 @@ import { CreateOrganizationRoleDto, OrganizationRole } from "shared-types";
 export class OrganizationRoleService {
   constructor(
     @InjectRepository(OrganizationRole)
-    private organizationRepo: EntityRepository<OrganizationRole>,
+    private organizationRoleRepo: EntityRepository<OrganizationRole>,
     private em: EntityManager
   ) {}
 
@@ -23,5 +23,12 @@ export class OrganizationRoleService {
     await this.em.flush();
 
     return organizationRole;
+  }
+
+  async findOne(organizationId: string, roleId: string) {
+    return this.organizationRoleRepo.findOne({
+      organization: organizationId,
+      id: roleId,
+    });
   }
 }

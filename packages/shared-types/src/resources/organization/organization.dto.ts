@@ -39,11 +39,7 @@ export class CreateOrganizationDto {
   @IsSlug()
   slug: string;
 }
-export class UpdateOrganizationDto extends CreateOrganizationDto {
-  @IsString()
-  @MinLength(3)
-  id: string;
-}
+export class UpdateOrganizationDto extends CreateOrganizationDto {}
 
 export class ReadOrganizationDto {
   @IsOptional()

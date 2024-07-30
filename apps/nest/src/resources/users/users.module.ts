@@ -6,9 +6,12 @@ import { JwtService } from "@nestjs/jwt";
 import { UserController } from "./user.controller";
 import { GeoService } from "../geo/geo.service";
 import { GeoModule } from "../geo/geo.module";
+import { OrganizationService } from "../organizations/services/organization.service";
+import { DatabaseModule } from "@/infrastructure/database/database.module";
+import { OrganizationRoleService } from "../organizations/services/role.service";
 
 @Module({
-  imports: [GeoModule],
+  imports: [GeoModule, DatabaseModule],
   providers: [
     UserController,
     UserService,
@@ -16,6 +19,8 @@ import { GeoModule } from "../geo/geo.module";
     AuthGuard,
     JwtService,
     GeoService,
+    OrganizationService,
+    OrganizationRoleService,
   ],
 })
 export class UsersModule {}

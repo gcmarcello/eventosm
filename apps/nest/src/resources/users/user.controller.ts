@@ -1,14 +1,6 @@
 import { UserService } from "./user.service";
 
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-  UsePipes,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { UserPipe } from "./user.pipe";
 import { ReadUserDto, CreateUserDto } from "shared-types";
@@ -29,8 +21,7 @@ export class UserController {
   }
 
   @Post()
-  @UsePipes(UserPipe)
-  public async createUser(@Body() data: CreateUserDto) {
+  public async createUser(@Body("", UserPipe) data: CreateUserDto) {
     return await this.userService.create(data);
   }
 }

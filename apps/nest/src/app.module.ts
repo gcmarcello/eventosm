@@ -20,7 +20,8 @@ import { OrganizationController } from "./resources/organizations/organization.c
 import { UserController } from "./resources/users/user.controller";
 import { GeoModule } from "./resources/geo/geo.module";
 import { GeoService } from "./resources/geo/geo.service";
-import { EventsModule } from './resources/events/events.module';
+import { EventsModule } from "./resources/events/events.module";
+import { OrganizationRoleService } from "./resources/organizations/services/role.service";
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { EventsModule } from './resources/events/events.module';
     OrganizationService,
     JwtService,
     GeoService,
+    OrganizationRoleService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseTimeInterceptor,

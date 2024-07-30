@@ -53,14 +53,14 @@ export class OrganizationService {
     return organization;
   }
 
-  async update(dto: UpdateOrganizationDto) {
-    const organization = await this.findOne(dto.id);
+  async update(dto: UpdateOrganizationDto, id: string) {
+    const organization = await this.findOne(id);
     if (!organization)
       throw new NotFoundException("Organização não encontrada.");
 
     const existingOrganization = await this.organizationRepo.findOne({
       $or: [{ slug: dto.slug }, { document: dto.document }],
-      id: { $ne: dto.id },
+      id: { $ne: id },
     });
 
     if (existingOrganization) {
@@ -68,12 +68,14 @@ export class OrganizationService {
         throw new ConflictException({
           message: "Já existe uma organização com este slug.",
           property: "slug",
+          activeOrg: id,
         });
       }
       if (existingOrganization.document === dto.document) {
         throw new ConflictException({
           message: "Já existe uma organização com este documento.",
           property: "document",
+          activeOrg: id,
         });
       }
     }

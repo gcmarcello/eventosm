@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index",
   "scripts": {
-    "dev": "libuilder --watch ./libuilder.mjs & tsc",
+    "dev": "libuilder --watch ./libuilder.mjs & tsc -w",
     "postinstall": "libuilder ./libuilder.mjs & tsc"
   },
   "keywords": [],

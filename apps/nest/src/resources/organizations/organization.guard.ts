@@ -15,21 +15,15 @@ import {
   OrganizationPermissions,
   OrganizationRole,
 } from "shared-types";
-
-export type JwtUserPayload = {
-  id: string;
-  role: string;
-  name: string;
-  iat: number;
-  exp: number;
-};
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class OrganizationGuard implements CanActivate {
   constructor(
     private organizationService: OrganizationService,
     private reflector: Reflector,
-    private em: EntityManager
+    private em: EntityManager,
+    private jwtService: JwtService
   ) {}
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const permissions = this.reflector.get(Permissions, ctx.getHandler());
@@ -47,7 +41,7 @@ export class OrganizationGuard implements CanActivate {
         "Você não possui permissão para fazer isto."
       );
 
-    const orgId = request.body.id ?? request.body.organization;
+    const orgId = user.activeOrg;
 
     if (!orgId) throw new NotFoundException("Organização não encontrada.");
 

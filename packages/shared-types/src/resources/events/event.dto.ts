@@ -10,9 +10,6 @@ import {
 import { EventOptions } from "./entities/event.entity";
 
 export class CreateEventDto {
-  @IsUUID()
-  organization: string;
-
   @IsString()
   @MinLength(3, {
     message: "O nome do evento precisa ter ao menos 3 caracteres.",
@@ -42,3 +39,5 @@ export class CreateEventDto {
   @IsOptional()
   options?: EventOptions;
 }
+
+export class UpdateEventDto extends CreateEventDto {}

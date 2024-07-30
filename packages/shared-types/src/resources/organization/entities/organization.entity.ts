@@ -65,7 +65,7 @@ export class Organization extends BaseEntity {
   @Property()
   document?: string;
 
-  @Property()
+  @Property({ unique: true })
   slug: string;
 
   @Property({ type: "jsonb", nullable: true })

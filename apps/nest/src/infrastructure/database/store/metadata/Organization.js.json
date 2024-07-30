@@ -54,6 +54,7 @@
       "slug": {
         "name": "slug",
         "kind": "scalar",
+        "unique": true,
         "getter": false,
         "setter": false,
         "type": "string",
@@ -134,6 +135,6 @@
     "collection": "organization"
   },
   "origin": "../../packages/shared-types/dist/resources/organization/entities/organization.entity.js",
-  "hash": "314e53c0a50701a7c3feab7184a94f1c",
+  "hash": "9a4061c792275f060a4da1c5bec942b6",
   "version": "6.2.9"
 }

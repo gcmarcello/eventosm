@@ -7,6 +7,6 @@ export const User = createParamDecorator(
 
     const user = request.user;
 
-    return user;
+    return user?.id;
   }
 );

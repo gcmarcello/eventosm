@@ -12,7 +12,6 @@ dayjs.extend(customParseFormat);
 @Injectable()
 export class OrganizationPipe implements PipeTransform {
   async transform(value: CreateOrganizationDto) {
-    if (typeof value === "string") return value;
     return {
       ...value,
       document: value.document ? normalizeDocument(value.document) : undefined,

@@ -7,9 +7,8 @@ import {
   Put,
   Query,
   UseGuards,
-  UsePipes,
 } from "@nestjs/common";
-import { AuthGuard } from "../auth/auth.guard";
+import { AuthGuard, JwtUserPayload } from "../auth/auth.guard";
 import { OrganizationService } from "./services/organization.service";
 import { OrganizationGuard } from "./organization.guard";
 import { Permissions } from "./permissions.decorator";
@@ -31,26 +30,27 @@ export class OrganizationController {
     return await this.organizationService.findMany(data);
   }
 
-  @Get(":id")
+  @Get()
   public async findOrganization(@Param("id") id: string) {
     return await this.organizationService.findOne(id);
   }
 
   @Post()
   @UseGuards(AuthGuard, OrganizationGuard)
-  @UsePipes(OrganizationPipe)
   public async createOrganization(
-    @Body() body: CreateOrganizationDto,
-    @User() userId: string
+    @Body("", OrganizationPipe) body: CreateOrganizationDto,
+    @User() user: JwtUserPayload
   ) {
-    return await this.organizationService.create(userId, body);
+    return await this.organizationService.create(user.id, body);
   }
 
   @Put()
   @Permissions([OrganizationPermissions.UpdateOrganization])
   @UseGuards(AuthGuard, OrganizationGuard)
-  @UsePipes(OrganizationPipe)
-  public async updateOrganization(@Body() body: UpdateOrganizationDto) {
-    return await this.organizationService.update(body);
+  public async updateOrganization(
+    @Body("", OrganizationPipe) body: UpdateOrganizationDto,
+    @User() user: JwtUserPayload
+  ) {
+    return await this.organizationService.update(body, user.activeOrg);
   }
 }
