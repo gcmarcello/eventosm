@@ -24,3 +24,11 @@ export async function deleteModality(
     }),
   ]);
 }
+
+export async function readEventModalities(eventId: string) {
+  const modalities = await prisma.eventModality.findMany({
+    where: { eventId },
+    include: { modalityCategory: true },
+  });
+  return modalities;
+}

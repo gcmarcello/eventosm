@@ -35,9 +35,13 @@ declare global {
       accountlessRegistration?: boolean;
       multipleRegistrations?: boolean;
       rules?: {
-        registrationMode: "team" | "individual";
-        teamSize?: number;
-        requiredCategories?: string[];
+        registrationMode?: "team" | "individual";
+        modalities?: {
+          modId: string;
+          teamSize?: number;
+          enableCategoryControl?: boolean;
+          requiredCategories?: { id: string; number: number }[];
+        }[];
       };
     };
 

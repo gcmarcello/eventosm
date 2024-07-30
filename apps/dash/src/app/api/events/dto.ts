@@ -46,15 +46,27 @@ export const upsertEventDto = z.object({
     .object({
       accountlessRegistration: z.boolean().optional(),
       multipleRegistrations: z.boolean().optional(),
-      registrationMode: z
-        .enum(["team", "individual"], {
-          invalid_type_error:
-            "Você deve escolher entre inscrição individual ou por equipes.",
-          description: "Modo de inscrição",
-        })
-        .optional(),
-      teamSize: z.number().optional(),
-      requiredCategories: z.array(z.string()).optional(),
+      rules: z.object({
+        registrationMode: z
+          .enum(["team", "individual"], {
+            invalid_type_error:
+              "Você deve escolher entre inscrição individual ou por equipes.",
+            description: "Modo de inscrição",
+          })
+          .optional(),
+        modalities: z
+          .array(
+            z.object({
+              modId: z.string().uuid({ message: "Formato de ID inválido" }),
+              teamSize: z.number().optional(),
+              enableCategoryControl: z.boolean().optional(),
+              requiredCategories: z
+                .array(z.object({ id: z.string(), number: z.number() }))
+                .optional(),
+            })
+          )
+          .optional(),
+      }),
     })
     .optional(),
 });

@@ -27,6 +27,7 @@ import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
 import { upsertEvent } from "@/app/api/events/action";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { RTE } from "../../../_shared/RichText";
+import { EventTeamModalitiesDialog } from "./EventTeamModalitiesDialog";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -53,10 +54,11 @@ export default function EventGeneralInfo({
       options: {
         accountlessRegistration: event.options?.accountlessRegistration,
         multipleRegistrations: event.options?.multipleRegistrations,
-        registrationMode:
-          event.options?.rules?.registrationMode ?? "individual",
-        teamSize: event.options?.rules?.teamSize,
-        requiredCategories: event.options?.rules?.requiredCategories,
+        rules: {
+          registrationMode:
+            event.options?.rules?.registrationMode ?? "individual",
+          modalities: event.options?.rules?.modalities ?? [],
+        },
       },
     },
   });
@@ -157,7 +159,7 @@ export default function EventGeneralInfo({
           {" "}
           <Heading>Opções do Evento</Heading>
           <FieldGroup className="col-span-2 lg:col-span-1">
-            <Field enableAsterisk={false} name="options.registrationMode">
+            <Field enableAsterisk={false} name="options.rules.registrationMode">
               <Label>Tipo de Inscrição</Label>
               <Select
                 data={[
@@ -172,18 +174,17 @@ export default function EventGeneralInfo({
 
               <ErrorMessage />
               <Description>
-                {form.watch("options.registrationMode") === "team" &&
+                {form.watch("options.rules.registrationMode") === "team" &&
                   "O evento é disputado por equipes."}
-                {form.watch("options.registrationMode") === "individual" &&
+                {form.watch("options.rules.registrationMode") ===
+                  "individual" &&
                   "O evento é disputado por atletas individualmente."}
               </Description>
             </Field>
-            {form.watch("options.registrationMode") === "team" && (
-              <Field name="options.teamSize">
-                <Label>Tamanho da Equipe</Label>
-                <Input inputMode="tel" type="number" />
-                <ErrorMessage />
-              </Field>
+            {form.watch("options.rules.registrationMode") === "team" && (
+              <>
+                <EventTeamModalitiesDialog event={event} />
+              </>
             )}
             <Field
               enableAsterisk={false}

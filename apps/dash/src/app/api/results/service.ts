@@ -100,7 +100,11 @@ export async function readEventGroupResults(eventGroupId: string) {
   if (!rules) throw "Regras do campeonato não encontradas.";
 
   const allResults = await prisma.eventResult.findMany({
-    where: { Event: { EventGroup: { id: eventGroupId } }, status: "active" },
+    where: {
+      Event: { EventGroup: { id: eventGroupId } },
+      status: "active",
+      Registration: { status: { not: "suspended" } },
+    },
     include: {
       Registration: {
         include: {
@@ -126,11 +130,13 @@ export async function readEventGroupResults(eventGroupId: string) {
         (r) => r.Registration.id === p && r.score
       );
 
-
       if (
         (rules.discard &&
-        participantResults.length < rules.discard &&
-        participantResults.length !== events.length)  || (rules.discard && Math.max(events.length - rules.discard, 0) > participantResults.length)
+          participantResults.length < rules.discard &&
+          participantResults.length !== events.length) ||
+        (rules.discard &&
+          Math.max(events.length - rules.discard, 0) >
+            participantResults.length)
       ) {
         return {
           ...details,
@@ -138,8 +144,6 @@ export async function readEventGroupResults(eventGroupId: string) {
           score: null,
         };
       }
-
-      
 
       let totalScore: number | null = 0;
 
@@ -177,8 +181,24 @@ export async function readEventGroupResults(eventGroupId: string) {
           .sort((a, b) => a - b);
         const numResults = Math.max(validResults.length, rules.discard || 0);
 
-        totalScore =
-          validResults.reduce((acc, curr) => acc + curr, 0) / numResults;
+        if (rules.discard && rules.discard > 0) {
+          if (rules.discard < validResults.length) {
+            // Calculate total score by excluding worst x results
+            const validScores = validResults.slice(
+              0,
+              validResults.length - rules.discard
+            );
+
+            totalScore =
+              validScores.reduce((acc, curr) => acc + curr, 0) /
+              validScores.length;
+          } else {
+            // If there are fewer results than the number to discard, use all results
+
+            totalScore =
+              validResults.reduce((acc, curr) => acc + curr, 0) / numResults;
+          }
+        }
 
         totalScore = totalScore ? Math.round(totalScore) : null;
       }

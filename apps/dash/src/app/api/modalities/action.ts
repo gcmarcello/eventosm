@@ -25,3 +25,13 @@ export async function deleteModality(request: DeleteModalityDto) {
     return ActionResponse.error(error);
   }
 }
+
+export async function readEventModalities(eventId: string) {
+  try {
+    const modalities = await service.readEventModalities(eventId);
+    return ActionResponse.success({ data: modalities });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}

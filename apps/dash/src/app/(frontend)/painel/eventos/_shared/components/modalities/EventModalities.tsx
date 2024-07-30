@@ -44,7 +44,7 @@ export default function EventModalities() {
             cell: (info) => (
               <Button
                 outline
-                href={`/painel/eventos/grupos/${info.row.original.eventGroupId}/modalidades/${info.row.original.id}`}
+                href={`/painel/eventos/${info.row.original.eventGroupId ? `grupos/${info.row.original.eventGroupId}` : `${info.row.original.eventId}`}/modalidades/${info.row.original.id}`}
               >
                 <div className="flex items-end gap-1 lg:items-center">
                   {`${info.getValue().length} Categorias`}{" "}
