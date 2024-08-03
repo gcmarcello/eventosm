@@ -10,6 +10,9 @@ import { JwtService } from "@nestjs/jwt";
 import { SignupDto, LoginDto } from "shared-types";
 import { OrganizationService } from "../organizations/services/organization.service";
 import { OrganizationRoleService } from "../organizations/services/role.service";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 @Injectable()
 export class AuthService {
@@ -65,6 +68,8 @@ export class AuthService {
         "Você não faz parte da equipe desta organização."
       );
 
+    const expiresIn = dayjs(payload.exp, "X").diff(dayjs(), "second");
+
     return this.jwtService.signAsync(
       {
         id: payload.id,
@@ -72,7 +77,7 @@ export class AuthService {
         role: payload.role,
         activeOrg: organizationId,
       },
-      { expiresIn: payload.exp }
+      { expiresIn }
     );
   }
 }
