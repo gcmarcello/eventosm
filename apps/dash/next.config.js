@@ -20,6 +20,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:5000/:path*",
+        permanent: true,
+      },
+    ];
+  },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.plugins.push(
       new CopyPlugin({
