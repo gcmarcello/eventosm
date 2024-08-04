@@ -1,7 +1,6 @@
 "use client";
 
-import { loginDto } from "@/app/api/auth/dto";
-import { login } from "@/app/api/auth/action";
+import { LoginDto, loginDto } from "@/app/api/auth/dto";
 import {
   Button,
   ErrorMessage,
@@ -10,36 +9,25 @@ import {
   Input,
   Label,
   useForm,
-  showToast,
-  useAction,
 } from "odinkit/client";
 import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { SubmitButton } from "odinkit";
+import { handleFormError, useFetch } from "../../hooks/useFetch";
 
 export default function LoginPage() {
-  const params = useSearchParams();
   const form = useForm({
     schema: loginDto,
     mode: "onChange",
-    defaultValues: {
-      redirect: params.get("redirect") || "/",
-    },
   });
 
   const Field = useMemo(() => form.createField(), []);
 
-  const { trigger: loginTrigger, isMutating: isLoading } = useAction({
-    action: login,
-    redirect: true,
+  const { trigger, isMutating, data, error } = useFetch<LoginDto, string>({
+    url: "/api/auth/login",
+    options: { method: "POST" },
+    form,
     onError: (error) => {
-      form.resetField("password");
-      showToast({ message: error.message, variant: "error", title: "Erro" });
-      /* form.setError("root.serverError", {
-        type: "400",
-        message: (error as string) || "Erro inesperado",
-      }); */
+      handleFormError(error, form);
     },
   });
 
@@ -71,7 +59,7 @@ export default function LoginPage() {
             <div>
               <Form
                 hform={form}
-                onSubmit={(data) => loginTrigger(data)}
+                onSubmit={(data) => trigger(data)}
                 className="space-y-6"
               >
                 <FieldGroup className="space-y-6">
@@ -112,11 +100,20 @@ export default function LoginPage() {
                     </a>
                   </div>
                 </div>
-
+                {form.formState.errors.root?.serverError && (
+                  <div className="text-base/6 text-red-600 data-[disabled]:opacity-50 sm:text-sm/6 dark:text-red-500">
+                    {form.formState.errors.root.serverError.message}
+                  </div>
+                )}
                 <div className="flex">
-                  <SubmitButton className={"w-full"} color="indigo">
+                  <Button
+                    type="submit"
+                    loading={isMutating ? "true" : undefined}
+                    className={"w-full"}
+                    color="indigo"
+                  >
                     Login
-                  </SubmitButton>
+                  </Button>
                 </div>
               </Form>
             </div>
