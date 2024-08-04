@@ -13,8 +13,8 @@ import {
   DialogDescription,
   DialogTitle,
   ErrorMessage,
+  FileDropArea,
   FileInput,
-  FileInputField,
   Form,
   Input,
   Label,
@@ -129,7 +129,7 @@ export default function ModalityCategoryModal() {
                           }
                         }}
                       >
-                        <FileInputField />
+                        <FileDropArea />
                         <ErrorMessage />
                       </FileInput>
                       <Description>

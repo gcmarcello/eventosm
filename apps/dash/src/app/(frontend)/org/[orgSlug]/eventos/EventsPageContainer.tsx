@@ -1,8 +1,8 @@
 "use client";
 import { EventGroup } from "@prisma/client";
 import dayjs from "dayjs";
-import { Table } from "odinkit";
-import { Badge, Date, Link } from "odinkit/client";
+import { Badge, Link, Table } from "odinkit";
+import { Date } from "odinkit/client";
 import { EventGroupWithInfo, EventWithInfo } from "prisma/types/Events";
 
 export function EventsPageContainer({

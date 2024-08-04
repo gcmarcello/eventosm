@@ -36,7 +36,7 @@ export class AuthService {
     });
 
     if (!user || !(await compareHash(password, user.password)))
-      throw new UnauthorizedException("Usuário ou senha incorretos");
+      throw new UnauthorizedException("Usuário ou senha incorretos.");
 
     return await this.createToken({
       id: user.id,

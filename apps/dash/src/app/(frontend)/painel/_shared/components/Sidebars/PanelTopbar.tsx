@@ -9,7 +9,7 @@ import { useSidebar } from "./lib/useSidebar";
 import { usePathname } from "next/navigation";
 import ProfileDropdown from "@/app/(frontend)/_shared/components/ProfileDropdown";
 import { getPageName } from "../../utils/pageName";
-import { Link } from "odinkit/client";
+import { Link } from "odinkit";
 
 export function SupporterTopBar() {
   const { user, organization, setVisibility } = useSidebar();

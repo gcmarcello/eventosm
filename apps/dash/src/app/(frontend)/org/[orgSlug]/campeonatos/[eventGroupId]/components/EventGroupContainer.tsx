@@ -14,6 +14,8 @@ import {
   date,
   Table,
   Alertbox,
+  Link,
+  Badge,
 } from "odinkit";
 import {
   Dropdown,
@@ -33,8 +35,6 @@ import {
   DialogTitle,
   Input,
   Label,
-  Link,
-  Badge,
 } from "odinkit/client";
 import { EventGroupWithInfo } from "prisma/types/Events";
 import { EventRegistrationBatchesWithCategoriesAndRegistrations } from "prisma/types/Batches";

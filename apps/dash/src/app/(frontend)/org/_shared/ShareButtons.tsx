@@ -1,7 +1,7 @@
 import FacebookIcon from "node_modules/odinkit/src/icons/FacebookIcon";
 import XIcon from "node_modules/odinkit/src/icons/TwitterIcon";
 import WhatsappIcon from "node_modules/odinkit/src/icons/WhatsappIcon";
-import { Link } from "odinkit/client";
+import { Link } from "odinkit";
 
 export function FacebookShareButton({
   size = 22,

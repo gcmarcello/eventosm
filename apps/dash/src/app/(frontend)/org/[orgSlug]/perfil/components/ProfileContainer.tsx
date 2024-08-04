@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { Organization } from "@prisma/client";
 import {
+  Badge,
   For,
   SubmitButton,
   date,
@@ -18,7 +19,6 @@ import { UserSession } from "@/middleware/functions/userSession.middleware";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import {
-  Badge,
   Button,
   Dialog,
   DialogActions,

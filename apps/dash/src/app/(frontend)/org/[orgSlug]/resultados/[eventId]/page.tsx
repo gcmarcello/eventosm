@@ -2,7 +2,7 @@ import { readEventResults } from "@/app/api/results/service";
 import { ResultsTable } from "../campeonatos/[eventGroupId]/components/ResultTable";
 import { notFound } from "next/navigation";
 import { Heading } from "odinkit";
-import { Link } from "odinkit/client";
+import { Link } from "odinkit";
 
 export default async function EventResultPage({
   params,

@@ -9,7 +9,7 @@ dayjs.extend(timezone);
 
 import { date } from "odinkit";
 import clsx from "clsx";
-import { Link } from "odinkit/client";
+import { Link } from "odinkit";
 
 export default async function EventResultCard({
   event,

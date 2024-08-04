@@ -6,7 +6,7 @@ import Image from "next/image";
 import { EventGroupRegistrationWithInfo } from "prisma/types/Registrations";
 import { useContext } from "react";
 import { EventGroupRegistrationModalContext } from "../context/RegistrationModal.ctx";
-import { Badge } from "odinkit/client";
+import { Badge } from "odinkit";
 
 export default function EventGroupRegistrationCard() {
   const { registration, visibility, setVisibility } = useContext(

@@ -1,6 +1,5 @@
 import { Organization } from "@prisma/client";
-import { Heading } from "odinkit";
-import { Link } from "odinkit/client";
+import { Heading, Link } from "odinkit";
 
 export default function SubeventHeading({
   children,
