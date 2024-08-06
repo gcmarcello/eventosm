@@ -1,8 +1,8 @@
 export * from './baseEntity';
+export * from './client_index';
 export * from './constants/twColorPalette';
 export * from './dbConstants';
 export * from './decorators/IsSlug.decorator';
-export * from './resources/auth/auth.dto';
 export * from './resources/auth/entities/passwordRecovery.entity';
 export * from './resources/events/entities/event.entity';
 export * from './resources/events/event.dto';
@@ -19,7 +19,6 @@ export * from './resources/organization/role.dto';
 export * from './resources/user/entities/user.entity';
 export * from './resources/user/entities/userDocument.entity';
 export * from './resources/user/entities/userInfo.entity';
-export * from './resources/user/user.dto';
 export * from './types/colors';
 export * from './types/errors';
 export * from './validators/birthDate.validator';

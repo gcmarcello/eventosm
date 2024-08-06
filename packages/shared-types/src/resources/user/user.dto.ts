@@ -1,3 +1,4 @@
+//client
 import {
   IsString,
   MinLength,
@@ -14,7 +15,6 @@ import {
   IsStrongPassword,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { PartialType } from "@nestjs/swagger";
 import { birthDateValidator } from "../../validators/birthDate.validator";
 import { cpfValidator } from "../../validators/cpf.validator";
 
@@ -152,8 +152,7 @@ export class ReadUserDto {
   @IsOptional()
   info?: UserInfoDto;
 }
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto extends CreateUserDto {
   @IsString()
   @MinLength(3)
   id: string;
