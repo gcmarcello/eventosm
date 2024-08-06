@@ -5,6 +5,7 @@ import useSWRMutation from "swr/mutation";
 type MutationError<T extends FieldValues> = {
   message: string;
   error?: string;
+  property?: "root" | `root.${string}` | Path<T>;
   errors?: {
     property: "root" | `root.${string}` | Path<T>;
     constraints: Record<string, string>;
@@ -70,6 +71,8 @@ export function handleFormError<T>(
           message: Object.values(err.constraints)[0],
         });
       }
+    } else if (parsedError.property) {
+      form.setError(parsedError.property, { message: parsedMessage });
     } else {
       form.setError("root.serverError", { message: parsedMessage });
     }
