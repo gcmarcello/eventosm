@@ -2,6 +2,12 @@
   "extends": "@repo/config/ts/next.tsconfig.json",
   "compilerOptions": {
     "strictPropertyInitialization": false,
+    "target": "es5",
+    "types": ["reflect-metadata"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "declarationMap": false,
     "plugins": [
       {
         "name": "next"
