@@ -1,11 +1,20 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginPipe } from "./pipes/login.pipe";
 import { UserPipe } from "../users/user.pipe";
 import { UserService } from "../users/user.service";
-import { CreateUserDto, LoginDto } from "shared-types";
+import { LoginDto } from "shared-types/dist/resources/auth/auth.dto";
 import { AuthGuard } from "./auth.guard";
 import { Request } from "express";
+import { CreateUserDto } from "shared-types/dist/resources/user/user.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -13,6 +22,11 @@ export class AuthController {
     private authService: AuthService,
     private userService: UserService
   ) {}
+
+  @Get()
+  async verifyAuth(@Req() req: Request) {
+    return await this.authService.verifyToken(req.headers.authorization);
+  }
 
   @Post("login")
   async login(@Body("", LoginPipe) body: LoginDto) {

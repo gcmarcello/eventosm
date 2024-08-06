@@ -3,7 +3,10 @@ import { UserService } from "./user.service";
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { UserPipe } from "./user.pipe";
-import { ReadUserDto, CreateUserDto } from "shared-types";
+import {
+  CreateUserDto,
+  ReadUserDto,
+} from "shared-types/dist/resources/user/user.dto";
 
 @UseGuards(AuthGuard)
 @Controller("user")

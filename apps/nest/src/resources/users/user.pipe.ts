@@ -4,11 +4,11 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { hashInfo } from "@/utils/bCrypt";
 import {
-  CreateUserDto,
   normalizeDocument,
   normalizeEmail,
   normalizeZipCode,
 } from "shared-types";
+import { CreateUserDto } from "shared-types/dist/resources/user/user.dto";
 dayjs.extend(customParseFormat);
 
 @Injectable()

@@ -4,8 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateUserDto, ReadUserDto, Role, User, UserInfo } from "shared-types";
+import { User, UserInfo } from "shared-types";
 import { GeoService } from "../geo/geo.service";
+import {
+  CreateUserDto,
+  ReadUserDto,
+  Role,
+} from "shared-types/dist/resources/user/user.dto";
 
 @Injectable()
 export class UserService {

@@ -7,7 +7,7 @@ import { UserService } from "../users/user.service";
 import { isEmail } from "class-validator";
 import { compareHash } from "@/utils/bCrypt";
 import { JwtService } from "@nestjs/jwt";
-import { SignupDto, LoginDto } from "shared-types";
+import { SignupDto, LoginDto } from "shared-types/dist/resources/auth/auth.dto";
 import { OrganizationService } from "../organizations/services/organization.service";
 import { OrganizationRoleService } from "../organizations/services/role.service";
 import dayjs from "dayjs";
@@ -35,14 +35,20 @@ export class AuthService {
       [isIdentifierEmail ? "email" : "document"]: identifier,
     });
 
-    if (!user || !(await compareHash(password, user.password)))
-      throw new UnauthorizedException("Usuário ou senha incorretos.");
+    if (!user || !(await compareHash(password, user.password))) {
+      throw new UnauthorizedException({
+        message: "Usuário ou senha incorretos.",
+        property: "password",
+      });
+    }
 
-    return await this.createToken({
-      id: user.id,
-      role: user.role,
-      name: user.firstName,
-    });
+    return {
+      token: await this.createToken({
+        id: user.id,
+        role: user.role,
+        name: user.firstName,
+      }),
+    };
   }
 
   async createToken(payload: any) {
@@ -79,5 +85,10 @@ export class AuthService {
       },
       { expiresIn }
     );
+  }
+
+  async verifyToken(token: string | undefined) {
+    if (!token) throw new UnauthorizedException("Token não encontrado.");
+    return await this.jwtService.verifyAsync(token);
   }
 }
