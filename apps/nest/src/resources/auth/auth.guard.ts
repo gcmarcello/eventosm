@@ -6,15 +6,7 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { JwtService } from "@nestjs/jwt";
-
-export type JwtUserPayload = {
-  id: string;
-  role: string;
-  name: string;
-  activeOrg: string;
-  iat: number;
-  exp: number;
-};
+import { JwtUserPayload } from "shared-types";
 
 export type RequestWithSession = Request & { user?: JwtUserPayload };
 

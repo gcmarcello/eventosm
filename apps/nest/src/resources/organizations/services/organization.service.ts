@@ -53,7 +53,8 @@ export class OrganizationService {
     return organization;
   }
 
-  async update(dto: UpdateOrganizationDto, id: string) {
+  async update(dto: UpdateOrganizationDto, id?: string) {
+    if (!id) throw new NotFoundException("ID não informado.");
     const organization = await this.findOne(id);
     if (!organization)
       throw new NotFoundException("Organização não encontrada.");
@@ -83,5 +84,11 @@ export class OrganizationService {
     this.organizationRepo.assign(organization, dto);
     await this.em.flush();
     return organization;
+  }
+
+  async readUserOrganizations(userId: string) {
+    return await this.organizationRepo.find({
+      $or: [{ owner: userId }, { roles: { users: { $in: [userId] } } }],
+    });
   }
 }

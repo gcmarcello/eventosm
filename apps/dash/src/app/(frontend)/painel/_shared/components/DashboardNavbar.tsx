@@ -1,24 +1,20 @@
 "use client";
-import { logout } from "@/app/api/auth/action";
-import { changeActiveOrganization } from "@/app/api/orgs/action";
-import { UserSession } from "@/middleware/functions/userSession.middleware";
 import {
   ChevronDownIcon,
-  MagnifyingGlassIcon,
   InboxIcon,
   UserIcon,
   Cog8ToothIcon,
   ShieldCheckIcon,
   LightBulbIcon,
-  ArrowRightStartOnRectangleIcon,
   HomeIcon,
   CalendarIcon,
   NewspaperIcon,
   PhotoIcon,
   UserCircleIcon,
+  ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { Organization } from "@prisma/client";
+import { Organization } from "shared-types";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Navbar,
@@ -37,7 +33,6 @@ import {
   SidebarItem,
   SidebarLabel,
   SidebarSection,
-  LoadingSpinner,
 } from "odinkit";
 import {
   Dropdown,
@@ -51,8 +46,10 @@ import {
   useAction,
   showToast,
 } from "odinkit/client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LoadingOverlay } from "./LoadingOverlay";
+import { PanelContext } from "../../context/Panel.ctx";
+import { logout, updateActiveOrganization } from "@/app/api/auth/action";
 
 const navItems = [
   { label: "Home", url: "/painel", id: "painel", icon: HomeIcon },
@@ -88,8 +85,8 @@ function TeamDropdownMenu({
   organizations: Organization[];
 }) {
   const router = useRouter();
-  const { trigger: changeOrgTrigger, isMutating: isOrgChanging } = useAction({
-    action: changeActiveOrganization,
+  const { trigger: updateActiveOrg, isMutating: isOrgUpdating } = useAction({
+    action: updateActiveOrganization,
     redirect: true,
     onSuccess: () => {
       showToast({
@@ -107,7 +104,7 @@ function TeamDropdownMenu({
       }),
   });
 
-  if (isOrgChanging) {
+  if (isOrgUpdating) {
     return <LoadingOverlay />;
   }
 
@@ -125,8 +122,8 @@ function TeamDropdownMenu({
         <DropdownHeading>Suas Organizações</DropdownHeading>
         <For each={organizations}>
           {(org) => (
-            <DropdownItem onClick={() => changeOrgTrigger(org.id)}>
-              <Avatar src={org.options.images?.logo} />
+            <DropdownItem onClick={() => updateActiveOrg(org.id)}>
+              <Avatar src={org.options?.images?.logo} />
               <DropdownLabel>{org.name}</DropdownLabel>
             </DropdownItem>
           )}
@@ -142,21 +139,18 @@ function TeamDropdownMenu({
   );
 }
 
-export function DashboardNavbar({
-  organizations,
-  user,
-  activeOrgId,
-}: {
-  organizations: Organization[];
-  activeOrgId: string;
-  user: UserSession;
-}) {
+export function DashboardNavbar() {
+  const {
+    organizations,
+    session: user,
+    activeOrg,
+    logoutTrigger,
+  } = useContext(PanelContext);
   const [showSidebar, setShowSidebar] = useState(false);
-  const activeOrg = organizations.find((org) => org.id === activeOrgId);
   const pathname = usePathname();
   const currentPage = pathname.split("/")[2] ?? "painel";
 
-  const { trigger: logoutTrigger, isMutating: isLoggingOut } = useAction({
+  /* const { trigger: logoutTrigger, isMutating: isLoggingOut } = useAction({
     action: logout,
     redirect: true,
     onError: () =>
@@ -165,82 +159,89 @@ export function DashboardNavbar({
         message: "Não foi possível efetuar o logout.",
         variant: "error",
       }),
-  });
+  }); */
 
-  if (isLoggingOut) {
+  /* if (isLoggingOut) {
     return <LoadingOverlay />;
-  }
+  } */
 
   return (
     <>
-      <MobileSidebar open={showSidebar} close={() => setShowSidebar(false)}>
-        <Sidebar>
-          <SidebarHeader>
+      {activeOrg && (
+        <MobileSidebar open={showSidebar} close={() => setShowSidebar(false)}>
+          <Sidebar>
+            <SidebarHeader>
+              <Dropdown>
+                <DropdownButton as={SidebarItem} className="lg:mb-2.5">
+                  <Avatar src={activeOrg?.options?.images?.logo} />
+                  <SidebarLabel>{activeOrg?.name}</SidebarLabel>
+                  <ChevronDownIcon />
+                </DropdownButton>
+                <TeamDropdownMenu
+                  organizations={organizations.filter(
+                    (org) => org.id !== activeOrg?.id
+                  )}
+                />
+              </Dropdown>
+            </SidebarHeader>
+            <SidebarBody>
+              <SidebarSection>
+                {navItems.map(({ label, url, icon: Icon }) => (
+                  <SidebarItem key={label} href={url}>
+                    <Icon />
+
+                    <SidebarLabel>{label}</SidebarLabel>
+                  </SidebarItem>
+                ))}
+              </SidebarSection>
+            </SidebarBody>
+          </Sidebar>
+        </MobileSidebar>
+      )}
+      <Navbar>
+        {activeOrg && (
+          <NavbarItem
+            className="block lg:hidden"
+            onClick={() => setShowSidebar(true)}
+            aria-label="Open navigation"
+          >
+            <OpenMenuIcon />
+          </NavbarItem>
+        )}
+        {activeOrg && (
+          <>
             <Dropdown>
-              <DropdownButton as={SidebarItem} className="lg:mb-2.5">
-                <Avatar src={activeOrg?.options.images?.logo} />
-                <SidebarLabel>{activeOrg?.name}</SidebarLabel>
+              <DropdownButton as={NavbarItem} className="max-lg:hidden">
+                <Avatar src={activeOrg?.options?.images?.logo} />
+                <NavbarLabel>{activeOrg?.name}</NavbarLabel>
                 <ChevronDownIcon />
               </DropdownButton>
               <TeamDropdownMenu
                 organizations={organizations.filter(
-                  (org) => org.id !== activeOrgId
+                  (org) => org.id !== activeOrg?.id
                 )}
               />
             </Dropdown>
-          </SidebarHeader>
-          <SidebarBody>
-            <SidebarSection>
-              {navItems.map(({ label, url, icon: Icon }) => (
-                <SidebarItem key={label} href={url}>
-                  <Icon />
+            <NavbarDivider className="max-lg:hidden" />
+          </>
+        )}
 
-                  <SidebarLabel>{label}</SidebarLabel>
-                </SidebarItem>
-              ))}
-            </SidebarSection>
-          </SidebarBody>
-        </Sidebar>
-      </MobileSidebar>
-      <Navbar>
-        <NavbarItem
-          className="block lg:hidden"
-          onClick={() => setShowSidebar(true)}
-          aria-label="Open navigation"
-        >
-          <OpenMenuIcon />
-        </NavbarItem>
-        <Dropdown>
-          <DropdownButton as={NavbarItem} className="max-lg:hidden">
-            <Avatar src={activeOrg?.options.images?.logo} />
-            <NavbarLabel>{activeOrg?.name}</NavbarLabel>
-            <ChevronDownIcon />
-          </DropdownButton>
-          <TeamDropdownMenu
-            organizations={organizations.filter(
-              (org) => org.id !== activeOrgId
-            )}
-          />
-        </Dropdown>
-        <NavbarDivider className="max-lg:hidden" />
         <NavbarSection className="max-lg:hidden">
-          {navItems.map(({ label, url, id }) => (
-            <NavbarItem current={id === currentPage} key={label} href={url}>
-              {label}
-            </NavbarItem>
-          ))}
+          {activeOrg &&
+            navItems.map(({ label, url, id }) => (
+              <NavbarItem current={id === currentPage} key={label} href={url}>
+                {label}
+              </NavbarItem>
+            ))}
         </NavbarSection>
         <NavbarSpacer />
         <NavbarSection>
-          <NavbarItem href="/search" aria-label="Search">
-            <MagnifyingGlassIcon />
-          </NavbarItem>
           <NavbarItem href="/inbox" aria-label="Inbox">
             <InboxIcon />
           </NavbarItem>
           <Dropdown>
             <DropdownButton as={NavbarItem}>
-              <UserCircleIcon /> {user.fullName.split(" ")[0]}
+              <UserCircleIcon /> {user.name.split(" ")[0]}
             </DropdownButton>
             <DropdownMenu className="min-w-64" anchor={{ to: "bottom end" }}>
               <DropdownItem href="/my-profile">
@@ -257,9 +258,9 @@ export function DashboardNavbar({
                 <DropdownLabel>Enviar Feedback</DropdownLabel>
               </DropdownItem>
               <DropdownDivider />
-              <DropdownItem onClick={() => logoutTrigger("/login")}>
+              <DropdownItem onClick={() => logoutTrigger()}>
                 <ArrowRightStartOnRectangleIcon />
-                <DropdownLabel>Sign out</DropdownLabel>
+                <DropdownLabel>Sair</DropdownLabel>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

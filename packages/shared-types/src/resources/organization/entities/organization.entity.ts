@@ -41,6 +41,8 @@ export class OrganizationOptions {
   pages?: {
     documents?: boolean;
   };
+  @IsOptional()
+  abbreviation?: string;
   @IsDefined()
   @IsEnum(Timezones, {
     message: "Fuso horário inválido. Por favor utilize o formato TZ.",

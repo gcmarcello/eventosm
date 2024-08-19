@@ -19,6 +19,7 @@ export * from './resources/organization/role.dto';
 export * from './resources/user/entities/user.entity';
 export * from './resources/user/entities/userDocument.entity';
 export * from './resources/user/entities/userInfo.entity';
+export * from './types/auth';
 export * from './types/colors';
 export * from './types/errors';
 export * from './validators/birthDate.validator';

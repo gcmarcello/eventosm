@@ -8,13 +8,14 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { AuthGuard, JwtUserPayload } from "../auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { OrganizationService } from "./services/organization.service";
 import { OrganizationGuard } from "./organization.guard";
 import { Permissions } from "./permissions.decorator";
 import { User } from "../auth/decorators/user.decorator";
 import {
   CreateOrganizationDto,
+  JwtUserPayload,
   OrganizationPermissions,
   ReadOrganizationDto,
   UpdateOrganizationDto,
@@ -28,6 +29,12 @@ export class OrganizationController {
   @Get()
   public async findOrganizations(@Query() data: ReadOrganizationDto) {
     return await this.organizationService.findMany(data);
+  }
+
+  @Get("/user")
+  @UseGuards(AuthGuard)
+  public async getUserOrganizations(@User() user: JwtUserPayload) {
+    return await this.organizationService.readUserOrganizations(user.id);
   }
 
   @Get()

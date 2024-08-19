@@ -4,13 +4,15 @@ export function DashboardLayout({
   children,
   sidebar,
   navbar,
+  grow = true,
 }: {
   children?: React.ReactNode;
   sidebar?: React.ReactNode;
   navbar?: React.ReactNode;
+  grow?: boolean;
 }) {
   return (
-    <SidebarStackedLayout navbar={navbar} sidebar={sidebar}>
+    <SidebarStackedLayout grow={grow} navbar={navbar} sidebar={sidebar}>
       {children}
     </SidebarStackedLayout>
   );

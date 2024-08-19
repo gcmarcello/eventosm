@@ -1,15 +1,10 @@
 "use server";
-import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { LoginDto, SignupDto } from "./dto";
-import { SignupMiddleware } from "@/middleware/functions/signup.middleware";
 import * as service from "./service";
 import { cookies } from "next/headers";
 import { ActionResponse } from "odinkit";
-import { User } from "@prisma/client";
-import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
-import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
+import { LoginDto } from "shared-types/dist/index.client";
 
-export async function signup(request: SignupDto) {
+/* export async function signup(request: SignupDto) {
   let signup;
 
   try {
@@ -26,46 +21,9 @@ export async function signup(request: SignupDto) {
     data: signup,
     message: "Usuário cadastrado com sucesso!",
   });
-}
+} */
 
-export async function login(request: LoginDto) {
-  const { redirect, ...loginInfo } = request;
-
-  try {
-    const login = await service.login(loginInfo);
-    if (login.organization && !cookies().get("activeOrg")?.value) {
-      console.log("aqui");
-      cookies().set("activeOrg", login.organization.id, {
-        maxAge: 60 * 60 * 24 * 7,
-      });
-    }
-    cookies().set("token", login.token);
-  } catch (error) {
-    if ((error as User).fullName) {
-      console.log("error");
-      return ActionResponse.success({ data: error });
-    }
-    return ActionResponse.error(error);
-  }
-
-  return ActionResponse.success({
-    redirect: redirect,
-  });
-}
-
-export async function logout(pathName?: string) {
-  try {
-    cookies().delete("token");
-  } catch (error) {
-    console.log(error);
-    return ActionResponse.error(error);
-  }
-  return ActionResponse.success({
-    redirect: pathName || "/",
-  });
-}
-
-export async function resendConfirmationEmail(request: { userId: string }) {
+/* export async function resendConfirmationEmail(request: { userId: string }) {
   try {
     const { request: parsedRequest } = await UseMiddlewares(request)
       .then(UserSessionMiddleware)
@@ -79,9 +37,9 @@ export async function resendConfirmationEmail(request: { userId: string }) {
     console.log(error);
     return ActionResponse.error(error);
   }
-}
+} */
 
-export async function readUserFromDocument(request: {
+/* export async function readUserFromDocument(request: {
   document: string;
   organizationId: string;
 }) {
@@ -91,4 +49,49 @@ export async function readUserFromDocument(request: {
   } catch (error) {
     return ActionResponse.error(error);
   }
+} */
+
+export async function updateActiveOrganization(id: string) {
+  try {
+    const updatedToken = await service.updateActiveOrganization(id);
+    return ActionResponse.success({ data: updatedToken });
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+}
+
+export async function login(request: LoginDto) {
+  let login;
+  try {
+    login = await service.login(request);
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+
+  return ActionResponse.success({
+    data: login,
+    redirect: "/painel",
+    message: "Usuário autenticado com sucesso!",
+  });
+}
+
+export async function logout() {
+  try {
+    cookies().delete("token");
+  } catch (error) {
+    console.log(error);
+    return ActionResponse.error(error);
+  }
+
+  return ActionResponse.success({
+    data: "Usuário deslogado com sucesso!",
+    redirect: "/login",
+  });
+}
+
+export async function setCookie(data: string, name: string) {
+  cookies().set(name, data);
+  return;
 }

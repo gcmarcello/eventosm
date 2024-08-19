@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import type { Metadata } from "next";
 import "leaflet/dist/leaflet.css";
 import { Inter } from "next/font/google";
@@ -5,9 +6,9 @@ import "./globals.css";
 import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import { cookies } from "next/headers";
-import MainNavbar from "./(frontend)/_shared/components/MainNavbar";
 import { Mocker } from "odinkit/client";
 import { isDev } from "@/app/api/env";
+import ClientLayoutComponent from "./reflect-metadata-client-side";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ export default function RootLayout({
     <html data-theme={theme?.value} lang="pt-BR">
       <body className={clsx(inter.className, "bg-zinc-50")}>
         {isDev && <Mocker />}
-
+        <ClientLayoutComponent />
         <main>{children}</main>
         <Toaster position="bottom-right" />
       </body>

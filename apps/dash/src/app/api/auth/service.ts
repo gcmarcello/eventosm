@@ -2,24 +2,20 @@ import { compareHash, hashInfo } from "@/utils/bCrypt";
 import { LoginDto, SignupDto } from "./dto";
 import { getServerEnv, isDev } from "@/app/api/env";
 import * as jose from "jose";
-import { prisma } from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
-  cpfValidator,
   isEmail,
   normalize,
-  normalizeDocument,
   normalizeEmail,
   normalizePhone,
   normalizeZipCode,
 } from "odinkit";
 import { cookies } from "next/headers";
-import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { sendEmail } from "../emails/service";
 import { chooseTextColor } from "@/utils/colors";
-import { getClientEnv } from "@/app/(frontend)/env";
-import { Organization } from "@prisma/client";
+import path from "path";
+
 dayjs.extend(customParseFormat);
 
 export async function signup(request: SignupDto, bypassEmail = false) {
@@ -82,7 +78,7 @@ export async function signup(request: SignupDto, bypassEmail = false) {
   return newUser;
 }
 
-export async function resendConfirmationEmail({
+/* export async function resendConfirmationEmail({
   userId,
   organization,
 }: {
@@ -121,9 +117,9 @@ export async function resendConfirmationEmail({
     },
   ]);
   return user;
-}
+} */
 
-export async function readUserFromDocument(data: {
+/* export async function readUserFromDocument(data: {
   document: string;
   organizationId: string;
 }) {
@@ -139,9 +135,42 @@ export async function readUserFromDocument(data: {
   const loginOrg = organizationsArray?.includes(data.organizationId);
 
   return { existent: !!user, type: loginOrg ? "sameorg" : "differentOrg" };
+} */
+
+export async function login(data: LoginDto) {
+  const res = await fetch(path.join(process.env.QUEUE_URL!, `/auth/login`), {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const parsedData = await res.json();
+  if (!res.ok) throw parsedData;
+  cookies().set("token", parsedData.token);
+  return parsedData;
 }
 
-export function createToken(request: { id: string }) {
+export async function updateActiveOrganization(id: string) {
+  const Authorization = cookies().get("token")?.value;
+  if (!Authorization) throw "Usuário não autenticado.";
+  const res = await fetch(
+    path.join(process.env.QUEUE_URL!, `/auth/active-organization/${id}`),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization,
+      },
+    }
+  );
+  const parsedData = await res.json();
+  if (!res.ok) throw parsedData;
+  cookies().set("token", parsedData.token);
+  return await parsedData;
+}
+
+export async function createToken(request: { id: string }) {
   const JWT_KEY = new TextEncoder().encode(getServerEnv("JWT_KEY"));
   if (!JWT_KEY)
     throw "O serviço de autenticação se encontra fora do ar. ERROR: MISSING JWTKEY";
@@ -153,54 +182,4 @@ export function createToken(request: { id: string }) {
     .setExpirationTime(isDev ? "10000d" : "1d")
     .sign(JWT_KEY);
   return token;
-}
-
-export async function login(request: LoginDto) {
-  const isIdentifierEmail = isEmail(request.identifier);
-
-  const potentialUser = await prisma.user.findUnique({
-    where: isIdentifierEmail
-      ? { email: normalizeEmail(request.identifier) }
-      : { document: normalize(request.identifier) },
-    include: { UserOrgLink: { include: { Organization: true } } },
-  });
-
-  if (!potentialUser) throw `Informações de login incorretas!`;
-  if (!potentialUser.password)
-    throw `Usuário não possui uma conta configurada. Por favor, acesse a recuperação de senha.`;
-  if (!potentialUser.confirmed)
-    throw `Usuário não confirmado. Por favor confirme sua conta através do e-mail enviado.`;
-
-  if (!(await compareHash(request.password, potentialUser.password)))
-    throw `Dados de login ou senha incorretos.`;
-
-  if (request.organizationId) {
-    const isUserLinkedToOrg = await prisma.userOrgLink.findFirst({
-      where: {
-        organizationId: request.organizationId,
-        userId: potentialUser.id,
-      },
-    });
-    if (!isUserLinkedToOrg && !request.acceptTerms) {
-      const { password, ...user } = potentialUser;
-      throw user;
-    }
-    if (!isUserLinkedToOrg) {
-      await prisma.userOrgLink.create({
-        data: {
-          userId: potentialUser.id,
-          organizationId: request.organizationId,
-        },
-      });
-    }
-  }
-
-  const ownedOrg = await prisma.organization.findFirst({
-    where: { ownerId: potentialUser.id },
-  });
-
-  return {
-    token: await createToken({ id: potentialUser.id }),
-    organization: ownedOrg,
-  };
 }

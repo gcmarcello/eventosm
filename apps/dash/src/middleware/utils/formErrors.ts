@@ -1,6 +1,5 @@
-import { showToast, UseFormReturn } from "odinkit/client";
+import { UseFormReturn } from "odinkit/client";
 import { FieldValues, Path } from "react-hook-form";
-import useSWRMutation from "swr/mutation";
 
 type MutationError<T extends FieldValues> = {
   message: string;
@@ -11,45 +10,6 @@ type MutationError<T extends FieldValues> = {
     constraints: Record<string, string>;
   }[];
 };
-
-export function useFetch<T, R>(props: {
-  url: string;
-  options: RequestInit;
-  form?: UseFormReturn<T extends FieldValues ? T : FieldValues>;
-  onError?: (error: any) => void;
-  onSuccess?: (data: R) => void;
-}) {
-  const fetcher = async (key: string, { arg }: { arg: T }): Promise<R> => {
-    const response = await fetch(key, {
-      method: props.options.method,
-      body: JSON.stringify(arg),
-      headers: { "Content-Type": "application/json", ...props.options.headers },
-    });
-    const parsedResponse = await response.json();
-
-    if (!response.ok) {
-      throw parsedResponse;
-    }
-
-    return parsedResponse;
-  };
-
-  const { trigger, isMutating, data, error } = useSWRMutation(
-    props.url,
-    fetcher,
-    {
-      throwOnError: false,
-      onError: (error) => {
-        props.onError && props.onError(error);
-      },
-      onSuccess: (data) => {
-        props.onSuccess && props.onSuccess(data);
-      },
-    }
-  );
-
-  return { trigger, error, isMutating, data };
-}
 
 export function handleFormError<T>(
   error: any,

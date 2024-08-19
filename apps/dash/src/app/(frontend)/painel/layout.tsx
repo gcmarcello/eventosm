@@ -1,18 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import clsx from "clsx";
-import { PanelSidebarsLayout } from "./_shared/components/Sidebars/PanelSidebarsLayout";
-import { cookies, headers } from "next/headers";
-import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
-import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
-import { readOrganizations } from "@/app/api/orgs/service";
-import { redirect } from "next/navigation";
-import { PanelStore } from "./_shared/components/PanelStore";
 import { DashboardNavbar } from "./_shared/components/DashboardNavbar";
 import { Suspense } from "react";
 import Loading from "./loading";
-
-const inter = Inter({ subsets: ["latin"] });
+import { readUserOrganizations } from "@/app/api/orgs/service";
+import { cookies } from "next/headers";
+import { decodeJwt } from "jose";
+import { redirect } from "next/navigation";
+import { JwtUserPayload } from "shared-types";
+import { PanelProvider } from "./context/PanelProvider";
 
 export const metadata: Metadata = {
   title: "EventoSM",
@@ -31,7 +27,23 @@ export default async function PanelLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await UseMiddlewares().then(UserSessionMiddleware);
+  const organizations = await readUserOrganizations();
+  if (!organizations?.length) return "No orgs";
+  const cookie = cookies().get("token")?.value;
+  let decodedCookie: JwtUserPayload;
+
+  let activeOrg;
+
+  if (!cookie) return redirect("/login");
+
+  try {
+    decodedCookie = decodeJwt(cookie);
+    activeOrg = decodedCookie?.activeOrg;
+  } catch (error) {
+    redirect("/login");
+  }
+
+  /* const data = await UseMiddlewares().then(UserSessionMiddleware);
 
   if (!data?.request.userSession) redirect("/");
 
@@ -45,27 +57,17 @@ export default async function PanelLayout({
 
   const organization = organizations?.find((org) => org.id === activeOrg);
 
-  if (!organization) return redirect("/orgs/nova");
+  if (!organization) return redirect("/orgs/nova");*/
 
   return (
     <>
-      <PanelStore
-        value={{
-          colors: {
-            primaryColor: organization?.options?.colors.primaryColor,
-            secondaryColor: organization?.options?.colors.secondaryColor,
-          },
-        }}
-      />
-      <div className="px-4 lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
-        <DashboardNavbar
-          user={data.request.userSession}
-          organizations={organizations}
-          activeOrgId={organization?.id}
-        />
-      </div>
+      <PanelProvider organizations={organizations} session={decodedCookie}>
+        <div className="px-4 lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
+          <DashboardNavbar />
+        </div>
 
-      <Suspense fallback={<Loading />}>{children}</Suspense>
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </PanelProvider>
     </>
   );
 }

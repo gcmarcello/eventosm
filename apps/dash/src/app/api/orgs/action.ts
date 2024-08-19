@@ -104,11 +104,3 @@ export async function readOrganizationDocument(request: { id: string }) {
     return ActionResponse.error(error);
   }
 }
-
-export async function changeActiveOrganization(orgId: string) {
-  try {
-    cookies().set("activeOrg", orgId);
-  } catch (error) {
-    console.log(error);
-  }
-}

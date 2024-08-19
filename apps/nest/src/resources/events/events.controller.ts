@@ -10,12 +10,13 @@ import {
 import { EventsService } from "./events.service";
 import {
   CreateEventDto,
+  JwtUserPayload,
   OrganizationPermissions,
   UpdateEventDto,
 } from "shared-types";
 import { Permissions } from "../organizations/permissions.decorator";
 import { OrganizationGuard } from "../organizations/organization.guard";
-import { AuthGuard, JwtUserPayload } from "../auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { User } from "../auth/decorators/user.decorator";
 import { EventGuard } from "./events.guard";
 

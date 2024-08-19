@@ -76,19 +76,25 @@ export class AuthService {
 
     const expiresIn = dayjs(payload.exp, "X").diff(dayjs(), "second");
 
-    return this.jwtService.signAsync(
-      {
-        id: payload.id,
-        name: payload.name,
-        role: payload.role,
-        activeOrg: organizationId,
-      },
-      { expiresIn }
-    );
+    return {
+      token: await this.jwtService.signAsync(
+        {
+          id: payload.id,
+          name: payload.name,
+          role: payload.role,
+          activeOrg: organizationId,
+        },
+        { expiresIn }
+      ),
+    };
   }
 
   async verifyToken(token: string | undefined) {
     if (!token) throw new UnauthorizedException("Token não encontrado.");
-    return await this.jwtService.verifyAsync(token);
+    try {
+      return await this.jwtService.verifyAsync(token);
+    } catch (error) {
+      throw new UnauthorizedException("Token inválido.");
+    }
   }
 }

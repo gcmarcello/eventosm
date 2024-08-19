@@ -37,35 +37,23 @@ export async function middleware(request: NextRequest) {
     return await customDomainMiddleware({ request, host, token, redirect });
   }
 
-  const userId = async (roles: string[] = ["user"]) =>
-    await AuthMiddleware({
-      request: { token },
-      additionalArguments: { roles },
-    });
+  const isLoggedIn = await fetch("http://localhost:5000/auth/", {
+    headers: { Authorization: token || "" },
+    method: "GET",
+  })
+    .then(async (res) => res.ok)
+    .catch(() => false);
 
-  if (startsWith(["/login", "/registrar"]) && (await userId())) {
+  if (startsWith(["/login", "/registrar"]) && isLoggedIn)
     return authRedirect({ url: redirect });
-  }
 
-  if (startsWith(["/admin"])) {
-    if (!(await userId(["admin"])))
-      return authRedirect({ url: "/login?redirect=/admin" });
-  }
+  if (startsWith(["/admin"]))
+    if (!isLoggedIn) return authRedirect({ url: "/login?redirect=/admin" });
 
-  if (startsWith(["/painel"]) && !(await userId(["user"])))
+  if (startsWith(["/painel"]) && !isLoggedIn)
     return authRedirect({ url: "/login?redirect=/painel" });
 
-  if (startsWith(["/equipes", "/perfil"]) && !(await userId())) {
-    return authRedirect({
-      url: `/login?&redirect=${request.nextUrl.pathname}`,
-    });
-  }
-
-  if (!userId) return NextResponse.next();
-
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("userId", await userId());
-  requestHeaders.set("x-url", request.url);
 
   return NextResponse.next({
     request: {

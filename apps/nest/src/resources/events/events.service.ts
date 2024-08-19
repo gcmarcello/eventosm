@@ -1,6 +1,10 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { isUUID } from "class-validator";
 import {
   CreateEventDto,
@@ -47,7 +51,8 @@ export class EventsService {
     return this.eventRepo.findOne(where);
   }
 
-  async create(data: CreateEventDto, activeOrg: string) {
+  async create(data: CreateEventDto, activeOrg?: string) {
+    if (!activeOrg) throw new NotFoundException("Organização não encontrada.");
     await this.verifySlug(data.slug);
 
     const event = this.eventRepo.create({

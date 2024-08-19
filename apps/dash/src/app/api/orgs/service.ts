@@ -1,63 +1,26 @@
-import { UserSession } from "@/middleware/functions/userSession.middleware";
 import {
-  UpsertOrganizationDto,
+  UpdateOrganizationDto,
   ReadOrganizationDto,
-  UpdateOrganizationStyleDto,
-  UpsertOrganizationDocumentDto,
-} from "./dto";
-import { prisma } from "prisma/prisma";
-import { generateColorJson } from "../colors/service";
-import { normalizeDocument, normalizeEmail, normalizePhone } from "odinkit";
-import { Organization, OrganizationDocumentStatus } from "@prisma/client";
+  CreateOrganizationDto,
+  Organization,
+} from "shared-types";
 import { getPreSignedURL } from "../uploads/service";
+import { API } from "../_shared/utils/api.service";
+import { cookies } from "next/headers";
 
-export async function createOrganization(
-  request: UpsertOrganizationDto & { userSession: UserSession }
-) {
-  const existingSlug = await prisma.organization.findFirst({
-    where: { slug: request.slug },
-  });
-  if (existingSlug) {
-    throw "Já existe uma organização com este link.";
+export async function readUserOrganizations() {
+  try {
+    const organizations = await API.get<Organization[]>("/organization/user");
+    return organizations;
+  } catch (error) {
+    console.log(error);
   }
-  const id = crypto.randomUUID();
-
-  const { primaryColor, secondaryColor, tertiaryColor } =
-    await generateColorJson({
-      colors: {
-        primaryColor: "indigo_600",
-        secondaryColor: "slate_200",
-        tertiaryColor: "zinc_700",
-      },
-    });
-
-  if (!primaryColor || !secondaryColor || !tertiaryColor)
-    throw "Cor não encontrada";
-
-  const organization = await prisma.organization.create({
-    data: {
-      id,
-      email: normalizeEmail(request.email),
-      name: request.name,
-      abbreviation: request.abbreviation.toUpperCase(),
-      slug: request.slug || id,
-      phone: normalizePhone(request.phone),
-      document: request?.document ? normalizeDocument(request.document) : null,
-      owner: { connect: { id: request.userSession.id } },
-      options: {
-        colors: {
-          primaryColor: primaryColor,
-          secondaryColor: secondaryColor,
-          tertiaryColor: tertiaryColor,
-        },
-      },
-    },
-  });
-  return organization;
 }
 
-export async function updateOrganization(
-  request: UpsertOrganizationDto & {
+export async function createOrganization(request: UpdateOrganizationDto) {}
+
+/* export async function updateOrganization(
+  request: UpdateOrganizationDto & {
     userSession: UserSession;
     organization: Organization;
   }
@@ -104,9 +67,9 @@ export async function updateOrganization(
     },
   });
   return updatedOrganization;
-}
+} */
 
-export async function updateOrganizationStyle(
+/* export async function updateOrganizationStyle(
   request: UpdateOrganizationStyleDto & {
     userSession: UserSession;
     organization: Organization;
@@ -158,11 +121,11 @@ export async function updateOrganizationStyle(
     },
   });
   return updatedOrganization;
-}
+} */
 
 export async function readOrganizations(request: ReadOrganizationDto) {
   return await prisma.organization.findMany({
-    where: request.where,
+    where: request,
     include: { OrgCustomDomain: true },
   });
 }
@@ -183,7 +146,7 @@ export async function readConnectedOrganizations({
   });
 }
 
-export async function upsertOrganizationDocument(
+/* export async function upsertOrganizationDocument(
   data: UpsertOrganizationDocumentDto & {
     userSession: UserSession;
     organization: Organization;
@@ -203,7 +166,7 @@ export async function upsertOrganizationDocument(
   });
 
   return document;
-}
+} */
 
 export async function readOrganizationDocument(data: { id: string }) {
   const document = await prisma.organizationDocument.findUnique({

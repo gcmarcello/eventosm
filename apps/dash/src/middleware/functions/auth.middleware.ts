@@ -24,19 +24,13 @@ export async function AuthMiddleware({
     if (!url) return false;
     if (!payload.id) return false;
 
-    const user = await fetch(`${url}/api/auth/verify`, {
+    const user = await fetch(`/api/auth/verify`, {
       headers: { Authorization: payload.id as string },
     })
       .then((res) => res.json())
-      .catch((error) => error);
+      .catch((error) => console.log(error));
 
     if (!user) return false;
-
-    const isAuthenticated = [...roles, "admin"].includes(user.role);
-
-    if (!isAuthenticated) return false;
-
-    return user.id;
   } catch (error) {
     return false;
   }
