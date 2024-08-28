@@ -50,7 +50,6 @@ export function ResultsTable({
     EventGroupRules?: EventGroupRules | null;
   };
 }) {
-
   const handlePlaces = (position: number) => {
     switch (position) {
       case 1:
@@ -142,8 +141,50 @@ export function ResultsTable({
     mode: "onChange",
   });
 
+  const uniqueTeams = useMemo(() => {
+    const ids = Array.from(
+      new Set(
+        results
+          .filter((r) => r.Registration.teamId)
+          .map((r) => r.Registration.teamId)
+      )
+    );
+
+    const teams = ids.map((id) => ({
+      ...results.find((r) => r.Registration.teamId === id)?.Registration.team,
+      results: [],
+    }));
+
+    for (const result of results.filter(
+      (r) =>
+        r.score && // Assuming time is the relevant metric here
+        (r.Registration.modalityId === modalityForm.watch("modality") &&
+        modalityForm.watch("gender")
+          ? modalityForm.watch("gender") === r.Registration.category?.gender
+          : true)
+    )) {
+      if (result.Registration.teamId) {
+        const teamIndex = teams.findIndex(
+          (t) => t?.id === result.Registration.teamId
+        );
+        teams[teamIndex]?.results.push(result as never);
+      }
+    }
+
+    return teams
+      .filter((t) => t.results.length >= 7) // At least 7 stages
+      .map((t) => ({
+        ...t,
+        averageTime:
+          (t.results as any[]).reduce((acc, r) => acc + r.score, 0) / // Calculating average time
+          t.results.length,
+      }))
+      .sort((a, b) => a.averageTime - b.averageTime); // Sorting by average time
+  }, [modalityForm.watch("gender"), modalityForm.watch("modality")]);
+
   const Field = useMemo(() => modalityForm.createField(), []);
 
+  console.log(uniqueTeams);
 
   return (
     <>
@@ -159,12 +200,13 @@ export function ResultsTable({
       </Form>
       <Table
         dense
-        data={results.filter((r) =>
-          r.score &&
-          (r.Registration.modalityId === modalityForm.watch("modality") &&
-          modalityForm.watch("gender")
-            ? modalityForm.watch("gender") === r.Registration.category?.gender
-            : true)
+        data={results.filter(
+          (r) =>
+            r.score &&
+            (r.Registration.modalityId === modalityForm.watch("modality") &&
+            modalityForm.watch("gender")
+              ? modalityForm.watch("gender") === r.Registration.category?.gender
+              : true)
         )}
         search={false}
         columns={(columnHelper) => [
