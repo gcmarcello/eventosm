@@ -22,6 +22,7 @@ export default async function EventGroupResultsPage({
 }: {
   params: { eventGroupId: string };
 }) {
+  console.time("EventGroupResultsPage");
   const eventGroup = await prisma.eventGroup.findUnique({
     where: { id: params.eventGroupId },
     include: {
@@ -39,6 +40,7 @@ export default async function EventGroupResultsPage({
   const events = await prisma.event.findMany({
     where: { id: { in: eventGroupData.events } },
   });
+
   const rules = await prisma.eventGroupRules.findUnique({
     where: { eventGroupId: eventGroup.id },
   });
@@ -79,7 +81,12 @@ export default async function EventGroupResultsPage({
             />
             <Text className="mt-2 text-xs lg:mt-1 lg:text-sm">
               {rules?.discard
-                ? `OBS: Devido ao descarte dos ${rules.discard} piores resultados, o ranking geral só exibirá os atletas que possuírem mais tempos do que o número de etapas realizadas menos o número de descartes. (Mínimo de ${rules.discard} resultados ou todas as realizadas até aqui.)`
+                ? `Para constar no ranking geral, o atleta necessita ter participado de pelo menos o número de etapas realizadas - número de possíveis descartes (ex: 7 etapas - 3 descartes = 4 resultados necessários).`
+                : null}
+            </Text>
+            <Text className="mt-2 text-xs lg:mt-1 lg:text-sm">
+              {rules?.discard
+                ? `Para o descarte dos ${rules.discard} resultado(s), o atleta necessita ter no mínimo ${rules.discard} resultado(s) válidos após o descarte (ex: 3 resultados - 3 descartes = 0, não há descarte. 6 resultados - 3 descartes = 3, os piores 3 são eliminados). No caso de não haver descarte, o resultado é calculado normalmente.`
                 : null}
             </Text>
           </div>
