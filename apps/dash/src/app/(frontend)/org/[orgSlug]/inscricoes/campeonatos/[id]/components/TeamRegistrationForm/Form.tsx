@@ -148,11 +148,11 @@ export default function TeamTournamentRegistration({
               <div className="mt-4 text-xl font-medium lg:mt-0">
                 {eventGroup.name}
               </div>
-              <Text>
+              {/* <Text>
                 Inscrição em equipe para todas as etapas (
                 {eventGroup.Event.length}
                 ).
-              </Text>
+              </Text> */}
               {batch.name && <Text>Lote {batch.name}</Text>}
             </div>
             <div className="relative h-20 w-32 ">

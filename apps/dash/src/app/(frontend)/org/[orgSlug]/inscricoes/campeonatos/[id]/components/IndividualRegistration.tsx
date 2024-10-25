@@ -200,10 +200,10 @@ export default function IndividualTournamentRegistration({
               {" "}
               {eventGroup.name}
             </div>
-            <Text>
+            {/* <Text>
               Inscrição para todas as etapas ({eventGroup.Event.length}
               ).
-            </Text>
+            </Text> */}
             {batch.name && <Text>Lote {batch.name}</Text>}
           </div>
           <div className="relative h-20 w-32 ">
