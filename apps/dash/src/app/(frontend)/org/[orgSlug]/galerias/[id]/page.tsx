@@ -3,6 +3,7 @@ import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 import { For, Title } from "odinkit";
 import PhotoAlbum from "react-photo-album";
 import { GalleryContainer } from "../components/GalleryContainer";
+import { readEventsGalleriesByEventGroup } from "@/app/api/events/service";
 
 export default async function GalleryPage({
   params,
@@ -22,6 +23,25 @@ export default async function GalleryPage({
   });
 
   if (!gallery) return notFound();
+
+  if (gallery.eventGroupId) {
+    const events = await readEventsGalleriesByEventGroup(gallery.eventGroupId);
+
+    return (
+      <>
+        <OrgPageContainer
+          className="grow bg-slate-200 lg:px-16 lg:pb-8 "
+          organization={organization}
+        >
+          <GalleryContainer
+            organization={organization}
+            gallery={gallery}
+            events={events}
+          />
+        </OrgPageContainer>
+      </>
+    );
+  }
 
   return (
     <>

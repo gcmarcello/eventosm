@@ -150,6 +150,16 @@ export async function upsertEventModality(
   return newEventModality;
 }
 
+export async function readEventsGalleriesByEventGroup(eventGroupId: string) {
+  const events = await prisma.event.findMany({
+    where: { eventGroupId },
+    include: { Gallery: true },
+    orderBy: { dateStart: "asc" },
+  });
+
+  return events;
+}
+
 export async function readEvents(request: ReadEventDto) {
   const events = await prisma.event.findMany({
     where: request.where,
