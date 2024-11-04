@@ -69,9 +69,7 @@ export default async function CompanyHome({
               <div className="space-y-3">
                 <For
                   each={[
-                    ...eventGroups.filter(
-                      (e) => dayjs(e.Event[0]?.dateStart) > dayjs()
-                    ),
+                    ...eventGroups,
                     ...events.filter((e) => dayjs(e.dateStart) > dayjs()),
                   ]}
                   fallback={
