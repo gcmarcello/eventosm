@@ -77,7 +77,7 @@ export default function EventContainer({
   registrationCount,
 }: {
   isUserRegistered: boolean;
-  event: Event & { EventModality: EventModality[], Gallery?: Gallery[] };
+  event: Event & { EventModality: EventModality[]; Gallery?: Gallery[] };
   batch: EventRegistrationBatchesWithCategoriesAndRegistrations | null;
   organization: Organization;
   nextBatch: EventRegistrationBatch | null;
@@ -316,9 +316,7 @@ export default function EventContainer({
 
                 <Link
                   href={
-                    event.Gallery
-                      ? `/galerias/${event.Gallery[0]?.id}`
-                      : "#"
+                    event.Gallery ? `/galerias/${event.Gallery[0]?.id}` : "#"
                   }
                   className="text-sm hover:underline"
                   style={{
@@ -331,7 +329,6 @@ export default function EventContainer({
                   <div className="flex gap-1">
                     <CameraIcon className="size-5" />
                     Fotos e Vídeos{" "}
-                    {event.status === "published" ? "(Em Breve)" : ""}
                   </div>
                 </Link>
               </div>

@@ -414,9 +414,6 @@ export default function EventGroupContainer({
                   <div className="flex gap-1">
                     <CameraIcon className="size-5" />
                     Fotos e Vídeos{" "}
-                    {eventGroup.Gallery && eventGroup.Gallery.length > 0
-                      ? ""
-                      : "(Em Breve)"}
                   </div>
                 </Link>
               }
