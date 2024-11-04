@@ -11,6 +11,7 @@ import NewsCard from "../_shared/NewsCard";
 import { readOrganizations } from "@/app/api/orgs/service";
 import OrgFooter from "../_shared/OrgFooter";
 import { OrgPageContainer } from "./_shared/components/OrgPageContainer";
+import dayjs from "dayjs";
 
 export default async function CompanyHome({
   params,
@@ -67,7 +68,12 @@ export default async function CompanyHome({
 
               <div className="space-y-3">
                 <For
-                  each={[...eventGroups, ...events]}
+                  each={[
+                    ...eventGroups.filter(
+                      (e) => dayjs(e.Event[0]?.dateStart) > dayjs()
+                    ),
+                    ...events.filter((e) => dayjs(e.dateStart) > dayjs()),
+                  ]}
                   fallback={
                     <>
                       <div className="mt-1 flex gap-2 text-sm text-gray-500">

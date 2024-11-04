@@ -7,6 +7,7 @@ import { For, Heading, Table } from "odinkit";
 import { EventsPageContainer } from "./EventsPageContainer";
 import OrgFooter from "../../_shared/OrgFooter";
 import { OrgPageContainer } from "../_shared/components/OrgPageContainer";
+import dayjs from "dayjs";
 
 export default async function OrganizationEventsPage({
   params: { orgSlug },
@@ -46,6 +47,7 @@ export default async function OrganizationEventsPage({
       status: { in: ["published", "finished"] },
       eventGroupId: null,
     },
+    orderBy: { dateStart: "desc" },
     include: {
       _count: {
         select: { EventRegistration: { where: { status: "active" } } },
@@ -73,7 +75,14 @@ export default async function OrganizationEventsPage({
         className="grow lg:px-16 lg:pb-8 "
         organization={organization}
       >
-        <EventsPageContainer eventGroups={eventGroups} events={events} />
+        <EventsPageContainer
+          eventGroups={eventGroups.sort(
+            (a, b) =>
+              dayjs(a.Event[0]?.dateStart).unix() -
+              dayjs(b.Event[0]?.dateEnd).unix()
+          )}
+          events={events}
+        />
       </OrgPageContainer>
     </>
   );
