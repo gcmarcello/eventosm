@@ -18,7 +18,7 @@ export async function createOrgTicket(data: CreateOrgTicketDto) {
     {
       setup: {
         from: getServerEnv("SENDGRID_EMAIL")!,
-        subject: "Inscrição confirmada",
+        subject: "Protocolo de Comunicação",
         to: data.email,
       },
       template: "protocol_confirmation",
@@ -50,6 +50,7 @@ export async function createOrgTicket(data: CreateOrgTicketDto) {
         name: data.name,
         phone: data.phone,
         orgName: organization?.name ?? "",
+        message: data.message,
       },
     },
   ];

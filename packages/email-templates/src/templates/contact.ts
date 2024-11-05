@@ -5,6 +5,7 @@ export function new_protocol({
   name,
   email,
   phone,
+  message,
 }: {
   mainColor: string;
   headerTextColor: string;
@@ -12,6 +13,7 @@ export function new_protocol({
   name: string;
   email: string;
   phone?: string;
+  message: string;
 }) {
   return `<!doctype html>
       <html lang="pt-br">
@@ -66,6 +68,7 @@ export function new_protocol({
                 <li><strong>Email:</strong> ${email}</li>
                 <li><strong>Telefone:</strong> ${phone || "Não informado"}</li>
               </ul>
+              <p>${message}</p>
               <p>Para responder ao chamado, basta responder a este email. Sua resposta será enviada diretamente ao solicitante.</p>
               <p>Atenciosamente,<br />Equipe ${orgName}</p>
             </div>
