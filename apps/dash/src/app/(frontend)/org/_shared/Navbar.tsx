@@ -1,5 +1,5 @@
 "use client";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
@@ -16,19 +16,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Organization } from "@prisma/client";
 
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Eventos", href: "/eventos", current: false },
-  { name: "Notícias", href: "/noticias", current: false },
-  {
-    name: "Institucional",
-    href: "/institucional",
-    current: false,
-  },
-  /*   { name: "Transparência", href: "/transparencia", current: false },
-  { name: "Contato", href: "/contato", current: false }, */
-];
-
 export function CompanyNavbar({
   user,
   organization,
@@ -37,6 +24,27 @@ export function CompanyNavbar({
   user?: UserSession | null;
 }) {
   const pathName = usePathname();
+
+  const navigation = useMemo(
+    () => [
+      { name: "Home", href: "/", current: true, condition: true },
+      { name: "Eventos", href: "/eventos", current: false, condition: true },
+      { name: "Notícias", href: "/noticias", current: false, condition: true },
+      {
+        name: "Transparência",
+        href: "/transparencia",
+        current: false,
+        condition: organization.options.pages?.documents,
+      },
+      {
+        name: "Contato",
+        href: "/contato",
+        current: false,
+        condition: organization.options.pages?.contact,
+      },
+    ],
+    [organization]
+  );
 
   const userNavigation = [
     { name: "Meu Perfil", href: "/perfil" },
@@ -73,11 +81,7 @@ export function CompanyNavbar({
                     <div className="hidden sm:-my-px sm:ml-6 sm:space-x-4 md:flex">
                       <For each={navigation} key="navigation">
                         {(item) => {
-                          if (
-                            item.name === "Institucional" &&
-                            !organization.options.pages?.documents
-                          )
-                            return <></>;
+                          if (!item.condition) return <></>;
                           return (
                             <a
                               key={item.name}
@@ -252,20 +256,23 @@ export function CompanyNavbar({
                   <>
                     <div className="space-y-1 pb-3 pt-2">
                       <For each={navigation}>
-                        {(item) => (
-                          <Disclosure.Button
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            style={{ borderColor: colors?.primaryColor.hex }}
-                            className={clsx(
-                              "block border-l-4 py-2 pl-3  pr-4 text-base font-medium hover:bg-gray-100 hover:text-gray-800"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </Disclosure.Button>
-                        )}
+                        {(item) => {
+                          if (!item.condition) return <></>;
+                          return (
+                            <Disclosure.Button
+                              key={item.name}
+                              as="a"
+                              href={item.href}
+                              style={{ borderColor: colors?.primaryColor.hex }}
+                              className={clsx(
+                                "block border-l-4 py-2 pl-3  pr-4 text-base font-medium hover:bg-gray-100 hover:text-gray-800"
+                              )}
+                              aria-current={item.current ? "page" : undefined}
+                            >
+                              {item.name}
+                            </Disclosure.Button>
+                          );
+                        }}
                       </For>
                     </div>
                     {user ? (
