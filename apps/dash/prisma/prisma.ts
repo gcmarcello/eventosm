@@ -24,6 +24,7 @@ declare global {
       colors: OrganizationColors;
       pages?: {
         documents?: boolean;
+        contact?: boolean;
       };
     };
 
