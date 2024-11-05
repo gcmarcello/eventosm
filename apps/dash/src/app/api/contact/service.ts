@@ -24,7 +24,7 @@ export async function createOrgTicket(data: CreateOrgTicketDto) {
       template: "protocol_confirmation",
       templateParameters: {
         headerTextColor:
-          organization?.options.colors.primaryColor.hex ?? "#000",
+          organization?.options.colors.secondaryColor.hex ?? "#000",
         mainColor: organization?.options.colors.primaryColor.hex ?? "#000",
         name: data.name,
         orgName: organization?.name ?? "",
@@ -44,7 +44,7 @@ export async function createOrgTicket(data: CreateOrgTicketDto) {
       template: "new_protocol",
       templateParameters: {
         headerTextColor:
-          organization?.options.colors.primaryColor.hex ?? "#000",
+          organization?.options.colors.secondaryColor.hex ?? "#000",
         mainColor: organization?.options.colors.primaryColor.hex ?? "#000",
         email: data.email,
         name: data.name,
