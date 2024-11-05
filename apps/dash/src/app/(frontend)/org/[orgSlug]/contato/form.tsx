@@ -3,7 +3,7 @@
 import form from "@/app/(frontend)/painel/eventos/grupos/[id]/geral/form";
 import { createOrgTicket } from "@/app/api/contact/action";
 import { createOrgTicketDto } from "@/app/api/contact/dto";
-import { SubmitButton } from "odinkit";
+import { Alertbox, SubmitButton } from "odinkit";
 import {
   Form,
   Input,
@@ -29,7 +29,20 @@ export function TicketForm({ organizationId }: { organizationId: string }) {
   });
 
   if (data) {
-    return JSON.stringify(data);
+    return (
+      <Alertbox type="success">
+        <div className="space-y-2">
+          <p>Chamado criado com sucesso! </p>
+          <p>
+            Protocolo: <span className="font-semibold">{data.id}</span>
+          </p>
+          <p>
+            Enviamos uma confirmação do protocolo para o seu email. Em breve
+            entraremos em contato.
+          </p>
+        </div>
+      </Alertbox>
+    );
   }
 
   return (

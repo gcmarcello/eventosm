@@ -20,11 +20,11 @@ export default async function Page({
   if (!organization || !organization.options.pages?.contact) return notFound();
 
   return (
-    <div className="bg-slate-200 lg:h-[calc(100dvh-80px)]">
+    <div className="bg-slate-200 lg:h-[calc(100dvh-88px)]">
       <div className="rounded-b-md bg-white px-4 pt-8 lg:mx-64 lg:px-16">
         <Title>Contato</Title>
 
-        <div className="my-4 grid gap-4 lg:grid-cols-2 lg:gap-16">
+        <div className="grid gap-4 py-4 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-2">
             <p className="text-sm">
               A Ouvidoria da {organization.name} – {organization.name} é o canal
