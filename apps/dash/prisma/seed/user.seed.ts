@@ -15,7 +15,7 @@ export const userSeed = async () => {
     "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
   ).then((res) => res.json());
 
-  const uuids = Array.from({ length: 5000 }, () => ({
+  const uuids = Array.from({ length: 100 }, () => ({
     userInfoUUID: faker.string.uuid(),
     userUUID: faker.string.uuid(),
   }));
