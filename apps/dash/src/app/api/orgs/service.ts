@@ -5,7 +5,7 @@ import {
   UpdateOrganizationStyleDto,
   UpsertOrganizationDocumentDto,
 } from "./dto";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import { generateColorJson } from "../colors/service";
 import { normalizePhone } from "odinkit";
 import { Organization, OrganizationDocumentStatus } from "@prisma/client";

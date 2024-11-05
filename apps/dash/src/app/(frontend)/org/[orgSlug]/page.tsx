@@ -12,6 +12,7 @@ import { readOrganizations } from "@/app/api/orgs/service";
 import OrgFooter from "../_shared/OrgFooter";
 import { OrgPageContainer } from "./_shared/components/OrgPageContainer";
 import dayjs from "dayjs";
+import prisma from "prisma/prisma";
 
 export default async function CompanyHome({
   params,
@@ -70,7 +71,7 @@ export default async function CompanyHome({
                 <For
                   each={[
                     ...eventGroups,
-                    ...events.filter((e) => dayjs(e.dateStart) > dayjs()),
+                    ...events.filter((e: any) => dayjs(e.dateStart) > dayjs()),
                   ]}
                   fallback={
                     <>

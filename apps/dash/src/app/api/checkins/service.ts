@@ -1,6 +1,7 @@
 import { isUUID, normalize } from "odinkit";
 import { SubeventEventGroupCheckinDto } from "./dto";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
+import prisma from "prisma/prisma";
 
 export async function readEventGroupRegistrationCheckin(
   data: SubeventEventGroupCheckinDto

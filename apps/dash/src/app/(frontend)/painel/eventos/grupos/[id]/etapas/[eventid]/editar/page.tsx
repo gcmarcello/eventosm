@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { UpsertForm } from "../../_shared/components/UpsertForm";
+import prisma from "prisma/prisma";
 
 export default async function EditarEtapa({
   params,

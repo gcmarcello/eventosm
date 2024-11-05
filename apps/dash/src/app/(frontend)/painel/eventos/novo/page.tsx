@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import NewEventForm from "./components/NewEventForm";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import { notFound } from "next/navigation";
 
 export default async function NewEventPage() {

@@ -11,6 +11,7 @@ import {
 } from "prisma/types/Results";
 import { EventRegistration, EventResult, Team } from "@prisma/client";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
+import prisma from "prisma/prisma";
 
 export async function createEventResults(data: CreateResultsDto) {
   const registrationCodes = data.athletes.map((athlete) => athlete.code);

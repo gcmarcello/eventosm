@@ -11,6 +11,7 @@ import { readUserInfo } from "@/app/api/users/service";
 import { readRegistrations } from "@/app/api/registrations/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { Alertbox } from "odinkit";
+import prisma from "prisma/prisma";
 
 export default async function InscricaoPage({
   searchParams,

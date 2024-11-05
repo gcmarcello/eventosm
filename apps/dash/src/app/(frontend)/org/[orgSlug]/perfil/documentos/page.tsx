@@ -7,6 +7,7 @@ import { DocumentsTable } from "./components/DocumentsTable";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { notFound } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function DocumentsPage(params: { orgSlug: string }) {
   const {

@@ -1,3 +1,4 @@
+import prisma from "prisma/prisma";
 import { UpsertRegistrationDocumentDto } from "./dto";
 
 export async function upsertRegistrationDocument(

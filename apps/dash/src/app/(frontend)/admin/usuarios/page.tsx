@@ -2,6 +2,7 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import UsersPanelPageTable from "./components/UsersTable";
+import prisma from "prisma/prisma";
 
 export default async function UsersPanelPage() {
   const users = await prisma.user.findMany({

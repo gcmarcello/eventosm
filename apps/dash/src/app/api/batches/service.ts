@@ -14,6 +14,7 @@ import {
 } from "@/app/api/batches/dto";
 import { readTeamSize } from "@/app/api/teams/service";
 import { date } from "odinkit";
+import prisma from "prisma/prisma";
 dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);

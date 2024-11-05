@@ -1,6 +1,6 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { uploadFile } from "../uploads/service";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import {
   ReadEventDto,
   ReadEventGroupCheckinsAndAbsencesDto,

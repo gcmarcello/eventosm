@@ -1,6 +1,7 @@
 import { getServerEnv } from "@/app/api/env";
 import { headers } from "next/headers";
 import { Button } from "odinkit/client";
+import prisma from "prisma/prisma";
 
 export default async function NotFoundOrg() {
   const headersList = headers();

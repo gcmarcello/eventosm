@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { isUUID } from "odinkit";
+import prisma from "prisma/prisma";
 
 export default async function EventGroupContactPage({
   params,

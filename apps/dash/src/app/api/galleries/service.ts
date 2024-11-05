@@ -1,6 +1,7 @@
 import { Organization } from "@prisma/client";
 import { CreateGalleryPhotosDto, UpsertGalleryDto } from "./dto";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
+import prisma from "prisma/prisma";
 
 export async function upsertGallery(
   data: UpsertGalleryDto & {

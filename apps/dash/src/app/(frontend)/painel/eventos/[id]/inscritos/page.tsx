@@ -11,7 +11,7 @@ import {
   User,
   UserInfo,
 } from "@prisma/client";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import RegistrationsTable from "../../_shared/components/registrations/RegistrationsContainer";
 import RegistrationsContainer from "../../_shared/components/registrations/RegistrationsContainer";
 

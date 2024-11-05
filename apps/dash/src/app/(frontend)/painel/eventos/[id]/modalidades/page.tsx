@@ -2,6 +2,7 @@ import EventModalities from "../../_shared/components/modalities/EventModalities
 import { readEvents } from "@/app/api/events/service";
 import { notFound } from "next/navigation";
 import { ModalityPageProvider } from "../../_shared/components/modalities/context/ModalityPageProvider";
+import prisma from "prisma/prisma";
 
 export default async function EventModalitiesPage({
   params,

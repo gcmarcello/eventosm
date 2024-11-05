@@ -2,6 +2,7 @@ import { Event } from "@prisma/client";
 import EventGeneralInfo from "../components/EventGeneralInfo";
 import { EventWithRegistrationCount } from "prisma/types/Events";
 import { notFound } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function UpdateEventPage({
   params,

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import EventAddons from "../../_shared/components/addons/EventAddons";
+import prisma from "prisma/prisma";
 
 export default async function AddonsPage({
   params,

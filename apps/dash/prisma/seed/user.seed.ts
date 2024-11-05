@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { hashInfo } from "../../src/utils/bCrypt";
-import { prisma } from "../prisma";
 import { faker } from "@faker-js/faker/locale/pt_BR";
 import { EventGroup, Gender } from "@prisma/client";
 import { normalizeEmail } from "odinkit";
+import prisma from "prisma/prisma";
 
 export const userSeed = async () => {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";

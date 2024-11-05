@@ -2,7 +2,7 @@ import { userSeed } from "./seed/user.seed";
 import { orgSeed } from "./seed/org.seed";
 import { geoSeed } from "./seed/geo.seed";
 import { colorSeed } from "./seed/colors.seed";
-import { prisma } from "./prisma";
+import prisma from "./prisma";
 
 async function main() {
   const colors = await colorSeed();

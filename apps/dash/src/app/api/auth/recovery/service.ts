@@ -17,6 +17,7 @@ import { createToken } from "../service";
 import { sendEmail } from "../../emails/service";
 import { chooseTextColor } from "@/utils/colors";
 import { getClientEnv } from "@/app/(frontend)/env";
+import prisma from "prisma/prisma";
 
 export async function generateRecoveryToken(
   data: UpsertPasswordRecoveryTokenDto

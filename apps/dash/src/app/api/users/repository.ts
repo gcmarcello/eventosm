@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 type UpdateUserParams = {
   where: Prisma.UserWhereUniqueInput;

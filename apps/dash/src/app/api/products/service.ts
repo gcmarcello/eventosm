@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { ReadEventAddonDto, UpsertEventAddonDto } from "./dto";
 import { Organization } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 export async function readEventAddons(request: ReadEventAddonDto) {
   return await prisma.eventAddon.findMany({

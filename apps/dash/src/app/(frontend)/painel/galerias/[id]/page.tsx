@@ -6,6 +6,7 @@ import PhotoAlbum from "react-photo-album";
 import { GalleryPhotos } from "./components/GalleryPhotos";
 import { GalleryForm } from "../shared/GalleryForm";
 import { GalleryContainer } from "../shared/GalleryContainer";
+import prisma from "prisma/prisma";
 
 export default async function GalleriesPage({
   params,

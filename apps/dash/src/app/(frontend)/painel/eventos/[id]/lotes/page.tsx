@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import EventBatches from "../../_shared/components/batches/EventBatches";
 import { cookies } from "next/headers";
+import prisma from "prisma/prisma";
 
 export default async function EventBatchesPage({
   params,

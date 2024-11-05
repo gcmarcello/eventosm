@@ -3,6 +3,7 @@ import { Alertbox, Link } from "odinkit";
 import { CreateNewPasswordForm } from "./components/RecoveryContainer";
 import { createToken } from "@/app/api/auth/service";
 import { redirect } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function PasswordRecoveryPage({
   params,

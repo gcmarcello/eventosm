@@ -2,7 +2,7 @@ import { compareHash, hashInfo } from "@/utils/bCrypt";
 import { LoginDto, SignupDto } from "./dto";
 import { getServerEnv, isDev } from "@/app/api/env";
 import * as jose from "jose";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {

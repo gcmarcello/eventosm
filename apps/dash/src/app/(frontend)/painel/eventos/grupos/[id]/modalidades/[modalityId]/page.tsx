@@ -4,7 +4,7 @@ import { UserSessionMiddleware } from "@/middleware/functions/userSession.middle
 import { notFound } from "next/navigation";
 import { CategoriesTable } from "./components/CategoriesTable";
 import { CategoryPageProvider } from "../../../../_shared/components/categories/context/CategoryPageProvider";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 
 export default async function ModalityPage({
   params,

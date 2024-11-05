@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { Organization } from "@prisma/client";
 import { UpsertCouponBatchDto } from "./dto";
+import prisma from "prisma/prisma";
 
 export async function readCoupon({
   couponId,

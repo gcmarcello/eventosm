@@ -5,6 +5,7 @@ import { redirect } from "next/dist/server/api-utils";
 import { notFound } from "next/navigation";
 import { isUUID } from "odinkit";
 import { headers } from "next/headers";
+import prisma from "prisma/prisma";
 
 export default async function CheckinPage({
   params,

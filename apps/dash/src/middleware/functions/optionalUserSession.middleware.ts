@@ -2,8 +2,8 @@
 import { User } from "@prisma/client";
 import { headers } from "next/headers";
 import { MiddlewareArguments } from "../types/types";
-import { prisma } from "prisma/prisma";
 import { UserWithoutPassword } from "prisma/types/User";
+import prisma from "prisma/prisma";
 
 export async function OptionalUserSessionMiddleware<P>({
   request,

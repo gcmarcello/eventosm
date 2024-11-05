@@ -22,6 +22,7 @@ import { RegistrationDto } from "../dto";
 import { readRegistrationPrice } from "../service";
 import { formatCPF } from "odinkit";
 import { upsertRegistrationDocument } from "../documents/service";
+import prisma from "prisma/prisma";
 
 export async function createEventGroupRegistration(
   request: EventGroupCreateRegistrationDto & { userSession: UserSession }
@@ -137,11 +138,11 @@ export async function createEventGroupRegistration(
           organization?.options.colors.primaryColor.hex || "#4F46E5"
         ),
         category: eventGroup?.EventModality.flatMap(
-          (m) => m.modalityCategory
-        ).find((category) => category.id === registrationInfo.categoryId)
+          (m: any) => m.modalityCategory
+        ).find((category: any) => category.id === registrationInfo.categoryId)
           ?.name!,
         modality: eventGroup?.EventModality.find(
-          (m) => m.id === registrationInfo.modalityId
+          (m: any) => m.id === registrationInfo.modalityId
         )?.name!,
         dateEnd: dayjs(
           eventGroup?.Event[eventGroup?.Event.length - 1]!.dateEnd
@@ -259,12 +260,14 @@ export async function createEventGroupMultipleRegistrations(
           organization?.options.colors.primaryColor.hex || "#4F46E5"
         ),
         category:
-          eventGroup?.EventModality.flatMap((m) => m.modalityCategory).find(
-            (category) => category.id === parsedUser.categoryId
-          )?.name || "",
-        modality:
-          eventGroup?.EventModality.find((m) => m.id === parsedUser.modalityId)
+          eventGroup?.EventModality.flatMap(
+            (m: any) => m.modalityCategory
+          ).find((category: any) => category.id === parsedUser.categoryId)
             ?.name || "",
+        modality:
+          eventGroup?.EventModality.find(
+            (m: any) => m.id === parsedUser.modalityId
+          )?.name || "",
         dateEnd: dayjs(
           eventGroup?.Event[eventGroup.Event.length - 1]?.dateEnd
         ).format("DD/MM/YYYY"),

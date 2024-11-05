@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import OrgFooter from "../../_shared/OrgFooter";
 import Sidebar from "./components/Sidebar";
 import { OrgPageContainer } from "../_shared/components/OrgPageContainer";
+import prisma from "prisma/prisma";
 
 export default async function RegistrationsPage({
   params,

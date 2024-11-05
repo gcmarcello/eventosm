@@ -2,6 +2,7 @@ import { readEventResults } from "@/app/api/results/service";
 import { ResultsTable } from "../campeonatos/[eventGroupId]/components/ResultTable";
 import { Link, Title } from "odinkit";
 import { notFound } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function EventResultPage({
   params,

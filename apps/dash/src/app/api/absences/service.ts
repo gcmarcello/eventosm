@@ -5,6 +5,7 @@ import { sendEmail } from "../emails/service";
 import { getServerEnv } from "../env";
 import { chooseTextColor } from "@/utils/colors";
 import { Organization } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 export async function changeAbsenceStatus(
   data: UpdateAbsenceStatusDto & {

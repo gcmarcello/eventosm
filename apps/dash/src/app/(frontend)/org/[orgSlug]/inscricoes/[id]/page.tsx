@@ -10,6 +10,7 @@ import { Alertbox } from "odinkit";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import SignupRegistration from "./components/SignupRegistration";
 import { readStates } from "@/app/api/geo/service";
+import prisma from "prisma/prisma";
 
 export default async function InscricaoPage({
   searchParams,

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Alertbox } from "odinkit";
 import LoginForm from "./components/LoginForm";
+import prisma from "prisma/prisma";
 
 export default async function LoginPage({
   params,

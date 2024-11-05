@@ -18,6 +18,7 @@ import { sendEmail } from "../emails/service";
 import { request } from "http";
 import _ from "lodash";
 import { id_ID } from "@faker-js/faker";
+import prisma from "prisma/prisma";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(parseCustomFormat);

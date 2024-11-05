@@ -3,7 +3,7 @@ import { getServerEnv } from "@/app/api/env";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 
 export async function GET(request: NextRequest, response: NextResponse) {
   try {

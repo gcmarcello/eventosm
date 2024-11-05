@@ -23,6 +23,7 @@ import { formatCPF } from "odinkit";
 import { signup } from "../../auth/service";
 import { cleanupUser } from "../../users/service";
 import { getOrganizationLink } from "../../orgs/utils/orgLink";
+import prisma from "prisma/prisma";
 
 export async function createEventIndividualRegistration(
   request: EventCreateRegistrationDto & { userSession: UserSession }

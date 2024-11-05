@@ -9,6 +9,7 @@ import { OrganizationMiddleware } from "@/middleware/functions/organization.midd
 import { Button } from "odinkit/client";
 import { EventNavbar } from "./components/EventNavbar";
 import EventPublishing from "./components/EventPublishing";
+import prisma from "prisma/prisma";
 
 export default async function EventGroupPanelLayout({
   children,

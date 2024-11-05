@@ -1,8 +1,8 @@
 "use server";
 import { cookies } from "next/headers";
-import { prisma } from "prisma/prisma";
 import { UserSessionMiddlewareReturnType } from "./userSession.middleware";
 import { OrganizationPermission } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 export async function OrganizationMiddleware<T>({
   request,

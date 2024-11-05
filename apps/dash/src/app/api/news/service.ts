@@ -1,6 +1,7 @@
 import { Organization } from "@prisma/client";
 import { UpsertNewsDto } from "./dto";
 import { UserSession } from "@/middleware/functions/userSession.middleware";
+import prisma from "prisma/prisma";
 
 export async function upsertNews(
   data: UpsertNewsDto & { organization: Organization; userSession: UserSession }

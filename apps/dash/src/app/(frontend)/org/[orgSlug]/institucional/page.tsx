@@ -12,6 +12,7 @@ import {
 import { DisclosureAccordion } from "odinkit/client";
 import PublicOrgDocumentsTable from "./components/PublicOrgDocumentsTable";
 import OrgFooter from "../../_shared/OrgFooter";
+import prisma from "prisma/prisma";
 
 export default async function InstitutionalPage({
   params,

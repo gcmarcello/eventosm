@@ -7,6 +7,7 @@ import { NewTeamModal } from "./components/NewTeamModal";
 import MembersDisclosure from "./components/MembersDisclosure";
 import NewMemberModal from "./components/NewMemberModal";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
+import prisma from "prisma/prisma";
 
 export default async function ProfilePage({
   params,
