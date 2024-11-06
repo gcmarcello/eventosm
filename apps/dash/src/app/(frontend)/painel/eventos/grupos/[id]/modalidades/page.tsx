@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import GeralForm from "../geral/form";
 import EventModalities from "../../../_shared/components/modalities/EventModalities";
 import { ModalityPageProvider } from "../../../_shared/components/modalities/context/ModalityPageProvider";
+import prisma from "prisma/prisma";
 
 export default async function ModalitiesPage({
   params,

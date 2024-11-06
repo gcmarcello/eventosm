@@ -3,6 +3,7 @@ import { UpsertForm } from "../../_shared/components/UpsertForm";
 import { AbsencesForm } from "./components/AbsenceContainer";
 import { readSubeventReviewData } from "@/app/api/events/service";
 import { AbsencesPageProvider } from "./context/AbsencesPageProvider";
+import prisma from "prisma/prisma";
 
 export default async function Faltas({
   params,

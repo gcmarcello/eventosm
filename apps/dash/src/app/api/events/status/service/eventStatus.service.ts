@@ -8,6 +8,7 @@ import { sendEmail } from "@/app/api/emails/service";
 import { getServerEnv } from "@/app/api/env";
 import { chooseTextColor } from "@/utils/colors";
 import { Email, EmailTemplate } from "email-templates";
+import prisma from "prisma/prisma";
 
 async function updateEventStatusToReview(data: {
   eventId: string;

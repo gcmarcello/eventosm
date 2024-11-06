@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { DeleteModalityDto } from "./dto";
 import { Organization } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 export async function deleteModality(
   data: DeleteModalityDto & {

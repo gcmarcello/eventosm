@@ -10,6 +10,7 @@ import { info } from "console";
 import { get } from "lodash";
 import { deletePrivateFile, getPreSignedURL } from "../uploads/service";
 import { orgSeed } from "prisma/seed/org.seed";
+import prisma from "prisma/prisma";
 
 export async function readUser({
   userId,

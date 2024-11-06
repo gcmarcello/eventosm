@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Table } from "odinkit";
 import NewsTable from "./components/NewsTable";
 import { Button } from "odinkit/client";
+import prisma from "prisma/prisma";
 
 export default async function NewsPage() {
   const activeOrg = cookies().get("activeOrg")?.value;

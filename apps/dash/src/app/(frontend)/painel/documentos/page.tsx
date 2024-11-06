@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import DocumentsTable from "./components/DocumentsTable";
 import { notFound } from "next/navigation";
 import OrgDocumentModal from "./components/OrgDocumentModal";
+import prisma from "prisma/prisma";
 
 export default async function DocumentsPage() {
   const organizationId = cookies().get("activeOrg")?.value;

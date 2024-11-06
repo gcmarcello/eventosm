@@ -4,6 +4,7 @@ import { For, Title } from "odinkit";
 import PhotoAlbum from "react-photo-album";
 import { GalleryContainer } from "../components/GalleryContainer";
 import { readEventsGalleriesByEventGroup } from "@/app/api/events/service";
+import prisma from "prisma/prisma";
 
 export default async function GalleryPage({
   params,

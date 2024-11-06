@@ -6,6 +6,7 @@ import { Alertbox, isUUID } from "odinkit";
 import EventContainer from "./components/EventContainer";
 import OrgFooter from "../../../_shared/OrgFooter";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
+import prisma from "prisma/prisma";
 
 export default async function EventPage({
   params,

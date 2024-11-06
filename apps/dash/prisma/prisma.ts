@@ -7,7 +7,7 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-  var prisma: ReturnType<typeof prismaClientSingleton>;
+  var prismaGlobal: ReturnType<typeof prismaClientSingleton>;
   namespace PrismaJson {
     type OrganizationOptions = {
       images?: {
@@ -24,6 +24,7 @@ declare global {
       colors: OrganizationColors;
       pages?: {
         documents?: boolean;
+        contact?: boolean;
       };
     };
 
@@ -58,6 +59,8 @@ declare global {
   }
 }
 
-export const prisma = globalThis.prisma! ?? prismaClientSingleton()!;
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
-globalThis.prisma = prisma;
+export default prisma;
+
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;

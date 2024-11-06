@@ -11,6 +11,7 @@ import {
 } from "../../../_shared/ShareButtons";
 import Image from "next/image";
 import { Date } from "odinkit/client";
+import prisma from "prisma/prisma";
 
 export default async function NewsPage({
   params,

@@ -1,5 +1,5 @@
 import { normalize } from "odinkit";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 
 type ViaCepResponse = {
   cep: string;

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NewsForm } from "../components/NewsForm";
 import { redirect } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function UpsertNewsPage({
   params,

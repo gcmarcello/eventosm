@@ -7,6 +7,7 @@ import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { isDev } from "@/utils/settings";
 import { Link } from "odinkit";
 import CopyToClipboard from "@/app/(frontend)/_shared/components/CopyToClipboard";
+import prisma from "prisma/prisma";
 
 export type CheckinWithInfo = EventCheckIn & {
   registration: {

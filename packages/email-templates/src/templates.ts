@@ -1,5 +1,6 @@
 export * from './templates/added_to_team';
 export * from './templates/added_to_team_signup';
+export * from './templates/contact';
 export * from './templates/joined_team_with_link';
 export * from './templates/justification_accepted';
 export * from './templates/justification_denied';

@@ -1,4 +1,4 @@
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import { UserSessionMiddlewareReturnType } from "./userSession.middleware";
 
 interface TeamOwnerMiddlewareRequestType<T>

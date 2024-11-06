@@ -1,5 +1,5 @@
 import RegistrationsContainer from "../../../_shared/components/registrations/RegistrationsContainer";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 
 export default async function RegistrationsPage({
   params,

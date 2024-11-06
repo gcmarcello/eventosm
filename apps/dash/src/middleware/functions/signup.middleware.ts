@@ -1,6 +1,7 @@
 "use server";
 import { SignupDto } from "@/app/api/auth/dto";
 import { normalize, normalizeEmail, normalizePhone } from "odinkit";
+import prisma from "prisma/prisma";
 
 export async function SignupMiddleware({ request }: { request: SignupDto }) {
   const eventRedirect = request.eventRedirect && { ...request.eventRedirect };

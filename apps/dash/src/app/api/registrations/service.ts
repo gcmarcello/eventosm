@@ -9,6 +9,7 @@ import { EventRegistrationStatus, Organization } from "@prisma/client";
 import { sendEmail } from "../emails/service";
 import { getServerEnv } from "../env";
 import { chooseTextColor } from "@/utils/colors";
+import prisma from "prisma/prisma";
 
 export async function readRegistrations(request: ReadRegistrationsDto) {
   if (request.where?.organizationId) {

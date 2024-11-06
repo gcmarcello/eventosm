@@ -8,6 +8,7 @@ import { EventsPageContainer } from "./EventsPageContainer";
 import OrgFooter from "../../_shared/OrgFooter";
 import { OrgPageContainer } from "../_shared/components/OrgPageContainer";
 import dayjs from "dayjs";
+import prisma from "prisma/prisma";
 
 export default async function OrganizationEventsPage({
   params: { orgSlug },

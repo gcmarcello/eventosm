@@ -6,6 +6,7 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 import { OrgStore } from "./_shared/components/OrgStore";
 import OrgFooter from "../_shared/OrgFooter";
+import prisma from "prisma/prisma";
 
 export async function generateViewport({
   params,

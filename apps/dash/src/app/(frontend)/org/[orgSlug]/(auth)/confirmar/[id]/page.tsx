@@ -1,6 +1,7 @@
 import { createToken } from "@/app/api/auth/service";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import prisma from "prisma/prisma";
 
 export default async function confirmUserPage({
   params,

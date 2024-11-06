@@ -144,13 +144,13 @@ export function EventGroupAttendance({
       )}
       {checkinsAndAbsencesData && (
         <For each={checkinsAndAbsencesData?.eventGroup?.Event || []}>
-          {(event) => {
+          {(event: any) => {
             const eventCheckin = checkinsAndAbsencesData?.EventCheckIn.find(
-              (checkin) => checkin.eventId === event.id
+              (checkin: any) => checkin.eventId === event.id
             );
             const absenceJustification =
               checkinsAndAbsencesData?.EventAbsences.find(
-                (absence) => absence.eventId === event.id
+                (absence: any) => absence.eventId === event.id
               );
 
             return (

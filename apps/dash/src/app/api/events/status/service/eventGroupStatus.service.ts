@@ -1,6 +1,7 @@
 import { UserSession } from "@/middleware/functions/userSession.middleware";
 import { Organization } from "@prisma/client";
 import { UpdateEventGroupStatusDto } from "../dto";
+import prisma from "prisma/prisma";
 
 async function updateEventGroupStatusToDraft(data: { eventGroupId: string }) {
   return await prisma.eventGroup.update({

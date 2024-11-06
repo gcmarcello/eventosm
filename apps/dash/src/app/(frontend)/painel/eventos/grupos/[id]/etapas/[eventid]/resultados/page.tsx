@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ResultsForm } from "./components/Form";
 import { cookies } from "next/headers";
+import prisma from "prisma/prisma";
 
 export default async function Resultados({
   params,

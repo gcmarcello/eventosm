@@ -16,6 +16,7 @@ import EventResultCard from "./components/EventResultCard";
 import dayjs from "dayjs";
 import OrgFooter from "@/app/(frontend)/org/_shared/OrgFooter";
 import { OrgPageContainer } from "../../../_shared/components/OrgPageContainer";
+import prisma from "prisma/prisma";
 
 export default async function EventGroupResultsPage({
   params,

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { GalleryForm } from "./shared/GalleryForm";
 import { notFound } from "next/navigation";
 import { GalleryTable } from "./components/GalleryTable";
+import prisma from "prisma/prisma";
 
 export default async function GalleriesPage() {
   const activeOrg = cookies().get("activeOrg")?.value;

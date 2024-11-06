@@ -20,7 +20,10 @@ import { useAction, showToast, Button } from "odinkit/client";
 import { useContext, useEffect } from "react";
 import { sortAbsences } from "../utils/sorting";
 import { DenyJustificationAlert } from "./DenyJustificationAlert";
-import { AbsencesPageContext } from "../context/AbsencesPage.ctx";
+import {
+  AbsencesPageContext,
+  AbsenceWithUser,
+} from "../context/AbsencesPage.ctx";
 
 export function AbsencesForm({
   event,
@@ -62,7 +65,9 @@ export function AbsencesForm({
           </Link>
         </div>
         <Table
-          data={sortAbsences(eventReview?.absences) || []}
+          data={
+            (sortAbsences(eventReview?.absences) as AbsenceWithUser[]) || []
+          }
           search={false}
           columns={(columnHelper) => [
             columnHelper.accessor("registration.user.fullName", {
@@ -71,107 +76,6 @@ export function AbsencesForm({
               enableSorting: true,
               enableGlobalFilter: true,
               cell: (info) => info.getValue(),
-            }),
-            columnHelper.accessor("status", {
-              id: "status",
-              header: "Status da Ausência",
-              enableSorting: true,
-              meta: {
-                filterVariant: "select",
-                selectOptions: [
-                  { value: "approved", label: "Aprovado" },
-                  { value: "denied", label: "Rejeitado" },
-                  { value: "pending", label: "Pendente" },
-                ],
-              },
-              cell: (info) => {
-                switch (info.getValue()) {
-                  case "pending":
-                    return <Badge color="amber">Pendente</Badge>;
-                  case "approved":
-                    return <Badge color="green">Justificada</Badge>;
-                  case "denied":
-                    return <Badge color="red">Rejeitado</Badge>;
-
-                  default:
-                    break;
-                }
-              },
-            }),
-            columnHelper.accessor("registration.user.phone", {
-              id: "phone",
-              header: "Telefone",
-              enableSorting: false,
-              enableColumnFilter: false,
-              enableGlobalFilter: false,
-
-              cell: (info) => formatPhone(info.getValue()),
-            }),
-
-            columnHelper.accessor("justificationUrl", {
-              id: "justificationUrl",
-              header: "Atestado",
-              enableSorting: true,
-              enableGlobalFilter: false,
-              enableColumnFilter: false,
-              cell: (info) =>
-                info.getValue() ? (
-                  <Badge
-                    color="blue"
-                    className="cursor-pointer underline hover:no-underline"
-                    onClick={() =>
-                      triggerReadAbsenceJustificationData({
-                        id: info.row.original.id,
-                      })
-                    }
-                  >
-                    Ver Atestado
-                  </Badge>
-                ) : (
-                  <Badge color="amber">Envio Pendente</Badge>
-                ),
-            }),
-
-            columnHelper.accessor("id", {
-              id: "id",
-              header: "Opções",
-              enableSorting: true,
-              enableGlobalFilter: true,
-              enableColumnFilter: false,
-              cell: (info) =>
-                info.row.original.status === "approved" ? (
-                  <Badge color="green">Atestado Verificado</Badge>
-                ) : (
-                  <div className="flex gap-2">
-                    <XMarkIcon
-                      onClick={() => {
-                        if (isAbsenceStatusMutating) return;
-                        handleModalOpen(info.row.original);
-                      }}
-                      className={clsx(
-                        "size-5 cursor-pointer  duration-200 hover:text-gray-800",
-                        !isAbsenceStatusMutating
-                          ? "text-red-600"
-                          : "text-gray-600"
-                      )}
-                    />
-                    <CheckIcon
-                      onClick={() => {
-                        if (isAbsenceStatusMutating) return;
-                        triggerAbsenceStatus({
-                          absenceId: info.getValue(),
-                          status: "approved",
-                        });
-                      }}
-                      className={clsx(
-                        "size-5 cursor-pointer  duration-200 hover:text-gray-800",
-                        !isAbsenceStatusMutating
-                          ? "text-green-600"
-                          : "text-gray-600"
-                      )}
-                    />
-                  </div>
-                ),
             }),
           ]}
         />

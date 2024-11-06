@@ -8,6 +8,7 @@ import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUs
 import { readActiveBatch, readNextBatch } from "@/app/api/batches/service";
 import { readOrganizations } from "@/app/api/orgs/service";
 import { OrgPageContainer } from "../../_shared/components/OrgPageContainer";
+import prisma from "prisma/prisma";
 
 export default async function TorneioPage({
   params,

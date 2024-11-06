@@ -3,7 +3,7 @@ import { UseMiddlewares } from "@/middleware/functions/useMiddlewares";
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { notFound } from "next/navigation";
 import { CategoriesTable } from "./components/CategoriesTable";
-import { prisma } from "prisma/prisma";
+import prisma from "prisma/prisma";
 import { CategoryPageProvider } from "../../../_shared/components/categories/context/CategoryPageProvider";
 
 export default async function ModalityPage({

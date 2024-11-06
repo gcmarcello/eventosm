@@ -9,6 +9,7 @@ import {
   UpsertCategoryDocumentsDto,
   UpsertEventModalityCategoriesDto,
 } from "./dto";
+import prisma from "prisma/prisma";
 
 export async function readModalityCategories(
   request: ReadEventCategoryModalitiesDto

@@ -1,3 +1,4 @@
+import prisma from "prisma/prisma";
 import { UpdateUserDto } from "../../users/dto";
 import { AdminUpdateUserDto } from "./dto";
 

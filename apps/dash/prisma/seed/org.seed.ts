@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
-import { prisma } from "../prisma";
+
 import { createOrganization } from "@/app/api/orgs/service";
 import { generateColorJson } from "@/app/api/colors/service";
 import { getServerEnv } from "@/app/api/env";
+import prisma from "prisma/prisma";
 
 export const orgSeed = async (userId: string) => {
   const orgUUID = "0ce7d854-e9c8-468b-b28b-28d32d725676";

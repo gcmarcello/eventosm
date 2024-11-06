@@ -1,4 +1,5 @@
 import { ColorId, Color } from "@prisma/client";
+import prisma from "prisma/prisma";
 
 export async function generateColorJson<T extends Record<string, ColorId>>({
   colors,

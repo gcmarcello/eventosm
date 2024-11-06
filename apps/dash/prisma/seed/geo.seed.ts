@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import prisma from "prisma/prisma";
 
 export const geoSeed = async () => {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
