@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { OrganizationMiddleware } from "@/middleware/functions/organization.middleware";
 import { revalidatePath } from "next/cache";
 import { ActionResponse } from "odinkit";
+import { OptionalUserSessionMiddleware } from "@/middleware/functions/optionalUserSession.middleware";
 
 export async function createOrganization(request: UpsertOrganizationDto) {
   let organization;
@@ -94,7 +95,7 @@ export async function upsertOrganizationDocument(
 
 export async function readOrganizationDocument(request: { id: string }) {
   const { request: parsedRequest } = await UseMiddlewares(request).then(
-    UserSessionMiddleware
+    OptionalUserSessionMiddleware
   );
 
   try {
