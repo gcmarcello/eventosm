@@ -184,8 +184,6 @@ export function ResultsTable({
 
   const Field = useMemo(() => modalityForm.createField(), []);
 
-  console.log(uniqueTeams);
-
   return (
     <>
       <Form className="my-4 mb-2 flex gap-2" hform={modalityForm}>

@@ -11,19 +11,22 @@ import {
 
 import { useEffect, useMemo, useState } from "react";
 import { ResultsTable } from "./components/ResultTable";
-import { readEventGroupResults } from "@/app/api/results/service";
+import {
+  readEventGroupResults,
+  readEventGroupResultsByTeam,
+} from "@/app/api/results/service";
 import EventResultCard from "./components/EventResultCard";
 import dayjs from "dayjs";
 import OrgFooter from "@/app/(frontend)/org/_shared/OrgFooter";
 import { OrgPageContainer } from "../../../_shared/components/OrgPageContainer";
 import prisma from "prisma/prisma";
+import { GroupResultsTable } from "./components/GroupResultTable";
 
 export default async function EventGroupResultsPage({
   params,
 }: {
   params: { eventGroupId: string };
 }) {
-  console.time("EventGroupResultsPage");
   const eventGroup = await prisma.eventGroup.findUnique({
     where: { id: params.eventGroupId },
     include: {
@@ -63,6 +66,16 @@ export default async function EventGroupResultsPage({
           >
             Voltar à página do campeonato
           </Link>{" "}
+          -
+          <Link
+            href={`/resultados/campeonatos/${eventGroup.id}/equipes`}
+            style={{
+              color: eventGroup.Organization.options.colors.primaryColor.hex,
+            }}
+            className="text-sm underline"
+          >
+            Ver Ranking por Equipes
+          </Link>
           -
           <Link
             href="#etapas"

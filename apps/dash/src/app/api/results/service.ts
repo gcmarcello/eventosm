@@ -204,7 +204,7 @@ export async function readEventGroupResultsByTeam(eventGroupId: string) {
   const results = await readEventGroupResults(eventGroupId);
 
   const events = await prisma.event.count({
-    where: { eventGroupId, status: { in: ["review", "finished", "archived"] } },
+    where: { eventGroupId },
   });
 
   const uniqueTeams = Array.from(
@@ -219,19 +219,18 @@ export async function readEventGroupResultsByTeam(eventGroupId: string) {
     const team = results.results.find((r) => r.Registration.teamId === teamId)
       ?.Registration.team!;
 
-    if (teamResults.length >= events) {
-      const totalScore =
-        teamResults
-          .sort((a, b) => (a.score || 0) - (b.score || 0))
-          .splice(0, events)
-          .reduce((acc, curr) => acc + (curr.score || 0), 0) / events;
+    if (teamResults.length < 7) return { team, score: null };
 
-      return {
-        team,
-        score: totalScore,
-      };
-    }
-    return { team, score: null };
+    const totalScore =
+      teamResults
+        .sort((a, b) => a.score! - b.score!)
+        .splice(0, 7)
+        .reduce((acc, curr) => acc + (curr.score || 0), 0) / 7;
+
+    return {
+      team,
+      score: Math.round(totalScore),
+    };
   });
 
   return sortTeamPositions(teamResults);
