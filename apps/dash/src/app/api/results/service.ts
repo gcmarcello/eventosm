@@ -21,12 +21,12 @@ export async function createEventResults(data: CreateResultsDto) {
       ? {
           eventGroupId: data.eventGroupId,
           code: { in: registrationCodes },
-          status: { notIn: ["cancelled", "suspended"] },
+          status: { notIn: ["suspended"] },
         }
       : {
           eventId: data.eventId,
           code: { in: registrationCodes },
-          status: { notIn: ["cancelled", "suspended"] },
+          status: { notIn: ["suspended"] },
         },
     select: { id: true, code: true },
   });
