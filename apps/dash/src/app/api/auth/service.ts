@@ -98,7 +98,7 @@ export async function resendConfirmationEmail({
   if (!user) throw "Usuário não encontrado.";
 
   const url = customDomain
-    ? "https://" + customDomain
+    ? "https://" + customDomain.domain
     : process.env.NEXT_PUBLIC_SITE_URL;
 
   await sendEmail([
