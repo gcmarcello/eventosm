@@ -32,7 +32,9 @@ export default async function InstitutionalPage({
 
   const years = [
     ...new Set(documents.map((obj) => dayjs(obj.createdAt).year())),
-  ];
+  ].sort((a, b) => b - a);
+
+  console.log(years);
 
   return (
     <>
