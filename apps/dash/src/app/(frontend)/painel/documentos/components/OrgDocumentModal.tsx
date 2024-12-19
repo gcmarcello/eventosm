@@ -200,7 +200,7 @@ export default function OrgDocumentModal({
                   <FileInput
                     fileTypes={["pdf", "docx"]}
                     maxFiles={1}
-                    maxSize={3}
+                    maxSize={25}
                     onError={(error) => {
                       if (typeof error === "string") {
                         showToast({
