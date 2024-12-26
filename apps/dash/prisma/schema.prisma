@@ -519,8 +519,8 @@ model Event {
   EventRegistration      EventRegistration[]
   EventGroup             EventGroup?              @relation(fields: [eventGroupId], references: [id])
   eventGroupId           String?                  @db.Uuid
-  dateStart              DateTime
-  dateEnd                DateTime
+  dateStart              DateTime?
+  dateEnd                DateTime?
   location               String
   description            String?
   rules                  String?
