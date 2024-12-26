@@ -75,16 +75,13 @@ export function EventsPageContainer({
                 enableGlobalFilter: false,
                 enableColumnFilter: false,
                 cell: (info) => {
-                  return (
+                  return info.row.original.Event[0]?.dateStart ? (
                     <Date
-                      date={
-                        info.row.original.Event.sort(
-                          (a, b) =>
-                            a.dateStart.getTime() - b.dateStart.getTime()
-                        )[0]?.dateStart ?? dayjs().toDate()
-                      }
+                      date={info.row.original.Event[0]?.dateStart}
                       format="DD/MM/YYYY"
                     />
+                  ) : (
+                    "Sem Data"
                   );
                 },
               }),

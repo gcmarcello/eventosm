@@ -119,9 +119,12 @@ export default function EventGroupContainer({
                 header: "Data",
                 enableSorting: true,
                 enableGlobalFilter: true,
-                cell: (info) => (
-                  info.getValue() ? <Date date={info.getValue()} format="DD/MM/YYYY" /> : "Sem data definida"
-                ),
+                cell: (info) =>
+                  info.getValue() ? (
+                    <Date date={info.getValue()} format="DD/MM/YYYY" />
+                  ) : (
+                    "Sem data definida"
+                  ),
               }),
               columnHelper.accessor("location", {
                 meta: { className: "hidden lg:table-cell" },
@@ -236,12 +239,14 @@ export default function EventGroupContainer({
                   }}
                   className="size-4 lg:size-5"
                 />
-                {
+                {eventGroup.Event[0]?.dateStart ? (
                   <Date
                     date={eventGroup.Event[0]!.dateStart}
                     format="DD/MM/YYYY"
                   />
-                }{" "}
+                ) : (
+                  "Sem Data"
+                )}{" "}
                 -{" "}
                 {
                   <Date

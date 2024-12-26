@@ -71,7 +71,10 @@ export default async function EventCard({
                 </>
               ) : (
                 <dd className="flex-grow text-xs text-gray-500">
-                  {event.location} - {date(event.dateStart, "DD/MM/YYYY")}
+                  {event.location} -{" "}
+                  {event.dateStart
+                    ? date(event.dateStart, "DD/MM/YYYY")
+                    : "Sem Data"}
                 </dd>
               )}
               <dt className="sr-only">Type</dt>

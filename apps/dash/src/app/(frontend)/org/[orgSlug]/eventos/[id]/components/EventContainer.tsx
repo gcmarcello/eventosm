@@ -161,8 +161,8 @@ export default function EventContainer({
                     }}
                     className="size-4 lg:size-5"
                   />
-                  {event.dateStart.toISOString() ===
-                  event.dateEnd.toISOString() ? (
+                  {(event.dateStart && event.dateStart.toISOString()) ===
+                  (event.dateEnd && event.dateEnd.toISOString()) ? (
                     <>
                       <Date date={event.dateStart} format="DD/MM/YYYY" />
                     </>

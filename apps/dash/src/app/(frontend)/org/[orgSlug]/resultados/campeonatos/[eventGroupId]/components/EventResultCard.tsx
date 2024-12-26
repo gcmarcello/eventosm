@@ -37,7 +37,10 @@ export default async function EventResultCard({
           </h3>
           <dl className="mb-2 mt-1 flex flex-grow flex-col justify-end">
             <dd className="mb-2 flex-grow text-xs text-gray-500">
-              {event.location} - {date(event.dateStart, "DD/MM/YYYY")}
+              {event.location} -{" "}
+              {event.dateStart
+                ? date(event.dateStart, "DD/MM/YYYY")
+                : "Sem Data"}
             </dd>
           </dl>
         </div>
