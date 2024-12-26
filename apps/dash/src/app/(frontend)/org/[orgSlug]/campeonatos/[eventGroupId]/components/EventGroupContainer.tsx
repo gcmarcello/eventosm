@@ -120,7 +120,7 @@ export default function EventGroupContainer({
                 enableSorting: true,
                 enableGlobalFilter: true,
                 cell: (info) => (
-                  <Date date={info.getValue()} format="DD/MM/YYYY" />
+                  info.getValue() ? <Date date={info.getValue()} format="DD/MM/YYYY" /> : "Sem data definida"
                 ),
               }),
               columnHelper.accessor("location", {
