@@ -1,4 +1,4 @@
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import "leaflet/dist/leaflet.css";
 import { Inter } from "next/font/google";
@@ -28,6 +28,7 @@ export default function RootLayout({
 
   return (
     <html data-theme={theme?.value} lang="pt-BR">
+      <Analytics />
       <body className={clsx(inter.className)}>
         {isDev && <Mocker />}
 
