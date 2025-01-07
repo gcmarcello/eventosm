@@ -50,6 +50,7 @@ export default function DocumentsTable({
         Novo documento
       </Button>
       <Table
+      itemsPerPage={50}
         data={documents}
         columns={(columnHelper) => [
           columnHelper.accessor("name", {
