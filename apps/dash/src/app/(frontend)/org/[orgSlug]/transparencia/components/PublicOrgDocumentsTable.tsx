@@ -13,6 +13,7 @@ export default function PublicOrgDocumentsTable({
 }) {
   return (
     <Table
+    itemsPerPage={50}
       search={false}
       pagination={false}
       data={documents}
