@@ -51,6 +51,7 @@ export default function DocumentsTable({
       </Button>
       <Table
       itemsPerPage={50}
+      pagination={true}
         data={documents}
         columns={(columnHelper) => [
           columnHelper.accessor("name", {
