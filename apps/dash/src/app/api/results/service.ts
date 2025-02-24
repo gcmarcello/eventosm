@@ -163,7 +163,7 @@ export async function readEventGroupResults(eventGroupId: string) {
       if (participantResults.length - discardLimit >= discardLimit) {
         const validScores = participantResults.slice(
           0,
-          participantResults.length - discardLimit
+          totalEvents - discardLimit
         );
 
         if (rules.scoreCalculation === "sum") {
