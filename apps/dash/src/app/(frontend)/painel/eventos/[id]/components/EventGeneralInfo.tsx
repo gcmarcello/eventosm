@@ -66,6 +66,7 @@ export default function EventGeneralInfo({
             );
             return {
               modId: mod.id,
+              teamSize: modality?.teamSize ?? 0,
               enableCategoryControl: modality?.enableCategoryControl ?? false,
               requiredCategories:
                 modality?.requiredCategories ??
