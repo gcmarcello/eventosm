@@ -19,5 +19,9 @@ export default async function UpdateEventPage({
     },
   });
   if (!event) return notFound();
-  return <EventGeneralInfo event={event} />;
+  const modalities = await prisma.eventModality.findMany({
+    where: { eventId: event.id },
+    include: {modalityCategory: true}
+  })
+  return <EventGeneralInfo event={event} modalities={modalities} />;
 }

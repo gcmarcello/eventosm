@@ -28,14 +28,17 @@ import { upsertEvent } from "@/app/api/events/action";
 import { uploadFiles } from "@/app/api/uploads/action";
 import { RTE } from "../../../_shared/RichText";
 import { EventTeamModalitiesDialog } from "./EventTeamModalitiesDialog";
+import { EventModality, ModalityCategory } from "@prisma/client";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function EventGeneralInfo({
   event,
+  modalities
 }: {
   event: EventWithRegistrationCount;
+  modalities: (EventModality & { modalityCategory: ModalityCategory[] })[];
 }) {
   const form = useForm({
     mode: "onChange",
@@ -57,7 +60,15 @@ export default function EventGeneralInfo({
         rules: {
           registrationMode:
             event.options?.rules?.registrationMode ?? "individual",
-          modalities: event.options?.rules?.modalities ?? [],
+          modalities: modalities.map(mod => ({
+            modId: mod.id,
+            enableCategoryControl: false,
+            requiredCategories: mod.modalityCategory.map(cat => ({
+              id: cat.id,
+              number: 0,
+            })),
+
+          })),
         },
       },
     },
