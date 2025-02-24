@@ -35,7 +35,7 @@ dayjs.extend(timezone);
 
 export default function EventGeneralInfo({
   event,
-  modalities
+  modalities,
 }: {
   event: EventWithRegistrationCount;
   modalities: (EventModality & { modalityCategory: ModalityCategory[] })[];
@@ -60,15 +60,21 @@ export default function EventGeneralInfo({
         rules: {
           registrationMode:
             event.options?.rules?.registrationMode ?? "individual",
-          modalities: modalities.map(mod => ({
-            modId: mod.id,
-            enableCategoryControl: false,
-            requiredCategories: mod.modalityCategory.map(cat => ({
-              id: cat.id,
-              number: 0,
-            })),
-
-          })),
+          modalities: modalities.map((mod) => {
+            const modality = event.options?.rules?.modalities?.find(
+              (m) => m.modId === mod.id
+            );
+            return {
+              modId: mod.id,
+              enableCategoryControl: modality?.enableCategoryControl ?? false,
+              requiredCategories:
+                modality?.requiredCategories ??
+                mod.modalityCategory.map((cat) => ({
+                  id: cat.id,
+                  number: 0,
+                })),
+            };
+          }),
         },
       },
     },
