@@ -210,14 +210,16 @@ export async function createEventMultipleRegistrations(
   )
     throw "Limite de inscrições por equipe excedido";
 
+  const selectedAthletes = request.teamMembers.filter((tm) => tm.selected);
+
   await verifyEventAvailableSlots({
-    registrations: request.teamMembers.filter((tm) => tm.selected),
+    registrations: selectedAthletes,
     batchId: request.batchId && batch.id,
     eventId: request.eventId,
   });
 
   await verifyEventRegistrationAvailability({
-    registrations: request.teamMembers,
+    registrations: selectedAthletes,
     eventId: request.eventId,
     batch,
     userIds: selectedUsers.filter((m) => m.selected).map((u) => u.userId || ""),
