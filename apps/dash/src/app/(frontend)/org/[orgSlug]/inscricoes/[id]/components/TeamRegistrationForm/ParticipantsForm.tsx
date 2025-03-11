@@ -29,6 +29,7 @@ import {
   formatCEP,
   formatCPF,
   formatPhone,
+  formatWithMask,
   normalize,
   sheetToJson,
 } from "odinkit";
@@ -97,7 +98,6 @@ export function ParticipantsForm({
 }) {
   const { fields, insert } = fieldArray;
   const [parsedTeamData, setParsedTeamData] = useState<any>(null);
-  const [allSelected, setAllSelected] = useState(false);
 
   const form = useFormContext<CreateMultipleRegistrationsDto>();
 
@@ -158,14 +158,21 @@ export function ParticipantsForm({
     });
   }
 
-  function toggleAllParticipants() {
-    const participantsValues = form.getValues("teamMembers");
-    participantsValues.forEach((participant, index) => {
-      const userInfo = fetchUserInfo(participant.userId, teams, form);
-      if (!userInfo?.EventRegistration?.find((r) => r.eventId === event.id))
-        form.setValue(`teamMembers.${index}.selected`, !allSelected);
+  function selectAllParticipants() {
+    fields.forEach((field, index) => {
+      const userInfo = fetchUserInfo(field.userId!, teams, form);
+      const isUserRegistered = userInfo?.EventRegistration?.find(
+        (r) => r.eventId === event.id
+      );
+      if (!isUserRegistered)
+        form.setValue(`teamMembers.${index}.selected`, true);
     });
-    setAllSelected(!allSelected);
+  }
+
+  function deselectAllParticipants() {
+    fields.forEach((field, index) => {
+      form.setValue(`teamMembers.${index}.selected`, false);
+    });
   }
 
   return (
@@ -286,14 +293,23 @@ export function ParticipantsForm({
             <TableHead>
               <TableRow>
                 <TableHeader>
-                  <Button
-                    className={"me-1"}
-                    outline
-                    onClick={() => toggleAllParticipants()}
-                  >
-                    {allSelected ? "Desmarcar" : "Marcar"} Todos
-                  </Button>
-                  Nome Completo{" "}
+                  <div className="flex flex-col justify-center gap-1">
+                    <Button
+                      className={"me-1 max-w-36"}
+                      outline
+                      onClick={() => selectAllParticipants()}
+                    >
+                      Selecionar Todos
+                    </Button>
+                    <Button
+                      className={"me-1 max-w-36"}
+                      outline
+                      onClick={() => deselectAllParticipants()}
+                    >
+                      Remover Todos
+                    </Button>
+                    Nome Completo{" "}
+                  </div>
                 </TableHeader>
                 <TableHeader>Modalidade</TableHeader>
                 <TableHeader>Categoria</TableHeader>

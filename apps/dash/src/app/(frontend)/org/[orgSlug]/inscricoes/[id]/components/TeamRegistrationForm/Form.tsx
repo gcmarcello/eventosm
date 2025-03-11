@@ -116,7 +116,10 @@ export default function TeamRegistration({
 
   function requiredAddonFields() {
     const registrationFields = fields.flatMap((_, index) => {
-      if (form.watch(`teamMembers.${index}.addon.id`)) {
+      if (
+        form.watch(`teamMembers.${index}.selected`) &&
+        form.watch(`teamMembers.${index}.addon.id`)
+      ) {
         return [`teamMembers.${index}.addon.option`];
       }
     });
