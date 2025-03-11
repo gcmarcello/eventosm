@@ -300,7 +300,17 @@ export function ParticipantsForm({
               </TableRow>
             </TableHead>
             <TableBody>
-              <For each={fields}>
+              <For
+                each={fields.sort((a, b) => {
+                  const userInfoA = fetchUserInfo(a.userId!, teams, form);
+                  const userInfoB = fetchUserInfo(b.userId!, teams, form);
+                  return (
+                    userInfoA?.fullName?.localeCompare(
+                      userInfoB?.fullName || ""
+                    ) || 0
+                  );
+                })}
+              >
                 {(field, index) => {
                   const userInfo = fetchUserInfo(field.userId!, teams, form);
                   const isUserRegistered = userInfo?.EventRegistration?.find(
