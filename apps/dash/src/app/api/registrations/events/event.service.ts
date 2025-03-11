@@ -227,9 +227,16 @@ export async function createEventMultipleRegistrations(
     where: { id: { in: selectedUsers.map((u) => u.userId || "") } },
   });
 
-  const eventRegistrations = await prisma.eventRegistration.count({
+  const eventRegistrations = await prisma.eventRegistration.findMany({
     where: { eventId: request.eventId },
   });
+
+  const teamRegistrations = eventRegistrations.filter(
+    (r) => r.teamId === request.teamId
+  );
+
+  if (teamRegistrations.length && event.options?.singleRegistrationForTeam)
+    throw "Equipe já inscrita no evento.";
 
   const organization = await prisma.organization.findUnique({
     where: { id: event.organizationId },
@@ -261,7 +268,7 @@ export async function createEventMultipleRegistrations(
       addonOption: addon?.option,
       teamId: request?.teamId || null,
       eventId: request.eventId,
-      code: (eventRegistrations + (index + 1)).toString(),
+      code: (eventRegistrations.length + (index + 1)).toString(),
       status: "active" as EventRegistrationStatus,
     });
 

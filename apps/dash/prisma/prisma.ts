@@ -35,6 +35,7 @@ declare global {
     type EventOptions = {
       accountlessRegistration?: boolean;
       multipleRegistrations?: boolean;
+      singleRegistrationForTeam?: boolean; // Allow only one registration per team (multiple athletes)
       rules?: {
         registrationMode?: "team" | "individual";
         modalities?: {

@@ -66,7 +66,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import parseCustomFormat from "dayjs/plugin/customParseFormat";
 import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { forEach } from "lodash";
+import { forEach, set } from "lodash";
 import clsx from "clsx";
 import { TeamWithUsers } from "prisma/types/Teams";
 
@@ -96,7 +96,8 @@ export function ParticipantsForm({
   inputMode: null | "file" | "manual";
 }) {
   const { fields, insert } = fieldArray;
-  const [parsedTeamData, setParsedTeamData] = useState(null);
+  const [parsedTeamData, setParsedTeamData] = useState<any>(null);
+  const [allSelected, setAllSelected] = useState(false);
 
   const form = useFormContext<CreateMultipleRegistrationsDto>();
 
@@ -116,12 +117,13 @@ export function ParticipantsForm({
           id: event.EventAddon?.find((addon) => !addon.price)?.id || undefined,
           option: undefined,
         },
-        selected: !Boolean(
-          u.EventRegistration?.find((r) => r.eventId === event.id)
-        ),
+        selected: false,
       }));
 
-    if (parsedTeamData) form.setValue("teamMembers", parsedTeamData);
+    if (parsedTeamData) {
+      form.setValue("teamMembers", parsedTeamData);
+      setParsedTeamData(parsedTeamData);
+    }
   }
 
   function autoAssignModalities() {
@@ -154,6 +156,16 @@ export function ParticipantsForm({
         );
       }
     });
+  }
+
+  function toggleAllParticipants() {
+    const participantsValues = form.getValues("teamMembers");
+    participantsValues.forEach((participant, index) => {
+      const userInfo = fetchUserInfo(participant.userId, teams, form);
+      if (!userInfo?.EventRegistration?.find((r) => r.eventId === event.id))
+        form.setValue(`teamMembers.${index}.selected`, !allSelected);
+    });
+    setAllSelected(!allSelected);
   }
 
   return (
@@ -273,7 +285,16 @@ export function ParticipantsForm({
           <TableMock>
             <TableHead>
               <TableRow>
-                <TableHeader>Nome Completo</TableHeader>
+                <TableHeader>
+                  <Button
+                    className={"me-1"}
+                    outline
+                    onClick={() => toggleAllParticipants()}
+                  >
+                    {allSelected ? "Desmarcar" : "Marcar"} Todos
+                  </Button>
+                  Nome Completo{" "}
+                </TableHeader>
                 <TableHeader>Modalidade</TableHeader>
                 <TableHeader>Categoria</TableHeader>
               </TableRow>

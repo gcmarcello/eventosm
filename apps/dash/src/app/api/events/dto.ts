@@ -46,6 +46,7 @@ export const upsertEventDto = z.object({
     .object({
       accountlessRegistration: z.boolean().optional(),
       multipleRegistrations: z.boolean().optional(),
+      singleRegistrationForTeam: z.boolean().optional(),
       rules: z.object({
         registrationMode: z
           .enum(["team", "individual"], {
