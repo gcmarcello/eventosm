@@ -108,6 +108,7 @@ export function ParticipantsForm({
       ?.find((team) => team.id === teamId)
       ?.User.map((u) => ({
         userId: u.id,
+        fullName: u.fullName,
         modalityId:
           event.EventModality.length > 1
             ? undefined
@@ -118,7 +119,10 @@ export function ParticipantsForm({
           option: undefined,
         },
         selected: false,
-      }));
+      }))
+      .sort((a, b) => {
+        return a.fullName.localeCompare(b.fullName);
+      });
 
     if (parsedTeamData) {
       form.setValue("teamMembers", parsedTeamData);
@@ -174,6 +178,8 @@ export function ParticipantsForm({
       form.setValue(`teamMembers.${index}.selected`, false);
     });
   }
+
+  console.log(form.watch("teamMembers").filter((member) => member.selected));
 
   return (
     <>
@@ -316,17 +322,7 @@ export function ParticipantsForm({
               </TableRow>
             </TableHead>
             <TableBody>
-              <For
-                each={fields.sort((a, b) => {
-                  const userInfoA = fetchUserInfo(a.userId!, teams, form);
-                  const userInfoB = fetchUserInfo(b.userId!, teams, form);
-                  return (
-                    userInfoA?.fullName?.localeCompare(
-                      userInfoB?.fullName || ""
-                    ) || 0
-                  );
-                })}
-              >
+              <For each={fields}>
                 {(field, index) => {
                   const userInfo = fetchUserInfo(field.userId!, teams, form);
                   const isUserRegistered = userInfo?.EventRegistration?.find(
@@ -366,7 +362,7 @@ export function ParticipantsForm({
                               }
                             />
                             <Label className={"ms-2"}>
-                              {userInfo?.fullName}{" "}
+                              {userInfo?.fullName} - {userInfo?.id}{" "}
                               {isUserRegistered ? "(Inscrito)" : ""}
                             </Label>
                           </Field>

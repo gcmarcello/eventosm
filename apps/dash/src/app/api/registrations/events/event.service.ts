@@ -249,9 +249,7 @@ export async function createEventMultipleRegistrations(
   let emailArray: Email<"registration_email">[] = [];
   const bucketName = getServerEnv("AWS_BUCKET_NAME") || "";
   const region = getServerEnv("AWS_REGION") || "";
-  for (const [index, user] of request.teamMembers
-    .filter((member) => member.selected)
-    .entries()) {
+  for (const [index, user] of selectedUsers.entries()) {
     if (!user.userId) throw "Usuário não encontrado";
     if (!user.selected) continue;
     if (!user.modalityId) throw "Modalidade não informada";
