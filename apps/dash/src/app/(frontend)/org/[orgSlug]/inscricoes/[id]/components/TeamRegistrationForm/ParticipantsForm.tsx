@@ -362,7 +362,7 @@ export function ParticipantsForm({
                               }
                             />
                             <Label className={"ms-2"}>
-                              {userInfo?.fullName} - {userInfo?.id}{" "}
+                              {userInfo?.fullName}{" "}
                               {isUserRegistered ? "(Inscrito)" : ""}
                             </Label>
                           </Field>
