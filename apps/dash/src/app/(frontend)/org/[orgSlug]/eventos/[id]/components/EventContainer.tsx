@@ -162,7 +162,7 @@ export default function EventContainer({
                     className="size-4 lg:size-5"
                   />
                   {(event.dateStart && event.dateStart.toISOString()) ===
-                  (event.dateEnd && event.dateEnd.toISOString()) ? (
+                    (event.dateEnd && event.dateEnd.toISOString()) ? (
                     <>
                       <Date date={event.dateStart} format="DD/MM/YYYY" />
                     </>
@@ -223,21 +223,41 @@ export default function EventContainer({
                 <div className="text-sm font-medium">Inscrições</div>
                 <div className="my-2 space-y-2">
                   {isUserRegistered && (
-                    <Button
-                      href={`/perfil`}
-                      className={"w-full"}
-                      color={organization.options.colors.primaryColor.tw.color}
-                    >
-                      <QrCodeIcon
-                        color={organization.options.colors.primaryColor.hex}
-                        className="size-6"
-                      />
-                      Ver QR Code
-                    </Button>
+                    <>
+                      {batch && batch.registrationType !== "individual" && (
+                        <Button
+                          href={`/inscricoes/${event.id}?team=true`}
+                          className={"grow"}
+                          color={
+                            organization.options.colors.secondaryColor.tw
+                              .color
+                          }
+                        >
+                          <UserGroupIcon
+                            color={
+                              organization.options.colors.primaryColor.hex
+                            }
+                            className="size-6"
+                          />
+                          Inscrição de Equipe
+                        </Button>
+                      )}
+                      <Button
+                        href={`/perfil`}
+                        className={"w-full"}
+                        color={organization.options.colors.primaryColor.tw.color}
+                      >
+                        <QrCodeIcon
+                          color={organization.options.colors.primaryColor.hex}
+                          className="size-6"
+                        />
+                        Ver QR Code
+                      </Button>
+                    </>
                   )}
                   {!isUserRegistered && batch ? (
                     batch.maxRegistrations <= batch._count.EventRegistration &&
-                    !nextBatch ? (
+                      !nextBatch ? (
                       <Button disabled color="red" className={"w-full"}>
                         Inscrições Esgotadas
                       </Button>
