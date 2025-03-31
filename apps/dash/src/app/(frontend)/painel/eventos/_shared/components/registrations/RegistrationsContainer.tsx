@@ -38,7 +38,6 @@ import {
   useForm,
 } from "odinkit/client";
 import { useEffect, useMemo, useState } from "react";
-import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { ModalitiesWithCategories } from "prisma/types/Modalities";
 import {
   UpdateRegistrationDto,
@@ -47,7 +46,7 @@ import {
 import { determineCategoryAvailability } from "@/app/(frontend)/org/[orgSlug]/inscricoes/utils/categories";
 import Image from "next/image";
 import {
-  resendEventGroupRegistrationConfirmation,
+  resendRegistrationConfirmation,
   updateRegistration,
 } from "@/app/api/registrations/action";
 import RegistrationStatusDropdown from "../RegistrationStatusDropdown";
@@ -101,7 +100,7 @@ export default function RegistrationsContainer({
     trigger: resendConfirmationTrigger,
     isMutating: isResendingEmailConfirmation,
   } = useAction({
-    action: resendEventGroupRegistrationConfirmation,
+    action: resendRegistrationConfirmation,
     onError: (error) =>
       showToast({ message: error.message, variant: "error", title: "Erro!" }),
     onSuccess: () => {
@@ -261,7 +260,7 @@ export default function RegistrationsContainer({
                       loading={isResendingEmailConfirmation}
                       onClick={() =>
                         selectedRegistration &&
-                        resendConfirmationTrigger(selectedRegistration.id)
+                        resendConfirmationTrigger({id: selectedRegistration.id, eventGroup: Boolean(selectedRegistration.eventGroupId)}, )
                       }
                     >
                       Reenviar QR Code

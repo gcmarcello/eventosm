@@ -489,3 +489,59 @@ export async function createEventSignupRegistration(
     throw error;
   }
 }
+
+export async function resendEventRegistrationConfirmation(id: string) {
+  const findRegistration = await prisma.eventRegistration.findUnique({
+    where: { id },
+    include: {
+      event: {
+        include: {
+          EventRegistration: true,
+          Organization: { include: { OrgCustomDomain: true } },
+        },
+      },
+      user: true,
+      modality: true,
+      category: true,
+    },
+  });
+
+  if (!findRegistration) throw "Inscrição não encontrada.";
+
+  const emailArray: Email<"registration_email">[] = [
+    {
+      setup: {
+        from: getServerEnv("SENDGRID_EMAIL")!,
+        subject: "Inscrição confirmada",
+        to: findRegistration.user.email,
+      },
+      template: "registration_email",
+      templateParameters: {
+        mainColor:
+          findRegistration.event?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5",
+        headerTextColor: chooseTextColor(
+          findRegistration.event?.Organization?.options.colors.primaryColor
+            .hex || "#4F46E5"
+        ),
+        category: findRegistration.category?.name || "",
+        modality: findRegistration.modality?.name || "",
+        dateEnd: dayjs(
+          findRegistration.event?.dateEnd
+        ).format("DD/MM/YYYY"),
+        dateStart: dayjs(
+          findRegistration.event?.dateStart
+        ).format("DD/MM/YYYY"),
+        eventName: findRegistration.event?.name || "",
+        location: findRegistration.event?.location || "",
+        name: findRegistration.user.fullName || "Amigo",
+        orgName: findRegistration.event?.Organization.name!,
+        qrCode: `https://${getServerEnv("AWS_BUCKET_NAME")}.s3.${getServerEnv("AWS_REGION")}.backblazeb2.com/qr-codes/${findRegistration.id}.png`,
+        siteLink: `${findRegistration?.event?.Organization?.OrgCustomDomain[0]?.domain!}`,
+        eventLink: `/campeonatos/${findRegistration?.event?.slug}`,
+      },
+    },
+  ];
+
+  return await sendEmail(emailArray);
+}

@@ -10,6 +10,7 @@ import {
 import { UserSessionMiddleware } from "@/middleware/functions/userSession.middleware";
 import { ActionResponse } from "odinkit";
 import * as eventGroupService from "./eventGroups/eventGroup.service";
+import * as eventService from "./events/event.service";
 import * as service from "./service";
 import { revalidatePath } from "next/cache";
 import {
@@ -95,14 +96,20 @@ export async function updateRegistration(request: UpdateRegistrationDto) {
   }
 }
 
-export async function resendEventGroupRegistrationConfirmation(id: string) {
+export async function resendRegistrationConfirmation(request: {
+  id: string;
+  eventGroup?: boolean;}) {
   try {
     const { request: parsedRequest } = await UseMiddlewares()
       .then(UserSessionMiddleware)
       .then(OrganizationMiddleware);
-    await eventGroupService.resendEventGroupRegistrationConfirmation(id);
+    if(request.eventGroup) {
+      await eventGroupService.resendEventGroupRegistrationConfirmation(request.id);
+    } else {
+      await eventService.resendEventRegistrationConfirmation(request.id);
+    }
     return ActionResponse.success({
-      data: id,
+      data: request.id,
       message: "Confirmação de inscrição reenviada com sucesso.",
     });
   } catch (error) {
